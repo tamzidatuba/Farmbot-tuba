@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "express": "^5.1.0",
+    "farmbot": "^15.8.11"
+  }
+}
