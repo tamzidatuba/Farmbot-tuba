@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 // test connection to local database
-mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true,})
+mongoose.connect(connectionString)
 .then(() => console.log('MongoDB connected'))
 .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -17,13 +17,11 @@ const userSchemaTest = mongoose.Schema({
 });
 
 // create model for user
-const userModel = mongoose.model('User', userSchemaTest, 'Users');
+const userModel = mongoose.model('user', userSchemaTest);
 
 // insert test user to collection in local db
 async function InsertUser() {
-  await userModel.create([
-    { name: 'admin', password: 'secret' },
-  ]);
+  await userModel.create({ name: 'admin', password: 'secret' });
   console.log('Sample user created');
 }
 
