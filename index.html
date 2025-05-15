@@ -7,56 +7,41 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <!-- MODAL -->
 <div id="seedingModal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="closeModal">&times;</span>
-      <h2>Create Seeding Job</h2>
-  
-      <label for="plantType">Select Plant Type:</label>
-      <select id="plantType">
-        <option value="">--Choose Plant--</option>
-        <option value="Tomato">Tomato</option>
-        <option value="Carrot">Carrot</option>
-        <option value="Lettuce">Lettuce</option>
-      </select>
-      <div class="error" id="plantError"></div>
-  
-      <label for="xCoord">X Coordinate:</label>
-      <input type="number" id="xCoord" placeholder="Enter X">
-      <div class="error" id="xError"></div>
-  
-      <label for="yCoord">Y Coordinate:</label>
-      <input type="number" id="yCoord" placeholder="Enter Y">
-      <div class="error" id="yError"></div>
-  
-      <label for="depth">Depth (mm):</label>
-      <input type="number" id="depth" placeholder="Enter Depth">
-      <div class="error" id="depthError"></div>
-  
-      <button id="executeBtn">Create & Save</button>
-    </div>
+  <div class="modal-content">
+    <span class="close" id="closeModal">&times;</span>
+    <h2>Create Seeding Jobs</h2>
+
+    <div id="jobContainer"></div>
+
+    <button id="addPlantBtn">+ Add Plant</button>
+    <button id="executeBtn">Create & Save</button>
   </div>
-  
-  
-  <div class="sidebar">
-    <h2>FarmBot Menu</h2>
-    <ul>
-      <li>
-        <div class="menu-item" id="createTaskToggle">
-          <span>Create Task</span>
-          <span class="arrow" id="arrow">&#9654;</span>
-        </div>
-        <div class="subtask" id="subtaskContainer">
-          <button id="seedingJobBtn">Create Seeding Job</button>
-        </div>
-      </li>
-      <li class="menu-item">Plants</li>
-      <li class="menu-item">Weather</li>
-      <li class="menu-item">Soil Health</li>
-      <li class="menu-item">Reports</li>
-    </ul>
-  </div>
+</div>
+
+
+
+<div class="sidebar">
+  <h2>FarmBot Menu</h2>
+  <ul>
+    <li>
+      <div class="menu-item" id="createTaskToggle">
+        <span>Create Task</span>
+        <span class="arrow" id="arrow">&#9654;</span>
+      </div>
+      <div class="subtask" id="subtaskContainer">
+        <button id="seedingJobBtn">Create Seeding Job</button>
+      </div>
+    </li>
+    <li class="menu-item">Plants</li>
+    <li class="menu-item">Weather</li>
+    <li class="menu-item">Soil Health</li>
+    <li class="menu-item">Reports</li>
+  </ul>
+</div>
+
 
   <div class="main">
     <button class="settings-btn">⚙ Settings</button>

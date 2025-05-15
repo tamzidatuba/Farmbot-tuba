@@ -3,7 +3,6 @@ const subtask = document.getElementById('subtaskContainer');
 const arrow = document.getElementById('arrow');
 const modal = document.getElementById('seedingModal');
 const closeModal = document.getElementById('closeModal');
-const executeBtn = document.getElementById('executeBtn');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
 
 
@@ -44,50 +43,96 @@ window.addEventListener('click', (e) => {
   }
 });
 
-executeBtn.addEventListener('click', () => {
-  const plant = document.getElementById('plantType').value;
-  const x = Number(document.getElementById('xCoord').value);
-  const y = Number(document.getElementById('yCoord').value);
-  const depth = Number(document.getElementById('depth').value);
+let jobCount = 0;
 
+const jobContainer = document.getElementById('jobContainer');
+const addPlantBtn = document.getElementById('addPlantBtn');
+const executeBtn = document.getElementById('executeBtn');
+
+function createJobRow() {
+  jobCount++;
+
+  const row = document.createElement('div');
+  row.classList.add('job-row');
+  row.setAttribute('data-index', jobCount);
+  row.innerHTML = `
+  <div class="job-header">
+      <span class="delete-job" title="Remove this plant job">&#128465;</span>
+    </div>
+    <div class="plant-row">
+      <label for="plant-${jobCount}">Plant Type</label>
+      <select id="plant-${jobCount}" class="plantType">
+        <option value="">--Choose Plant--</option>
+        <option value="Tomato">Tomato</option>
+        <option value="Carrot">Carrot</option>
+        <option value="Lettuce">Lettuce</option>
+      </select>
+    </div>
+    <div class="coord-row">
+      <div>
+        <label>X Coordinate</label>
+        <input type="number" class="coord-input xCoord" placeholder="0 - 395">
+      </div>
+      <div>
+        <label>Y Coordinate</label>
+        <input type="number" class="coord-input yCoord" placeholder="0 - 650">
+      </div>
+      <div>
+        <label>Depth (mm)</label>
+        <input type="number" class="coord-input depth" placeholder="> 0">
+      </div>
+    </div>
+    <div class="errorMsg"></div>
+  `;
+
+  // Add delete event
+  row.querySelector('.delete-job').addEventListener('click', () => {
+    row.remove();
+  });
+
+  jobContainer.appendChild(row);
+}
+
+addPlantBtn.addEventListener('click', () => {
+  createJobRow();
+});
+
+executeBtn.addEventListener('click', () => {
+  const jobRows = document.querySelectorAll('.job-row');
+  const results = [];
   let isValid = true;
 
-  // Clear all errors
-  document.getElementById('plantError').textContent = '';
-  document.getElementById('xError').textContent = '';
-  document.getElementById('yError').textContent = '';
-  document.getElementById('depthError').textContent = '';
+  jobRows.forEach(row => {
+    const plant = row.querySelector('.plantType').value;
+    const x = Number(row.querySelector('.xCoord').value);
+    const y = Number(row.querySelector('.yCoord').value);
+    const depth = Number(row.querySelector('.depth').value);
+    const errorMsg = row.querySelector('.errorMsg');
+    errorMsg.textContent = '';
 
-  // Validate Plant
-  if (!plant) {
-    document.getElementById('plantError').textContent = 'Please select a plant type.';
-    isValid = false;
-  }
-
-  // Validate X
-  if (isNaN(x) || x < 0 || x > 395 || x=='') {
-    document.getElementById('xError').textContent = 'X must be between 0 and 395.';
-    isValid = false;
-  }
-
-  // Validate Y
-  if (isNaN(y) || y < 0 || y > 650 || y=='') {
-    document.getElementById('yError').textContent = 'Y must be between 0 and 650.';
-    isValid = false;
-  }
-
-  // Validate Depth
-  if (isNaN(depth) || depth <= 0 || depth===' ') {
-    document.getElementById('depthError').textContent = 'Depth must be greater than 0.';
-    isValid = false;
-  }
+    if (!plant || isNaN(x) || isNaN(y) || isNaN(depth) ||
+        x < 0 || x > 395 || y < 0 || y > 650 || depth <= 0) {
+      errorMsg.textContent = 'Please correct the above values.';
+      isValid = false;
+    } else {
+      results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
+    }
+  });
 
   if (!isValid) return;
 
-  // If all inputs are valid
-  alert(`Seeding Job Created:\nPlant: ${plant}\nCoordinates: (${x}, ${y})\nDepth: ${depth}mm`);
+  alert("Seeding Jobs Created:\n\n" + results.join("\n"));
+  jobContainer.innerHTML = '';
+  jobCount = 0;
   modal.style.display = 'none';
-})
+});
+
+seedingJobBtn.addEventListener('click', () => {
+  jobContainer.innerHTML = '';
+  jobCount = 0;
+  createJobRow(); // Add first row by default
+  modal.style.display = 'block';
+});
 
 // Draw grid lines for visual reference
 function drawGrid() {
