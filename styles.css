@@ -1,9 +1,40 @@
- * {
+#grid-container {
+  margin: 0 auto;
+  width: fit-content;
+  border: 2px solid #333;
+  background-color: #0a0a0a;
+  object-position: relative  ;
+}
+
+canvas {
+  display: block;
+  background-color: #967736;
+  cursor: crosshair;
+}
+
+#hover-coordinates {
+  position: absolute;
+  background: black;
+  color: white;
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  pointer-events: none;
+  display: none;
+  white-space: nowrap;
+}
+
+* {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: Arial, sans-serif;
     }
+
+    h1 {
+      position: center top;
+    }
+
 
     body {
       display: flex;
@@ -172,3 +203,4 @@
   font-size: 0.85rem;
   height: 16px;
 }
+
