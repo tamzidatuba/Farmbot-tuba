@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import userModule from './models/user.model.js';
+import wateringjob from './models/wateringjob.model.js';
 
 const connectionString = 'mongodb://localhost:27017/admin';
 const app = express();
@@ -11,7 +12,7 @@ mongoose.connect(connectionString)
 .then(() => console.log('MongoDB connected'))
 .catch((err) => console.error('MongoDB connection error:', err));
 
-// insert test user to collection in local db
+/*// insert test user to collection in local db
 async function InsertUser() {
   await userModule.create({ name: 'admin', password: 'secret' });
   console.log('Sample user created');
@@ -77,7 +78,9 @@ await admin.save();
 const jobSchema = new mongoose.Schema({
   xcoordinate: Number,
   ycoordinate: Number,
-});
+});*/
 
-const job = mongoose.model('job', jobSchema);
-export default job;
+//const job = mongoose.model('job', jobSchema);
+//export default job;
+
+await  wateringjob.InsertWaterPlant("Lettuce2", 230,240, 20);
