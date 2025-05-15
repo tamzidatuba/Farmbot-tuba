@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import userModule from './models/user.model.js';
+import seedingjob from './models/seedingjob.model.js';
 
 const connectionString = 'mongodb://localhost:27017/admin';
 const app = express();
@@ -73,11 +74,5 @@ var admin = await GetAdmin();
 admin.password = 'newpassword';
 await admin.save();
 
-
-const jobSchema = new mongoose.Schema({
-  xcoordinate: Number,
-  ycoordinate: Number,
-});
-
-const job = mongoose.model('job', jobSchema);
-export default job;
+await seedingjob.InsertSeedingJobToDB(1, 2, 'corn');
+console.log('done');
