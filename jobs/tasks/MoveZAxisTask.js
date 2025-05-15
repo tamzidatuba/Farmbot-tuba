@@ -1,0 +1,19 @@
+import { Task } from "./Task.js"
+
+class MoveZAxisTask extends Task {
+    constructor(z) {
+        super();
+        this.z = z;
+    }
+
+    checkCondition(state) {
+        return this.z == state["location_data"]["position"]["z"]; //&& state["informational_settings"]["busy"] == false;
+    }
+
+    execute(farmbot, lastState) {
+        farmbot.moveAbsolute({ x: lastState["location_data"]["position"]["x"], y: lastState["location_data"]["position"]["y"], z: this.z, speed: 100 });
+        console.log("Task: Moving to:", { x: lastState["location_data"]["position"]["x"], y: lastState["location_data"]["position"]["y"], z: this.z, speed: 100 });
+    }
+}
+
+export {MoveZAxisTask};

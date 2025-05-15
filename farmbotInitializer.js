@@ -38,7 +38,7 @@ async function getFarmbot() {
         console.log("Recieved Token.");
 
         let farmbot = new Farmbot({ token: tokenData["token"]["encoded"] });
-
+        farmbot.connect()
         return farmbot
 
     } catch (error) {

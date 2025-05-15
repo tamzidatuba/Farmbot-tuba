@@ -1,8 +1,12 @@
 import { Farmbot } from "farmbot";
+import {SeedingJob} from "./jobs/SeedingJob.js";
+import { MoveTask } from "./jobs/tasks/MoveTask.js";
+import { StatusManager } from "./statusManager.js";
 import {getFarmbot} from './farmbotInitializer.js';
 
 let farmbot = await getFarmbot()
-console.log("Farmbot Initialised!")
+let statusManager = new StatusManager(farmbot);
+console.log("Farmbot Initialised!");
 
 /*
  var bot = Farmbot({ token: '---'});
@@ -17,17 +21,35 @@ console.log("Farmbot Initialised!")
    // [function(){...}]
 */
 
-farmbot.on("offline",
-    function(data, eventName) {
-        console.log("ALERT: Disconnected from Farmbot!");
-    }
-)
+// TODO: create list of possible statuses
+// TODO: Determine what the current status is
+// TODO: create history of past statuses
 
+/*
 farmbot.on("sent",
     function(data, eventName) {
         console.log("Sent: ", data);
     }
-)
-farmbot.connect()
-console.log(await farmbot.home({speed: 100, axis: "y"}))
+)*/
+
+//console.log(await farmbot.home({speed: 100, axis: "y"}))
 //console.log(await farmbot.connect().then(farmbot.home({speed: 100, axis: "x"})));
+/*
+function move_to(x_coords, y_coords, z_coords) {
+    farmbot.moveAbsolute({ x: x_coords, y: y_coords, z: z_coords, speed: 100 });
+}*/
+
+function waitForFirstStatus(farmbot) {
+  return new Promise((resolve) => {
+    const unsubscribe = farmbot.on("status", (status) => {
+      resolve(status);
+    }, true);
+  });
+}
+
+await waitForFirstStatus(farmbot);
+console.log("StatusManager Initialized");
+let seedingArgs = {"position": {"x": 100, "y": 100}}
+let seedingJob = new SeedingJob(seedingArgs);
+
+statusManager.startJob(seedingJob);
