@@ -1,11 +1,8 @@
 {
+  "type": "module",
   "dependencies": {
-<<<<<<< HEAD
     "express": "^5.1.0",
     "farmbot": "^15.8.11",
     "mongoose": "^8.14.3"
-=======
-    "farmbot": "^15.8.10"
->>>>>>> b82fb24 (Add frontend code for initialized)
   }
 }
