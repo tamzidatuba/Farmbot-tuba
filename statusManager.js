@@ -66,13 +66,15 @@ class StatusManager {
     }
 
     _checkNextTask() {
-        if (this.currentJob.isJobCompleted()) {
+        if (this.currentJob.isJobCompleted()) { // Check if Job is completed
             this.status = FarmbotStatus.READY;
             this.runningJob = false
             console.log("Finished a Job");
         } else {
+            // Starting the next Task
             this.currentTask = this.currentJob.getNextTask();
-            console.log("Executing a task");
+            this.status = this.currentTask.status;
+            console.log("Status:", this.status);
             this.currentTask.execute(this.farmbot, this.lastState);
         }
 

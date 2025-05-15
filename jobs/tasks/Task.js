@@ -3,13 +3,20 @@ A Task is a single Instruction for the Farmbot with a condition to check if its 
 */
 
 class Task {
-    constructor() {
-        this.completed = false;
+    constructor(status) {
+        this.status = status
     }
-
 
     checkCondition(state) {
         return true;
+    }
+
+    pauseTask() {
+
+    }
+
+    continueTask(farmbot, lastState) {
+        this.execute(farmbot, lastState);
     }
 
     execute(farmbot, lastState) {
