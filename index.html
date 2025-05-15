@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Digital Farming Dashboard</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<!-- MODAL -->
+<div id="seedingModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeModal">&times;</span>
+    <h2>Create Seeding Jobs</h2>
+
+    <div id="jobContainer"></div>
+
+    <button id="addPlantBtn">+ Add Plant</button>
+    <button id="executeBtn">Create & Save</button>
+  </div>
+</div>
+
+
+
+<div class="sidebar">
+  <h2>FarmBot Menu</h2>
+  <ul>
+    <li>
+      <div class="menu-item" id="createTaskToggle">
+        <span>Create Task</span>
+        <span class="arrow" id="arrow">&#9654;</span>
+      </div>
+      <div class="subtask" id="subtaskContainer">
+        <button id="seedingJobBtn">Create Seeding Job</button>
+      </div>
+    </li>
+    <li class="menu-item">Plants</li>
+    <li class="menu-item">Weather</li>
+    <li class="menu-item">Soil Health</li>
+    <li class="menu-item">Reports</li>
+  </ul>
+</div>
+
+
+  <div class="main">
+    <button class="settings-btn">⚙ Settings</button>
+    <h1>Welcome to Digital Farming</h1>
+    <p>Use the sidebar to navigate your farming tools.</p>
+    <!-- grid container using canvas-->
+    <div>
+      <canvas id="gridCanvas" width="790" height="650"></canvas>
+    </div>
+    <div id="hover-coordinates"></div>
+  </div>
+
+  
+
+  <script src="./script.js"></script>
+</body>
+</html>
