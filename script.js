@@ -5,6 +5,8 @@ const modal = document.getElementById('seedingModal');
 const closeModal = document.getElementById('closeModal');
 const executeBtn = document.getElementById('executeBtn');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
+
+
 //grid ids
 const canvas = document.getElementById('gridCanvas');
 const ctx = canvas.getContext('2d');
@@ -16,6 +18,11 @@ const canvasHeight = canvas.height;
 // Farm-robot coordinate system
 const coordWidth = 395;
 const coordHeight = 650;
+
+//coordinate system
+const axisPadding = 30;
+const majorTickX = 50;
+const majorTickY = 100;
 
 toggle.addEventListener('click', () => {
   const isVisible = subtask.style.display === 'block';
@@ -84,24 +91,78 @@ executeBtn.addEventListener('click', () => {
 
 // Draw grid lines for visual reference
 function drawGrid() {
-  const stepX = canvasWidth / 10;
-  const stepY = canvasHeight / 10;
   ctx.strokeStyle = '#ddd';
+  ctx.linewidth = 1;
 
-  for (let x = 0; x <= canvasWidth; x += stepX) {
+  for (let x = 0; x <= canvasWidth; x += majorTickX) {
     ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, canvasHeight);
+    ctx.moveTo(coordToPixel(x, 0).x, 0);
+    ctx.lineTo(coordToPixel(x, 0).x, canvasHeight);
     ctx.stroke();
   }
 
-  for (let y = 0; y <= canvasHeight; y += stepY) {
+  for (let y = 0; y <= canvasHeight; y += majorTickY) {
     ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(canvasWidth, y);
+    ctx.moveTo(0, coordToPixel(0, y).y);
+    ctx.lineTo(canvasWidth, coordToPixel(0, y).y);
     ctx.stroke();
   }
+
+  drawAxesAndLabels();
 }
+
+function drawAxesAndLabels() {
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 2;
+
+  // Draw X-axis
+  ctx.beginPath();
+  ctx.moveTo(0,canvasHeight);
+  ctx.lineTo(canvasWidth, canvasHeight);
+  ctx.stroke();
+
+  // Draw Y-axis
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, canvasHeight);
+  ctx.stroke();
+
+  ctx.fillStyle = '#000';
+  ctx.font = '12px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+
+  // X-axis labels
+  for (let x = 0; x <= coordWidth; x += majorTickX) {
+    const px = (x / coordWidth) * canvasWidth;
+    ctx.beginPath();
+    ctx.moveTo(px, canvasHeight - 5);
+    ctx.lineTo(px, canvasHeight);
+    ctx.stroke();
+    ctx.fillText(x.toString(), px, canvasHeight + 2);
+  }
+
+  // Y-axis labels
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+
+  for (let y = 0; y <= coordHeight; y += majorTickY) {
+    const py = (y / coordHeight) * canvasHeight;
+    ctx.beginPath();
+    ctx.moveTo(0, py);
+    ctx.lineTo(5, py);
+    ctx.stroke();
+    ctx.fillText((coordHeight - y).toString(), -5, py);
+  }
+
+  // Axis titles
+  ctx.textAlign = 'right';
+  ctx.fillText("Y", 15, 10);
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText("X", canvasWidth - 10, canvasHeight - 5);
+}
+
 
 function clearCanvas() {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -127,6 +188,7 @@ canvas.addEventListener('mousemove', (e) => {
   const hoverX = e.clientX - rect.left;
   const hoverY = e.clientY - rect.top;
 
+  //position of the display box for the coordinates
   const coords = pixelToCoord(hoverX, hoverY);
   coordDisplay.style.left = `${e.clientX - 200}px`;
   coordDisplay.style.top = `${e.clientY + 15}px`;
@@ -134,6 +196,7 @@ canvas.addEventListener('mousemove', (e) => {
   coordDisplay.style.display = 'block';
 });
 
+//box disappears when mouse leaves the canvas
 canvas.addEventListener('mouseleave', () => {
   coordDisplay.style.display = 'none';
 });
