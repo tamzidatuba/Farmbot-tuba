@@ -84,5 +84,5 @@ const jobSchema = new mongoose.Schema({
 //const job = mongoose.model('job', jobSchema);
 //export default job;
 
-await  wateringjob.InsertWaterPlant("Lettuce2", 230,240, 20);
-await seedingjob.InsertSeedingJobToDB(1, 2, 'corn');
+await  wateringjob.InsertWateringJob("Lettuce2", 200,340, 50);
+await seedingjob.InsertSeedingJobToDB(1, 2, 'Radish1',10);

@@ -1,28 +1,25 @@
 import mongoose from 'mongoose';
-import express from 'express';
-
 
 // create schema for data
 const wateringSchema = mongoose.Schema({
   plantName : String,
   xcoordinate: Number,
   ycoordinate: Number,
-  time: Number,},
-  {
-  timestamps: true  //To add createdAt and updatedAt fields
-}
+  wateringDuration: Number,
+  date: Date}
 );
 
 //creating a model for wateringjob
 const WaterJobModel = mongoose.model('wateringjob',wateringSchema);
 
-async function InsertWaterPlant( plantName1, xcoordinate1, ycoordinate1, time1)
+async function InsertWateringJob( plantName, x, y, wateringDuration)
 {
-  await WaterJobModel.create({plantName: plantName1, xcoordinate: xcoordinate1, ycoordinate: ycoordinate1, time:time1});
-  console.log(plantName1 +' added in Database.');
+  var now = new Date();
+  await WaterJobModel.create({plantName: plantName, xcoordinate: x, ycoordinate: y,wateringDuration:wateringDuration, date:now});
+  console.log(plantName +' added in Database.');
 }
 
 
 export default{
-    InsertWaterPlant,
+    InsertWateringJob,
 };
