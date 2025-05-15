@@ -127,6 +127,20 @@ executeBtn.addEventListener('click', () => {
   modal.style.display = 'none';
 });
 
+async function saveJobToServer(x, y, plant, depth) {
+  const response = await fetch('/api/seeding-job', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ x, y, plant, depth })
+  });
+
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error);
+  console.log(result.message);
+}
+
 seedingJobBtn.addEventListener('click', () => {
   jobContainer.innerHTML = '';
   jobCount = 0;
