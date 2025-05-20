@@ -36,9 +36,9 @@ app.listen(PORT, () => {
 });
 
 
-const backend = initalizeBackend();
+const backend = await initalizeBackend();
 app.get('/status', (req, res) => {
-  res.json({status: backend.statusManager.status})
+  res.status(200).json({status: backend.statusManager.status})
 });
 
 
