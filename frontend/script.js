@@ -1,9 +1,13 @@
+//import {initializeBackend} from "../backend/backend.js";
 const toggle = document.getElementById('createTaskToggle');
 const subtask = document.getElementById('subtaskContainer');
 const arrow = document.getElementById('arrow');
 const modal = document.getElementById('seedingModal');
 const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
+
+//import backend
+const backend = require('../backend/backend.js');
 
 //grid ids
 const canvas = document.getElementById('gridCanvas');
@@ -304,8 +308,14 @@ function drawRobot() {
 }
 
 // Update status box
-function updateStatus(text) {
-  statusBox.textContent = `Status: ${text}`;
+function updateStatus() {
+  fetch('/status', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    statusBox.textContent = 'Status:  ${data.status}';
+  })
+  //statusBox.textContent = `Status: ${text}`;
 }
 
 // Update status history
@@ -335,7 +345,13 @@ function updateRobot() {
   setTimeout(() => {
     updateStatusHistory("Test");
   }, 2000);
+
+  updateStatus();
 }
+
+
+//Initialize robot
+let back = backend.initalizeBackend();
 
 // Initial draw
 drawGrid();
