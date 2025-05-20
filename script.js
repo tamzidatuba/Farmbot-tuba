@@ -6,6 +6,7 @@ const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
 
 
+
 //grid ids
 const canvas = document.getElementById('gridCanvas');
 const ctx = canvas.getContext('2d');
@@ -22,6 +23,21 @@ const coordHeight = 650;
 const axisPadding = 30;
 const majorTickX = 50;
 const majorTickY = 100;
+
+//farmbot status
+const statusBox = document.getElementById('farmbot-status');
+
+const settingsBtn = document.querySelector('.settings-btn');
+const logoutBtn = document.getElementById('logoutBtn');
+settingsBtn.addEventListener('click', () => {
+  // Toggle logout button visibility
+  logoutBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
+});
+
+logoutBtn.addEventListener('click', () => {
+  // Redirect or clear session
+  alert('Logging out...');
+});
 
 toggle.addEventListener('click', () => {
   const isVisible = subtask.style.display === 'block';
@@ -101,6 +117,7 @@ executeBtn.addEventListener('click', () => {
   const jobRows = document.querySelectorAll('.job-row');
   const results = [];
   let isValid = true;
+  const seenCoordinates = new Set();
 
   jobRows.forEach(row => {
     const plant = row.querySelector('.plantType').value;
@@ -110,11 +127,17 @@ executeBtn.addEventListener('click', () => {
     const errorMsg = row.querySelector('.errorMsg');
     errorMsg.textContent = '';
 
+    const coordKey = `${x},${y}`;
+
     if (!plant || isNaN(x) || isNaN(y) || isNaN(depth) ||
         x < 0 || x > 395 || y < 0 || y > 650 || depth <= 0) {
       errorMsg.textContent = 'Please correct the above values.';
       isValid = false;
+    } else if (seenCoordinates.has(coordKey)) {
+      errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
+      isValid = false;
     } else {
+      seenCoordinates.add(coordKey);
       results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
     }
   });
@@ -273,19 +296,31 @@ function drawRobot() {
   ctx.stroke();
 }
 
+// Update status box
+function updateStatus(text) {
+  statusBox.textContent = `Status: ${text}`;
+}
+
 // Simulate robot moving
 function updateRobot() {
-  robot.x = Math.floor(Math.random() * coordWidth);
-  robot.y = Math.floor(Math.random() * coordHeight);
+  updateStatus("Moving...");//change this to actually get status
+
+  //robot.x = Math.floor(Math.random() * coordWidth);
+  //robot.y = Math.floor(Math.random() * coordHeight);
 
   clearCanvas();
   drawGrid();
-  drawRobot();
+  //drawRobot();
+
+  //just for testing
+  setTimeout(() => {
+    updateStatus("Idle");
+  }, 500);
 }
 
 // Initial draw
 drawGrid();
-drawRobot();
+//drawRobot();
 
 // Update every 1 second
 setInterval(updateRobot, 1000);

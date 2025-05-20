@@ -30,6 +30,30 @@ canvas {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      position: center top;
+    }
+
+    #farmbot-status {
+      position: fixed;
+      width: 200px;
+      top: 20px;
+      right: 150px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+    }
+
 
 body {
   display: flex;
@@ -263,4 +287,22 @@ transition: background-color 0.2s;
 
 .delete-job:hover {
 background-color: #ffcdd2;
+}
+
+.logout-btn {
+  position: absolute;
+  top: 60px; /* slightly below settings button */
+  right: 20px;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none; 
+  transition: background 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #c62828;
 }
