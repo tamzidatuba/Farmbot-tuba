@@ -38,9 +38,9 @@ class TimedPinTask extends Task {
     }
 
     pauseTask(farmbot) {
-        farmbot.togglePin({pin_number: this.pinNumber})
-        clearTimeout(this.currentTimeout)
-        this.remainingTime = remainingTime - (Date.now()-this.start)
+        farmbot.togglePin({pin_number: this.pinNumber});
+        clearTimeout(this.currentTimeout);
+        this.remainingTime = remainingTime - (Date.now()-this.start);
     }
 
     checkCondition(state) {

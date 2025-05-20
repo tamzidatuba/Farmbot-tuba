@@ -6,7 +6,8 @@ const FarmbotStatus = Object.freeze({
     MOVING_TO_WATERING_POSITION: 4,
     FETCHING: 5,
     SEEDING: 6,
-    WATERING: 7
+    WATERING: 7,
+    //PAUSED: 8
 });
 
 
@@ -84,10 +85,12 @@ class StatusManager {
     }
 
     pauseJob() {
+        //this.status = FarmbotStatus.PAUSED;
         this.currentTask.pauseTask();
     }
 
     continueJob() {
+        this.status = this.currentTask.status;
         this.currentTask.continueTask();
     }
 
