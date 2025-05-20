@@ -304,8 +304,14 @@ function drawRobot() {
 }
 
 // Update status box
-function updateStatus(text) {
-  statusBox.textContent = `Status: ${text}`;
+function updateStatus() {
+  fetch('/api/status', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    statusBox.textContent = 'Status: ' + data.status;
+  })
+  //statusBox.textContent = `Status: ${text}`;
 }
 
 // Update status history
@@ -335,6 +341,8 @@ function updateRobot() {
   setTimeout(() => {
     updateStatusHistory("Test");
   }, 2000);
+
+  updateStatus();
 }
 
 // Initial draw
