@@ -5,7 +5,6 @@ const modal = document.getElementById('seedingModal');
 const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
 
-
 //grid ids
 const canvas = document.getElementById('gridCanvas');
 const ctx = canvas.getContext('2d');
@@ -22,6 +21,24 @@ const coordHeight = 650;
 const axisPadding = 30;
 const majorTickX = 50;
 const majorTickY = 100;
+
+//farmbot status
+const statusBox = document.getElementById('farmbot-status');
+const statusHistory = document.getElementById('status-history');
+const statusContainer = document.getElementById('robot-status-container');
+let isHistoryVisible = false;
+
+const settingsBtn = document.querySelector('.settings-btn');
+const logoutBtn = document.getElementById('logoutBtn');
+settingsBtn.addEventListener('click', () => {
+  // Toggle logout button visibility
+  logoutBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
+});
+
+logoutBtn.addEventListener('click', () => {
+  // Redirect or clear session
+  alert('Logging out...');
+});
 
 toggle.addEventListener('click', () => {
   const isVisible = subtask.style.display === 'block';
@@ -101,6 +118,7 @@ executeBtn.addEventListener('click', async () => {
   const jobRows = document.querySelectorAll('.job-row');
   const results = [];
   let isValid = true;
+  const seenCoordinates = new Set();
 
   for (const row of jobRows) {
     const plant = row.querySelector('.plantType').value;
@@ -110,11 +128,18 @@ executeBtn.addEventListener('click', async () => {
     const errorMsg = row.querySelector('.errorMsg');
     errorMsg.textContent = '';
 
+    const coordKey = `${x},${y}`;
+
     if (!plant || isNaN(x) || isNaN(y) || isNaN(depth) ||
         x < 0 || x > 395 || y < 0 || y > 650 || depth <= 0) {
       errorMsg.textContent = 'Please correct the above values.';
       isValid = false;
-      continue;
+    } else if (seenCoordinates.has(coordKey)) {
+      errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
+      isValid = false;
+    } else {
+      seenCoordinates.add(coordKey);
+      results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
     }
     
     results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
@@ -276,6 +301,12 @@ canvas.addEventListener('mouseleave', () => {
   coordDisplay.style.display = 'none';
 });
 
+// Handle extension of status box
+statusBox.addEventListener('click', () => {
+  isHistoryVisible = !isHistoryVisible;
+  statusHistory.classList.toggle('hidden', !isHistoryVisible);
+});
+
 // Draw robot
 let robot = { x: 0, y: 0 };
 
@@ -289,19 +320,51 @@ function drawRobot() {
   ctx.stroke();
 }
 
+// Update status box
+function updateStatus() {
+  fetch('/api/status', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    statusBox.textContent = 'Status: ' + data.status;
+  })
+  //statusBox.textContent = `Status: ${text}`;
+}
+
+// Update status history
+function updateStatusHistory(text) {
+  const timestamp = new Date().toLocaleTimeString();
+  const newStatus = document.createElement('div');
+  const entry = document.createElement('div');
+  entry.textContent = `[${timestamp}] ${text}`;
+  statusHistory.prepend(entry);
+  if (statusHistory.children.length > 10) {
+    statusHistory.removeChild(statusHistory.lastChild);
+  }
+}
+
 // Simulate robot moving
 function updateRobot() {
-  robot.x = Math.floor(Math.random() * coordWidth);
-  robot.y = Math.floor(Math.random() * coordHeight);
+  updateStatus("Moving...");//change this to actually get status
+
+  //robot.x = Math.floor(Math.random() * coordWidth);
+  //robot.y = Math.floor(Math.random() * coordHeight);
 
   clearCanvas();
   drawGrid();
-  drawRobot();
+  //drawRobot();
+
+  //just for testing
+  setTimeout(() => {
+    updateStatusHistory("Test");
+  }, 2000);
+
+  updateStatus();
 }
 
 // Initial draw
 drawGrid();
-drawRobot();
+//drawRobot();
 
 // Update every 1 second
-setInterval(updateRobot, 1000);
+setInterval(updateRobot, 1000); 

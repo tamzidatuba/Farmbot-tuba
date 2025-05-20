@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
+import { initalizeBackend } from './backend/backend.js';
 
 const app = express();
 const PORT = 3000;
@@ -10,13 +11,14 @@ const PORT = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+let backend_initialized = false;
+
 // Serve static files (CSS, JS) from root
-app.use(express.static(__dirname));
-app.use(express.json());
+app.use(express.static(path.join(__dirname, 'frontend//')));
 
 // Serve index.html on root route
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'frontend//index.html'));
 });
 
 app.post('/api/insertjob/:jobType', async (req, res) => {
@@ -60,3 +62,14 @@ app.delete('/api/deletejob/:jobtype/:id', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+app.get('/api/status', (req, res) => {
+  if (backend_initialized) {
+    res.status(200).json({status: backend.statusManager.status});
+  }
+  else {
+    res.status(200).json({status: "Initializing"});
+  }
+});
+const backend = await initalizeBackend();
+backend_initialized = true;
