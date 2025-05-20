@@ -13,6 +13,8 @@ const PORT = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+let backend_initialized = false;
+
 // Serve static files (CSS, JS) from root
 app.use(express.static(path.join(__dirname, 'frontend//')));
 
@@ -35,11 +37,15 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
-
-const backend = await initalizeBackend();
-app.get('/status', (req, res) => {
-  res.status(200).json({status: backend.statusManager.status})
+app.get('/api/status', (req, res) => {
+  if (backend_initialized) {
+    res.status(200).json({status: backend.statusManager.status});
+  }
+  else {
+    res.status(200).json({status: "Initializing"});
+  }
 });
+const backend = await initalizeBackend();
 
 
 let WateringArgs ={"position": {"x": 100, "y": 100,"z": -50}, "duration":10}
