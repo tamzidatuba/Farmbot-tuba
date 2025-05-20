@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+
 // create schema for data
 const wateringSchema = mongoose.Schema({
   plantName : String,
@@ -13,7 +14,7 @@ const wateringSchema = mongoose.Schema({
 const WaterJobModel = mongoose.model('wateringjob',wateringSchema);
 
 //for the name/type of the plant example :  radish1 or lettuce 2, the coordinates and the millilitres to be watered.
-async function InsertWateringJob( plantName, x, y, wateringcapacity)
+async function InsertWateringJobToDB( plantName, x, y, wateringcapacity)
 {
 
   const existingWaterjob = await WaterJobModel.findOne({plantName: plantName}, {xcoordinate: x}, {ycoordinate: y},{wateringcapacity:wateringcapacity})
@@ -30,5 +31,5 @@ async function InsertWateringJob( plantName, x, y, wateringcapacity)
 
 
 export default{
-    InsertWateringJob,
+    InsertWateringJobToDB,
 };
