@@ -5,6 +5,9 @@ const modal = document.getElementById('seedingModal');
 const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
 
+//import backend
+const backend = require('../backend/backend.js');
+
 //grid ids
 const canvas = document.getElementById('gridCanvas');
 const ctx = canvas.getContext('2d');
@@ -304,8 +307,14 @@ function drawRobot() {
 }
 
 // Update status box
-function updateStatus(text) {
-  statusBox.textContent = `Status: ${text}`;
+function updateStatus() {
+  fetch('/status', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    statusBox.textContent = 'Status:  ${data.status}';
+  })
+  //statusBox.textContent = `Status: ${text}`;
 }
 
 // Update status history
@@ -335,6 +344,8 @@ function updateRobot() {
   setTimeout(() => {
     updateStatusHistory("Test");
   }, 2000);
+
+  updateStatus();
 }
 
 // Initial draw
