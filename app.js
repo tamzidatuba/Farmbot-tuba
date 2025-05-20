@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import dbservice from './Services/databaseservice.js';
+import DatabaseService from './databaseservice.js';
 import { initalizeBackend } from './backend/backend.js';
 
 const app = express();
@@ -15,19 +15,46 @@ let backend_initialized = false;
 
 // Serve static files (CSS, JS) from root
 app.use(express.static(path.join(__dirname, 'frontend//')));
+app.use(express.json());
 
 // Serve index.html on root route
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend//index.html'));
 });
-// API endpoint
-app.post('/api/seeding-job', async (req, res) => {
-  const { x, y, plant, depth } = req.body;
+
+app.post('/api/insertjob/:jobType', async (req, res) => {
+  const { jobType } = req.params;
+  const object = req.body;
+
   try {
-    await dbservice.InsertSeedingJobToDB(x, y, plant, depth);
+    await DatabaseService.InsertJobToDB(jobType, object);
     res.status(200).json({ message: 'Job saved' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to save job' });
+  }
+});
+
+app.get('/api/getjobs/:jobType', async (req, res) => {
+  const { jobType } = req.params;
+  try {
+    let jobs;
+    jobs = await DatabaseService.FetchJobsFromDB(jobType);
+    res.status(200).json(jobs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch jobs' });
+  }  
+});
+
+
+app.delete('/api/deletejob/:jobtype/:id', async (req, res) => {
+  const {jobtype, id} = req.params;
+  try {
+    await DatabaseService.DeleteJobFromDB(jobtype, id);
+    res.status(200).json({ message: 'Job deleted' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete job' });
   }
 });
 

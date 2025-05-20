@@ -114,13 +114,13 @@ addPlantBtn.addEventListener('click', () => {
   createJobRow();
 });
 
-executeBtn.addEventListener('click', () => {
+executeBtn.addEventListener('click', async () => {
   const jobRows = document.querySelectorAll('.job-row');
   const results = [];
   let isValid = true;
   const seenCoordinates = new Set();
 
-  jobRows.forEach(row => {
+  for (const row of jobRows) {
     const plant = row.querySelector('.plantType').value;
     const x = Number(row.querySelector('.xCoord').value);
     const y = Number(row.querySelector('.yCoord').value);
@@ -141,7 +141,23 @@ executeBtn.addEventListener('click', () => {
       seenCoordinates.add(coordKey);
       results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
     }
-  });
+    
+    results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
+
+    try {
+      var obj= {
+      x: x,
+      y: y,
+      planttype: plant,
+      depth: depth
+      };
+      await InsertSeedingJob(x, y, plant, depth);
+    } catch (error) {
+      errorMsg.textContent = 'Failed to save job.';
+      console.error(error);
+      isValid = false;
+    }
+  }
 
   if (!isValid) return;
 
@@ -151,13 +167,14 @@ executeBtn.addEventListener('click', () => {
   modal.style.display = 'none';
 });
 
-async function saveJobToServer(x, y, plant, depth) {
-  const response = await fetch('/api/seeding-job', {
+
+async function InsertSeedingJob(x, y, plant, depth) {
+  const response = await fetch('/api/insertjob/Seeding', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ x, y, plant, depth })
+    body: JSON.stringify({ x, y, planttype: plant, depth })
   });
 
   const result = await response.json();
