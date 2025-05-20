@@ -55,4 +55,4 @@ backend_initialized = true;
 let WateringArgs ={"position": {"x": 100, "y": 100,"z": -50}, "duration":10}
 let wateringJob = new WateringJob(WateringArgs);
 
-statusManager.startJob(wateringJob);
+backend.startJob(wateringJob);
