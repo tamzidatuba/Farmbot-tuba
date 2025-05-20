@@ -28,7 +28,6 @@ class ScheduleManager {
         for (const job_idx in scheduledJobs) {
             // calculate the time difference of current time and planned execution time
             let time_difference = scheduledJobs[job_idx].nextExecution - currentTime;
-            console.log("Time difference:", time_difference);
             if (time_difference <= SCHEDULE_TOLERANCE) {
                 //move job from scheduled_jobs to jobs_to_execute in database
                 this.jobsToExecute.enqueue(scheduledJobs[job_idx]);
@@ -38,7 +37,7 @@ class ScheduleManager {
                 nextScheduleCheck = Math.min(nextScheduleCheck, time_difference);
             }
         }
-        console.log("Next schedule check:", nextScheduleCheck)
+        //console.log("Next schedule check:", nextScheduleCheck)
         setTimeout(this.checkForScheduledJobs.bind(this), nextScheduleCheck);
     }
 

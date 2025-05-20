@@ -26,6 +26,9 @@ class Backend {
 
   appendNotification(notification) {
     // TODO put notification in database
+    let date = new Date();
+    // append date to the end of the string
+    notification += Date().getFullYear() +'.'+ Date().getMonth() +'.'+ Date.getDay() +' '+ Date.getHours() +':'+ Date.getMinutes() +':'+ Date.getSeconds();
     this.notification_history.enqueue(notification);
     while (this.notification_history.length > 10) {
       this.notification_history.dequeue();
@@ -35,13 +38,13 @@ class Backend {
   startJob(job) {
     this.statusManager.startJob(job);
     this.appendNotification(
-      "[" + this.user + "] Job " + job.name + "started at " + new Date()
+      "[" + this.user + "] Job " + job.name + "started at "
     );
   }
 
   finishJob(job) {
     this.appendNotification(
-      "[" + this.user + "] Job " + job.name + "finished at " + new Date()
+      "[" + this.user + "] Job " + job.name + "finished at "
     );
   }
   
