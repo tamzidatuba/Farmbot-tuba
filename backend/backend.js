@@ -35,13 +35,13 @@ class Backend {
   startJob(job) {
     this.statusManager.startJob(job);
     this.appendNotification(
-      "[" + this.user + "] Job " + job.name + "started at " + new Date().toLocaleTimeString()
+      "[" + this.user + "] Job " + job.name + "started at " + new Date()
     );
   }
 
   finishJob(job) {
     this.appendNotification(
-      "[" + this.user + "] Job " + job.name + "finished at " + new Date().toLocaleTimeString()
+      "[" + this.user + "] Job " + job.name + "finished at " + new Date()
     );
   }
   
