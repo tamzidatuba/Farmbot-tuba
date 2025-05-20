@@ -1,4 +1,5 @@
-//import {initializeBackend} from "../backend/backend.js";
+import { initalizeBackend } from "../backend/backend.js";
+
 const toggle = document.getElementById('createTaskToggle');
 const subtask = document.getElementById('subtaskContainer');
 const arrow = document.getElementById('arrow');
@@ -349,9 +350,9 @@ function updateRobot() {
   updateStatus();
 }
 
-
-//Initialize robot
-let back = backend.initalizeBackend();
+// initialize Backend
+const backend = initalizeBackend();
+console.log(backend.statusManager.status);
 
 // Initial draw
 drawGrid();
