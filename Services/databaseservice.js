@@ -18,7 +18,7 @@ async function SaveWateringJob(plantName, x, y, duration)
 }
 
 async function SaveSeedingJob(x, y, planttype, depth) {
-  await seedingModule.create({ xcoordinate: x, ycoordinate: y, planttype: planttype, depth: depth});
+  await seedingModule.InsertSeedingJobToDB(x, y, planttype, depth);
 }
 
 export default {
