@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-
 // create schema for data
 const wateringSchema = mongoose.Schema({
   plantName : String,
@@ -29,7 +28,35 @@ async function InsertWateringJobToDB( plantName, x, y, wateringcapacity)
   }
 }
 
+async function DeleteWateringJobToDB(id)
+{
+  const existingWaterjob = await WaterJobModel.findById(id);
+  if(existingWaterjob)
+  {
+    await WaterJobModel.findByIdAndDelete(id);
+    console.log("This watering request has been deleted.");
+  }
+  else{//  else add the job to the table
+console.log("This watering job does not exist.");
+
+  }
+}
+
+async function FetchAllWateringJobs() 
+{
+    const existingWaterjob = await WaterJobModel.find();
+    if(existingWaterjob)
+  {
+    return existingWaterjob;
+  }
+  else
+  {
+    console.log("There are no watering jobs.");
+  }
+}
 
 export default{
     InsertWateringJobToDB,
+    DeleteWateringJobToDB,
+    FetchAllWateringJobs,
 };

@@ -116,11 +116,17 @@ executeBtn.addEventListener('click', async () => {
       isValid = false;
       continue;
     }
-
+    
     results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
 
     try {
-      await saveSeedingJob(x, y, plant, depth);
+      var obj= {
+      x: x,
+      y: y,
+      planttype: plant,
+      depth: depth
+      };
+      await InsertSeedingJob(x, y, plant, depth);
     } catch (error) {
       errorMsg.textContent = 'Failed to save job.';
       console.error(error);
@@ -137,13 +143,13 @@ executeBtn.addEventListener('click', async () => {
 });
 
 
-async function saveSeedingJob(x, y, plant, depth) {
-  const response = await fetch('/api/insertseedingjob', {
+async function InsertSeedingJob(x, y, plant, depth) {
+  const response = await fetch('/api/insertjob/Seeding', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ x, y, plant, depth })
+    body: JSON.stringify({ x, y, planttype: plant, depth })
   });
 
   const result = await response.json();

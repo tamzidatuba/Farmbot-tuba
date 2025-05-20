@@ -1,24 +1,29 @@
 import mongoose from 'mongoose';
 
-
 const seedingJobSchema = new mongoose.Schema({
   xcoordinate: Number,
   ycoordinate: Number,
   depth: Number,
   planttype : String,
-  date: Date
+  createdAt: Date
 });
 
 const seedingJob = mongoose.model('seedingjob', seedingJobSchema);
 
 async function InsertSeedingJobToDB(x, y, planttype, depth) {
   const now = new Date();
-  await seedingJob.create({ xcoordinate: x, ycoordinate: y, planttype: planttype, depth: depth,date: now });
+  await seedingJob.create({ xcoordinate: x, ycoordinate: y, planttype: planttype, depth: depth,createdAt: now });
   console.log('Job has been inserted');
+}
+
+async function FetchSeedingJobsFromDB() {
+  const jobs = await seedingJob.find();
+  return jobs;
 }
 
 export default {
   InsertSeedingJobToDB,
+  FetchSeedingJobsFromDB
 //   findAll,
 //   model: seedingJob,
 };
