@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// API endpoint
+// Insert seeding job
 app.post('/api/insertseedingjob', async (req, res) => {
   const { x, y, plant, depth } = req.body;
   try {
@@ -29,6 +29,19 @@ app.post('/api/insertseedingjob', async (req, res) => {
     res.status(500).json({ error: 'Failed to save job' });
   }
 });
+
+
+// Insert seeding job
+app.post('/api/insertseedingjob', async (req, res) => {
+  const { x, y, plant, depth } = req.body;
+  try {
+    await dbservice.SaveSeedingJob(x, y, plant, depth);
+    res.status(200).json({ message: 'Job saved' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to save job' });
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
