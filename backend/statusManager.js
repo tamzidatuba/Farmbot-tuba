@@ -13,7 +13,8 @@ const FarmbotStatus = Object.freeze({
 
 class StatusManager {
 
-    constructor(farmbot) {
+    constructor(farmbot, backend) {
+        this.backend = backend;
         this.runningJob = false;
         this.farmbot = farmbot;
         this.status = FarmbotStatus.OFFLINE;
@@ -60,6 +61,7 @@ class StatusManager {
             this.status = FarmbotStatus.READY;
             this.runningJob = false
             console.log("Finished a Job");
+            this.backend.finishJob(this.currentJob);
         } else {
             // Starting the next Task
             this.currentTask = this.currentJob.getNextTask();

@@ -3,12 +3,46 @@ import { StatusManager } from "./statusManager.js";
 import {getFarmbot} from './farmbotInitializer.js';
 import { WateringJob } from "../jobs/WateringJob.js";
 import { ScheduleManager } from "./scheduleManager.js";
+import { Queue } from "../jobs/Queue.js";
+
+const JobNotification = Object.freeze({
+    JOB_CREATED: "Job created",
+    JOB_MODIFIED: "Job modified",
+    JOB_DELETED: "Job deleted",
+    JOB_STARTED: "Job started",
+    JOB_FINISHED: "Job finished"
+});
+
 
 class Backend {
   constructor(farmbot, statusManager) {
+    this.user = "Visitor";
     this.farmbot = farmbot;
     this.statusManager = statusManager;
     //this.scheduleManager = new ScheduleManager();
+
+    this.notification_history = new Queue();
+  }
+
+  appendNotification(notification) {
+    // TODO put notification in database
+    this.notification_history.enqueue(notification);
+    while (this.notification_history.length > 10) {
+      this.notification_history.dequeue();
+    }
+  }
+
+  startJob(job) {
+    this.statusManager.startJob(job);
+    this.appendNotification(
+      "[" + this.user + "] Job " + job.name + "started at " + new Date().toLocaleTimeString()
+    );
+  }
+
+  finishJob(job) {
+    this.appendNotification(
+      "[" + this.user + "] Job " + job.name + "finished at " + new Date().toLocaleTimeString()
+    );
   }
   
 }

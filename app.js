@@ -35,6 +35,10 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
+app.get('/api/notifications', (req, res) => {
+  res.status(200).json(backend.notification_history.elements);
+});
+
 app.get('/api/status', (req, res) => {
   if (backend_initialized) {
     res.status(200).json({status: backend.statusManager.status});
