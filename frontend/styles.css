@@ -1,0 +1,308 @@
+#grid-container {
+  margin: 0 auto;
+  width: fit-content;
+  border: 2px solid #333;
+  background-color: #0a0a0a;
+  object-position: relative  ;
+}
+
+canvas {
+  display: block;
+  background-color: #967736;
+  cursor: crosshair;
+}
+
+#hover-coordinates {
+  position: absolute;
+  background: black;
+  color: white;
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  pointer-events: none;
+  display: none;
+  white-space: nowrap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      position: center top;
+    }
+
+    #farmbot-status {
+      position: fixed;
+      width: 200px;
+      top: 20px;
+      right: 150px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f0fff0;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #2e7d32;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-bottom: 30px;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.sidebar ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu-item {
+  background-color: #388e3c;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s;
+}
+
+.menu-item:hover {
+  background-color: #4caf50;
+}
+
+.arrow {
+  font-size: 0.8rem;
+  transition: transform 0.2s;
+}
+
+.arrow.open {
+  transform: rotate(90deg);
+}
+
+.subtask {
+  display: none;
+  padding-left: 20px;
+}
+
+.subtask button {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: #66bb6a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.subtask button:hover {
+  background-color: #81c784;
+}
+
+.main {
+  flex-grow: 1;
+  padding: 20px;
+  position: relative;
+}
+
+.settings-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.settings-btn:hover {
+  background-color: #388e3c;
+}
+/* Modal styles */
+.modal {
+display: none;
+position: fixed;
+z-index: 10;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+background-color: #f9fff9;
+margin: 5% auto;
+padding: 20px;
+border: 1px solid #4caf50;
+border-radius: 10px;
+width: 500px;
+box-shadow: 0 0 15px rgba(0,0,0,0.2);
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+
+.modal-content h2 {
+margin-bottom: 10px;
+color: #2e7d32;
+text-align: center;
+}
+
+.modal-content label {
+text-align: center;
+font-weight: bold;
+margin-top: 5px;
+}
+
+.modal-content input,
+.modal-content select {
+padding: 8px;
+border-radius: 5px;
+border: 1px solid #ccc;
+}
+
+.modal-content button {
+background-color: #4caf50;
+color: white;
+padding: 10px;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+margin-top: 10px;
+}
+
+.modal-content button:hover {
+background-color: #388e3c;
+}
+
+.close {
+align-self: flex-end;
+font-size: 24px;
+cursor: pointer;
+color: #888;
+}
+
+.close:hover {
+color: #333;
+}
+
+.job-row {
+margin-bottom: 20px;
+}
+
+.plant-row {
+display: flex;
+flex-direction: column;
+}
+
+.coord-row {
+display: flex;
+justify-content: space-between;
+gap: 10px;
+}
+
+.coord-row > div {
+flex: 1;
+display: flex;
+flex-direction: column;
+}
+
+select.plantType {
+text-align: center;
+padding: 8px;
+border-radius: 5px;
+border: 1px solid #ccc;
+width: 100%;
+}
+
+input.coord-input {
+padding: 8px;
+border-radius: 5px;
+border: 1px solid #ccc;
+width: 100%;
+}
+
+.errorMsg {
+color: red;
+font-size: 0.8rem;
+height: 16px;
+margin-top: 4px;
+}
+.job-row {
+position: relative;
+border: 1px solid #c8e6c9;
+padding: 15px;
+margin-bottom: 15px;
+border-radius: 10px;
+background-color: #f4fff4;
+}
+
+.job-header {
+display: flex;
+justify-content: flex-end;
+margin-bottom: 10px;
+}
+
+.delete-job {
+cursor: pointer;
+font-size: 18px;
+color: #c62828;
+padding: 2px 6px;
+border-radius: 4px;
+transition: background-color 0.2s;
+}
+
+.delete-job:hover {
+background-color: #ffcdd2;
+}
+
+.logout-btn {
+  position: absolute;
+  top: 60px; /* slightly below settings button */
+  right: 20px;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none; 
+  transition: background 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #c62828;
+}
