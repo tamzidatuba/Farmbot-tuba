@@ -4,8 +4,6 @@ import { fileURLToPath } from 'url';
 import dbservice from './Services/databaseservice.js';
 import { initalizeBackend } from './backend/backend.js';
 
-import { WateringJob } from './jobs/WateringJob.js';
-
 const app = express();
 const PORT = 3000;
 
@@ -46,9 +44,4 @@ app.get('/api/status', (req, res) => {
   }
 });
 const backend = await initalizeBackend();
-
-
-let WateringArgs ={"position": {"x": 100, "y": 100,"z": -50}, "duration":10}
-let wateringJob = new WateringJob(WateringArgs);
-
-backend.statusManager.startJob(wateringJob);
+backend_initialized = true;
