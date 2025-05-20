@@ -1,14 +1,3 @@
-/*
-Statuses:
-- Fetching
-- Moving (to position)
-- Moving to Seeding position
-- Moving to watering position
-- seeding
-- ready
-- offline
-- watering
-*/
 const FarmbotStatus = Object.freeze({
     OFFLINE: 0,
     READY: 1,
@@ -17,7 +6,8 @@ const FarmbotStatus = Object.freeze({
     MOVING_TO_WATERING_POSITION: 4,
     FETCHING: 5,
     SEEDING: 6,
-    WATERING: 7
+    WATERING: 7,
+    //PAUSED: 8
 });
 
 
@@ -92,6 +82,16 @@ class StatusManager {
                 this._checkNextTask();
             }
         }
+    }
+
+    pauseJob() {
+        //this.status = FarmbotStatus.PAUSED;
+        this.currentTask.pauseTask();
+    }
+
+    continueJob() {
+        this.status = this.currentTask.status;
+        this.currentTask.continueTask();
     }
 
     deactivate() {
