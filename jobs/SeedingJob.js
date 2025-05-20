@@ -1,4 +1,4 @@
-import { FarmbotStatus } from "../statusManager.js";
+import { FarmbotStatus } from "../backend/statusManager.js";
 import { Job } from "./Job.js"
 import { MoveTask } from "./tasks/MoveTask.js";
 import { MoveZAxisTask} from "./tasks/MoveZAxisTask.js";
