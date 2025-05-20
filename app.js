@@ -46,9 +46,4 @@ app.get('/api/status', (req, res) => {
   }
 });
 const backend = await initalizeBackend();
-
-
-let WateringArgs ={"position": {"x": 100, "y": 100,"z": -50}, "duration":10}
-let wateringJob = new WateringJob(WateringArgs);
-
-backend.statusManager.startJob(wateringJob);
+backend_initialized = true;
