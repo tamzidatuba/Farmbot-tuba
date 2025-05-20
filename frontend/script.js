@@ -1,3 +1,5 @@
+import { initalizeBackend } from "../backend/backend.js";
+
 const toggle = document.getElementById('createTaskToggle');
 const subtask = document.getElementById('subtaskContainer');
 const arrow = document.getElementById('arrow');
@@ -336,6 +338,10 @@ function updateRobot() {
     updateStatusHistory("Test");
   }, 2000);
 }
+
+// initialize Backend
+const backend = initalizeBackend();
+console.log(backend.statusManager.status);
 
 // Initial draw
 drawGrid();

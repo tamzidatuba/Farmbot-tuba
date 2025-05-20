@@ -1,4 +1,4 @@
-import { Queue } from "./jobs/Queue.js";
+import { Queue } from "../jobs/Queue.js";
 
 const SCHEDULE_CHECKING_INTERVAL = 900000 // 15*60*1000 = 15min
 const SCHEDULE_TOLERANCE = 30000; // 30 Second execution tolerance
@@ -20,7 +20,7 @@ class ScheduleManager {
     }
 
     checkForScheduledJobs() {
-        // ask database for scheduledtasks
+        // TODO ask database for scheduledtasks
         let scheduledJobs = {0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+34000, "name": "Job2"}};
         let currentTime = Date.now();
         let nextScheduleCheck = SCHEDULE_CHECKING_INTERVAL;
