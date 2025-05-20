@@ -5,8 +5,6 @@ const modal = document.getElementById('seedingModal');
 const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
 
-
-
 //grid ids
 const canvas = document.getElementById('gridCanvas');
 const ctx = canvas.getContext('2d');
@@ -26,6 +24,9 @@ const majorTickY = 100;
 
 //farmbot status
 const statusBox = document.getElementById('farmbot-status');
+const statusHistory = document.getElementById('status-history');
+const statusContainer = document.getElementById('robot-status-container');
+let isHistoryVisible = false;
 
 const settingsBtn = document.querySelector('.settings-btn');
 const logoutBtn = document.getElementById('logoutBtn');
@@ -283,6 +284,12 @@ canvas.addEventListener('mouseleave', () => {
   coordDisplay.style.display = 'none';
 });
 
+// Handle extension of status box
+statusBox.addEventListener('click', () => {
+  isHistoryVisible = !isHistoryVisible;
+  statusHistory.classList.toggle('hidden', !isHistoryVisible);
+});
+
 // Draw robot
 let robot = { x: 0, y: 0 };
 
@@ -301,6 +308,18 @@ function updateStatus(text) {
   statusBox.textContent = `Status: ${text}`;
 }
 
+// Update status history
+function updateStatusHistory(text) {
+  const timestamp = new Date().toLocaleTimeString();
+  const newStatus = document.createElement('div');
+  const entry = document.createElement('div');
+  entry.textContent = `[${timestamp}] ${text}`;
+  statusHistory.prepend(entry);
+  if (statusHistory.children.length > 10) {
+    statusHistory.removeChild(statusHistory.lastChild);
+  }
+}
+
 // Simulate robot moving
 function updateRobot() {
   updateStatus("Moving...");//change this to actually get status
@@ -314,8 +333,8 @@ function updateRobot() {
 
   //just for testing
   setTimeout(() => {
-    updateStatus("Idle");
-  }, 500);
+    updateStatusHistory("Test");
+  }, 2000);
 }
 
 // Initial draw
@@ -323,4 +342,4 @@ drawGrid();
 //drawRobot();
 
 // Update every 1 second
-setInterval(updateRobot, 1000);
+setInterval(updateRobot, 1000); 
