@@ -1,8 +1,8 @@
 import express from 'express';
+
 import path from 'path';
 import { fileURLToPath } from 'url';
-import SeedingModule  from './models/seedingjob.model.js';
-import  WateringModule from './models/wateringjob.model.js';
+import DatabaseService from './databaseservice.js';
 
 const app = express();
 const PORT = 3000;
@@ -15,52 +15,67 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(__dirname));
 app.use(express.json());
 
-//connect to DB
-const connectionString = 'mongodb://localhost:27017/admin';
-
-// test connection to local database
-mongoose.connect(connectionString)
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('MongoDB connection error:', err));
-
-
 // Serve index.html on root route
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Insert seeding job
-app.post('/api/insertseedingjob', async (req, res) => {
-  const { x, y, plant, depth } = req.body;
-  try {
-    await SeedingModule.InsertSeedingJobToDB(x, y, plant, depth);
-    res.status(200).json({ message: 'Job saved' });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to save job' });
-  }
-});
 
-app.post('/api/insertwateringjob', async (req, res) => {
-  const {plantName,x,y,wateringcapacity} = req.body;
+app.post('/api/insertjob/:jobType', async (req, res) => {
+  const { jobType } = req.params;
+  const object = req.body;
+
   try {
-    await WateringModule.InsertWateringJobToDB(plantName,x,y,wateringcapacity);
+    await DatabaseService.InsertJobToDB(jobType, object);
     res.status(200).json({ message: 'Job saved' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to save job' });
   }
 });
 
 
-// Insert seeding job
-app.post('/api/insertseedingjob', async (req, res) => {
-  const { x, y, plant, depth } = req.body;
+app.get('/api/getjobs/:jobType', async (req, res) => {
+  const { jobType } = req.params;
   try {
-    await dbservice.SaveSeedingJob(x, y, plant, depth);
-    res.status(200).json({ message: 'Job saved' });
+    let jobs;
+    jobs = await DatabaseService.FetchJobsFromDB(jobType);
+    res.status(200).json(jobs);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to save job' });
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch jobs' });
+  }  
+});
+
+
+app.delete('/api/deletejob/:jobtype/:id', async (req, res) => {
+  const {jobtype, id} = req.params;
+  try {
+    await DatabaseService.DeleteJobFromDB(jobtype, id);
+    res.status(200).json({ message: 'Job deleted' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete job' });
   }
 });
+
+// app.delete('/api/deletewateringjob/:id', async (req, res) => {
+//   const {id} = req.params;
+//   try {
+//     await WateringModule.DeleteWateringJobToDB(id);
+//     res.status(200).json({ message: 'Job deleted' });
+//   } catch (err) {
+//     res.status(500).json({ error: 'Failed to delete job' });
+//   }
+// });
+
+// app.get('/api/wateringjobs', async (req,res)=>{
+//     try {
+//     const allwateringjobs = await WateringModule.FetchAllWateringJobs();
+//     res.status(200).json(allwateringjobs);
+//   } catch (err) {
+//     res.status(500).json({ error: 'Failed to fetch jobs' });
+//   }
+// })
 
 
 app.listen(PORT, () => {
