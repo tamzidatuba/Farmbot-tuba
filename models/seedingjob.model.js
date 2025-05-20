@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+
 const seedingJobSchema = new mongoose.Schema({
   xcoordinate: Number,
   ycoordinate: Number,
