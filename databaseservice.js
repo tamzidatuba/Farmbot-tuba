@@ -97,6 +97,4 @@ export default {
     FetchJobsFromDB,
     DeleteJobFromDB,
     JobType,
-    //   findAll,
-    //   model: seedingJob,
 };
