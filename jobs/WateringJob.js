@@ -2,7 +2,7 @@ import { FarmbotStatus } from "../statusManager.js";
 import { Job } from "./Job.js"
 import { MoveTask } from "./tasks/MoveTask.js";
 import { MoveZAxisTask} from "./tasks/MoveZAxisTask.js";
-import { TogglePinTask, VACUUM_PIN, WATER_PIN } from "./tasks/TogglePinTask.js";
+import { WATER_PIN } from "./tasks/TogglePinTask.js";
 import {TimedPinTask} from "./tasks/TimedPinTask.js";
 
 /*

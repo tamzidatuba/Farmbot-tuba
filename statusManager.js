@@ -1,12 +1,12 @@
 const FarmbotStatus = Object.freeze({
-    OFFLINE: 0,
-    READY: 1,
-    MOVING: 2,
-    MOVING_TO_SEEDING_POSITION: 3,
-    MOVING_TO_WATERING_POSITION: 4,
-    FETCHING: 5,
-    SEEDING: 6,
-    WATERING: 7,
+    OFFLINE: "Offline",
+    READY: "Ready",
+    MOVING: "Moving",
+    MOVING_TO_SEEDING_POSITION: "Moving to seeding position",
+    MOVING_TO_WATERING_POSITION: "Moving to watering position",
+    FETCHING: "Fetching",
+    SEEDING: "Seeding",
+    WATERING: "Watering",
     //PAUSED: 8
 });
 

@@ -19,11 +19,12 @@ function waitForFirstStatus(farmbot) {
 await waitForFirstStatus(farmbot);
 console.log("StatusManager Initialized");
 
+/*
 let seedingArgs = {"position": {"x": 100, "y": 100}}
 let seedingJob = new SeedingJob(seedingArgs);
 
 statusManager.startJob(seedingJob);
-
+*/
 let WateringArgs ={"position": {"x": 100, "y": 100,"z": -50}, "duration":10}
 let wateringJob = new WateringJob(WateringArgs);
 
