@@ -16,6 +16,8 @@ const canvasHeight = canvas.height;
 
 var dataList = [];
 
+var plants = [];
+
 // Farm-robot coordinate system
 const coordWidth = 395;
 const coordHeight = 650;
@@ -233,6 +235,9 @@ function drawGrid() {
   }
 
   drawAxesAndLabels();
+  for (const plant in plants) {
+    drawPlant(plant);
+  }
 }
 
 function drawAxesAndLabels() {
@@ -331,6 +336,35 @@ statusBox.addEventListener('click', () => {
   statusHistory.classList.toggle('hidden', !isHistoryVisible);
 });
 
+//add plant
+function addPlant(x, y, type, color) {
+  plants.push({ x, y, type, color });
+}
+
+//draw plants
+function drawPlant(plant) {
+  //ctx.save();
+
+  if (plant.type === 'salad') {
+    ctx.fillStyle = 'green';
+    ctx.strokeStyle = 'green';
+    ctx.beginPath();
+    ctx.arc(x, y, 8, 0, 2 * Math.PI);
+    ctx.fill();
+  } else if (plant.type === 'raddish') {
+    ctx.fillStyle = 'red';
+    ctx.strokeStyle = 'red';
+    ctx.beginPath();
+    ctx.moveTo(x, y - 10);
+    ctx.lineTo(x - 10, y + 8);
+    ctx.lineTo(x + 10, y + 8);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  //ctx.restore();
+}
+
 // Draw robot
 let robot = { x: 0, y: 0 };
 
@@ -401,6 +435,9 @@ function updateRobot() {
   //just for testing
   updateStatusHistory();
 }
+
+addPlant(100, 100, 'salad', 'green');
+addPlant(200, 200, 'raddish', 'red');
 
 // Initial draw
 drawGrid();
