@@ -18,7 +18,7 @@ const SEED_BOWL_SAFETY_HEIGHT = 0;
 
 class WateringJob extends Job {
     constructor(wateringArgs) {
-        super();
+        super(wateringArgs.name);
         this.duration = wateringArgs["duration"];
         this.position = wateringArgs["position"];
 
