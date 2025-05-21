@@ -95,6 +95,54 @@ async function DeleteJobFromDB(jobType, jobname) {
     }
 }
 
+async function UpdateJobToDB(jobType, object) {
+    const now = new Date();
+
+    if (!Object.values(JobType).includes(jobType)) {
+        throw new Error("Invalid job type: " + jobType);
+    }
+
+    let payload = {};
+
+    if (jobType === JobType.SEEDING) {
+        const {jobname, x, y, planttype, depth } = object;
+
+        if (!planttype || isNaN(x) || isNaN(y) || isNaN(depth)) {
+            throw new Error("Invalid seeding job data");
+        }
+
+        payload = {
+            jobname,
+            x,
+            y,
+            planttype,
+            depth,
+        };
+
+        await seedingModule.UpdateSeedingJobToDB(jobname, x, y, planttype, depth);
+    }
+
+    else if (jobType === JobType.WATERING) {
+        const {jobname, plantName, x, y, wateringcapacity } = object;
+
+        if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
+            throw new Error("Invalid watering job data");
+        }
+        payload = {
+            jobname,
+            plantName,
+            x,
+            y,
+            wateringcapacity,
+        };
+
+        await wateringModule.UpdateWateringJobToDB(jobname, plantName, x, y, wateringcapacity);
+    }
+
+    console.log('Job has been updated.');
+}
+
+
 async function InsertNotificationToDB(text) {
     await notificationModel.InsertNotificationToDB(text);
 }
@@ -109,6 +157,7 @@ export default {
     FetchJobsFromDB,
     DeleteJobFromDB,
     JobType,
+    UpdateJobToDB,
     InsertNotificationToDB,
     FetchNotificationsFromDB,
 };

@@ -31,7 +31,7 @@ async function InsertWateringJobToDB(jobname, plantName, x, y, wateringcapacity)
 }
 
 async function DeleteWateringJobFromDB(jobname) {
-  await WaterJobModel.deleteOne({jobname: jobname});
+  await WaterJobModel.deleteOne({"jobname": jobname});
 }
 
 async function FetchAllWateringJobsFromDB() {
@@ -44,8 +44,19 @@ async function FetchAllWateringJobsFromDB() {
   }
 }
 
+
+async function UpdateWateringJobToDB(jobname, plantName, x,y, wateringcapacity) {
+  const now = new Date();
+  await WaterJobModel.findOneAndUpdate( {"jobname": jobname},{plantName: plantName, xcoordinate: x, ycoordinate: y, wateringcapacity: wateringcapacity, date: now});
+  console.log("Job has been updated.");
+  
+}
+
+
+
 export default {
   InsertWateringJobToDB,
   DeleteWateringJobFromDB,
   FetchAllWateringJobsFromDB,
+  UpdateWateringJobToDB,
 };

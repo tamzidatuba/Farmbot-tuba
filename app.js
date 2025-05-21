@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
@@ -57,6 +58,21 @@ app.delete('/api/deletejob/:jobtype/:jobname', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete job' });
   }
 });
+
+
+app.post('/api/updatejob/:jobtype', async (req, res) => {
+  const {jobtype} = req.params;
+  const object = req.body;
+  try {
+    await DatabaseService.UpdateJobToDB(jobtype, object);
+    res.status(200).json({ message: 'Job updated' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update job' });
+  }
+});
+
+
 
 app.get('/api/getnotifications', async (req, res) => {
   try {
