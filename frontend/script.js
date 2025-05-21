@@ -13,6 +13,8 @@ const coordDisplay = document.getElementById('hover-coordinates');
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
+var dataList = [];
+
 // Farm-robot coordinate system
 const coordWidth = 395;
 const coordHeight = 650;
@@ -332,20 +334,40 @@ function updateStatus() {
 }
 
 // Update status history
-function updateStatusHistory(text) {
-  const timestamp = new Date().toLocaleTimeString();
-  const newStatus = document.createElement('div');
-  const entry = document.createElement('div');
-  entry.textContent = `[${timestamp}] ${text}`;
-  statusHistory.prepend(entry);
-  if (statusHistory.children.length > 10) {
-    statusHistory.removeChild(statusHistory.lastChild);
+function updateStatusHistory() {
+  fetch('/api/notifications', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Check if the data has changed
+    if (dataList.toString() != data.toString()) {
+      // Clear the current status history
+      while (statusHistory.children.length > 0) {
+        statusHistory.removeChild(statusHistory.lastChild);
+      }
+      // Add new entries to the status history
+      for (const status in data) {
+        const entry = document.createElement('div');
+        entry.textContent = data[status];
+        statusHistory.prepend(entry);
+      }
+      dataList = data;
+      }
+    })
   }
-}
+  /*
+  fetch('/api/notifications', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    statusHistory = data;
+  })
+  */
 
+  
 // Simulate robot moving
 function updateRobot() {
-  updateStatus("Moving...");//change this to actually get status
+  updateStatus();//change this to actually get status
 
   //robot.x = Math.floor(Math.random() * coordWidth);
   //robot.y = Math.floor(Math.random() * coordHeight);
@@ -355,16 +377,13 @@ function updateRobot() {
   //drawRobot();
 
   //just for testing
-  setTimeout(() => {
-    updateStatusHistory("Test");
-  }, 2000);
-
-  updateStatus();
+  updateStatusHistory();
 }
 
 // Initial draw
 drawGrid();
 //drawRobot();
 
-// Update every 1 second
-setInterval(updateRobot, 1000); 
+// Update every 5 seconds
+setInterval(updateRobot, 5000); 
+

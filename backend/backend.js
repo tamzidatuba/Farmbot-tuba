@@ -3,12 +3,50 @@ import { StatusManager } from "./statusManager.js";
 import {getFarmbot} from './farmbotInitializer.js';
 import { WateringJob } from "../jobs/WateringJob.js";
 import { ScheduleManager } from "./scheduleManager.js";
+import { Queue } from "../jobs/Queue.js";
+
+const JobNotification = Object.freeze({
+    JOB_CREATED: "Job created",
+    JOB_MODIFIED: "Job modified",
+    JOB_DELETED: "Job deleted",
+    JOB_STARTED: "Job started",
+    JOB_FINISHED: "Job finished"
+});
+
 
 class Backend {
   constructor(farmbot, statusManager) {
+    this.user = "Visitor"; // TODO remove
+    this.notification_history = new Array();
+
     this.farmbot = farmbot;
     this.statusManager = statusManager;
+    this.statusManager.backend = this;
     //this.scheduleManager = new ScheduleManager();
+  }
+
+  appendNotification(notification) {
+    // TODO put notification in database
+    let date = new Date();
+    // append date to the end of the string
+    notification += date.getFullYear() +'.'+ date.getMonth() +'.'+ date.getDay() +' '+ date.getHours() +':'+ date.getMinutes() +':'+ date.getSeconds();;
+    this.notification_history.push(notification);
+    while (this.notification_history.length > 10) {
+      this.notification_history.shift();
+    }
+  }
+
+  startJob(job) {
+    this.statusManager.startJob(job);
+    this.appendNotification(
+      "[" + this.user + "] Job " + job.name + " started at "
+    );
+  }
+
+  finishJob(job) {
+    this.appendNotification(
+      "[" + this.user + "] Job " + job.name + " finished at "
+    );
   }
   
 }

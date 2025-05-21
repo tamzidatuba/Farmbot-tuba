@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
 import { initalizeBackend } from './backend/backend.js';
 
+import { WateringJob } from './jobs/WateringJob.js';
+
 const app = express();
 const PORT = 3000;
 
@@ -62,13 +64,27 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
+app.get('/api/notifications', (req, res) => {
+  if (backend_initialized) {
+    res.status(200).json(backend.notification_history);
+  }
+  else {
+    res.status(200).json(new Array());
+  }
+});
+
 app.get('/api/status', (req, res) => {
   if (backend_initialized) {
     res.status(200).json({status: backend.statusManager.status});
   }
   else {
-    res.status(200).json({status: "Initializing"});
+    res.status(200).json({status: "Offline"});
   }
 });
 const backend = await initalizeBackend();
 backend_initialized = true;
+
+let WateringArgs ={name: "MyWateringJob", "position": {"x": 100, "y": 100,"z": -50}, "duration":10}
+let wateringJob = new WateringJob(WateringArgs);
+
+backend.startJob(wateringJob);
