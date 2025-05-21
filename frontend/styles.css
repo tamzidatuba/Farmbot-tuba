@@ -30,24 +30,64 @@ canvas {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
-     
+
     h1 {
       position: center top;
     }
 
-    #farmbot-status {
+    #farmbot-status-container {
       position: fixed;
-      width: 200px;
       top: 20px;
-      right: 150px;
+      right: 15%;
+      width: auto;
+      max-width: 90%;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    #farmbot-status {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 240px;
+      height: 50px;
       background-color: #4caf50;
       color: white;
       border: none;
-      padding: 10px 15px;
       border-radius: 5px;
       cursor: pointer;
       text-align: center;
+      margin-bottom: 10px;
+      pointer-events: auto;
+      text-align: center;
     }
+
+    #status-history {
+      position: absolute;
+      width: 400px;
+      top: 100%;
+      background-color: #4caf50;
+      border: none;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-size: 14px;
+      color: #333;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #status-history.hidden {
+      display: none;
+    }
+
 
 
 body {
@@ -287,9 +327,10 @@ transition: background-color 0.2s;
 background-color: #ffcdd2;
 }
 
+
 .logout-btn {
   position: absolute;
-  top: 60px; /* slightly below settings button */
+  top: 60px;
   right: 20px;
   background-color: #e53935;
   color: white;
@@ -300,7 +341,7 @@ background-color: #ffcdd2;
   display: none; 
   transition: background 0.3s;
   z-index: 10;
-  display: inline-block; /* ensures it only takes up necessary space */
+  display: inline-block; 
   width: auto;
 }
 

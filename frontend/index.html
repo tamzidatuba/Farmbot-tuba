@@ -15,7 +15,8 @@
   <div class="modal-content">
     <span class="close" id="closeModal">&times;</span>
     <h2>Create Seeding Jobs</h2>
-
+    <input type="text" id="SeedingJobName" placeholder="Enter job name" />
+    <div id="jobNameError" class="errorMsg"></div>
     <div id="jobContainer"></div>
 
     <button id="addPlantBtn">+ Add Plant</button>
@@ -93,11 +94,14 @@
       <canvas id="gridCanvas" width="790" height="650"></canvas>
     </div>
     <div id="hover-coordinates"></div>
-    <div id="farmbot-status">Status: Initializing...</div> <!-- Robot status -->
+     <div id="farmbot-status-container">
+      <div id="farmbot-status">Status: Initializing...</div> <!-- Robot status -->
+      <div id="status-history" class="hidden"></div> <!-- notification history-->
+    </div>
   </div>
 
   
 
-  <script src="./script.js"></script>
+  <script type="module" src="./script.js"></script>
 </body>
 </html>

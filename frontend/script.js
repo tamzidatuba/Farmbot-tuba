@@ -4,6 +4,7 @@ const arrow = document.getElementById('arrow');
 const modal = document.getElementById('seedingModal');
 const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
+const jobNameError = document.getElementById('jobNameError');
 
 
 
@@ -41,11 +42,17 @@ const majorTickY = 100;
 
 //farmbot status
 const statusBox = document.getElementById('farmbot-status');
+const statusHistory = document.getElementById('status-history');
+const statusContainer = document.getElementById('robot-status-container');
+let isHistoryVisible = false;
+
+
 const settingsBtn = document.querySelector('.settings-btn');
 const logoutBtn = document.getElementById('logoutBtn');
 const loginBtn = document.getElementById('loginBtn');
 const loginModal = document.getElementById('loginModal');
 const closeLoginModal = document.getElementById('closeLoginModal');
+
 
 settingsBtn.addEventListener('click', () => {
   // Toggle logout button visibility
@@ -53,10 +60,6 @@ settingsBtn.addEventListener('click', () => {
   loginBtn.style.display = loginBtn.style.display === 'block' ? 'none' : 'block';
 });
 
-logoutBtn.addEventListener('click', () => {
-  // Redirect or clear session
-  alert('Logging out...');
-});
 
 toggle.addEventListener('click', () => {
   const isVisible = subtask.style.display === 'block';
@@ -131,11 +134,15 @@ seedingJobBtn.addEventListener('click', () => {
 
 closeModal.addEventListener('click', () => {
   modal.style.display = 'none';
+  document.getElementById('SeedingJobName').value = '';
+  document.getElementById('jobNameError').textContent = '';
 });
 
 window.addEventListener('click', (e) => {
   if (e.target === modal) {
     modal.style.display = 'none';
+    document.getElementById('SeedingJobName').value = '';
+    document.getElementById('jobNameError').textContent = '';
   }
 });
 
@@ -193,13 +200,13 @@ addPlantBtn.addEventListener('click', () => {
   createJobRow();
 });
 
-executeBtn.addEventListener('click', () => {
+executeBtn.addEventListener('click', async () => {
   const jobRows = document.querySelectorAll('.job-row');
   const results = [];
   let isValid = true;
   const seenCoordinates = new Set();
 
-  jobRows.forEach(row => {
+  for (const row of jobRows) {
     const plant = row.querySelector('.plantType').value;
     const x = Number(row.querySelector('.xCoord').value);
     const y = Number(row.querySelector('.yCoord').value);
@@ -220,23 +227,52 @@ executeBtn.addEventListener('click', () => {
       seenCoordinates.add(coordKey);
       results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
     }
-  });
+    results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
+
+      try {
+        var obj= {
+        x: x,
+        y: y,
+        planttype: plant,
+        depth: depth
+        };
+        await InsertSeedingJob(x, y, plant, depth);
+      } catch (error) {
+        errorMsg.textContent = 'Failed to save job.';
+        console.error(error);
+        isValid = false;
+      }
+    }
+
+    const input = document.getElementById("SeedingJobName").value.trim(); // Get the latest value
+    jobNameError.textContent = ''; // Clear old error
+    const regex = /^[a-zA-Z0-9 ]*$/;
+
+    if (!regex.test(input)) {
+      jobNameError.textContent = 'Special characters are not allowed in the job name.';
+      isValid = false;
+    }
 
   if (!isValid) return;
 
+  if (jobCount !== 0 && Array.isArray(results) && results.length > 0) {
+    alert("Seeding Jobs Created:\n\n" + results.join("\n"));
+  } else {
+    alert("Seeding Job Task Empty");
+  }
   alert("Seeding Jobs Created:\n\n" + results.join("\n"));
   jobContainer.innerHTML = '';
   jobCount = 0;
   modal.style.display = 'none';
 });
 
-async function saveJobToServer(x, y, plant, depth) {
-  const response = await fetch('/api/seeding-job', {
+async function InsertSeedingJob(x, y, plant, depth) {
+  const response = await fetch('/api/insertjob/Seeding', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ x, y, plant, depth })
+    body: JSON.stringify({ x, y, planttype: plant, depth })
   });
 
   const result = await response.json();
@@ -410,21 +446,53 @@ function drawRobot() {
   ctx.stroke();
 }
 
+
 // Update status box
-function updateStatus(text) {
-  statusBox.textContent = `Status: ${text}`;
+function updateStatus() {
+  fetch('/api/status', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    statusBox.textContent = 'Status: ' + data.status;
+  })
 }
+
+// Update status history
+function updateStatusHistory() {
+  fetch('/api/notifications', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Check if the data has changed
+    if (dataList.toString() != data.toString()) {
+      // Clear the current status history
+      while (statusHistory.children.length > 0) {
+        statusHistory.removeChild(statusHistory.lastChild);
+      }
+      // Add new entries to the status history
+      for (const status in data) {
+        const entry = document.createElement('div');
+        entry.textContent = data[status];
+        statusHistory.prepend(entry);
+      }
+      dataList = data;
+      }
+    })
+  }
+
 
 // Simulate robot moving
 function updateRobot() {
-  updateStatus("Moving...");//change this to actually get status
+  updateStatus();//change this to actually get status
 
   //robot.x = Math.floor(Math.random() * coordWidth);
   //robot.y = Math.floor(Math.random() * coordHeight);
-
+  console.log("Update");
   clearCanvas();
   drawGrid();
   //drawRobot();
+
+  updateStatusHistory();
 
   //just for testing
   setTimeout(() => {
@@ -440,7 +508,7 @@ drawGrid();
 //drawRobot();
 
 // Update every 1 second
-setInterval(updateRobot, 1000);
+setInterval(updateRobot, 2500);
 
 
 
