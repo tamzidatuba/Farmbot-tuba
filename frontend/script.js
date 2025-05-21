@@ -360,15 +360,13 @@ function updateRobot() {
   //drawRobot();
 
   //just for testing
-  setTimeout(() => {
-    updateStatusHistory();
-  }, 2000);
+  updateStatusHistory();
 }
 
 // Initial draw
 drawGrid();
 //drawRobot();
 
-// Update every 1 second
-setInterval(updateRobot, 1000); 
+// Update every 5 seconds
+setInterval(updateRobot, 5000); 
 
