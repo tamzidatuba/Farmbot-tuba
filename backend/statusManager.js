@@ -24,6 +24,7 @@ class StatusManager {
         this._newStatusRecieved = this._newStatusRecieved.bind(this);
 
         // TODO handle unsubscribe
+        /*
         farmbot.on("offline",
             function(data, eventName) {
                 this.status = FarmbotStatus.OFFLINE;
@@ -43,6 +44,7 @@ class StatusManager {
                 console.log("Bot:", data);
             }
         )
+        */
 
         farmbot.on("status",
             this._newStatusRecieved
