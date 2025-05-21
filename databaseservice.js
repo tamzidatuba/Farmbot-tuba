@@ -16,8 +16,8 @@ const JobType = Object.freeze({
     WATERING: 'Watering',
 });
 
-const PlantRadii ={
-    lettuce : 15,
+const PlantRadii = {
+    lettuce: 15,
     tomato: 10,
     carrot: 5,
 }
@@ -32,22 +32,20 @@ async function InsertJobToDB(jobType, object) {
     let payload = {};
 
     if (jobType === JobType.SEEDING) {
-        const {jobname, plants } = object;
+        const { jobname, seeds } = object;
 
-        let result = await seedingModule.InsertSeedingJobToDB(jobname, plants);
+        let result = await seedingModule.InsertSeedingJobToDB(jobname, seeds);
 
-        if( result)
-        {
-             return true;
-
+        if (result) {
+            return true;
         }
-       else{
-        return false;
-       }
+        else {
+            return false;
+        }
     }
 
     else if (jobType === JobType.WATERING) {
-        const {jobname, plantName, x, y, wateringcapacity } = object;
+        const { jobname, plantName, x, y, wateringcapacity } = object;
 
         if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
             throw new Error("Invalid watering job data");
@@ -87,7 +85,7 @@ async function DeleteJobFromDB(jobType, jobname) {
         throw new Error("Invalid job type: " + jobType);
     }
 
-    if(!jobname) {
+    if (!jobname) {
         throw new Error("Invalid job Name: " + jobname);
     }
 
@@ -108,12 +106,12 @@ async function UpdateJobToDB(jobType, object) {
     let payload = {};
 
     if (jobType === JobType.SEEDING) {
-        const {jobname, plants } = object;
-        await seedingModule.UpdateSeedingJobToDB(jobname, plants);
+        const { jobname, seeds } = object;
+        await seedingModule.UpdateSeedingJobToDB(jobname, seeds);
     }
 
     else if (jobType === JobType.WATERING) {
-        const {jobname, plantName, x, y, wateringcapacity } = object;
+        const { jobname, plantName, x, y, wateringcapacity } = object;
 
         if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
             throw new Error("Invalid watering job data");
@@ -152,7 +150,6 @@ export default {
     FetchNotificationsFromDB,
 };
 
-function GetDistance(x1, y1, x2, y2)
-{
-    return Math.sqrt(Math.pow((x1-x2),2)+ Math.pow((y1-y2),2));
+function GetDistance(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
 }

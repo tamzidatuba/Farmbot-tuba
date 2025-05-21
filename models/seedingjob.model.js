@@ -3,17 +3,17 @@ import mongoose from 'mongoose';
 const seedingJobSchema = new mongoose.Schema({
   jobname: String,
   createdat: Date,
-  plants: [{
+  seeds: [{
     xcoordinate: Number,
     ycoordinate: Number,
     depth: Number,
-    planttype: String,
+    seedtype: String,
   }],
 });
 
 const seedingJobModel = mongoose.model('seedingjob', seedingJobSchema);
 
-async function InsertSeedingJobToDB(jobname, plants) {
+async function InsertSeedingJobToDB(jobname, seeds) {
   const now = new Date();
   let existingjob = await seedingJobModel.findOne({"jobname":jobname});
   if (existingjob)
@@ -22,7 +22,7 @@ async function InsertSeedingJobToDB(jobname, plants) {
   }
   else
   {
-  await seedingJobModel.create({ jobname: jobname, createdat: now, plants: plants });
+  await seedingJobModel.create({ jobname: jobname, createdat: now, seeds: seeds });
   console.log('Job has been inserted');
   return true;
   }
@@ -35,12 +35,12 @@ async function FetchSeedingJobsFromDB() {
 }
 
 async function DeleteSeedingJobFromDB(jobname) {
-  await seedingJobModel.deleteOne({ " jobname": jobname });
+  await seedingJobModel.deleteOne({ "jobname": jobname });
 }
 
 async function UpdateSeedingJobToDB(jobname, plants) {
   const now = new Date();
-  await seedingJobModel.findOneAndUpdate({ "jobname": jobname }, { jobname: jobname, createdat: now, plants: plants });
+  await seedingJobModel.findOneAndUpdate({ "jobname": jobname }, { jobname: jobname, createdat: now, seeds: seeds });
   console.log("Job has been updated.");
 
 }
