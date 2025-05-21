@@ -1,9 +1,7 @@
-import {SeedingJob} from "../jobs/SeedingJob.js";
 import { StatusManager } from "./statusManager.js";
 import {getFarmbot} from './farmbotInitializer.js';
-import { WateringJob } from "../jobs/WateringJob.js";
 import { ScheduleManager } from "./scheduleManager.js";
-import { Queue } from "../jobs/Queue.js";
+import DatabaseService from '../databaseservice.js';
 
 const JobNotification = Object.freeze({
     JOB_CREATED: "Job created",
@@ -29,26 +27,48 @@ class Backend {
     // TODO put notification in database
     let date = new Date();
     // append date to the end of the string
-    notification += date.getFullYear() +'.'+ date.getMonth() +'.'+ date.getDay() +' '+ date.getHours() +':'+ date.getMinutes() +':'+ date.getSeconds();;
+    notification += date.getDay() +'.'+ date.getMonth() +'.'+ date.getFullYear() +' '+ date.getHours() +':'+ date.getMinutes() +':'+ date.getSeconds();;
     this.notification_history.push(notification);
     while (this.notification_history.length > 10) {
       this.notification_history.shift();
     }
   }
 
-  startJob(job) {
-    this.statusManager.startJob(job);
-    this.appendNotification(
-      "[" + this.user + "] Job " + job.name + " started at "
-    );
+  async startJob(job_id, res) {
+    if (this.statusManager.runningJob) {
+      return res.status(500).json({ error: "There is already a job running"})
+    }
+    try {
+      // TODO wait for get-job method
+      let job = await Databaseservice.getJob(job_id);
+      appendNotification("Job " + job.name + " started at ");
+      this.statusManager.startJob(job);
+      res.status(200).json({ message: 'Job started' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Failed to start job' });
+    }
   }
 
-  finishJob(job) {
-    this.appendNotification(
-      "[" + this.user + "] Job " + job.name + " finished at "
-    );
+  pauseJob() {
+    if (this.statusManager.runningJob && !this.statusManager.isPaused) {
+      this.statusManager.pauseJob()
+      res.status(200).json({ message: 'Paused a running job' });
+    } else {
+      res.status(500).json({ error: 'There is no job currently running' });
+    }
   }
-  
+
+  continueJob() {
+    if (this.statusManager.runningJob && this.statusManager.isPaused) {
+      this.statusManager.continueJob()
+      res.status(200).json({ message: 'Resumed a paused job' });
+    } else {
+      res.status(500).json({ error: 'There is no job currently paused' });
+    }
+  }
+
+
 }
 
 // Method necessary to get the current state of the farmbot. Awaits the status-callback

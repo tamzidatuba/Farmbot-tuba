@@ -16,6 +16,7 @@ class StatusManager {
     constructor(farmbot) {
         this.backend;
         this.runningJob = false;
+        this.isPaused = false;
         this.farmbot = farmbot;
         this.status = FarmbotStatus.OFFLINE;
         this.currentTask;
@@ -63,7 +64,7 @@ class StatusManager {
             this.status = FarmbotStatus.READY;
             this.runningJob = false
             console.log("Finished a Job");
-            this.backend.finishJob(this.currentJob);
+            this.backend.appendNotification("Job " + this.currentJob.name + " finished at ");
         } else {
             // Starting the next Task
             this.currentTask = this.currentJob.getNextTask();
@@ -90,10 +91,12 @@ class StatusManager {
 
     pauseJob() {
         //this.status = FarmbotStatus.PAUSED;
+        this.isPaused = true;
         this.currentTask.pauseTask(farmbot);
     }
 
     continueJob() {
+        this.isPaused = false;
         this.status = this.currentTask.status;
         this.currentTask.continueTask();
     }

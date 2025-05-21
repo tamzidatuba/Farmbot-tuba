@@ -24,12 +24,15 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend//index.html'));
 });
 
+
+// insert job
 app.post('/api/insertjob/:jobType', async (req, res) => {
   const { jobType } = req.params;
   const object = req.body;
 
   try {
     await DatabaseService.InsertJobToDB(jobType, object);
+    backend.appendNotification("Job " + object.name + " saved at ");
     res.status(200).json({ message: 'Job saved' });
   } catch (err) {
     console.error(err);
@@ -37,6 +40,8 @@ app.post('/api/insertjob/:jobType', async (req, res) => {
   }
 });
 
+
+// get jobs of type jobType
 app.get('/api/getjobs/:jobType', async (req, res) => {
   const { jobType } = req.params;
   try {
@@ -49,15 +54,48 @@ app.get('/api/getjobs/:jobType', async (req, res) => {
   }  
 });
 
-
+// delete job with id
 app.delete('/api/deletejob/:jobtype/:id', async (req, res) => {
   const {jobtype, id} = req.params;
   try {
     await DatabaseService.DeleteJobFromDB(jobtype, id);
+    backend.appendNotification("Job " + id + " deleted at ");
     res.status(200).json({ message: 'Job deleted' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete job' });
   }
+});
+
+// modify job with id
+app.post('/api/modifyjob/:id', async (req, res) => {
+  const { id } = req.params;
+  const object = req.body;
+
+  try {
+    // TODO modify entry in DB
+    //await DatabaseService.InsertJobToDB(jobType, object);
+    backend.appendNotification("Job " + object.name + " modified at ");
+    res.status(200).json({ message: 'Job modified' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to modify job' });
+  }
+});
+
+//start job
+app.post('/api/startjob/:id', async (req, res) => {
+  const { id } = req.params;
+  backend.startJob(id, res);
+});
+
+//pause job
+app.post('/api/pausejob', async (req, res) => {
+  backend.pauseJob(res);
+});
+
+//resume job
+app.post('/api/resumejob', async (req, res) => {
+  backend.continueJob(res);
 });
 
 app.listen(PORT, () => {
@@ -87,4 +125,4 @@ backend_initialized = true;
 let WateringArgs ={name: "MyWateringJob", "position": {"x": 100, "y": 100,"z": -50}, "duration":10}
 let wateringJob = new WateringJob(WateringArgs);
 
-backend.startJob(wateringJob);
+backend.statusManager.startJob(wateringJob);
