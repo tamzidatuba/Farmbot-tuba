@@ -19,6 +19,17 @@ var dataList = [];
 
 var plants = [];
 
+
+//plant class
+class Plant {
+  constructor(x, y, type) {
+    this.x = x;
+    this.y = y;
+    this.type = type;
+  }
+}
+
+
 // Farm-robot coordinate system
 const coordWidth = 395;
 const coordHeight = 650;
