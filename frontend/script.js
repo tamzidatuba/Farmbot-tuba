@@ -315,20 +315,33 @@ function updateStatus() {
 }
 
 // Update status history
-function updateStatusHistory(text) {
-  const timestamp = new Date().toLocaleTimeString();
-  const newStatus = document.createElement('div');
-  const entry = document.createElement('div');
-  entry.textContent = `[${timestamp}] ${text}`;
-  statusHistory.prepend(entry);
-  if (statusHistory.children.length > 10) {
+function updateStatusHistory() {
+  fetch('/api/notifications', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    for (const status in data) {
+      const entry = document.createElement('div');
+      entry.textContent = data[status];
+      statusHistory.prepend(entry);
+    }
+  })
+  while(statusHistory.childNodes.length > 2) {
     statusHistory.removeChild(statusHistory.lastChild);
-  }
+  } 
+  /*
+  fetch('/api/notifications', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    statusHistory = data;
+  })
+  */
 }
 
 // Simulate robot moving
 function updateRobot() {
-  updateStatus("Moving...");//change this to actually get status
+  updateStatus();//change this to actually get status
 
   //robot.x = Math.floor(Math.random() * coordWidth);
   //robot.y = Math.floor(Math.random() * coordHeight);
@@ -339,10 +352,8 @@ function updateRobot() {
 
   //just for testing
   setTimeout(() => {
-    updateStatusHistory("Test");
+    updateStatusHistory();
   }, 2000);
-
-  updateStatus();
 }
 
 // Initial draw
@@ -351,3 +362,4 @@ drawGrid();
 
 // Update every 1 second
 setInterval(updateRobot, 1000); 
+
