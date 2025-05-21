@@ -42,7 +42,7 @@ app.get('/api/notifications', (req, res) => {
     res.status(200).json(backend.notification_array);
   }
   else {
-    res.status(200).json({});
+    res.status(200).json(new Array());
   }
 });
 
