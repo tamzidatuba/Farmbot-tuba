@@ -13,8 +13,8 @@ const FarmbotStatus = Object.freeze({
 
 class StatusManager {
 
-    constructor(farmbot, backend) {
-        this.backend = backend;
+    constructor(farmbot) {
+        this.backend;
         this.runningJob = false;
         this.farmbot = farmbot;
         this.status = FarmbotStatus.OFFLINE;

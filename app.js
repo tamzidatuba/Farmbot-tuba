@@ -39,7 +39,7 @@ app.listen(PORT, () => {
 
 app.get('/api/notifications', (req, res) => {
   if (backend_initialized) {
-    res.status(200).json(backend.notification_array);
+    res.status(200).json(backend.notification_history);
   }
   else {
     res.status(200).json(new Array());
@@ -57,7 +57,7 @@ app.get('/api/status', (req, res) => {
 const backend = await initalizeBackend();
 backend_initialized = true;
 
-let WateringArgs ={"position": {"x": 100, "y": 100,"z": -50}, "duration":10}
+let WateringArgs ={name: "MyWateringJob", "position": {"x": 100, "y": 100,"z": -50}, "duration":10}
 let wateringJob = new WateringJob(WateringArgs);
 
 backend.startJob(wateringJob);
