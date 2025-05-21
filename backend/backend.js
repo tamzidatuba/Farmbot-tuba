@@ -20,7 +20,7 @@ class Backend {
     this.farmbot = farmbot;
     this.statusManager = statusManager;
     this.statusManager.backend = this;
-    //this.scheduleManager = new ScheduleManager();
+    this.scheduleManager = new ScheduleManager();
   }
 
   appendNotification(notification) {
@@ -34,20 +34,39 @@ class Backend {
     }
   }
 
-  async startJob(job_id, res) {
-    if (this.statusManager.runningJob) {
-      return res.status(500).json({ error: "There is already a job running"})
-    }
+  async queueJob(job_id, res) {
     try {
       // TODO wait for get-job method
-      let job = await Databaseservice.getJob(job_id);
-      appendNotification("Job " + job.name + " started at ");
-      this.statusManager.startJob(job);
-      res.status(200).json({ message: 'Job started' });
+      let job = await DatabaseService.getJob(job_id);
+      this.scheduleManager.appendJob(job);
+      this.checkForNextJob();
+      res.status(200).json({ message: 'Job queued' });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ error: 'Failed to start job' });
+      res.status(500).json({ error: 'Failed to queue job' });
     }
+  }
+
+  finishJob() {
+    console.log("Finished a Job");
+    this.appendNotification("Job " + this.statusManager.currentJob.name + " finished at ");
+    this.checkForNextJob()
+  }
+
+  checkForNextJob() {
+    if (this.statusManager.runningJob) {
+      return false
+    }
+    if (this.scheduleManager.isJobScheduled()) {
+      let nextJob = this.scheduleManager.getScheduledJob();
+      if ("nextExecution" in nextJob) {
+        this.scheduleManager.calculateNextSchedule(nextJob);
+      }
+      this.statusManager.startJob(nextJob);
+      this.appendNotification("Job " + nextJob.name + " started at ");
+      return true
+    }
+    return false
   }
 
   pauseJob() {

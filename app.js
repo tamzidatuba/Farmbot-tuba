@@ -85,7 +85,7 @@ app.post('/api/modifyjob/:id', async (req, res) => {
 //start job
 app.post('/api/startjob/:id', async (req, res) => {
   const { id } = req.params;
-  backend.startJob(id, res);
+  backend.queueJob(id, res);
 });
 
 //pause job
@@ -122,7 +122,9 @@ app.get('/api/status', (req, res) => {
 const backend = await initalizeBackend();
 backend_initialized = true;
 
+// TODO delete
 let WateringArgs ={name: "MyWateringJob", "position": {"x": 100, "y": 100,"z": -50}, "duration":10}
 let wateringJob = new WateringJob(WateringArgs);
 
-backend.statusManager.startJob(wateringJob);
+backend.scheduleManager.appendScheduledJob(wateringJob);
+backend.checkForNextJob();

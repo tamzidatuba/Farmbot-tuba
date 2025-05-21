@@ -63,8 +63,7 @@ class StatusManager {
         if (this.currentJob.isJobCompleted()) { // Check if Job is completed
             this.status = FarmbotStatus.READY;
             this.runningJob = false
-            console.log("Finished a Job");
-            this.backend.appendNotification("Job " + this.currentJob.name + " finished at ");
+            this.backend.finishJob();
         } else {
             // Starting the next Task
             this.currentTask = this.currentJob.getNextTask();
