@@ -4,7 +4,8 @@ const arrow = document.getElementById('arrow');
 const modal = document.getElementById('seedingModal');
 const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
-const jobNameError = document.getElementById('jobNameError');
+
+
 
 //grid ids
 const canvas = document.getElementById('gridCanvas');
@@ -13,8 +14,6 @@ const coordDisplay = document.getElementById('hover-coordinates');
 
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
-
-var dataList = [];
 
 // Farm-robot coordinate system
 const coordWidth = 395;
@@ -27,15 +26,16 @@ const majorTickY = 100;
 
 //farmbot status
 const statusBox = document.getElementById('farmbot-status');
-const statusHistory = document.getElementById('status-history');
-const statusContainer = document.getElementById('robot-status-container');
-let isHistoryVisible = false;
-
 const settingsBtn = document.querySelector('.settings-btn');
 const logoutBtn = document.getElementById('logoutBtn');
+const loginBtn = document.getElementById('loginBtn');
+const loginModal = document.getElementById('loginModal');
+const closeLoginModal = document.getElementById('closeLoginModal');
+
 settingsBtn.addEventListener('click', () => {
   // Toggle logout button visibility
   logoutBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
+  loginBtn.style.display = loginBtn.style.display === 'block' ? 'none' : 'block';
 });
 
 logoutBtn.addEventListener('click', () => {
@@ -49,21 +49,78 @@ toggle.addEventListener('click', () => {
   arrow.classList.toggle('open', !isVisible);
 });
 
+
+  settingsBtn.addEventListener('click', () => {
+  // Toggle logout button visibility
+  loginBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
+});
+
+
+
+loginBtn.addEventListener('click', () => {
+  loginModal.style.display = 'block';
+});
+
+closeLoginModal.addEventListener('click', () => {
+  loginModal.style.display = 'none';
+});
+
+const form = document.getElementById('loginForm');
+    form.addEventListener('submit', function(e) {
+      let valid = true;
+      const username = document.getElementById('username');
+      const password = document.getElementById('password');
+      const usernameError = document.getElementById('usernameError');
+      const passwordError = document.getElementById('passwordError');
+
+      usernameError.textContent = '';
+      passwordError.textContent = '';
+
+      if (username.value.trim() === '') {
+        usernameError.textContent = 'Username is required.';
+        valid = false;
+      } else if (username.value.trim().length < 3) {
+        usernameError.textContent = 'Username must be at least 3 characters.';
+        valid = false;
+      }
+
+      if (password.value.trim() === '') {
+        passwordError.textContent = 'Password is required.';
+        valid = false;
+      } else if (password.value.trim().length < 6) {
+        passwordError.textContent = 'Password must be at least 6 characters.';
+        valid = false;
+      }
+
+      if (!valid) e.preventDefault();
+    });
+// Optional: Close on background click
+window.addEventListener('click', (e) => {
+  if (e.target === loginModal) {
+    loginModal.style.display = 'none';
+  }
+});
+
+
+
+
+toggle.addEventListener('click', () => {
+  const isVisible = subtask.style.display === 'block';
+  subtask.style.display = isVisible ? 'none' : 'block';
+  arrow.classList.toggle('open', !isVisible);
+});
+
 seedingJobBtn.addEventListener('click', () => {
   modal.style.display = 'block';
 });
 
 closeModal.addEventListener('click', () => {
   modal.style.display = 'none';
-  document.getElementById('SeedingJobName').value = '';
-  document.getElementById('jobNameError').textContent = '';
 });
 
 window.addEventListener('click', (e) => {
   if (e.target === modal) {
     modal.style.display = 'none';
-    document.getElementById('SeedingJobName').value = '';
-    document.getElementById('jobNameError').textContent = '';
   }
 });
 
@@ -121,13 +178,13 @@ addPlantBtn.addEventListener('click', () => {
   createJobRow();
 });
 
-executeBtn.addEventListener('click', async () => {
+executeBtn.addEventListener('click', () => {
   const jobRows = document.querySelectorAll('.job-row');
   const results = [];
   let isValid = true;
   const seenCoordinates = new Set();
 
-  for (const row of jobRows) {
+  jobRows.forEach(row => {
     const plant = row.querySelector('.plantType').value;
     const x = Number(row.querySelector('.xCoord').value);
     const y = Number(row.querySelector('.yCoord').value);
@@ -148,42 +205,9 @@ executeBtn.addEventListener('click', async () => {
       seenCoordinates.add(coordKey);
       results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
     }
-    
-    results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
-
-    try {
-      var obj= {
-      x: x,
-      y: y,
-      planttype: plant,
-      depth: depth
-      };
-      await InsertSeedingJob(x, y, plant, depth);
-    } catch (error) {
-      errorMsg.textContent = 'Failed to save job.';
-      console.error(error);
-      isValid = false;
-    }
-  }
-
-  const input = document.getElementById("SeedingJobName").value.trim(); // Get the latest value
-  jobNameError.textContent = ''; // Clear old error
-  const regex = /^[a-zA-Z0-9 ]*$/;
-
-  if (!regex.test(input)) {
-    jobNameError.textContent = 'Special characters are not allowed in the job name.';
-    isValid = false;
-  }
-
+  });
 
   if (!isValid) return;
-
-  if (jobCount !== 0 && Array.isArray(results) && results.length > 0) {
-    alert("Seeding Jobs Created:\n\n" + results.join("\n"));
-  } else {
-    alert("Seeding Job Task Empty");
-  }
-  
 
   alert("Seeding Jobs Created:\n\n" + results.join("\n"));
   jobContainer.innerHTML = '';
@@ -191,14 +215,13 @@ executeBtn.addEventListener('click', async () => {
   modal.style.display = 'none';
 });
 
-
-async function InsertSeedingJob(x, y, plant, depth) {
-  const response = await fetch('/api/insertjob/Seeding', {
+async function saveJobToServer(x, y, plant, depth) {
+  const response = await fetch('/api/seeding-job', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ x, y, planttype: plant, depth })
+    body: JSON.stringify({ x, y, plant, depth })
   });
 
   const result = await response.json();
@@ -325,12 +348,6 @@ canvas.addEventListener('mouseleave', () => {
   coordDisplay.style.display = 'none';
 });
 
-// Handle extension of status box
-statusBox.addEventListener('click', () => {
-  isHistoryVisible = !isHistoryVisible;
-  statusHistory.classList.toggle('hidden', !isHistoryVisible);
-});
-
 // Draw robot
 let robot = { x: 0, y: 0 };
 
@@ -345,51 +362,13 @@ function drawRobot() {
 }
 
 // Update status box
-function updateStatus() {
-  fetch('/api/status', {method: 'GET',
-  })
-  .then(response => response.json())
-  .then(data => {
-    statusBox.textContent = 'Status: ' + data.status;
-  })
-  //statusBox.textContent = `Status: ${text}`;
+function updateStatus(text) {
+  statusBox.textContent = `Status: ${text}`;
 }
 
-// Update status history
-function updateStatusHistory() {
-  fetch('/api/notifications', {method: 'GET',
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Check if the data has changed
-    if (dataList.toString() != data.toString()) {
-      // Clear the current status history
-      while (statusHistory.children.length > 0) {
-        statusHistory.removeChild(statusHistory.lastChild);
-      }
-      // Add new entries to the status history
-      for (const status in data) {
-        const entry = document.createElement('div');
-        entry.textContent = data[status];
-        statusHistory.prepend(entry);
-      }
-      dataList = data;
-      }
-    })
-  }
-  /*
-  fetch('/api/notifications', {method: 'GET',
-  })
-  .then(response => response.json())
-  .then(data => {
-    statusHistory = data;
-  })
-  */
-
-  
 // Simulate robot moving
 function updateRobot() {
-  updateStatus();//change this to actually get status
+  updateStatus("Moving...");//change this to actually get status
 
   //robot.x = Math.floor(Math.random() * coordWidth);
   //robot.y = Math.floor(Math.random() * coordHeight);
@@ -399,13 +378,18 @@ function updateRobot() {
   //drawRobot();
 
   //just for testing
-  updateStatusHistory();
+  setTimeout(() => {
+    updateStatus("Idle");
+  }, 500);
 }
 
 // Initial draw
 drawGrid();
 //drawRobot();
 
-// Update every 5 seconds
-setInterval(updateRobot, 5000); 
+// Update every 1 second
+setInterval(updateRobot, 1000);
+
+
+
 
