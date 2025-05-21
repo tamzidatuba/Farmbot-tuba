@@ -35,6 +35,16 @@ let isHistoryVisible = false;
 
 const settingsBtn = document.querySelector('.settings-btn');
 const logoutBtn = document.getElementById('logoutBtn');
+
+//plant class
+class Plant {
+  constructor(x, y, type) {
+    this.x = x;
+    this.y = y;
+    this.type = type;
+  }
+}
+
 settingsBtn.addEventListener('click', () => {
   // Toggle logout button visibility
   logoutBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
@@ -236,7 +246,7 @@ function drawGrid() {
 
   drawAxesAndLabels();
   for (const plant in plants) {
-    drawPlant(plant);
+    drawPlant(plants[plant]);
   }
 }
 
@@ -336,28 +346,24 @@ statusBox.addEventListener('click', () => {
   statusHistory.classList.toggle('hidden', !isHistoryVisible);
 });
 
-//add plant
-function addPlant(x, y, type, color) {
-  plants.push({ x, y, type, color });
-}
-
 //draw plants
 function drawPlant(plant) {
   //ctx.save();
+  const coord = coordToPixel(plant.x, plant.y);
 
-  if (plant.type === 'salad') {
+  if (plant.type == 'salad') {
     ctx.fillStyle = 'green';
     ctx.strokeStyle = 'green';
     ctx.beginPath();
-    ctx.arc(x, y, 8, 0, 2 * Math.PI);
+    ctx.arc(coord.x, coord.y, 8, 0, 2 * Math.PI);
     ctx.fill();
-  } else if (plant.type === 'raddish') {
+  } else if (plant.type == 'raddish') {
     ctx.fillStyle = 'red';
     ctx.strokeStyle = 'red';
     ctx.beginPath();
-    ctx.moveTo(x, y - 10);
-    ctx.lineTo(x - 10, y + 8);
-    ctx.lineTo(x + 10, y + 8);
+    ctx.moveTo(coord.x, coord.y - 10);
+    ctx.lineTo(coord.x - 10, coord.y + 8);
+    ctx.lineTo(coord.x + 10, coord.y + 8);
     ctx.closePath();
     ctx.fill();
   }
@@ -436,8 +442,8 @@ function updateRobot() {
   updateStatusHistory();
 }
 
-addPlant(100, 100, 'salad', 'green');
-addPlant(200, 200, 'raddish', 'red');
+plants.push(new Plant(100, 100, 'salad'));
+plants.push(new Plant(200, 200, 'raddish'));
 
 // Initial draw
 drawGrid();
