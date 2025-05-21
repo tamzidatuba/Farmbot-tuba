@@ -4,6 +4,7 @@ const arrow = document.getElementById('arrow');
 const modal = document.getElementById('seedingModal');
 const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
+const jobNameError = document.getElementById('jobNameError');
 
 //grid ids
 const canvas = document.getElementById('gridCanvas');
@@ -54,11 +55,15 @@ seedingJobBtn.addEventListener('click', () => {
 
 closeModal.addEventListener('click', () => {
   modal.style.display = 'none';
+  document.getElementById('SeedingJobName').value = '';
+  document.getElementById('jobNameError').textContent = '';
 });
 
 window.addEventListener('click', (e) => {
   if (e.target === modal) {
     modal.style.display = 'none';
+    document.getElementById('SeedingJobName').value = '';
+    document.getElementById('jobNameError').textContent = '';
   }
 });
 
@@ -161,7 +166,24 @@ executeBtn.addEventListener('click', async () => {
     }
   }
 
+  const input = document.getElementById("SeedingJobName").value.trim(); // Get the latest value
+  jobNameError.textContent = ''; // Clear old error
+  const regex = /^[a-zA-Z0-9 ]*$/;
+
+  if (!regex.test(input)) {
+    jobNameError.textContent = 'Special characters are not allowed in the job name.';
+    isValid = false;
+  }
+
+
   if (!isValid) return;
+
+  if (jobCount !== 0 && Array.isArray(results) && results.length > 0) {
+    alert("Seeding Jobs Created:\n\n" + results.join("\n"));
+  } else {
+    alert("Seeding Job Task Empty");
+  }
+  
 
   alert("Seeding Jobs Created:\n\n" + results.join("\n"));
   jobContainer.innerHTML = '';
