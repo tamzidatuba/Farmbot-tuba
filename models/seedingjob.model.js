@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const seedingJobSchema = new mongoose.Schema({
+  jobname : String,
   xcoordinate: Number,
   ycoordinate: Number,
   depth: Number,
@@ -10,9 +11,9 @@ const seedingJobSchema = new mongoose.Schema({
 
 const seedingJob = mongoose.model('seedingjob', seedingJobSchema);
 
-async function InsertSeedingJobToDB(x, y, planttype, depth) {
+async function InsertSeedingJobToDB(jobname, x, y, planttype, depth) {
   const now = new Date();
-  await seedingJob.create({ xcoordinate: x, ycoordinate: y, planttype: planttype, depth: depth, createdAt: now });
+  await seedingJob.create({ jobname: jobname, xcoordinate: x, ycoordinate: y, planttype: planttype, depth: depth, createdAt: now });
   console.log('Job has been inserted');
 }
 
@@ -21,8 +22,8 @@ async function FetchSeedingJobsFromDB() {
   return jobs;
 }
 
-async function DeleteSeedingJobFromDB(id) {
-  await seedingJob.findByIdAndDelete(id);
+async function DeleteSeedingJobFromDB(jobname) {
+  await seedingJob.deleteOne({jobname: jobname});
 }
 
 export default {
