@@ -51,7 +51,7 @@ app.get('/api/status', (req, res) => {
     res.status(200).json({status: backend.statusManager.status});
   }
   else {
-    res.status(200).json({status: "Initializing"});
+    res.status(200).json({status: "Offline"});
   }
 });
 const backend = await initalizeBackend();

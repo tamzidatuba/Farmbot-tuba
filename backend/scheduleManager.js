@@ -49,5 +49,3 @@ class ScheduleManager {
 }
 
 export {ScheduleManager};
-
-let s = new ScheduleManager();
