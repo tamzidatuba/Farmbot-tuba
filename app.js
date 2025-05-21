@@ -98,9 +98,18 @@ app.put('/api/resumejob', async (req, res) => {
   backend.continueJob(res);
 });
 
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+app.get('/api/executionPipeline', async (req, res) => {
+  if (backend_initialized) {
+    res.status(200).json(backend.scheduleManager.jobsToExecute);
+  } else {
+    res.status(200).json(new Array());
+  }
+})
 
 app.get('/api/notifications', (req, res) => {
   if (backend_initialized) {
@@ -123,7 +132,7 @@ const backend = await initalizeBackend();
 backend_initialized = true;
 
 // TODO delete
-let WateringArgs ={name: "MyWateringJob", "position": {"x": 100, "y": 100,"z": -50}, "duration":10}
+let WateringArgs ={name: "MyWateringJob", positions: new Array({x: 100, y: 100,z: -50}), "ml": 500}
 let wateringJob = new WateringJob(WateringArgs);
 
 backend.scheduleManager.appendScheduledJob(wateringJob);

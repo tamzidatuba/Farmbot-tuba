@@ -14,7 +14,6 @@ const JobNotification = Object.freeze({
 
 class Backend {
   constructor(farmbot, statusManager) {
-    this.user = "Visitor"; // TODO remove
     this.notification_history = new Array();
 
     this.farmbot = farmbot;
