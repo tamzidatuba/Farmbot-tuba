@@ -43,6 +43,7 @@ app.get('/api/notifications', (req, res) => {
   }
   else {
     res.status(200).json({});
+  }
 });
 
 app.get('/api/status', (req, res) => {

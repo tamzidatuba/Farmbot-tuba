@@ -1,14 +1,14 @@
 import { Queue } from "../jobs/Queue.js";
 
 const SCHEDULE_CHECKING_INTERVAL = 900000 // 15*60*1000 = 15min
-const SCHEDULE_TOLERANCE = 30000; // 30 Second execution tolerance
+const SCHEDULE_TOLERANCE = 15000; // 15 Second execution tolerance
 
 class ScheduleManager {
 
     constructor() {
         this.jobsToExecute = new Queue();
-        this.checkForScheduledJobs.bind(this);
         this.checkForScheduledJobs()
+        this.currentTimeout;
     }
 
     isJobScheduled() {
@@ -20,8 +20,9 @@ class ScheduleManager {
     }
 
     checkForScheduledJobs() {
+        clearTimeout(this.currentTimeout);
         // TODO ask database for scheduledtasks
-        let scheduledJobs = {0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+34000, "name": "Job2"}};
+        let scheduledJobs = {0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
         let currentTime = Date.now();
         let nextScheduleCheck = SCHEDULE_CHECKING_INTERVAL;
 
@@ -38,7 +39,7 @@ class ScheduleManager {
             }
         }
         //console.log("Next schedule check:", nextScheduleCheck)
-        setTimeout(this.checkForScheduledJobs.bind(this), nextScheduleCheck);
+        this.currentTimeout = setTimeout(this.checkForScheduledJobs.bind(this), nextScheduleCheck);
     }
 
     calculateNextSchedule(job) {
@@ -48,3 +49,5 @@ class ScheduleManager {
 }
 
 export {ScheduleManager};
+
+let s = new ScheduleManager();

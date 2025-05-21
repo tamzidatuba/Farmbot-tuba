@@ -11,11 +11,12 @@ class Task {
         return true;
     }
 
-    pauseTask() {
-
+    pauseTask(farmbot) {
+        farmbot.emergencyLock(); // TODO is emergency lock the only way?
     }
 
     continueTask(farmbot, lastState) {
+        farmbot.emergencyUnlock();
         this.execute(farmbot, lastState);
     }
 

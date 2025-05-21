@@ -28,7 +28,7 @@ class Backend {
     // TODO put notification in database
     let date = new Date();
     // append date to the end of the string
-    notification += Date().getFullYear() +'.'+ Date().getMonth() +'.'+ Date.getDay() +' '+ Date.getHours() +':'+ Date.getMinutes() +':'+ Date.getSeconds();
+    notification += date.getFullYear() +'.'+ date.getMonth() +'.'+ date.getDay() +' '+ date.getHours() +':'+ date.getMinutes() +':'+ date.getSeconds();
     this.notification_history.enqueue(notification);
     while (this.notification_history.length > 10) {
       this.notification_history.dequeue();
