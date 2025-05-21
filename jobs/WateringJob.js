@@ -1,7 +1,7 @@
 import { FarmbotStatus } from "../backend/statusManager.js";
 import { Job } from "./Job.js"
 import { MoveTask } from "./tasks/MoveTask.js";
-import { MoveZAxisTask} from "./tasks/MoveZAxisTask.js";
+import { MoveZTask} from "./tasks/MoveZTask.js";
 import { WATER_PIN } from "./tasks/TogglePinTask.js";
 import {TimedPinTask} from "./tasks/TimedPinTask.js";
 
@@ -12,29 +12,37 @@ Steps:
 - repeat till all the given plants are finished
 */
 
-const SEEDING_HEIGHT = -350
-const FIELD_SAFETY_HEIGHT = -300
-const SEED_BOWL_SAFETY_HEIGHT = 0;
+const MIN_WATERING_HEIGHT = -300 // has to be > field height
+const SAFETY_HEIGHT = 0;
 
 class WateringJob extends Job {
     constructor(wateringArgs) {
         super(wateringArgs.name);
-        this.duration = wateringArgs["duration"];
-        this.position = wateringArgs["position"];
+        let duration = this.convert_ml_into_duration(wateringArgs.ml);
 
-        let goToSafetyHeight = new MoveZAxisTask(FarmbotStatus.FETCHING, SEED_BOWL_SAFETY_HEIGHT);
+        let waterSeeds = new TimedPinTask(FarmbotStatus.WATERING, WATER_PIN, duration);
+        let goToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, SAFETY_HEIGHT);
         this.taskQueue.enqueue(goToSafetyHeight);
-
-        wateringArgs["position"]["z"] = Math.max(FIELD_SAFETY_HEIGHT,wateringArgs["position"]["z"]);
-        let goToWateringPosition = new MoveTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, wateringArgs["position"]);
-        this.taskQueue.enqueue(goToWateringPosition);
-
-        let waterSeeds = new TimedPinTask(FarmbotStatus.WATERING, WATER_PIN, this.duration);
-        this.taskQueue.enqueue(waterSeeds);
-
-        let returnToFieldSafetyHeight = new MoveZAxisTask(FarmbotStatus.WATERING, FIELD_SAFETY_HEIGHT);
-        this.taskQueue.enqueue(returnToFieldSafetyHeight);
         
+        for(const pos in wateringArgs.positions) {
+
+            let position = wateringArgs.positions[pos];
+
+            let goToWateringGridPosition = new MoveTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, position.x, position.y);
+            this.taskQueue.enqueue(goToWateringGridPosition);
+
+            position.z = Math.max(MIN_WATERING_HEIGHT, position.z);
+            let goToWateringHeight = new MoveZTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, position.z);
+            this.taskQueue.enqueue(goToWateringHeight);
+    
+            this.taskQueue.enqueue(waterSeeds);
+        }
+
+        
+    }
+
+    convert_ml_into_duration(ml) {
+        return ml / 100;
     }
 }
 
