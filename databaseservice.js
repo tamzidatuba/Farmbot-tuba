@@ -16,6 +16,12 @@ const JobType = Object.freeze({
     WATERING: 'Watering',
 });
 
+const PlantRadii ={
+    lettuce : 15,
+    tomato: 10,
+    carrot: 5,
+}
+
 async function InsertJobToDB(jobType, object) {
     const now = new Date();
 
@@ -27,7 +33,17 @@ async function InsertJobToDB(jobType, object) {
 
     if (jobType === JobType.SEEDING) {
         const {jobname, plants } = object;
-        await seedingModule.InsertSeedingJobToDB(jobname, plants);
+
+        let result = await seedingModule.InsertSeedingJobToDB(jobname, plants);
+
+        if( result)
+        {
+             return true;
+
+        }
+       else{
+        return false;
+       }
     }
 
     else if (jobType === JobType.WATERING) {
@@ -135,3 +151,8 @@ export default {
     InsertNotificationToDB,
     FetchNotificationsFromDB,
 };
+
+function GetDistance(x1, y1, x2, y2)
+{
+    return Math.sqrt(Math.pow((x1-x2),2)+ Math.pow((y1-y2),2));
+}

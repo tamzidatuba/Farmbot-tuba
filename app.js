@@ -26,14 +26,18 @@ app.get('/', (req, res) => {
 app.post('/api/insertjob/:jobType', async (req, res) => {
   const { jobType } = req.params;
   const object = req.body;
-
   try {
-    await DatabaseService.InsertJobToDB(jobType, object);
-    res.status(200).json({ message: 'Job saved' });
+    let result = await DatabaseService.InsertJobToDB(jobType, object);
+    if (result){
+    res.status(200).json({ message: 'Job saved' });}
+    else{
+      res.status(201).json({message:"THe job name already exists."});
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to save job' });
   }
+
 });
 
 app.get('/api/getjobs/:jobType', async (req, res) => {

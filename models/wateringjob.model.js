@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+
 // create schema for data
 const wateringSchema = mongoose.Schema({
   jobname: String,
