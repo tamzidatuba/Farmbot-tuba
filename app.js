@@ -48,10 +48,10 @@ app.get('/api/getjobs/:jobType', async (req, res) => {
 });
 
 
-app.delete('/api/deletejob/:jobtype/:id', async (req, res) => {
-  const {jobtype, id} = req.params;
+app.delete('/api/deletejob/:jobtype/:jobname', async (req, res) => {
+  const {jobtype, jobname} = req.params;
   try {
-    await DatabaseService.DeleteJobFromDB(jobtype, id);
+    await DatabaseService.DeleteJobFromDB(jobtype, jobname);
     res.status(200).json({ message: 'Job deleted' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete job' });

@@ -25,36 +25,38 @@ async function InsertJobToDB(jobType, object) {
     let payload = {};
 
     if (jobType === JobType.SEEDING) {
-        const { x, y, planttype, depth } = object;
+        const {jobname, x, y, planttype, depth } = object;
 
         if (!planttype || isNaN(x) || isNaN(y) || isNaN(depth)) {
             throw new Error("Invalid seeding job data");
         }
 
         payload = {
+            jobname,
             x,
             y,
             planttype,
             depth,
         };
 
-        await seedingModule.InsertSeedingJobToDB(x, y, planttype, depth);
+        await seedingModule.InsertSeedingJobToDB(jobname, x, y, planttype, depth);
     }
 
     else if (jobType === JobType.WATERING) {
-        const { plantName, x, y, wateringcapacity } = object;
+        const {jobname, plantName, x, y, wateringcapacity } = object;
 
         if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
             throw new Error("Invalid watering job data");
         }
         payload = {
+            jobname,
             plantName,
             x,
             y,
             wateringcapacity,
         };
 
-        await wateringModule.InsertWateringJobToDB(plantName, x, y, wateringcapacity);
+        await wateringModule.InsertWateringJobToDB(jobname, plantName, x, y, wateringcapacity);
     }
 
     console.log('Job has been inserted');
@@ -76,19 +78,19 @@ async function FetchJobsFromDB(jobType) {
     return jobs;
 }
 
-async function DeleteJobFromDB(jobType, id) {
+async function DeleteJobFromDB(jobType, jobname) {
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
     }
 
-    if(!id) {
-        throw new Error("Invalid job ID: " + id);
+    if(!jobname) {
+        throw new Error("Invalid job Name: " + jobname);
     }
 
     if (jobType === JobType.SEEDING) {
-        await seedingModule.DeleteSeedingJobFromDB(id);
+        await seedingModule.DeleteSeedingJobFromDB(jobname);
     } else if (jobType === JobType.WATERING) {
-        await wateringModule.DeleteWateringJobFromDB(id);
+        await wateringModule.DeleteWateringJobFromDB(jobname);
     }
 }
 
