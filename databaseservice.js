@@ -26,21 +26,8 @@ async function InsertJobToDB(jobType, object) {
     let payload = {};
 
     if (jobType === JobType.SEEDING) {
-        const {jobname, x, y, planttype, depth } = object;
-
-        if (!planttype || isNaN(x) || isNaN(y) || isNaN(depth)) {
-            throw new Error("Invalid seeding job data");
-        }
-
-        payload = {
-            jobname,
-            x,
-            y,
-            planttype,
-            depth,
-        };
-
-        await seedingModule.InsertSeedingJobToDB(jobname, x, y, planttype, depth);
+        const {jobname, plants } = object;
+        await seedingModule.InsertSeedingJobToDB(jobname, plants);
     }
 
     else if (jobType === JobType.WATERING) {
