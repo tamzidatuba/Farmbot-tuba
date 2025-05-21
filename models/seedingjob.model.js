@@ -25,14 +25,14 @@ async function FetchSeedingJobsFromDB() {
 }
 
 async function DeleteSeedingJobFromDB(jobname) {
-  await seedingJob.deleteOne({" jobname": jobname });
+  await seedingJob.deleteOne({ " jobname": jobname });
 }
 
-async function UpdateSeedingJobToDB(jobname, x,y, planttype, depth) {
+async function UpdateSeedingJobToDB(jobname, plants) {
   const now = new Date();
-  await seedingJob.findOneAndUpdate( {"jobname": jobname},{ xcoordinate: x, ycoordinate: y, planttype: planttype, depth: depth, createdAt: now});
+  await seedingJob.findOneAndUpdate({ "jobname": jobname }, { jobname: jobname, createdat: now, plants: plants });
   console.log("Job has been updated.");
-  
+
 }
 
 

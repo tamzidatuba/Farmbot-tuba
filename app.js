@@ -60,7 +60,7 @@ app.delete('/api/deletejob/:jobtype/:jobname', async (req, res) => {
 });
 
 
-app.post('/api/updatejob/:jobtype', async (req, res) => {
+app.put('/api/updatejob/:jobtype', async (req, res) => {
   const {jobtype} = req.params;
   const object = req.body;
   try {
