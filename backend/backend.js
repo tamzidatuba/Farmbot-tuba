@@ -62,6 +62,7 @@ class Backend {
       if ("nextExecution" in nextJob) {
         this.scheduleManager.calculateNextSchedule(nextJob);
       }
+      // TODO translate job-dictionary into job-object
       this.statusManager.startJob(nextJob);
       this.appendNotification("Job " + nextJob.name + " started at ");
       return true

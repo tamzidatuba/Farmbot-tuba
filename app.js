@@ -89,12 +89,12 @@ app.post('/api/startjob/:id', async (req, res) => {
 });
 
 //pause job
-app.post('/api/pausejob', async (req, res) => {
+app.put('/api/pausejob', async (req, res) => {
   backend.pauseJob(res);
 });
 
 //resume job
-app.post('/api/resumejob', async (req, res) => {
+app.put('/api/resumejob', async (req, res) => {
   backend.continueJob(res);
 });
 
