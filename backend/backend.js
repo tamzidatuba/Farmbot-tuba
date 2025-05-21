@@ -20,7 +20,7 @@ class Backend {
     this.farmbot = farmbot;
     this.statusManager = statusManager;
     //this.scheduleManager = new ScheduleManager();
-
+    this.notification_array = new Array();
     this.notification_history = new Queue();
   }
 
@@ -30,8 +30,10 @@ class Backend {
     // append date to the end of the string
     notification += date.getFullYear() +'.'+ date.getMonth() +'.'+ date.getDay() +' '+ date.getHours() +':'+ date.getMinutes() +':'+ date.getSeconds();
     this.notification_history.enqueue(notification);
+    this.notification_array.push(notification);
     while (this.notification_history.length > 10) {
       this.notification_history.dequeue();
+      this.notification_array.shift();
     }
   }
 

@@ -39,7 +39,7 @@ app.listen(PORT, () => {
 
 app.get('/api/notifications', (req, res) => {
   if (backend_initialized) {
-    res.status(200).json(backend.notification_history.elements);
+    res.status(200).json(backend.notification_array);
   }
   else {
     res.status(200).json({});
