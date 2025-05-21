@@ -13,6 +13,8 @@ const coordDisplay = document.getElementById('hover-coordinates');
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
+var dataList = [];
+
 // Farm-robot coordinate system
 const coordWidth = 395;
 const coordHeight = 650;
@@ -320,15 +322,22 @@ function updateStatusHistory() {
   })
   .then(response => response.json())
   .then(data => {
-    for (const status in data) {
-      const entry = document.createElement('div');
-      entry.textContent = data[status];
-      statusHistory.prepend(entry);
-    }
-  })
-  while(statusHistory.childNodes.length > 2) {
-    statusHistory.removeChild(statusHistory.lastChild);
-  } 
+    // Check if the data has changed
+    if (dataList.toString() != data.toString()) {
+      // Clear the current status history
+      while (statusHistory.children.length > 0) {
+        statusHistory.removeChild(statusHistory.lastChild);
+      }
+      // Add new entries to the status history
+      for (const status in data) {
+        const entry = document.createElement('div');
+        entry.textContent = data[status];
+        statusHistory.prepend(entry);
+      }
+      dataList = data;
+      }
+    })
+  }
   /*
   fetch('/api/notifications', {method: 'GET',
   })
@@ -337,8 +346,8 @@ function updateStatusHistory() {
     statusHistory = data;
   })
   */
-}
 
+  
 // Simulate robot moving
 function updateRobot() {
   updateStatus();//change this to actually get status
