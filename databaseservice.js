@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import seedingModule from './models/seedingjob.model.js';
 import wateringModule from './models/wateringjob.model.js';
 import notificationModel from './models/notification.model.js';
+import plantModel from './models/plant.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -125,6 +126,14 @@ async function FetchNotificationsFromDB() {
     return notifications;
 }
 
+async function FetchPlantsfromDBtoFE() {
+
+    const plants  = await plantModel.FetchPlantsFromDB();
+    return plants;
+}
+
+
+
 export default {
     InsertJobToDB,
     FetchJobsFromDB,
@@ -133,6 +142,7 @@ export default {
     UpdateJobToDB,
     InsertNotificationToDB,
     FetchNotificationsFromDB,
+    FetchPlantsfromDBtoFE,
 };
 
 function GetDistance(x1, y1, x2, y2) {
