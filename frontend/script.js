@@ -4,6 +4,9 @@ const arrow = document.getElementById('arrow');
 const modal = document.getElementById('seedingModal');
 const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
+const jobNameError = document.getElementById('jobNameError');
+
+
 
 //grid ids
 const canvas = document.getElementById('gridCanvas');
@@ -12,6 +15,21 @@ const coordDisplay = document.getElementById('hover-coordinates');
 
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
+
+var dataList = [];
+
+var plants = [];
+
+
+//plant class
+class Plant {
+  constructor(x, y, type) {
+    this.x = x;
+    this.y = y;
+    this.type = type;
+  }
+}
+
 
 // Farm-robot coordinate system
 const coordWidth = 395;
@@ -27,18 +45,83 @@ const statusBox = document.getElementById('farmbot-status');
 const statusHistory = document.getElementById('status-history');
 const statusContainer = document.getElementById('robot-status-container');
 let isHistoryVisible = false;
+const title = statusHistory.querySelector('.history-title');
+
 
 const settingsBtn = document.querySelector('.settings-btn');
 const logoutBtn = document.getElementById('logoutBtn');
-settingsBtn.addEventListener('click', () => {
-  // Toggle logout button visibility
-  logoutBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
+const loginBtn = document.getElementById('loginBtn');
+const loginModal = document.getElementById('loginModal');
+const closeLoginModal = document.getElementById('closeLoginModal');
+
+
+toggle.addEventListener('click', () => {
+  const isVisible = seedingSubtask.style.display === 'block';
+  const display = isVisible ? 'none' : 'block';
+
+  seedingSubtask.style.display = display;
+  arrow.classList.toggle('open', !isVisible);
 });
 
-logoutBtn.addEventListener('click', () => {
-  // Redirect or clear session
-  alert('Logging out...');
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('loginBtn').style.display = 'none';
+  document.getElementById('logoutBtn').style.display = 'none';
 });
+
+settingsBtn.addEventListener('click', () => {
+  const isVisible = loginBtn.style.display === 'block';
+
+  loginBtn.style.display = isVisible ? 'none' : 'block';
+  logoutBtn.style.display = isVisible ? 'none' : 'block';
+});
+
+
+loginBtn.addEventListener('click', () => {
+  loginModal.style.display = 'block';
+});
+
+closeLoginModal.addEventListener('click', () => {
+  loginModal.style.display = 'none';
+});
+
+const form = document.getElementById('loginForm');
+    form.addEventListener('submit', function(e) {
+      let valid = true;
+      const username = document.getElementById('username');
+      const password = document.getElementById('password');
+      const usernameError = document.getElementById('usernameError');
+      const passwordError = document.getElementById('passwordError');
+
+      usernameError.textContent = '';
+      passwordError.textContent = '';
+
+      if (username.value.trim() === '') {
+        usernameError.textContent = 'Username is required.';
+        valid = false;
+      } else if (username.value.trim().length < 3) {
+        usernameError.textContent = 'Username must be at least 3 characters.';
+        valid = false;
+      }
+
+      if (password.value.trim() === '') {
+        passwordError.textContent = 'Password is required.';
+        valid = false;
+      } else if (password.value.trim().length < 6) {
+        passwordError.textContent = 'Password must be at least 6 characters.';
+        valid = false;
+      }
+
+      if (!valid) e.preventDefault();
+    });
+// Optional: Close on background click
+window.addEventListener('click', (e) => {
+  if (e.target === loginModal) {
+    loginModal.style.display = 'none';
+  }
+});
+
+
+
 
 toggle.addEventListener('click', () => {
   const isVisible = subtask.style.display === 'block';
@@ -52,11 +135,15 @@ seedingJobBtn.addEventListener('click', () => {
 
 closeModal.addEventListener('click', () => {
   modal.style.display = 'none';
+  document.getElementById('SeedingJobName').value = '';
+  document.getElementById('jobNameError').textContent = '';
 });
 
 window.addEventListener('click', (e) => {
   if (e.target === modal) {
     modal.style.display = 'none';
+    document.getElementById('SeedingJobName').value = '';
+    document.getElementById('jobNameError').textContent = '';
   }
 });
 
@@ -141,32 +228,44 @@ executeBtn.addEventListener('click', async () => {
       seenCoordinates.add(coordKey);
       results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
     }
-    
     results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
 
-    try {
-      var obj= {
-      x: x,
-      y: y,
-      planttype: plant,
-      depth: depth
-      };
-      await InsertSeedingJob(x, y, plant, depth);
-    } catch (error) {
-      errorMsg.textContent = 'Failed to save job.';
-      console.error(error);
+      try {
+        var obj= {
+        x: x,
+        y: y,
+        planttype: plant,
+        depth: depth
+        };
+        await InsertSeedingJob(x, y, plant, depth);
+      } catch (error) {
+        errorMsg.textContent = 'Failed to save job.';
+        console.error(error);
+        isValid = false;
+      }
+    }
+
+    const input = document.getElementById("SeedingJobName").value.trim(); // Get the latest value
+    jobNameError.textContent = ''; // Clear old error
+    const regex = /^[a-zA-Z0-9 ]*$/;
+
+    if (!regex.test(input)) {
+      jobNameError.textContent = 'Special characters are not allowed in the job name.';
       isValid = false;
     }
-  }
 
   if (!isValid) return;
 
+  if (jobCount !== 0 && Array.isArray(results) && results.length > 0) {
+    alert("Seeding Jobs Created:\n\n" + results.join("\n"));
+  } else {
+    alert("Seeding Job Task Empty");
+  }
   alert("Seeding Jobs Created:\n\n" + results.join("\n"));
   jobContainer.innerHTML = '';
   jobCount = 0;
   modal.style.display = 'none';
 });
-
 
 async function InsertSeedingJob(x, y, plant, depth) {
   const response = await fetch('/api/insertjob/Seeding', {
@@ -209,6 +308,9 @@ function drawGrid() {
   }
 
   drawAxesAndLabels();
+  for (const plant in plants) {
+    drawPlant(plants[plant]);
+  }
 }
 
 function drawAxesAndLabels() {
@@ -307,6 +409,32 @@ statusBox.addEventListener('click', () => {
   statusHistory.classList.toggle('hidden', !isHistoryVisible);
 });
 
+
+//draw plants
+function drawPlant(plant) {
+  //ctx.save();
+  const coord = coordToPixel(plant.x, plant.y);
+
+  if (plant.type == 'salad') {
+    ctx.fillStyle = 'green';
+    ctx.strokeStyle = 'green';
+    ctx.beginPath();
+    ctx.arc(coord.x, coord.y, 8, 0, 2 * Math.PI);
+    ctx.fill();
+  } else if (plant.type == 'raddish') {
+    ctx.fillStyle = 'red';
+    ctx.strokeStyle = 'red';
+    ctx.beginPath();
+    ctx.moveTo(coord.x, coord.y - 10);
+    ctx.lineTo(coord.x - 10, coord.y + 8);
+    ctx.lineTo(coord.x + 10, coord.y + 8);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  //ctx.restore();
+}
+
 // Draw robot
 let robot = { x: 0, y: 0 };
 
@@ -320,6 +448,7 @@ function drawRobot() {
   ctx.stroke();
 }
 
+
 // Update status box
 function updateStatus() {
   fetch('/api/status', {method: 'GET',
@@ -328,43 +457,61 @@ function updateStatus() {
   .then(data => {
     statusBox.textContent = 'Status: ' + data.status;
   })
-  //statusBox.textContent = `Status: ${text}`;
 }
 
 // Update status history
-function updateStatusHistory(text) {
-  const timestamp = new Date().toLocaleTimeString();
-  const newStatus = document.createElement('div');
-  const entry = document.createElement('div');
-  entry.textContent = `[${timestamp}] ${text}`;
-  statusHistory.prepend(entry);
-  if (statusHistory.children.length > 10) {
-    statusHistory.removeChild(statusHistory.lastChild);
+function updateStatusHistory() {
+  fetch('/api/notifications', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Check if the data has changed
+    if (dataList.toString() != data.toString()) {
+      // Clear the current status history
+      while (statusHistory.children.length > 1) {
+        statusHistory.removeChild(statusHistory.lastChild);
+      }
+      // Add new entries to the status history
+      for (const status in data) {
+        const entry = document.createElement('div');
+        entry.textContent = data[status];
+        statusHistory.insertBefore(entry, title.nextSibling);
+      }
+      dataList = data;
+      }
+    })
   }
-}
+
 
 // Simulate robot moving
 function updateRobot() {
-  updateStatus("Moving...");//change this to actually get status
+  updateStatus();//change this to actually get status
 
   //robot.x = Math.floor(Math.random() * coordWidth);
   //robot.y = Math.floor(Math.random() * coordHeight);
-
+  console.log("Update");
   clearCanvas();
   drawGrid();
   //drawRobot();
 
+  updateStatusHistory();
+
   //just for testing
   setTimeout(() => {
-    updateStatusHistory("Test");
-  }, 2000);
-
-  updateStatus();
+    updateStatus("Idle");
+  }, 500);
 }
+
+plants.push(new Plant(100, 100, 'salad'));
+plants.push(new Plant(200, 200, 'raddish'));
 
 // Initial draw
 drawGrid();
 //drawRobot();
 
 // Update every 1 second
-setInterval(updateRobot, 1000); 
+setInterval(updateRobot, 2500);
+
+
+
+

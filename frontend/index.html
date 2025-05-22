@@ -10,14 +10,52 @@
 
 <!-- MODAL -->
 <div id="seedingModal" class="modal">
+ 
+
   <div class="modal-content">
     <span class="close" id="closeModal">&times;</span>
     <h2>Create Seeding Jobs</h2>
-
+    <input type="text" id="SeedingJobName" placeholder="Enter job name" />
+    <div id="jobNameError" class="errorMsg"></div>
     <div id="jobContainer"></div>
 
     <button id="addPlantBtn">+ Add Plant</button>
     <button id="executeBtn">Create & Save</button>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="modal">
+   
+    
+     <div class="login-container">
+      <span class="close" id="closeLoginModal">&times;</span>
+    
+    <h2>
+      <img src="https://static.vecteezy.com/system/resources/previews/036/004/484/non_2x/green-leaf-icon-on-white-background-for-graphic-and-web-design-simple-sign-internet-concept-symbol-for-website-button-or-mobile-app-vector.jpg" alt="Leaf Icon" />
+       Login
+    </h2>
+  
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" />
+        <div id="usernameError" class="error"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" />
+        <div id="passwordError" class="error"></div>
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="forgot-password">
+      <a href="#">Forgot Password?</a>
+    </div>
+  </div>
   </div>
 </div>
 
@@ -45,7 +83,10 @@
 
   <div class="main">
     <button class="settings-btn" id="settings-btn">⚙ Settings</button>
-    <button class="logout-btn" id="logoutBtn" title="Log out of your farming session">🌱Logout🌱</button>
+    <button class="login-btn" id="loginBtn">🌱LogIn🌱</button>
+    <button class="logout-btn" id="logoutBtn">🌱Logout🌱</button>
+
+    
     <h1>Welcome to Digital Farming</h1>
     <p>Use the sidebar to navigate your farming tools.</p>
     <!-- grid container using canvas-->
@@ -53,16 +94,16 @@
       <canvas id="gridCanvas" width="790" height="650"></canvas>
     </div>
     <div id="hover-coordinates"></div>
-    <div id="farmbot-status-container">
+     <div id="farmbot-status-container">
       <div id="farmbot-status">Status: Initializing...</div> <!-- Robot status -->
-      <div id="status-history" class="hidden"></div> <!-- notification history-->
+      <div id="status-history" class="hidden">
+        <h3 class="history-title">Notification History</h3>
+      </div> <!-- notification history-->
     </div>
-    
   </div>
 
   
 
   <script type="module" src="./script.js"></script>
-  
 </body>
 </html>

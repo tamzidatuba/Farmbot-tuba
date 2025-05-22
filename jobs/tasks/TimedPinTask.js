@@ -5,13 +5,18 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
 const MINIMUM_PIN_ACTIVATION_DURATION = 0.5; // Duration should atleast last 0.5 seconds
 const MAXIMUM_PIN_ACTIVATION_DURATION = 5; // Duration shall not exceed 5 seconds
 
-const WATER_PIN = 8;
-const VACUUM_PIM = 9;
+const WATER_PIN = {
+    pin_type: "BoxLed4", // "Peripheral"
+    pin_id: -1 //this.pinNumber
+};
+const VACUUM_PIM = {
+    pin_type: "BoxLed4", // "Peripheral"
+    pin_id: -1 //this.pinNumber
+};
 
 class TimedPinTask extends Task {
-    constructor(status, pinNumber, duration) { // Duration in seconds as arg
+    constructor(status, pinData, duration) { // Duration in seconds as arg
         super(status);
-        this.pinNumber = pinNumber;
         this.duration = clamp(duration, 0.5, MAXIMUM_PIN_ACTIVATION_DURATION) * 1000
         this.timeout = this.timeout.bind(this);
         
@@ -21,24 +26,42 @@ class TimedPinTask extends Task {
 
         this.executionFinished = false;
         this.farmbot;
+
+        this.pinArgs = {
+            pin_value: 1,
+            pin_mode: 0,
+            pin_number: {
+                kind: "named_pin",
+                args: pinData
+            }
+        };
     }
 
     execute(farmbot, lastState) {
+        if (this.remainingTime < 500) {
+            this.executionFinished = true;
+            return
+        }
         console.log("Executing Timed Pin Task!");
         this.farmbot = farmbot;
         this.start = Date.now();
-        farmbot.togglePin({pin_number: this.pinNumber});
         this.currentTimeout = setTimeout(this.timeout, this.remainingTime);
+        this.pinArgs.pin_value = 1;
+        farmbot.writePin(this.pinArgs);
+        //farmbot.togglePin({pin_number: this.pinNumber});
     }
 
     timeout() {
-        console.log("timeout");
-        this.farmbot.togglePin({pin_number: this.pinNumber});
+        this.pinArgs.pin_value = 0;
+        this.farmbot.writePin(this.pinArgs);
+        //this.farmbot.togglePin({pin_number: this.pinNumber});
         this.executionFinished = true;
     }
 
     pauseTask(farmbot) {
-        farmbot.togglePin({pin_number: this.pinNumber});
+        this.pinArgs.pin_value = 0;
+        this.farmbot.writePin(this.pinArgs);
+        //farmbot.togglePin({pin_number: this.pinNumber});
         clearTimeout(this.currentTimeout);
         this.remainingTime = remainingTime - (Date.now()-this.start);
     }

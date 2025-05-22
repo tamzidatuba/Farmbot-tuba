@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
 import { initalizeBackend } from './backend/backend.js';
 
+import { WateringJob } from './jobs/WateringJob.js';
+
 const app = express();
 const PORT = 3000;
 
@@ -22,15 +24,18 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend//index.html'));
 });
 
+
+// insert job
 app.post('/api/insertjob/:jobType', async (req, res) => {
   const { jobType } = req.params;
   const object = req.body;
   try {
     let result = await DatabaseService.InsertJobToDB(jobType, object);
     if (result){
-    res.status(200).json({ message: 'Job saved' });}
+      backend.appendNotification("Job " + object.name + " saved at ");
+      res.status(200).json({ message: 'Job saved' });}
     else{
-      res.status(201).json({message:"THe job name already exists."});
+      res.status(201).json({message:"The job name already exists."});
     }
   } catch (err) {
     console.error(err);
@@ -39,6 +44,8 @@ app.post('/api/insertjob/:jobType', async (req, res) => {
 
 });
 
+
+// get jobs of type jobType
 app.get('/api/getjobs/:jobType', async (req, res) => {
   const { jobType } = req.params;
   try {
@@ -51,23 +58,23 @@ app.get('/api/getjobs/:jobType', async (req, res) => {
   }  
 });
 
-
 app.delete('/api/deletejob/:jobtype/:jobname', async (req, res) => {
   const {jobtype, jobname} = req.params;
   try {
     await DatabaseService.DeleteJobFromDB(jobtype, jobname);
+    backend.appendNotification("Job " + id + " deleted at ");
     res.status(200).json({ message: 'Job deleted' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete job' });
   }
 });
 
-
 app.put('/api/updatejob/:jobtype', async (req, res) => {
   const {jobtype} = req.params;
   const object = req.body;
   try {
     await DatabaseService.UpdateJobToDB(jobtype, object);
+    backend.appendNotification("Job " + object.name + " modified at ");
     res.status(200).json({ message: 'Job updated' });
   } catch (err) {
     console.error(err);
@@ -99,8 +106,42 @@ app.post('/api/insertnotification', async (req, res) => {
   }
 });
 
+//start job
+app.post('/api/startjob/:id', async (req, res) => {
+  const { id } = req.params;
+  backend.queueJob(id, res);
+});
+
+//pause job
+app.put('/api/pausejob', async (req, res) => {
+  backend.pauseJob(res);
+});
+
+//resume job
+app.put('/api/resumejob', async (req, res) => {
+  backend.continueJob(res);
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+});
+
+app.get('/api/executionPipeline', async (req, res) => {
+  if (backend_initialized) {
+    res.status(200).json(backend.scheduleManager.jobsToExecute);
+  } else {
+    res.status(200).json(new Array());
+  }
+})
+
+app.get('/api/notifications', (req, res) => {
+  if (backend_initialized) {
+    res.status(200).json(backend.notification_history);
+  }
+  else {
+    res.status(200).json(new Array());
+  }
 });
 
 app.get('/api/status', (req, res) => {
@@ -108,8 +149,14 @@ app.get('/api/status', (req, res) => {
     res.status(200).json({status: backend.statusManager.status});
   }
   else {
-    res.status(200).json({status: "Initializing"});
+    res.status(200).json({status: "Offline"});
   }
 });
 const backend = await initalizeBackend();
 backend_initialized = true;
+
+// TODO delete
+let wateringJob ={jobType: "watering", name: "MyWateringJob", positions: new Array({x: 100, y: 100,z: -50}), "ml": 500}
+
+backend.scheduleManager.appendScheduledJob(wateringJob);
+backend.checkForNextJob();

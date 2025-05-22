@@ -1,8 +1,8 @@
 import { FarmbotStatus } from "../backend/statusManager.js";
 import { Job } from "./Job.js"
 import { MoveTask } from "./tasks/MoveTask.js";
-import { MoveZAxisTask} from "./tasks/MoveZAxisTask.js";
-import { TogglePinTask, VACUUM_PIN } from "./tasks/TogglePinTask.js";
+import { MoveZTask} from "./tasks/MoveZTask.js";
+import { SetPinTask, VACUUM_PIN } from "./tasks/SetPinTask.js";
 
 /*
 Steps:
@@ -13,47 +13,51 @@ Steps:
 - (Move a little up)
 */
 
-const SEEDING_HEIGHT = -350
-const FIELD_SAFETY_HEIGHT = -300
-const SEED_SUCTION_PIN = 1
-const SEED_PLANTING_PIN = 2
+const SEEDING_HEIGHT = -350;
+const FIELD_SAFETY_HEIGHT = -300;
 const SEED_BOWL_SAFETY_HEIGHT = 0;
-const SEED_BOWL_POSITION = {"x": 0, "y": 500, "z": SEED_BOWL_SAFETY_HEIGHT}
+const SEED_BOWL_POSITION = {"x": 0, "y": 500};
 const SEED_BOWL_SUCTION_HEIGHT = -200;
 
 class SeedingJob extends Job {
     constructor(seedingArgs) {
-        super();
-        this.plantType = seedingArgs["type"]
-        this.position = seedingArgs["position"]
+        super(seedingArgs.name);
 
-        let goToSafetyHeight = new MoveZAxisTask(FarmbotStatus.FETCHING, SEED_BOWL_SAFETY_HEIGHT);
-        this.taskQueue.enqueue(goToSafetyHeight);
+        let goToSafetyHeight = new MoveZTask(FarmbotStatus.FETCHING, SEED_BOWL_SAFETY_HEIGHT);
+        let goToSeedBowl = new MoveTask(FarmbotStatus.FETCHING, SEED_BOWL_POSITION.x , SEED_BOWL_POSITION.y);
+        let lowerToSeedBowl = new MoveZTask(FarmbotStatus.FETCHING, SEED_BOWL_SUCTION_HEIGHT);
+        let activateVacuumPin = new SetPinTask(FarmbotStatus.FETCHING, VACUUM_PIN, 1);
+        let returnToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, SEED_BOWL_SAFETY_HEIGHT);
+        let lowerToSeedingHeight = new MoveZTask(FarmbotStatus.SEEDING, SEEDING_HEIGHT);
+        let deactivateVacuumPin = new SetPinTask(FarmbotStatus.FETCHING, VACUUM_PIN, 0);
 
-        let goToSeedBowl = new MoveTask(FarmbotStatus.FETCHING, SEED_BOWL_POSITION);
-        this.taskQueue.enqueue(goToSeedBowl);
-
-        let lowerToSeedBowl = new MoveZAxisTask(FarmbotStatus.FETCHING, SEED_BOWL_SUCTION_HEIGHT);
-        this.taskQueue.enqueue(lowerToSeedBowl);
-
-        let suckUpSeeds = new TogglePinTask(FarmbotStatus.FETCHING, VACUUM_PIN);
-        this.taskQueue.enqueue(suckUpSeeds);
+        let returnToFieldSafetyHeight = new MoveZTask(FarmbotStatus.SEEDING, FIELD_SAFETY_HEIGHT);
         
-        let returnToBowlSafetyHeight = new MoveZAxisTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, SEED_BOWL_SAFETY_HEIGHT);
-        this.taskQueue.enqueue(returnToBowlSafetyHeight);
+        for(const plant in seedingArgs.positions) {
+            let position = seedingArgs.positions[plant].position;
+                
+            this.taskQueue.enqueue(goToSafetyHeight);
 
-        seedingArgs["position"]["z"] = FIELD_SAFETY_HEIGHT;
-        let goToPlantingPosition = new MoveTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, seedingArgs["position"]);
-        this.taskQueue.enqueue(goToPlantingPosition);
+            this.taskQueue.enqueue(goToSeedBowl);
 
-        let lowerToSeedingHeight = new MoveZAxisTask(FarmbotStatus.SEEDING, SEEDING_HEIGHT);
-        this.taskQueue.enqueue(lowerToSeedingHeight);
+            this.taskQueue.enqueue(lowerToSeedBowl);
+            
+            // vacuum the seeds
+            this.taskQueue.enqueue(activateVacuumPin);
+            
+            this.taskQueue.enqueue(returnToSafetyHeight);
 
-        let plantSeeds = new TogglePinTask(FarmbotStatus.SEEDING, VACUUM_PIN);
-        this.taskQueue.enqueue(plantSeeds);
+            position.z = SEED_BOWL_SAFETY_HEIGHT;
+            let goToPlantingPosition = new MoveTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, position.x, position.y);
+            this.taskQueue.enqueue(goToPlantingPosition);
 
-        let returnToFieldSafetyHeight = new MoveZAxisTask(FarmbotStatus.SEEDING, FIELD_SAFETY_HEIGHT);
-        this.taskQueue.enqueue(returnToFieldSafetyHeight);
+            this.taskQueue.enqueue(lowerToSeedingHeight);
+
+            // plant the seeds
+            this.taskQueue.enqueue(deactivateVacuumPin);
+
+            this.taskQueue.enqueue(returnToFieldSafetyHeight);
+        }
         
     }
 }

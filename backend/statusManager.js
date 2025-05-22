@@ -14,7 +14,9 @@ const FarmbotStatus = Object.freeze({
 class StatusManager {
 
     constructor(farmbot) {
+        this.backend;
         this.runningJob = false;
+        this.isPaused = false;
         this.farmbot = farmbot;
         this.status = FarmbotStatus.OFFLINE;
         this.currentTask;
@@ -23,25 +25,27 @@ class StatusManager {
         this._newStatusRecieved = this._newStatusRecieved.bind(this);
 
         // TODO handle unsubscribe
+        /*
         farmbot.on("offline",
             function(data, eventName) {
                 this.status = FarmbotStatus.OFFLINE;
                 console.log("ALERT: Connection lost!")
             }
         )
-
+        */
         farmbot.on("logs",
             function(data, eventName) {
                 console.log("Log:", data);
             }
         )
-
+        /*
         farmbot.on("online",
             function(data, eventName) {
                 this.Status = FarmbotStatus.READY;
                 console.log("Bot:", data);
             }
         )
+        */
 
         farmbot.on("status",
             this._newStatusRecieved
@@ -59,12 +63,12 @@ class StatusManager {
         if (this.currentJob.isJobCompleted()) { // Check if Job is completed
             this.status = FarmbotStatus.READY;
             this.runningJob = false
-            console.log("Finished a Job");
+            this.backend.finishJob();
         } else {
             // Starting the next Task
             this.currentTask = this.currentJob.getNextTask();
             this.status = this.currentTask.status;
-            console.log("Status:", this.status);
+            console.log("Starting a new Task, Status:", this.status);
             this.currentTask.execute(this.farmbot, this.lastState);
         }
 
@@ -86,15 +90,17 @@ class StatusManager {
 
     pauseJob() {
         //this.status = FarmbotStatus.PAUSED;
-        this.currentTask.pauseTask();
+        this.isPaused = true;
+        this.currentTask.pauseTask(farmbot);
     }
 
     continueJob() {
+        this.isPaused = false;
         this.status = this.currentTask.status;
         this.currentTask.continueTask();
     }
 
-    deactivate() {
+    cancelJob() {
         
     }
 }
