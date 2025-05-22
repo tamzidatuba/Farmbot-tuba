@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 
+/*
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
 
@@ -8,6 +9,7 @@ const connectionString = 'mongodb://localhost:27017/admin';
 mongoose.connect(connectionString)
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.error('MongoDB connection error:', err));
+*/
 
 const plantSchema = new mongoose.Schema({
   plantname: String,
@@ -19,9 +21,9 @@ const plantSchema = new mongoose.Schema({
 
 const plantModel = mongoose.model("plant", plantSchema);
 
-async function InsertPlantToDB(plant){
-   const now = new Date();
-   await plantModel.create(plant);}
+async function InsertPlantToDB(plant) {
+  await plantModel.create(plant);
+}
 
 async function FetchPlantsFromDB() {
   const notifications = await plantModel.find().select('planttype xcoordinate ycoordinate');
