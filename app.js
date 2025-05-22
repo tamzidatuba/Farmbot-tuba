@@ -3,8 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
 import { initalizeBackend } from './backend/backend.js';
-
 import { WateringJob } from './jobs/WateringJob.js';
+import plantModel from './models/plant.model.js';
 
 const app = express();
 const PORT = 3000;
@@ -70,7 +70,6 @@ app.delete('/api/deletejob/:jobtype/:id', async (req, res) => {
 app.post('/api/modifyjob/:id', async (req, res) => {
   const { id } = req.params;
   const object = req.body;
-
   try {
     // TODO modify entry in DB
     //await DatabaseService.InsertJobToDB(jobType, object);
@@ -81,6 +80,7 @@ app.post('/api/modifyjob/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to modify job' });
   }
 });
+
 
 //start job
 app.post('/api/startjob/:id', async (req, res) => {
@@ -96,6 +96,19 @@ app.put('/api/pausejob', async (req, res) => {
 //resume job
 app.put('/api/resumejob', async (req, res) => {
   backend.continueJob(res);
+});
+
+
+//to get plants
+app.get('/api/plants', async (req,res) => {
+  try{
+    let plants = await DatabaseService.FetchPlantsfromDBtoFE();
+    res.status(200).json(plants);
+  }
+  catch(err){
+    console.error(err);
+    res.status(500).json({error: "Error in fetching"});
+  }
 });
 
 
@@ -132,7 +145,9 @@ const backend = await initalizeBackend();
 backend_initialized = true;
 
 // TODO delete
-let wateringJob ={jobType: "watering", name: "MyWateringJob", positions: new Array({x: 100, y: 100,z: -50}), "ml": 500}
-
+let WateringArgs ={name: "MyWateringJob", positions: new Array({x: 100, y: 100,z: -50}), "ml": 500}
+let wateringJob = new WateringJob(WateringArgs);
+ //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
+ //console.log(plants);
 backend.scheduleManager.appendScheduledJob(wateringJob);
 backend.checkForNextJob();

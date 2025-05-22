@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import seedingModule from './models/seedingjob.model.js';
 import wateringModule from './models/wateringjob.model.js';
+import plantModel from './models/plant.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -92,11 +93,22 @@ async function DeleteJobFromDB(jobType, id) {
     }
 }
 
+
+async function FetchPlantsfromDBtoFE() {
+
+    const plants  = await plantModel.FetchPlantsFromDB();
+    return plants;
+}
+
+
+
+
 export default {
     InsertJobToDB,
     FetchJobsFromDB,
     DeleteJobFromDB,
     JobType,
+    FetchPlantsfromDBtoFE,
     //   findAll,
     //   model: seedingJob,
 };
