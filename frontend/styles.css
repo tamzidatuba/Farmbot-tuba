@@ -184,18 +184,26 @@ body {
   background-color: #6B8F71;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s;
-  z-index: 10;
-  display: inline-block; /* ensures it only takes up necessary space */
-  width: auto; /* prevents stretching */
+  font-size: 20px; /* affects emoji size too if no span used */
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .settings-btn:hover {
   background-color: #5B7F62;
 }
+
+.gear-emoji {
+  font-size: 1.8em; /* controls emoji size */
+}
+
 /* Modal styles */
 .modal {
 display: none;
@@ -509,6 +517,25 @@ background-color: #ffcdd2;
     .forgot-password a:hover {
       text-decoration: underline;
     }
+
+    .pause-btn {
+      background-color: #fbc02d;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      position: absolute;
+      top:20px;
+      right:500px;
+      height:50px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+      width:auto;
+    }
+    .pause-btn:hover {
+      background-color: #f9a825;
+    }
+    
 
 
     

@@ -268,6 +268,28 @@ executeBtn.addEventListener('click', async () => {
   modal.style.display = 'none';
 });
 
+
+const pauseBtn = document.getElementById('pauseJobBtn');
+
+pauseBtn.addEventListener('click', async () => {
+  const isCurrentlyPaused = pauseBtn.textContent.includes('Resume');
+  const endpoint = isCurrentlyPaused ? '/api/resumejob' : '/api/pausejob';
+
+  try {
+    const res = await fetch(endpoint, { method: 'PUT' });
+    if (res.status === 200) {
+      pauseBtn.textContent = isCurrentlyPaused ? '⏸ Pause Job' : '▶ Resume Job';
+    } else {
+      const errorText = await res.text();
+      alert("Failed: " + errorText);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Network error: " + err.message);
+  }
+});
+
+
 async function InsertSeedingJob(x, y, plant, depth) {
   const response = await fetch('/api/insertjob/Seeding', {
     method: 'POST',
