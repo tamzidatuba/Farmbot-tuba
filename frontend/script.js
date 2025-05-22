@@ -54,28 +54,25 @@ const loginModal = document.getElementById('loginModal');
 const closeLoginModal = document.getElementById('closeLoginModal');
 
 
+settingsBtn.addEventListener('click', () => {
+  // Toggle logout button visibility
+  logoutBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
+  loginBtn.style.display = loginBtn.style.display === 'block' ? 'none' : 'block';
+});
 
 
 toggle.addEventListener('click', () => {
-  const isVisible = seedingSubtask.style.display === 'block';
-  const display = isVisible ? 'none' : 'block';
-
-  seedingSubtask.style.display = display;
-  wateringSubtask.style.display = display;
+  const isVisible = subtask.style.display === 'block';
+  subtask.style.display = isVisible ? 'none' : 'block';
   arrow.classList.toggle('open', !isVisible);
 });
 
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('loginBtn').style.display = 'none';
-  document.getElementById('logoutBtn').style.display = 'none';
+
+  settingsBtn.addEventListener('click', () => {
+  // Toggle logout button visibility
+  loginBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
 });
 
-settingsBtn.addEventListener('click', () => {
-  const isVisible = loginBtn.style.display === 'block';
-
-  loginBtn.style.display = isVisible ? 'none' : 'block';
-  logoutBtn.style.display = isVisible ? 'none' : 'block';
-});
 
 
 loginBtn.addEventListener('click', () => {
@@ -84,10 +81,6 @@ loginBtn.addEventListener('click', () => {
 
 closeLoginModal.addEventListener('click', () => {
   loginModal.style.display = 'none';
-});
-
-logoutBtn.addEventListener('click', () => {
-  console.log("loggin out");
 });
 
 const form = document.getElementById('loginForm');
