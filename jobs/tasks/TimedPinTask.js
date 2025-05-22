@@ -63,7 +63,7 @@ class TimedPinTask extends Task {
         this.farmbot.writePin(this.pinArgs);
         //farmbot.togglePin({pin_number: this.pinNumber});
         clearTimeout(this.currentTimeout);
-        this.remainingTime = remainingTime - (Date.now()-this.start);
+        this.remainingTime = this.remainingTime - (Date.now()-this.start);
     }
 
     checkCondition(state) {

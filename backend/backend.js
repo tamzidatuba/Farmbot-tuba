@@ -90,6 +90,7 @@ class Backend {
 
   pauseJob(res) {
     if (this.statusManager.runningJob && !this.statusManager.isPaused) {
+      console.log(this.statusManager.runningJob);
       this.statusManager.pauseJob()
       res.status(200).json({ message: 'Paused a running job' });
     } else {

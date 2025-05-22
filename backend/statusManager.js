@@ -91,13 +91,13 @@ class StatusManager {
     pauseJob() {
         //this.status = FarmbotStatus.PAUSED;
         this.isPaused = true;
-        this.currentTask.pauseTask(farmbot);
+        this.currentTask.pauseTask(this.farmbot);
     }
 
     continueJob() {
         this.isPaused = false;
         this.status = this.currentTask.status;
-        this.currentTask.continueTask();
+        this.currentTask.continueTask(this.farmbot, this.lastState);
     }
 
     cancelJob() {
