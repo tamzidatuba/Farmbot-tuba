@@ -45,6 +45,12 @@ class ScheduleManager {
         let nextScheduleCheck = SCHEDULE_CHECKING_INTERVAL;
 
         for (const job_idx in scheduledJobs) {
+            
+            //check if scheduled job is active
+            if (!scheduledJobs[job_idx].active) {
+                continue;
+            }
+
             // calculate the time difference of current time and planned execution time
             let time_difference = scheduledJobs[job_idx].nextExecution - currentTime;
             if (time_difference <= SCHEDULE_TOLERANCE) {
