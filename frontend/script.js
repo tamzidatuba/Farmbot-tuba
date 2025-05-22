@@ -295,7 +295,6 @@ function getPlants() {
   })
   .then(response => response.json())
   .then(data => {
-    console.log(data);
     if (plantsList.toString() != data.toString()) {
     //if (plants.toString() != data.toString()) {
       plants = [];
@@ -311,7 +310,6 @@ function getPlants() {
 function drawPlant(plant) {
   //ctx.save();
   const coord = coordToPixel(plant.x, plant.y);
-
   if (plant.type == 'lettuce') {
     ctx.fillStyle = 'green';
     ctx.strokeStyle = 'green';
@@ -345,7 +343,7 @@ function drawPlant(plant) {
     ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
     ctx.lineWidth = 2;
     ctx.stroke();
-  } else if (plant.type == 'radish') {
+  } else if (plant.type == 'raddish') {
     ctx.beginPath();
     ctx.arc(coord.x, coord.y, 15, 0, 2 * Math.PI);
     ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
@@ -398,7 +396,6 @@ function drawGrid() {
 
   drawAxesAndLabels();
 
-  getPlants();
   for (const plant in plants) {
     drawPlant(plants[plant]);
   }
@@ -541,7 +538,6 @@ function updateRobot() {
 
   //robot.x = Math.floor(Math.random() * coordWidth);
   //robot.y = Math.floor(Math.random() * coordHeight);
-  console.log("Update");
   clearCanvas();
   drawGrid();
   //drawRobot();
@@ -549,9 +545,6 @@ function updateRobot() {
   updateStatusHistory();
 
   //just for testing
-  setTimeout(() => {
-    updateStatus("Idle");
-  }, 500);
 }
 
 plants.push(new Plant(100, 100, 'salad'));
@@ -560,6 +553,8 @@ plants.push(new Plant(200, 200, 'raddish'));
 // Initial draw
 drawGrid();
 //drawRobot();
+
+getPlants();
 
 // Update every 1 second
 setInterval(updateRobot, 2500);
