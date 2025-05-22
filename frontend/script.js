@@ -311,29 +311,26 @@ function drawPlant(plant) {
   //ctx.save();
   const coord = coordToPixel(plant.x, plant.y);
   if (plant.type == 'lettuce') {
-    ctx.fillStyle = 'green';
-    ctx.strokeStyle = 'green';
-    ctx.beginPath();
-    ctx.arc(coord.x, coord.y, 8, 0, 2 * Math.PI);
-    ctx.fill();
+    const img = new Image();
+    img.src = './icons/lettuce.png';
+    img.onload = () => {
+      const size = 50;
+      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
+    }
   } else if (plant.type == 'radish') {
-    ctx.fillStyle = 'red';
-    ctx.strokeStyle = 'red';
-    ctx.beginPath();
-    ctx.moveTo(coord.x, coord.y - 10);
-    ctx.lineTo(coord.x - 10, coord.y + 8);
-    ctx.lineTo(coord.x + 10, coord.y + 8);
-    ctx.closePath();
-    ctx.fill();
+    const img = new Image();
+    img.src = './icons/radish.png';
+    img.onload = () => {
+      const size = 50;
+      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
+    }
   } else if (plant.type == 'tomato') {
-    ctx.fillStyle = 'red';
-    ctx.strokeStyle = 'red';
-    ctx.beginPath();
-    ctx.moveTo(coord.x, coord.y - 10);
-    ctx.lineTo(coord.x - 10, coord.y + 8);
-    ctx.lineTo(coord.x + 10, coord.y + 8);
-    ctx.closePath();
-    ctx.fill();
+    const img = new Image();
+    img.src = './icons/tomato.png';
+    img.onload = () => {
+      const size = 50;
+      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
+    }
   }
 
   //add the radius
@@ -538,8 +535,8 @@ function updateRobot() {
 
   //robot.x = Math.floor(Math.random() * coordWidth);
   //robot.y = Math.floor(Math.random() * coordHeight);
-  clearCanvas();
-  drawGrid();
+  //clearCanvas();
+  //drawGrid();
   //drawRobot();
 
   updateStatusHistory();
@@ -547,14 +544,18 @@ function updateRobot() {
   //just for testing
 }
 
-plants.push(new Plant(100, 100, 'salad'));
-plants.push(new Plant(200, 200, 'raddish'));
+plants.push(new Plant(100, 100, 'lettuce'));
+plants.push(new Plant(200, 200, 'radish'));
+plants.push(new Plant(300, 300, 'tomato'));
 
 // Initial draw
 drawGrid();
 //drawRobot();
-
-getPlants();
+setTimeout (() => {
+  clearCanvas();
+  drawGrid();
+}, 100);
+//getPlants();
 
 // Update every 1 second
 setInterval(updateRobot, 2500);
