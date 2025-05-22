@@ -2,7 +2,11 @@ import { StatusManager } from "./statusManager.js";
 import {getFarmbot} from './farmbotInitializer.js';
 import { ScheduleManager } from "./scheduleManager.js";
 import DatabaseService from '../databaseservice.js';
+import { GoHomeJob } from '../jobs/GoHomeJob.js';
+import { SeedingJob} from '../jobs/SeedingJob.js';
+import { WateringJob} from '../jobs/WateringJob.js';
 
+// TODO delete
 const JobNotification = Object.freeze({
     JOB_CREATED: "Job created",
     JOB_MODIFIED: "Job modified",
@@ -26,7 +30,7 @@ class Backend {
     // TODO put notification in database
     let date = new Date();
     // append date to the end of the string
-    notification += date.getDay() +'.'+ date.getMonth() +'.'+ date.getFullYear() +' '+ date.getHours() +':'+ date.getMinutes() +':'+ date.getSeconds();;
+    notification += date.getDate() +'.'+ (date.getMonth() + 1) +'.'+ date.getFullYear() +' '+ date.getHours() +':'+ date.getMinutes() +':'+ date.getSeconds();;
     this.notification_history.push(notification);
     while (this.notification_history.length > 10) {
       this.notification_history.shift();
@@ -49,7 +53,10 @@ class Backend {
   finishJob() {
     console.log("Finished a Job");
     this.appendNotification("Job " + this.statusManager.currentJob.name + " finished at ");
-    this.checkForNextJob()
+    if (!this.checkForNextJob() && this.statusManager.currentJob.name != "GoHome") {
+      this.statusManager.startJob(new GoHomeJob());
+      this.appendNotification("Job GoHome started at ");
+    }
   }
 
   checkForNextJob() {
@@ -61,8 +68,20 @@ class Backend {
       if ("nextExecution" in nextJob) {
         this.scheduleManager.calculateNextSchedule(nextJob);
       }
-      // TODO translate job-dictionary into job-object
-      this.statusManager.startJob(nextJob);
+      // translate job-dictionary into job-object
+      let jobObject;
+      switch(nextJob.jobType) {
+        case "seeding": 
+          jobObject = new SeedingJob(nextJob);
+          break;
+        case "watering":
+          jobObject = new WateringJob(nextJob);
+          break;
+        default:
+          console.log("Job has no valid Job-Type. Cancelling...");
+          return
+      }
+      this.statusManager.startJob(jobObject);
       this.appendNotification("Job " + nextJob.name + " started at ");
       return true
     }
@@ -85,6 +104,10 @@ class Backend {
     } else {
       res.status(500).json({ error: 'There is no job currently paused' });
     }
+  }
+
+  cancelJob() {
+    this.statusManager.cancelJob();
   }
 
 

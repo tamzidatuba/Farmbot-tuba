@@ -16,7 +16,11 @@ const coordDisplay = document.getElementById('hover-coordinates');
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
-var dataList = [];
+// List to compare history with data base
+var historyList = [];
+
+// List to compare plants with data base
+var plantsList = [];
 
 var plants = [];
 
@@ -119,9 +123,6 @@ window.addEventListener('click', (e) => {
     loginModal.style.display = 'none';
   }
 });
-
-
-
 
 toggle.addEventListener('click', () => {
   const isVisible = subtask.style.display === 'block';
@@ -310,6 +311,89 @@ seedingJobBtn.addEventListener('click', () => {
   modal.style.display = 'block';
 });
 
+// get plants from server
+function getPlants() {
+  fetch('/api/plants', {method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (plantsList.toString() != data.toString()) {
+    //if (plants.toString() != data.toString()) {
+      plants = [];
+      for (const plant of data) {
+        plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
+      }
+    }
+  })
+  .catch(error => console.error('Error fetching plants:', error));
+}
+
+//draw plants
+function drawPlant(plant) {
+  //ctx.save();
+  const coord = coordToPixel(plant.x, plant.y);
+  if (plant.type == 'lettuce') {
+    const img = new Image();
+    img.src = './icons/lettuce.png';
+    img.onload = () => {
+      const size = 50;
+      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
+    }
+  } else if (plant.type == 'radish') {
+    const img = new Image();
+    img.src = './icons/radish.png';
+    img.onload = () => {
+      const size = 50;
+      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
+    }
+  } else if (plant.type == 'tomato') {
+    const img = new Image();
+    img.src = './icons/tomato.png';
+    img.onload = () => {
+      const size = 50;
+      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
+    }
+  }
+
+  //add the radius
+  if (plant.type == 'lettuce') {
+    ctx.beginPath();
+    ctx.arc(coord.x, coord.y, 30, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  } else if (plant.type == 'raddish') {
+    ctx.beginPath();
+    ctx.arc(coord.x, coord.y, 15, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  } else if (plant.type == 'tomato') {
+    ctx.beginPath();
+    ctx.arc(coord.x, coord.y, 15, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  //ctx.restore();
+}
+
+// Draw robot
+let robot = { x: 0, y: 0 };
+
+function drawRobot() {
+  const pos = coordToPixel(robot.x, robot.y);
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, 8, 0, Math.PI * 2);
+  ctx.fillStyle = '#4caf50';
+  ctx.fill();
+  ctx.strokeStyle = '#333';
+  ctx.stroke();
+}
+
+
+
 // Draw grid lines for visual reference
 function drawGrid() {
   ctx.strokeStyle = '#ddd';
@@ -330,6 +414,7 @@ function drawGrid() {
   }
 
   drawAxesAndLabels();
+
   for (const plant in plants) {
     drawPlant(plants[plant]);
   }
@@ -432,45 +517,6 @@ statusBox.addEventListener('click', () => {
 });
 
 
-//draw plants
-function drawPlant(plant) {
-  //ctx.save();
-  const coord = coordToPixel(plant.x, plant.y);
-
-  if (plant.type == 'salad') {
-    ctx.fillStyle = 'green';
-    ctx.strokeStyle = 'green';
-    ctx.beginPath();
-    ctx.arc(coord.x, coord.y, 8, 0, 2 * Math.PI);
-    ctx.fill();
-  } else if (plant.type == 'raddish') {
-    ctx.fillStyle = 'red';
-    ctx.strokeStyle = 'red';
-    ctx.beginPath();
-    ctx.moveTo(coord.x, coord.y - 10);
-    ctx.lineTo(coord.x - 10, coord.y + 8);
-    ctx.lineTo(coord.x + 10, coord.y + 8);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  //ctx.restore();
-}
-
-// Draw robot
-let robot = { x: 0, y: 0 };
-
-function drawRobot() {
-  const pos = coordToPixel(robot.x, robot.y);
-  ctx.beginPath();
-  ctx.arc(pos.x, pos.y, 8, 0, Math.PI * 2);
-  ctx.fillStyle = '#4caf50';
-  ctx.fill();
-  ctx.strokeStyle = '#333';
-  ctx.stroke();
-}
-
-
 // Update status box
 function updateStatus() {
   fetch('/api/status', {method: 'GET',
@@ -488,7 +534,7 @@ function updateStatusHistory() {
   .then(response => response.json())
   .then(data => {
     // Check if the data has changed
-    if (dataList.toString() != data.toString()) {
+    if (historyList.toString() != data.toString()) {
       // Clear the current status history
       while (statusHistory.children.length > 1) {
         statusHistory.removeChild(statusHistory.lastChild);
@@ -499,7 +545,7 @@ function updateStatusHistory() {
         entry.textContent = data[status];
         statusHistory.insertBefore(entry, title.nextSibling);
       }
-      dataList = data;
+      historyList = data;
       }
     })
   }
@@ -511,25 +557,27 @@ function updateRobot() {
 
   //robot.x = Math.floor(Math.random() * coordWidth);
   //robot.y = Math.floor(Math.random() * coordHeight);
-  console.log("Update");
-  clearCanvas();
-  drawGrid();
+  //clearCanvas();
+  //drawGrid();
   //drawRobot();
 
   updateStatusHistory();
 
   //just for testing
-  setTimeout(() => {
-    updateStatus("Idle");
-  }, 500);
 }
 
-plants.push(new Plant(100, 100, 'salad'));
-plants.push(new Plant(200, 200, 'raddish'));
+//plants.push(new Plant(100, 100, 'lettuce'));
+//plants.push(new Plant(200, 200, 'radish'));
+//plants.push(new Plant(300, 300, 'tomato'));
 
 // Initial draw
 drawGrid();
 //drawRobot();
+setTimeout (() => {
+  clearCanvas();
+  drawGrid();
+}, 100);
+getPlants();
 
 // Update every 1 second
 setInterval(updateRobot, 2500);

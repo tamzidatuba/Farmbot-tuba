@@ -32,13 +32,13 @@ class StatusManager {
                 console.log("ALERT: Connection lost!")
             }
         )
-
+        */
         farmbot.on("logs",
             function(data, eventName) {
                 console.log("Log:", data);
             }
         )
-
+        /*
         farmbot.on("online",
             function(data, eventName) {
                 this.Status = FarmbotStatus.READY;
@@ -68,7 +68,7 @@ class StatusManager {
             // Starting the next Task
             this.currentTask = this.currentJob.getNextTask();
             this.status = this.currentTask.status;
-            console.log("Status:", this.status);
+            console.log("Starting a new Task, Status:", this.status);
             this.currentTask.execute(this.farmbot, this.lastState);
         }
 
@@ -100,7 +100,7 @@ class StatusManager {
         this.currentTask.continueTask();
     }
 
-    deactivate() {
+    cancelJob() {
         
     }
 }

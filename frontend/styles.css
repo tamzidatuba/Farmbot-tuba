@@ -8,7 +8,7 @@
 
 canvas {
   display: block;
-  background-color: #967736;
+  background-color: #A47149;
   cursor: crosshair;
 }
 
@@ -56,7 +56,7 @@ canvas {
       text-align: center;
       width: 240px;
       height: 50px;
-      background-color: #4caf50;
+      background-color: #6B8F71;
       color: white;
       border: none;
       border-radius: 5px;
@@ -71,7 +71,7 @@ canvas {
       position: absolute;
       width: 400px;
       top: 100%;
-      background-color: #4caf50;
+      background-color: #6B8F71;
       border: none;
       border-top: none;
       border-radius: 0 0 8px 8px;
@@ -80,7 +80,7 @@ canvas {
       padding: 10px 15px;
       border-radius: 5px;
       font-size: 14px;
-      color: #333;
+      color: #ffffff;
       box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
     }
 
@@ -102,12 +102,12 @@ canvas {
 body {
   display: flex;
   min-height: 100vh;
-  background-color: #f0fff0;
+  background-color: #EAE3DC;
 }
 
 .sidebar {
   width: 220px;
-  background-color: #2e7d32;
+  background-color: #6B8F71;
   color: white;
   padding: 20px;
 }
@@ -126,7 +126,7 @@ body {
 }
 
 .menu-item {
-  background-color: #388e3c;
+  background-color: #7C9F81;
   border-radius: 5px;
   cursor: pointer;
   padding: 12px;
@@ -137,7 +137,7 @@ body {
 }
 
 .menu-item:hover {
-  background-color: #4caf50;
+  background-color: #5B7F62;
 }
 
 .arrow {
@@ -157,7 +157,7 @@ body {
 .subtask button {
   margin-top: 8px;
   padding: 8px 12px;
-  background-color: #66bb6a;
+  background-color: #5B7F62;
   color: white;
   border: none;
   border-radius: 5px;
@@ -168,7 +168,7 @@ body {
 }
 
 .subtask button:hover {
-  background-color: #81c784;
+  background-color: #7C9F81;
 }
 
 .main {
@@ -180,8 +180,8 @@ body {
 .settings-btn {
   position: absolute;
   top: 20px;
-  right: 20px;
-  background-color: #4caf50;
+  right: 40px;
+  background-color: #6B8F71;
   color: white;
   border: none;
   padding: 10px;
@@ -197,7 +197,7 @@ body {
 }
 
 .settings-btn:hover {
-  background-color: #388e3c;
+  background-color: #5B7F62;
 }
 
 .gear-emoji {
@@ -218,10 +218,10 @@ background-color: rgba(0,0,0,0.5);
 }
 
 .modal-content {
-background-color: #f9fff9;
+background-color: #F2ECE6;
 margin: 5% auto;
 padding: 20px;
-border: 1px solid #4caf50;
+border: 1px solid #6B8F71;
 border-radius: 10px;
 width: 500px;
 box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -232,7 +232,7 @@ gap: 15px;
 
 .modal-content h2 {
 margin-bottom: 10px;
-color: #2e7d32;
+color: #6B8F71;
 text-align: center;
 }
 
@@ -250,7 +250,7 @@ border: 1px solid #ccc;
 }
 
 .modal-content button {
-background-color: #4caf50;
+background-color: #6B8F71
 color: white;
 padding: 10px;
 border: none;
@@ -260,7 +260,7 @@ margin-top: 10px;
 }
 
 .modal-content button:hover {
-background-color: #388e3c;
+background-color: #5B7F62;
 }
 
 .close {
@@ -322,7 +322,7 @@ border: 1px solid #c8e6c9;
 padding: 15px;
 margin-bottom: 15px;
 border-radius: 10px;
-background-color: #f4fff4;
+background-color: #F2ECE6;
 }
 
 .job-header {
@@ -349,7 +349,7 @@ background-color: #ffcdd2;
   position: absolute;
   top: 100px;
   right: 40px;
-  background-color: #e53935;
+  background-color: #A65A4C;
   color: white;
   border: none;
   padding: 8px 10px;
@@ -369,7 +369,7 @@ background-color: #ffcdd2;
   position: absolute;
   top: 60px;
   right: 40px;
-  background-color: #388e3c;
+  background-color: #5B7F62;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -383,16 +383,16 @@ background-color: #ffcdd2;
 }
 
 .login-btn:hover {
-  background-color: #15c034;
+  background-color: #6B8F71;
 }
 
 
 /* Login Modal Specific Styles */
 #loginModal .modal-content {
-  background-color: #f0fff0;
+  background-color: #EAE3DC;
   padding: 30px 25px;
   border-radius: 10px;
-  border: 2px solid #4caf50;
+  border: 2px solid #6B8F71;
   width: 350px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   font-family: Arial, sans-serif;
@@ -400,7 +400,7 @@ background-color: #ffcdd2;
 
 #loginModal h2 {
   text-align: center;
-  color: #2e7d32;
+  color: #6B8F71
   margin-bottom: 5px;
 }
 
@@ -416,7 +416,7 @@ background-color: #ffcdd2;
   width: 100%;
   padding: 10px 12px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #EAE3DC;
   border-radius: 6px;
   transition: border-color 0.3s ease;
   font-size: 14px;
@@ -424,14 +424,14 @@ background-color: #ffcdd2;
 
 #loginModal input[type="text"]:focus,
 #loginModal input[type="password"]:focus {
-  border-color: #4caf50;
+  border-color: #6B8F71;
   outline: none;
 }
 
 #loginModal button[type="submit"] {
   width: 100%;
   padding: 10px;
-  background-color: #4caf50;
+  background-color: #6B8F71;
   color: white;
   border: none;
   border-radius: 6px;
@@ -441,10 +441,10 @@ background-color: #ffcdd2;
 }
 
 #loginModal button[type="submit"]:hover {
-  background-color: #388e3c;
+  background-color: #6B8F71;
 }
  .login-container {
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: #EAE3DC;
       padding: 30px 40px;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -453,7 +453,7 @@ background-color: #ffcdd2;
 
     .login-container h2 {
       text-align: center;
-      color: #2e7d32;
+      color: #6B8F71;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -479,7 +479,7 @@ background-color: #ffcdd2;
     input[type="password"] {
       width: 100%;
       padding: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid #EAE3DC;
       border-radius: 5px;
     }
 
@@ -492,7 +492,7 @@ background-color: #ffcdd2;
     button {
       width: 100%;
       padding: 10px;
-      background-color: #4caf50;
+      background-color: #6B8F71;
       color: white;
       border: none;
       border-radius: 5px;
@@ -500,7 +500,7 @@ background-color: #ffcdd2;
     }
 
     button:hover {
-      background-color: #388e3c;
+      background-color: #5B7F62;
     }
 
     .forgot-password {
@@ -509,7 +509,7 @@ background-color: #ffcdd2;
     }
 
     .forgot-password a {
-      color: #2e7d32;
+      color: #6B8F71;
       text-decoration: none;
       font-size: 0.9em;
     }

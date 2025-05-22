@@ -3,8 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
 import { initalizeBackend } from './backend/backend.js';
-
 import { WateringJob } from './jobs/WateringJob.js';
+import plantModel from './models/plant.model.js';
 
 const app = express();
 const PORT = 3000;
@@ -29,15 +29,19 @@ app.get('/', (req, res) => {
 app.post('/api/insertjob/:jobType', async (req, res) => {
   const { jobType } = req.params;
   const object = req.body;
-
   try {
-    await DatabaseService.InsertJobToDB(jobType, object);
-    backend.appendNotification("Job " + object.name + " saved at ");
-    res.status(200).json({ message: 'Job saved' });
+    let result = await DatabaseService.InsertJobToDB(jobType, object);
+    if (result){
+      backend.appendNotification("Job " + object.name + " saved at ");
+      res.status(200).json({ message: 'Job saved' });}
+    else{
+      res.status(201).json({message:"The job name already exists."});
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to save job' });
   }
+
 });
 
 
@@ -54,11 +58,10 @@ app.get('/api/getjobs/:jobType', async (req, res) => {
   }  
 });
 
-// delete job with id
-app.delete('/api/deletejob/:jobtype/:id', async (req, res) => {
-  const {jobtype, id} = req.params;
+app.delete('/api/deletejob/:jobtype/:jobname', async (req, res) => {
+  const {jobtype, jobname} = req.params;
   try {
-    await DatabaseService.DeleteJobFromDB(jobtype, id);
+    await DatabaseService.DeleteJobFromDB(jobtype, jobname);
     backend.appendNotification("Job " + id + " deleted at ");
     res.status(200).json({ message: 'Job deleted' });
   } catch (err) {
@@ -66,21 +69,43 @@ app.delete('/api/deletejob/:jobtype/:id', async (req, res) => {
   }
 });
 
-// modify job with id
-app.post('/api/modifyjob/:id', async (req, res) => {
-  const { id } = req.params;
+app.put('/api/updatejob/:jobtype', async (req, res) => {
+  const {jobtype} = req.params;
   const object = req.body;
-
   try {
-    // TODO modify entry in DB
-    //await DatabaseService.InsertJobToDB(jobType, object);
+    await DatabaseService.UpdateJobToDB(jobtype, object);
     backend.appendNotification("Job " + object.name + " modified at ");
-    res.status(200).json({ message: 'Job modified' });
+    res.status(200).json({ message: 'Job updated' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to modify job' });
+    res.status(500).json({ error: 'Failed to update job' });
   }
 });
+
+
+
+app.get('/api/getnotifications', async (req, res) => {
+  try {
+    const notifications = await DatabaseService.FetchNotificationsFromDB();
+    res.status(200).json(notifications);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch notifications' });
+  }
+});
+
+app.post('/api/insertnotification', async (req, res) => {
+  const { text } = req.body;
+
+  try {
+    await DatabaseService.InsertNotificationToDB(text);
+    res.status(200).json({ message: 'Notification saved' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to save notification' });
+  }
+});
+
 
 //start job
 app.post('/api/startjob/:id', async (req, res) => {
@@ -96,6 +121,19 @@ app.put('/api/pausejob', async (req, res) => {
 //resume job
 app.put('/api/resumejob', async (req, res) => {
   backend.continueJob(res);
+});
+
+
+//to get plants
+app.get('/api/plants', async (req,res) => {
+  try{
+    let plants = await DatabaseService.FetchPlantsfromDBtoFE();
+    res.status(200).json(plants);
+  }
+  catch(err){
+    console.error(err);
+    res.status(500).json({error: "Error in fetching"});
+  }
 });
 
 
@@ -132,8 +170,8 @@ const backend = await initalizeBackend();
 backend_initialized = true;
 
 // TODO delete
-let WateringArgs ={name: "MyWateringJob", positions: new Array({x: 100, y: 100,z: -50}), "ml": 500}
-let wateringJob = new WateringJob(WateringArgs);
-
+let wateringJob = {jobType: "watering", name: "MyWateringJob", positions: new Array({x: 100, y: 100,z: -50}), "ml": 500}
+ //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
+ //console.log(plants);
 backend.scheduleManager.appendScheduledJob(wateringJob);
 backend.checkForNextJob();
