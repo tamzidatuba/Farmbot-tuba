@@ -132,8 +132,7 @@ const backend = await initalizeBackend();
 backend_initialized = true;
 
 // TODO delete
-let WateringArgs ={name: "MyWateringJob", positions: new Array({x: 100, y: 100,z: -50}), "ml": 500}
-let wateringJob = new WateringJob(WateringArgs);
+let wateringJob ={jobType: "watering", name: "MyWateringJob", positions: new Array({x: 100, y: 100,z: -50}), "ml": 500}
 
 backend.scheduleManager.appendScheduledJob(wateringJob);
 backend.checkForNextJob();

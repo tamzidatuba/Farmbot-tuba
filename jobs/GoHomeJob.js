@@ -8,7 +8,7 @@ const SAFETY_HEIGHT = 0;
 
 class GoHomeJob extends Job {
     constructor() {
-        super("goHome");
+        super("GoHome");
 
         let moveToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING, SAFETY_HEIGHT);
         this.taskQueue.enqueue(moveToSafetyHeight);
