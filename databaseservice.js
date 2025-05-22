@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import seedingModule from './models/seedingjob.model.js';
 import wateringModule from './models/wateringjob.model.js';
+import notificationModel from './models/notification.model.js';
+import plantModel from './models/plant.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -15,46 +17,34 @@ const JobType = Object.freeze({
     WATERING: 'Watering',
 });
 
+const PlantRadii = {
+    lettuce: 15,
+    tomato: 10,
+    carrot: 5,
+}
+
 async function InsertJobToDB(jobType, object) {
     const now = new Date();
-
-    if (!Object.values(JobType).includes(jobType)) {
-        throw new Error("Invalid job type: " + jobType);
-    }
-
-    let payload = {};
-
     if (jobType === JobType.SEEDING) {
-        const { x, y, planttype, depth } = object;
+        const { jobname, seeds } = object;
 
-        if (!planttype || isNaN(x) || isNaN(y) || isNaN(depth)) {
-            throw new Error("Invalid seeding job data");
+        let result = await seedingModule.InsertSeedingJobToDB(jobname, seeds);
+        
+        if (result) {
+            return true;
         }
-
-        payload = {
-            x,
-            y,
-            planttype,
-            depth,
-        };
-
-        await seedingModule.InsertSeedingJobToDB(x, y, planttype, depth);
+        else {
+            return false;
+        }
     }
-
+    
     else if (jobType === JobType.WATERING) {
-        const { plantName, x, y, wateringcapacity } = object;
+        const { jobname, plantName, x, y, wateringcapacity } = object;
 
         if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
             throw new Error("Invalid watering job data");
         }
-        payload = {
-            plantName,
-            x,
-            y,
-            wateringcapacity,
-        };
-
-        await wateringModule.InsertWateringJobToDB(plantName, x, y, wateringcapacity);
+        await wateringModule.InsertWateringJobToDB(jobname, plantName, x, y, wateringcapacity);
     }
 
     console.log('Job has been inserted');
@@ -76,27 +66,85 @@ async function FetchJobsFromDB(jobType) {
     return jobs;
 }
 
-async function DeleteJobFromDB(jobType, id) {
+async function DeleteJobFromDB(jobType, jobname) {
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
     }
 
-    if(!id) {
-        throw new Error("Invalid job ID: " + id);
+    if (!jobname) {
+        throw new Error("Invalid job Name: " + jobname);
     }
 
     if (jobType === JobType.SEEDING) {
-        await seedingModule.DeleteSeedingJobFromDB(id);
+        await seedingModule.DeleteSeedingJobFromDB(jobname);
     } else if (jobType === JobType.WATERING) {
-        await wateringModule.DeleteWateringJobFromDB(id);
+        await wateringModule.DeleteWateringJobFromDB(jobname);
     }
 }
+
+async function UpdateJobToDB(jobType, object) {
+    const now = new Date();
+
+    if (!Object.values(JobType).includes(jobType)) {
+        throw new Error("Invalid job type: " + jobType);
+    }
+
+    let payload = {};
+
+    if (jobType === JobType.SEEDING) {
+        const { jobname, seeds } = object;
+        await seedingModule.UpdateSeedingJobToDB(jobname, seeds);
+    }
+
+    else if (jobType === JobType.WATERING) {
+        const { jobname, plantName, x, y, wateringcapacity } = object;
+
+        if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
+            throw new Error("Invalid watering job data");
+        }
+        payload = {
+            jobname,
+            plantName,
+            x,
+            y,
+            wateringcapacity,
+        };
+
+        await wateringModule.UpdateWateringJobToDB(jobname, plantName, x, y, wateringcapacity);
+    }
+
+    console.log('Job has been updated.');
+}
+
+
+async function InsertNotificationToDB(text) {
+    await notificationModel.InsertNotificationToDB(text);
+}
+
+async function FetchNotificationsFromDB() {
+    const notifications = await notificationModel.FetchNotificationsFromDB();
+    return notifications;
+}
+
+async function FetchPlantsfromDBtoFE() {
+
+    const plants  = await plantModel.FetchPlantsFromDB();
+    return plants;
+}
+
+
 
 export default {
     InsertJobToDB,
     FetchJobsFromDB,
     DeleteJobFromDB,
     JobType,
-    //   findAll,
-    //   model: seedingJob,
+    UpdateJobToDB,
+    InsertNotificationToDB,
+    FetchNotificationsFromDB,
+    FetchPlantsfromDBtoFE,
 };
+
+function GetDistance(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
+}
