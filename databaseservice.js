@@ -132,8 +132,6 @@ async function FetchPlantsfromDBtoFE() {
     return plants;
 }
 
-
-
 export default {
     InsertJobToDB,
     FetchJobsFromDB,
