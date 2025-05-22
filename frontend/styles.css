@@ -181,13 +181,21 @@ body {
   position: absolute;
   top: 20px;
   right: 20px;
+  right: 20px;
   background-color: #4caf50;
   color: white;
   border: none;
   padding: 10px;
+  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s;
+  font-size: 20px; /* affects emoji size too if no span used */
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 20px; /* affects emoji size too if no span used */
   width: 44px;
   height: 44px;
@@ -199,6 +207,11 @@ body {
 .settings-btn:hover {
   background-color: #388e3c;
 }
+
+.gear-emoji {
+  font-size: 1.8em; /* controls emoji size */
+}
+
 
 .gear-emoji {
   font-size: 1.8em; /* controls emoji size */
@@ -525,7 +538,7 @@ background-color: #ffcdd2;
       padding: 10px 15px;
       position: absolute;
       top:20px;
-      right:600px;
+      right:500px;
       height:50px;
       border-radius: 5px;
       cursor: pointer;
