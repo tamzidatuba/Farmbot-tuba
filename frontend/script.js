@@ -295,11 +295,12 @@ function getPlants() {
   })
   .then(response => response.json())
   .then(data => {
+    console.log(data);
     if (plantsList.toString() != data.toString()) {
     //if (plants.toString() != data.toString()) {
       plants = [];
       for (const plant of data) {
-        plants.push(new Plant(Number(plant[0]), Number(plant[1]), plant[2]));
+        plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
       }
     }
   })
@@ -311,13 +312,22 @@ function drawPlant(plant) {
   //ctx.save();
   const coord = coordToPixel(plant.x, plant.y);
 
-  if (plant.type == 'salad') {
+  if (plant.type == 'lettuce') {
     ctx.fillStyle = 'green';
     ctx.strokeStyle = 'green';
     ctx.beginPath();
     ctx.arc(coord.x, coord.y, 8, 0, 2 * Math.PI);
     ctx.fill();
-  } else if (plant.type == 'raddish') {
+  } else if (plant.type == 'radish') {
+    ctx.fillStyle = 'red';
+    ctx.strokeStyle = 'red';
+    ctx.beginPath();
+    ctx.moveTo(coord.x, coord.y - 10);
+    ctx.lineTo(coord.x - 10, coord.y + 8);
+    ctx.lineTo(coord.x + 10, coord.y + 8);
+    ctx.closePath();
+    ctx.fill();
+  } else if (plant.type == 'tomato') {
     ctx.fillStyle = 'red';
     ctx.strokeStyle = 'red';
     ctx.beginPath();
@@ -329,13 +339,19 @@ function drawPlant(plant) {
   }
 
   //add the radius
-  if (plant.type == 'salad') {
+  if (plant.type == 'lettuce') {
     ctx.beginPath();
     ctx.arc(coord.x, coord.y, 30, 0, 2 * Math.PI);
     ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
     ctx.lineWidth = 2;
     ctx.stroke();
-  } else if (plant.type == 'raddish') {
+  } else if (plant.type == 'radish') {
+    ctx.beginPath();
+    ctx.arc(coord.x, coord.y, 15, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  } else if (plant.type == 'tomato') {
     ctx.beginPath();
     ctx.arc(coord.x, coord.y, 15, 0, 2 * Math.PI);
     ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
@@ -382,7 +398,7 @@ function drawGrid() {
 
   drawAxesAndLabels();
 
-  //getPlants();
+  getPlants();
   for (const plant in plants) {
     drawPlant(plants[plant]);
   }
