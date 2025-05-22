@@ -24,18 +24,11 @@ const PlantRadii = {
 
 async function InsertJobToDB(jobType, object) {
     const now = new Date();
-
-    if (!Object.values(JobType).includes(jobType)) {
-        throw new Error("Invalid job type: " + jobType);
-    }
-
-    let payload = {};
-
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
 
         let result = await seedingModule.InsertSeedingJobToDB(jobname, seeds);
-
+        
         if (result) {
             return true;
         }
@@ -43,21 +36,13 @@ async function InsertJobToDB(jobType, object) {
             return false;
         }
     }
-
+    
     else if (jobType === JobType.WATERING) {
         const { jobname, plantName, x, y, wateringcapacity } = object;
 
         if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
             throw new Error("Invalid watering job data");
         }
-        payload = {
-            jobname,
-            plantName,
-            x,
-            y,
-            wateringcapacity,
-        };
-
         await wateringModule.InsertWateringJobToDB(jobname, plantName, x, y, wateringcapacity);
     }
 
