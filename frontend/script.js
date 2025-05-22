@@ -45,6 +45,7 @@ const statusBox = document.getElementById('farmbot-status');
 const statusHistory = document.getElementById('status-history');
 const statusContainer = document.getElementById('robot-status-container');
 let isHistoryVisible = false;
+const title = statusHistory.querySelector('.history-title');
 
 
 const settingsBtn = document.querySelector('.settings-btn');
@@ -466,14 +467,14 @@ function updateStatusHistory() {
     // Check if the data has changed
     if (dataList.toString() != data.toString()) {
       // Clear the current status history
-      while (statusHistory.children.length > 0) {
+      while (statusHistory.children.length > 1) {
         statusHistory.removeChild(statusHistory.lastChild);
       }
       // Add new entries to the status history
       for (const status in data) {
         const entry = document.createElement('div');
         entry.textContent = data[status];
-        statusHistory.prepend(entry);
+        statusHistory.insertBefore(entry, title.nextSibling);
       }
       dataList = data;
       }
