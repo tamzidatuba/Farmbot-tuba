@@ -88,7 +88,7 @@ class Backend {
     return false
   }
 
-  pauseJob() {
+  pauseJob(res) {
     if (this.statusManager.runningJob && !this.statusManager.isPaused) {
       this.statusManager.pauseJob()
       res.status(200).json({ message: 'Paused a running job' });
@@ -97,7 +97,7 @@ class Backend {
     }
   }
 
-  continueJob() {
+  continueJob(res) {
     if (this.statusManager.runningJob && this.statusManager.isPaused) {
       this.statusManager.continueJob()
       res.status(200).json({ message: 'Resumed a paused job' });
