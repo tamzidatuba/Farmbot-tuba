@@ -566,9 +566,9 @@ function updateRobot() {
   //just for testing
 }
 
-plants.push(new Plant(100, 100, 'lettuce'));
-plants.push(new Plant(200, 200, 'radish'));
-plants.push(new Plant(300, 300, 'tomato'));
+//plants.push(new Plant(100, 100, 'lettuce'));
+//plants.push(new Plant(200, 200, 'radish'));
+//plants.push(new Plant(300, 300, 'tomato'));
 
 // Initial draw
 drawGrid();
@@ -577,7 +577,7 @@ setTimeout (() => {
   clearCanvas();
   drawGrid();
 }, 100);
-//getPlants();
+getPlants();
 
 // Update every 1 second
 setInterval(updateRobot, 2500);
