@@ -45,6 +45,7 @@ const statusBox = document.getElementById('farmbot-status');
 const statusHistory = document.getElementById('status-history');
 const statusContainer = document.getElementById('robot-status-container');
 let isHistoryVisible = false;
+const title = statusHistory.querySelector('.history-title');
 
 
 const settingsBtn = document.querySelector('.settings-btn');
@@ -54,25 +55,25 @@ const loginModal = document.getElementById('loginModal');
 const closeLoginModal = document.getElementById('closeLoginModal');
 
 
-settingsBtn.addEventListener('click', () => {
-  // Toggle logout button visibility
-  logoutBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
-  loginBtn.style.display = loginBtn.style.display === 'block' ? 'none' : 'block';
-});
-
-
 toggle.addEventListener('click', () => {
-  const isVisible = subtask.style.display === 'block';
-  subtask.style.display = isVisible ? 'none' : 'block';
+  const isVisible = seedingSubtask.style.display === 'block';
+  const display = isVisible ? 'none' : 'block';
+
+  seedingSubtask.style.display = display;
   arrow.classList.toggle('open', !isVisible);
 });
 
-
-  settingsBtn.addEventListener('click', () => {
-  // Toggle logout button visibility
-  loginBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('loginBtn').style.display = 'none';
+  document.getElementById('logoutBtn').style.display = 'none';
 });
 
+settingsBtn.addEventListener('click', () => {
+  const isVisible = loginBtn.style.display === 'block';
+
+  loginBtn.style.display = isVisible ? 'none' : 'block';
+  logoutBtn.style.display = isVisible ? 'none' : 'block';
+});
 
 
 loginBtn.addEventListener('click', () => {
@@ -408,6 +409,7 @@ statusBox.addEventListener('click', () => {
   statusHistory.classList.toggle('hidden', !isHistoryVisible);
 });
 
+
 //draw plants
 function drawPlant(plant) {
   //ctx.save();
@@ -466,14 +468,14 @@ function updateStatusHistory() {
     // Check if the data has changed
     if (dataList.toString() != data.toString()) {
       // Clear the current status history
-      while (statusHistory.children.length > 0) {
+      while (statusHistory.children.length > 1) {
         statusHistory.removeChild(statusHistory.lastChild);
       }
       // Add new entries to the status history
       for (const status in data) {
         const entry = document.createElement('div');
         entry.textContent = data[status];
-        statusHistory.prepend(entry);
+        statusHistory.insertBefore(entry, title.nextSibling);
       }
       dataList = data;
       }

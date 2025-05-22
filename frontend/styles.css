@@ -88,6 +88,15 @@ canvas {
       display: none;
     }
 
+    .history-title {
+      text-align: center;
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      font-weight: bold;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+    }
+
 
 
 body {
@@ -330,8 +339,8 @@ background-color: #ffcdd2;
 
 .logout-btn {
   position: absolute;
-  top: 60px;
-  right: 20px;
+  top: 100px;
+  right: 40px;
   background-color: #e53935;
   color: white;
   border: none;
@@ -350,8 +359,8 @@ background-color: #ffcdd2;
 }
 .login-btn {
   position: absolute;
-  top: 70px;
-  right: 20px;
+  top: 60px;
+  right: 40px;
   background-color: #388e3c;
   color: white;
   border: none;
