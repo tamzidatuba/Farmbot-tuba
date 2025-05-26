@@ -148,6 +148,8 @@ window.addEventListener('click', (e) => {
   }
 });
 
+let isEditMode = false;
+let jobBeingEdited = null;
 let jobCount = 0;
 
 const jobContainer = document.getElementById('jobContainer');
@@ -208,6 +210,8 @@ executeBtn.addEventListener('click', async () => {
   let isValid = true;
   const seenCoordinates = new Set();
 
+  const seeds = [];
+
   for (const row of jobRows) {
     const plant = row.querySelector('.plantType').value;
     const x = Number(row.querySelector('.xCoord').value);
@@ -227,49 +231,144 @@ executeBtn.addEventListener('click', async () => {
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
+      seeds.push({ planttype: plant, x, y, depth });
       results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
     }
-    results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
+  }
 
-      try {
-        var obj= {
-        x: x,
-        y: y,
-        planttype: plant,
-        depth: depth
-        };
-        await InsertSeedingJob(x, y, plant, depth);
-      } catch (error) {
-        errorMsg.textContent = 'Failed to save job.';
-        console.error(error);
-        isValid = false;
-      }
-    }
+  const jobname = document.getElementById("SeedingJobName").value.trim();
+  jobNameError.textContent = '';
+  const regex = /^[a-zA-Z0-9 ]*$/;
 
-    const input = document.getElementById("SeedingJobName").value.trim(); // Get the latest value
-    jobNameError.textContent = ''; // Clear old error
-    const regex = /^[a-zA-Z0-9 ]*$/;
-
-    if (!regex.test(input)) {
-      jobNameError.textContent = 'Special characters are not allowed in the job name.';
-      isValid = false;
-    }
+  if (!regex.test(jobname)) {
+    jobNameError.textContent = 'Special characters are not allowed in the job name.';
+    isValid = false;
+  }
 
   if (!isValid) return;
 
-  if (jobCount !== 0 && Array.isArray(results) && results.length > 0) {
-    alert("Seeding Jobs Created:\n\n" + results.join("\n"));
-  } else {
-    alert("Seeding Job Task Empty");
+  const payload = { jobname, seeds };
+
+  try {
+    if (isEditMode) {
+      // 🔁 UPDATE mode
+      const response = await fetch('/api/updatejob/Seeding', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to update job.");
+      alert("Seeding Job Updated ✅");
+    } else {
+      // ➕ CREATE mode
+      const response = await fetch('/api/insertjob/Seeding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to create job.");
+      alert("Seeding Job Created ✅");
+    }
+
+    modal.style.display = 'none';
+    jobContainer.innerHTML = '';
+    document.getElementById("SeedingJobName").value = '';
+    jobCount = 0;
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Error: " + err.message);
   }
-  alert("Seeding Jobs Created:\n\n" + results.join("\n"));
-  jobContainer.innerHTML = '';
-  jobCount = 0;
-  modal.style.display = 'none';
 });
 
 
+const viewJobsBtn = document.getElementById('viewJobsBtn');
+const viewJobsModal = document.getElementById('viewJobsModal');
+const closeViewJobsModal = document.getElementById('closeViewJobsModal');
+const jobsList = document.getElementById('jobsList');
+const jobCountDisplay = document.getElementById('jobCountDisplay'); 
+function editJob(job) {
+  isEditMode = true;
+  jobBeingEdited = job.name;
+
+  // Update modal heading and button
+  document.getElementById('modalTitle').textContent = 'Modify Seeding Job';
+  document.getElementById('executeBtn').textContent = 'Update Job';
+
+  // Disable editing job name
+  const jobNameInput = document.getElementById('SeedingJobName');
+  jobNameInput.value = job.name;
+  jobNameInput.disabled = true;
+
+  // Clear old plant rows
+  jobContainer.innerHTML = '';
+  jobCount = 0;
+
+  // Add rows from the existing job data
+  job.plants.forEach(p => {
+    createJobRow(); // adds 1 row to jobContainer
+    const row = jobContainer.lastChild;
+    row.querySelector('.plantType').value = p.planttype;
+    row.querySelector('.xCoord').value = p.x;
+    row.querySelector('.yCoord').value = p.y;
+    row.querySelector('.depth').value = p.depth;
+  });
+
+  modal.style.display = 'block';
+}
+//VIEW JOBS BUTTON LOGIC
+viewJobsBtn.addEventListener('click', async () => {
+  jobsList.innerHTML = '<p>Loading jobs...</p>';
+  jobCountDisplay.textContent = '';
+  viewJobsModal.style.display = 'block';
+
+  try {
+    const response = await fetch('/api/getjobs/Seeding');
+    const jobs = await response.json();
+
+    jobCountDisplay.textContent = `✅ You have created ${jobs.length} seeding job${jobs.length !== 1 ? 's' : ''}.`;
+
+    if (jobs.length === 0) {
+      jobsList.innerHTML = '<p>No jobs found.</p>';
+    } else {
+      jobsList.innerHTML = '';
+      jobs.forEach((job, index) => {
+        const jobDiv = document.createElement('div');
+        jobDiv.className = 'job-row';
+        jobDiv.innerHTML = `
+          <strong>${job.name}</strong><br>
+          Plants: ${job.plants?.length || 0}
+          <br><button class="edit-job-btn" data-index="${index}">✏️ Edit</button>
+        `;
+        jobsList.appendChild(jobDiv);
+
+        jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
+          editJob(job);
+        });
+      });
+    }
+  } catch (err) {
+    jobsList.innerHTML = '<p>Error loading jobs.</p>';
+    console.error(err);
+  }
+});
+
+closeViewJobsModal.addEventListener('click', () => {
+  viewJobsModal.style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+  if (e.target === viewJobsModal) {
+    viewJobsModal.style.display = 'none';
+  }
+});
+
+
+//PAUSE BUTTON LOGIC
 const pauseBtn = document.getElementById('pauseJobBtn');
+const errorMessageBox = document.getElementById('errorMessage');
 
 pauseBtn.addEventListener('click', async () => {
   const isCurrentlyPaused = pauseBtn.textContent.includes('Resume');
@@ -277,17 +376,36 @@ pauseBtn.addEventListener('click', async () => {
 
   try {
     const res = await fetch(endpoint, { method: 'PUT' });
+    const data = await res.json();
+
     if (res.status === 200) {
-      pauseBtn.textContent = isCurrentlyPaused ? '⏸ Pause Job' : '▶ Resume Job';
+      if (data.message && data.message.includes('No job')) {
+        showError(data.message); // 👈 Show user-friendly error
+      } else {
+        pauseBtn.textContent = isCurrentlyPaused ? '⏸ Pause Job' : '▶ Resume Job';
+        hideError(); // hide if previously shown
+      }
     } else {
-      const errorText = await res.text();
-      alert("Failed: " + errorText);
+      showError(data.error || 'Failed to process the request.');
     }
   } catch (err) {
     console.error(err);
-    alert("Network error: " + err.message);
+    showError('Network error: ' + err.message);
   }
 });
+
+function showError(message) {
+  const errorBox = document.getElementById('errorMessage');
+  errorBox.textContent = `⚠️ ${message}`;
+  errorBox.classList.add('show');
+
+  setTimeout(() => {
+    errorBox.classList.remove('show');
+  }, 3000);
+}
+
+
+
 
 
 async function InsertSeedingJob(x, y, plant, depth) {
@@ -305,11 +423,21 @@ async function InsertSeedingJob(x, y, plant, depth) {
 }
 
 seedingJobBtn.addEventListener('click', () => {
+  // Reset to creation mode
+  isEditMode = false;
+  jobBeingEdited = null;
+
+  document.getElementById('modalTitle').textContent = 'Create Seeding Job';
+  document.getElementById('executeBtn').textContent = 'Create & Save';
+  document.getElementById('SeedingJobName').value = '';
+  document.getElementById('SeedingJobName').disabled = false;
+
   jobContainer.innerHTML = '';
   jobCount = 0;
-  createJobRow(); // Add first row by default
+  createJobRow(); // Add one row by default
   modal.style.display = 'block';
 });
+
 
 // get plants from server
 function getPlants() {
