@@ -250,7 +250,7 @@ border: 1px solid #ccc;
 }
 
 .modal-content button {
-background-color: #6B8F71
+background-color: #6B8F71;
 color: white;
 padding: 10px;
 border: none;
@@ -400,7 +400,7 @@ background-color: #ffcdd2;
 
 #loginModal h2 {
   text-align: center;
-  color: #6B8F71
+  color: #6B8F71;
   margin-bottom: 5px;
 }
 
@@ -519,22 +519,80 @@ background-color: #ffcdd2;
     }
 
     .pause-btn {
+      position: fixed;
+      top: 20px;
+      right: calc(15% + 260px); /* aligns to the left of status box */
       background-color: #fbc02d;
       color: white;
+      padding: 10px 20px;
+      height: 50px;
       border: none;
-      padding: 10px 15px;
-      position: absolute;
-      top:20px;
-      right:600px;
-      height:50px;
       border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s;
-      width:auto;
+      width: auto; /* 👈 ensures button does not stretch */
+      display: inline-block; /* 👈 ensures it doesn't behave like a block element */
+      font-weight: bold;
+      z-index: 1000;
+      white-space: nowrap;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
+    
     .pause-btn:hover {
       background-color: #f9a825;
     }
+    
+    
+    
+
+    #viewJobsBtn {
+      cursor: pointer;
+      padding: 12px;
+      background-color: #7C9F81;
+      border-radius: 5px;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+    
+    #viewJobsBtn:hover {
+      background-color: #5B7F62;
+    }
+    .error-box {
+      position: fixed;
+      top: 80px;
+      background-color: #fff5f5;
+      color: #c62828;
+      border: 1px solid #f5c6cb;
+      padding: 12px 18px;
+      border-radius: 8px;
+      z-index: 1000;
+      font-size: 14px;
+      font-weight: bold;
+      max-width: 350px;        
+      white-space: normal;     
+      word-break: break-word;   
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: none;     
+    }
+    
+    .error-box.show {
+      display: block;           
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    
+    
+    
     
 
 
