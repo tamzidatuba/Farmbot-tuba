@@ -163,34 +163,36 @@ function createJobRow() {
   row.classList.add('job-row');
   row.setAttribute('data-index', jobCount);
   row.innerHTML = `
-  <div class="job-header">
+  <div class="plant-row">
+    <div class="plant-row-header">
+      <label for="plant-${jobCount}">Plant Type</label>
       <span class="delete-job" title="Remove this plant job">&#128465;</span>
     </div>
-    <div class="plant-row">
-      <label for="plant-${jobCount}">Plant Type</label>
-      <select id="plant-${jobCount}" class="plantType">
-        <option value="">--Choose Plant--</option>
-        <option value="Tomato">Tomato</option>
-        <option value="Carrot">Carrot</option>
-        <option value="Lettuce">Lettuce</option>
-      </select>
+    <select id="plant-${jobCount}" class="plantType">
+      <option value="">--Choose Plant--</option>
+      <option value="Tomato">Tomato</option>
+      <option value="Carrot">Carrot</option>
+      <option value="Lettuce">Lettuce</option>
+    </select>
+  </div>
+  <div class="coord-row">
+    <div>
+      <label>X Coordinate</label>
+      <input type="number" class="coord-input xCoord" placeholder="0 - 395">
     </div>
-    <div class="coord-row">
-      <div>
-        <label>X Coordinate</label>
-        <input type="number" class="coord-input xCoord" placeholder="0 - 395">
-      </div>
-      <div>
-        <label>Y Coordinate</label>
-        <input type="number" class="coord-input yCoord" placeholder="0 - 650">
-      </div>
-      <div>
-        <label>Depth (mm)</label>
-        <input type="number" class="coord-input depth" placeholder="> 0">
-      </div>
+    <div>
+      <label>Y Coordinate</label>
+      <input type="number" class="coord-input yCoord" placeholder="0 - 650">
     </div>
-    <div class="errorMsg"></div>
-  `;
+    <div>
+      <label>Depth (mm)</label>
+      <input type="number" class="coord-input depth" placeholder="> 0">
+    </div>
+  </div>
+  <div class="errorMsg"></div>
+`;
+
+
 
   // Add delete event
   row.querySelector('.delete-job').addEventListener('click', () => {
@@ -244,6 +246,10 @@ executeBtn.addEventListener('click', async () => {
     jobNameError.textContent = 'Special characters are not allowed in the job name.';
     isValid = false;
   }
+  if(jobname===''){
+    jobNameError.textContent = 'Please fill the Jobname';
+    isValid = false;
+  }
 
   if (!isValid) return;
 
@@ -289,9 +295,19 @@ const viewJobsModal = document.getElementById('viewJobsModal');
 const closeViewJobsModal = document.getElementById('closeViewJobsModal');
 const jobsList = document.getElementById('jobsList');
 const jobCountDisplay = document.getElementById('jobCountDisplay'); 
+
+function capitalizeFirstLetter(str) {
+  return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
+}
+
 function editJob(job) {
+  viewJobsModal.style.display = 'none';
+  setTimeout(() => {
+    modal.style.display = 'block';
+  }, 200);
+
   isEditMode = true;
-  jobBeingEdited = job.name;
+  jobBeingEdited = job.jobname;
 
   // Update modal heading and button
   document.getElementById('modalTitle').textContent = 'Modify Seeding Job';
@@ -299,7 +315,7 @@ function editJob(job) {
 
   // Disable editing job name
   const jobNameInput = document.getElementById('SeedingJobName');
-  jobNameInput.value = job.name;
+  jobNameInput.value = job.jobname;
   jobNameInput.disabled = true;
 
   // Clear old plant rows
@@ -307,14 +323,21 @@ function editJob(job) {
   jobCount = 0;
 
   // Add rows from the existing job data
-  job.plants.forEach(p => {
-    createJobRow(); // adds 1 row to jobContainer
+  job.seeds.forEach(p => {
+    createJobRow(); // creates empty row
     const row = jobContainer.lastChild;
-    row.querySelector('.plantType').value = p.planttype;
-    row.querySelector('.xCoord').value = p.x;
-    row.querySelector('.yCoord').value = p.y;
-    row.querySelector('.depth').value = p.depth;
+  
+    const seedtype = p.seedtype; // fallback
+    const x = p.xcoordinate;
+    const y = p.ycoordinate;
+    const depth = p.depth ;
+  
+    row.querySelector('.plantType').value = capitalizeFirstLetter(seedtype);
+    row.querySelector('.xCoord').value = x;
+    row.querySelector('.yCoord').value = y;
+    row.querySelector('.depth').value = depth;
   });
+  
 
   modal.style.display = 'block';
 }
@@ -338,8 +361,8 @@ viewJobsBtn.addEventListener('click', async () => {
         const jobDiv = document.createElement('div');
         jobDiv.className = 'job-row';
         jobDiv.innerHTML = `
-          <strong>${job.name}</strong><br>
-          Plants: ${job.plants?.length || 0}
+          <strong>${job.jobname}</strong><br>
+          Plants: ${job.seeds?.length || 0}
           <br><button class="edit-job-btn" data-index="${index}">✏️ Edit</button>
         `;
         jobsList.appendChild(jobDiv);
