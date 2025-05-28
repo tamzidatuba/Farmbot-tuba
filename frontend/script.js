@@ -252,6 +252,12 @@ executeBtn.addEventListener('click', async () => {
   }
 
   if (!isValid) return;
+  console.warn("🚫 Form validation failed. Not sending job.");
+
+  if (seeds.length === 0) {
+    alert("❌ Please add at least one plant before creating a job.");
+    return;
+  }
 
   const payload = { jobname, seeds };
 
@@ -361,15 +367,48 @@ viewJobsBtn.addEventListener('click', async () => {
         const jobDiv = document.createElement('div');
         jobDiv.className = 'job-row';
         jobDiv.innerHTML = `
-          <strong>${job.jobname}</strong><br>
-          Plants: ${job.seeds?.length || 0}
-          <br><button class="edit-job-btn" data-index="${index}">✏️ Edit</button>
-        `;
+  <div class="job-header-row">
+    <strong>${job.jobname}</strong>
+    <div class="icon-actions">
+      <span class="icon-btn edit-job-btn" title="Edit" data-index="${index}">✏️</span>
+      <span class="icon-btn delete-job-btn" title="Delete" data-index="${index}">🗑️</span>
+    </div>
+  </div>
+  <div>Plants: ${job.seeds?.length || 0}</div>
+  <button class="execute-job-btn">🚜 Execute</button>
+`;
+
+
         jobsList.appendChild(jobDiv);
 
-        jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
-          editJob(job);
-        });
+        // edit logic
+    jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
+      editJob(job);
+      });
+
+      // new delete logic
+    jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
+      if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
+    try {
+      const res = await fetch(`/api/deletejob/Seeding?jobname=${encodeURIComponent(job.jobname)}`, {
+        method: 'DELETE'
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Failed to delete job.");
+      alert("Job deleted ✅");
+      viewJobsBtn.click(); // Refresh list
+    } catch (err) {
+      console.error(err);
+      alert("❌ Could not delete job: " + err.message);
+    }
+  }
+});
+
+// optional placeholder for future Execute
+jobDiv.querySelector('.execute-job-btn').addEventListener('click', () => {
+  alert("🚜 Execute job feature coming soon!");
+});
+
       });
     }
   } catch (err) {
