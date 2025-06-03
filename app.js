@@ -7,6 +7,7 @@ import { WateringJob } from './jobs/WateringJob.js';
 import plantModel from './models/plant.model.js';
 import createJobsRouter from './routes/jobs.js';
 
+
 const app = express();
 const PORT = 3000;
 
@@ -30,15 +31,6 @@ app.get('/', (req, res) => {
 
 app.use('/api/jobs', createJobsRouter(backend));
 
-app.get('/api/notifications', (req, res) => {
-  if (backend_initialized) {
-    res.status(200).json(backend.notification_history);
-  }
-  else {
-    res.status(200).json(new Array());
-  }
-});
-
 //to get plants
 app.get('/api/plants', async (req, res) => {
   try {
@@ -48,6 +40,18 @@ app.get('/api/plants', async (req, res) => {
   catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error in fetching" });
+  }});
+
+
+
+app.use('/api/jobs', createJobsRouter(backend));
+
+app.get('/api/notifications', (req, res) => {
+  if (backend_initialized) {
+    res.status(200).json(backend.notification_history);
+  }
+  else {
+    res.status(200).json(new Array());
   }
 });
 
@@ -79,11 +83,6 @@ app.put('/api/updateuser/:username/:password', async (req, res) => {
   }
 });
 
-
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
-
 app.get('/api/executionPipeline', async (req, res) => {
   if (backend_initialized) {
     res.status(200).json(backend.scheduleManager.jobsToExecute);
@@ -95,30 +94,20 @@ app.get('/api/executionPipeline', async (req, res) => {
 app.get('/api/status', (req, res) => {
   if (backend_initialized) {
     res.status(200).json({ status: backend.statusManager.status });
-    res.status(200).json({ status: backend.statusManager.status });
   }
   else {
     res.status(200).json({ status: "Offline" });
-    res.status(200).json({ status: "Offline" });
   }
 });
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
-
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
-
 
 // TODO delete
 let wateringJob = { jobType: "watering", name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }
 //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
 //console.log(plants);
-let wateringJob = { jobType: "watering", name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }
-//let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
-//console.log(plants);
+
 backend.scheduleManager.appendScheduledJob(wateringJob);
 backend.checkForNextJob();
