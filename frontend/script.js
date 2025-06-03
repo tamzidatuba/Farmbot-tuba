@@ -68,6 +68,7 @@ toggle.addEventListener('click', () => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('pauseJobBtn').style.display = 'none';
   document.getElementById('loginBtn').style.display = 'none';
   document.getElementById('logoutBtn').style.display = 'none';
 });
@@ -292,7 +293,7 @@ executeBtn.addEventListener('click', async () => {
   try {
     if (isEditMode) {
       // 🔁 UPDATE mode
-      const response = await fetch('/api/updatejob/Seeding', {
+      const response = await fetch('/api/jobs/Seeding', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -302,7 +303,7 @@ executeBtn.addEventListener('click', async () => {
       alert("Seeding Job Updated ✅");
     } else {
       // ➕ CREATE mode
-      const response = await fetch('/api/insertjob/Seeding', {
+      const response = await fetch('/api/jobs/Seeding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -382,7 +383,7 @@ viewJobsBtn.addEventListener('click', async () => {
   viewJobsModal.style.display = 'block';
 
   try {
-    const response = await fetch('/api/getjobs/Seeding');
+    const response = await fetch('/api/jobs/Seeding');
     const jobs = await response.json();
 
     jobCountDisplay.textContent = `✅ You have created ${jobs.length} seeding job${jobs.length !== 1 ? 's' : ''}.`;
@@ -418,7 +419,7 @@ viewJobsBtn.addEventListener('click', async () => {
     jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
       if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
     try {
-      const res = await fetch(`/api/deletejob/Seeding?jobname=${encodeURIComponent(job.jobname)}`, {
+      const res = await fetch(`/api/jobs/Seeding?jobname=${encodeURIComponent(job.jobname)}`, {
         method: 'DELETE'
       });
       const result = await res.json();
@@ -457,23 +458,32 @@ window.addEventListener('click', (e) => {
 
 
 //PAUSE BUTTON LOGIC
-function updatePauseButtonVisibility() {
+function updatePauseButtonVisibilityFromStatusManager() {
   const pauseBtn = document.getElementById('pauseJobBtn');
-  const isRunning = window.statusManager?.runningJob;
 
-  if (isRunning) {
-    pauseBtn.style.display = 'inline-block'; // show when job is running
-  } else {
-    pauseBtn.style.display = 'none'; // hide otherwise
-  }
+  fetch('/api/status')
+    .then(res => res.json())
+    .then(data => {
+      const status = data.status || "";
+      const isRunning = ["Seeding", "Watering", "Moving", "Fetching", "Moving to seeding position", "Moving to watering position"].includes(status);
+      pauseBtn.style.display = isRunning ? 'inline-block' : 'none';
+
+      // Update button text depending on paused state
+      pauseBtn.textContent = (status === "Paused") ? '▶ Resume Job' : '⏸ Pause Job';
+    })
+    .catch(err => {
+      console.error("Failed to fetch status:", err);
+      pauseBtn.style.display = 'none'; // hide on error
+    });
 }
+
 
 const pauseBtn = document.getElementById('pauseJobBtn');
 const errorMessageBox = document.getElementById('errorMessage');
 
 pauseBtn.addEventListener('click', async () => {
   const isCurrentlyPaused = pauseBtn.textContent.includes('Resume');
-  const endpoint = isCurrentlyPaused ? '/api/resumejob' : '/api/pausejob';
+  const endpoint = isCurrentlyPaused ? '/api/jobs/resume' : '/api/jobs/pause';
 
   try {
     const res = await fetch(endpoint, { method: 'PUT' });
@@ -510,7 +520,7 @@ function showError(message) {
 
 
 async function InsertSeedingJob(x, y, plant, depth) {
-  const response = await fetch('/api/insertjob/Seeding', {
+  const response = await fetch('/api/jobs/Seeding', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -792,7 +802,7 @@ function updateRobot() {
 
   updateStatusHistory();
 
-  updatePauseButtonVisibility();
+  updatePauseButtonVisibilityFromStatusManager();
 
   //just for testing
 }
