@@ -26,8 +26,6 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
-const backend = await initalizeBackend();
-backend_initialized = true;
 
 // Serve index.html on root route
 app.get('/', (req, res) => {
@@ -115,6 +113,8 @@ app.get('/api/frontendData', (req, res) => {
   }
 });
 
+const backend = await initalizeBackend();
+backend_initialized = true;
 
 // TODO delete
 let wateringJob = { jobType: "watering", name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }
