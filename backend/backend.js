@@ -15,6 +15,7 @@ const JobNotification = Object.freeze({
     JOB_FINISHED: "Job finished"
 });
 
+const MAX_NOTIFICATIONS = 50;
 
 class Backend {
   constructor(farmbot, statusManager) {
@@ -30,9 +31,10 @@ class Backend {
     // TODO put notification in database
     let date = new Date();
     // append date to the end of the string
-    notification += date.getDate() +'.'+ (date.getMonth() + 1) +'.'+ date.getFullYear() +' '+ date.getHours() +':'+ date.getMinutes() +':'+ date.getSeconds();;
+    let dateString = date.getDate().toString().padStart(2, "0") +'.'+ (date.getMonth() + 1).toString().padStart(2, "0") +'.'+ date.getFullYear() +' '+ date.getHours().toString().padStart(2, "0") +':'+ date.getMinutes().toString().padStart(2, "0") +':'+ date.getSeconds().toString().padStart(2, "0") + ": ";
+    notification = dateString + notification
     this.notification_history.push(notification);
-    while (this.notification_history.length > 10) {
+    while (this.notification_history.length > MAX_NOTIFICATIONS) {
       this.notification_history.shift();
     }
   }
@@ -52,10 +54,10 @@ class Backend {
 
   finishJob() {
     console.log("Finished a Job");
-    this.appendNotification("Job " + this.statusManager.currentJob.name + " finished at ");
+    this.appendNotification("Job " + this.statusManager.currentJob.name + " finished.");
     if (!this.checkForNextJob() && this.statusManager.currentJob.name != "GoHome") {
       this.statusManager.startJob(new GoHomeJob());
-      this.appendNotification("Job GoHome started at ");
+      this.appendNotification("Job GoHome started.");
     }
   }
 
@@ -82,7 +84,7 @@ class Backend {
           return
       }
       this.statusManager.startJob(jobObject);
-      this.appendNotification("Job " + nextJob.name + " started at ");
+      this.appendNotification("Job " + nextJob.name + " started.");
       return true
     }
     return false

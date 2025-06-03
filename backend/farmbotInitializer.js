@@ -8,7 +8,7 @@ const fakeBotPw = "84Ostertag!"
 // Requests a API-Token and returns it
 async function _getApiToken() {
     const data = {
-        'user': {'email': farmbotEmail3, 'password': fakeBotPw}
+        'user': {'email': farmbotEmail1, 'password': fakeBotPw}
     }
     const requestOptions = {
         method: "POST",
