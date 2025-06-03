@@ -18,13 +18,15 @@ const JobNotification = Object.freeze({
 const MAX_NOTIFICATIONS = 50;
 
 class Backend {
-  constructor(farmbot, statusManager) {
+  constructor() {
     this.notification_history = new Array();
+    this.scheduleManager = new ScheduleManager();
+  }
 
+  init(farmbot, statusManager) {
     this.farmbot = farmbot;
     this.statusManager = statusManager;
     this.statusManager.backend = this;
-    this.scheduleManager = new ScheduleManager();
   }
 
   generateFrontendData() {
@@ -131,7 +133,7 @@ function waitForFirstStatus(farmbot) {
     }, true);
   });
 }
-async function initalizeBackend() {
+async function initalizeBackend(backend) {
   let farmbot = await getFarmbot()
   let statusManager = new StatusManager(farmbot);
   console.log("Farmbot Initialised!");
@@ -139,7 +141,7 @@ async function initalizeBackend() {
   await waitForFirstStatus(farmbot);
   console.log("StatusManager Initialized");
   
-  return new Backend(farmbot, statusManager);
+  backend.init(farmbot, statusManager);
 }
 /*
 let seedingArgs = {"position": {"x": 100, "y": 100}}
@@ -153,4 +155,4 @@ let wateringJob = new WateringJob(WateringArgs);
 statusManager.startJob(wateringJob);
 */
 
-export {initalizeBackend};
+export {initalizeBackend, Backend};

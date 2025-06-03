@@ -2,8 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
-import { initalizeBackend } from './backend/backend.js';
-import { WateringJob } from './jobs/WateringJob.js';
+import { initalizeBackend, Backend} from './backend/backend.js';
 import plantModel from './models/plant.model.js';
 import createJobsRouter from './routes/jobs.js';
 
@@ -15,7 +14,7 @@ const PORT = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-let backend;
+const backend = new Backend();
 let backend_initialized = false;
 
 // Serve static files (CSS, JS) from root
@@ -114,7 +113,7 @@ app.get('/api/frontendData', (req, res) => {
   }
 });
 
-backend = await initalizeBackend();
+await initalizeBackend(backend);
 backend_initialized = true;
 
 // TODO delete
