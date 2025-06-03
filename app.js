@@ -79,6 +79,11 @@ app.put('/api/updateuser/:username/:password', async (req, res) => {
   }
 });
 
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
+
 app.get('/api/executionPipeline', async (req, res) => {
   if (backend_initialized) {
     res.status(200).json(backend.scheduleManager.jobsToExecute);
