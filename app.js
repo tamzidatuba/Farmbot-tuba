@@ -15,6 +15,7 @@ const PORT = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+let backend;
 let backend_initialized = false;
 
 // Serve static files (CSS, JS) from root
@@ -113,7 +114,7 @@ app.get('/api/frontendData', (req, res) => {
   }
 });
 
-const backend = await initalizeBackend();
+backend = await initalizeBackend();
 backend_initialized = true;
 
 // TODO delete
