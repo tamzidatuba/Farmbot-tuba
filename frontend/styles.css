@@ -180,8 +180,8 @@ body {
 .settings-btn {
   position: absolute;
   top: 20px;
-  right: 40px;
-  background-color: #6B8F71;
+  right: 20px;
+  background-color: #4caf50;
   color: white;
   border: none;
   padding: 10px;
@@ -197,7 +197,7 @@ body {
 }
 
 .settings-btn:hover {
-  background-color: #5B7F62;
+  background-color: #388e3c;
 }
 
 .gear-emoji {

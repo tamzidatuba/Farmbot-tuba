@@ -31,15 +31,6 @@ app.get('/', (req, res) => {
 
 app.use('/api/jobs', createJobsRouter(backend));
 
-app.get('/api/notifications', (req, res) => {
-  if (backend_initialized) {
-    res.status(200).json(backend.notification_history);
-  }
-  else {
-    res.status(200).json(new Array());
-  }
-});
-
 //to get plants
 app.get('/api/plants', async (req, res) => {
   try {
@@ -49,7 +40,49 @@ app.get('/api/plants', async (req, res) => {
   catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error in fetching" });
+  }});
+
+app.get('/api/notifications', (req, res) => {
+  if (backend_initialized) {
+    res.status(200).json(backend.notification_history);
   }
+  else {
+    res.status(200).json(new Array());
+  }
+});
+
+
+app.put('/api/updateuser/:username/:password', async (req, res) => {
+    const { username, password } = req.params;
+  try {
+    const user = await DatabaseService.UpdateUserToDB(username, password);
+    res.status(200).json({ message : "Password Updated"})
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+
+app.post('/api/user/:username/:password', async (req,res) => {
+  const { username, password } = req.params;
+  try{
+    let users = await DatabaseService.FetchUserfromDBtoFE(username, password);
+    if (users == null){
+      res.status(500).json({error: "Error. Invalid credentials"});
+    }
+    else{
+       res.status(200).json({Message : "Login Successful."});
+    }
+  }
+  catch(err){
+    console.error(err);
+    res.status(500).json({error: "Error. Invalid credentials"});
+  }
+});
+
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
 
 app.get('/api/executionPipeline', async (req, res) => {
@@ -69,14 +102,11 @@ app.get('/api/status', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
-
 
 // TODO delete
 let wateringJob = { jobType: "watering", name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }
 //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
 //console.log(plants);
+
 backend.scheduleManager.appendScheduledJob(wateringJob);
 backend.checkForNextJob();
