@@ -66,8 +66,8 @@ app.put('/api/updateuser/:username/:password', async (req, res) => {
   }
 });
 
-app.post('/api/user/:username/:password', async (req,res) => {
-  const { username, password } = req.params;
+app.post('/api/login', async (req,res) => {
+  const { username, password } = req.body;
   try{
     let users = await DatabaseService.FetchUserfromDBtoFE(username, password);
     if (users == null){
