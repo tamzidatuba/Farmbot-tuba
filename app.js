@@ -83,6 +83,39 @@ app.put('/api/updateuser/:username/:password', async (req, res) => {
   }
 });
 
+app.post('/api/user/:username/:password', async (req,res) => {
+  const { username, password } = req.params;
+  try{
+    let users = await DatabaseService.FetchUserfromDBtoFE(username, password);
+    if (users == null){
+      res.status(500).json({error: "Error. Invalid credentials"});
+    }
+    else{
+       res.status(200).json({Message : "Login Successful."});
+    }
+  }
+  catch(err){
+    console.error(err);
+    res.status(500).json({error: "Error. Invalid credentials"});
+  }
+});
+
+app.put('/api/updateuser/:username/:password', async (req, res) => {
+    const { username, password } = req.params;
+  try {
+    const user = await DatabaseService.UpdateUserToDB(username, password);
+    res.status(200).json({ message : "Password Updated"})
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
+
 app.get('/api/executionPipeline', async (req, res) => {
   if (backend_initialized) {
     res.status(200).json(backend.scheduleManager.jobsToExecute);
