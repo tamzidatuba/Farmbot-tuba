@@ -2,9 +2,12 @@ const toggle = document.getElementById('createTaskToggle');
 const subtask = document.getElementById('subtaskContainer');
 const arrow = document.getElementById('arrow');
 const modal = document.getElementById('seedingModal');
+const modalWatering = document.getElementById('wateringModal');
 const closeModal = document.getElementById('closeModal');
+const closeModalWatering = document.getElementById('closeModalWatering');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
 const jobNameError = document.getElementById('jobNameError');
+const wateringJobBtn = document.getElementById('wateringJobBtn');
 
 //grid ids
 const canvas = document.getElementById('gridCanvas');
@@ -42,6 +45,12 @@ const axisPadding = 30;
 const majorTickX = 50;
 const majorTickY = 100;
 
+//Watering Schedule
+const scheduleFields = document.getElementById("scheduleFields");
+const scheduleRadios = document.querySelectorAll('input[name="scheduleOption"]');
+scheduleRadios.item(1).checked = true; // Default to "Not Scheduled""
+
+
 //farmbot status
 const statusBox = document.getElementById('farmbot-status');
 const statusHistory = document.getElementById('status-history');
@@ -58,15 +67,16 @@ const loginBtn = document.getElementById('loginBtn');
 const loginModal = document.getElementById('loginModal');
 const closeLoginModal = document.getElementById('closeLoginModal');
 
-
+/*
 toggle.addEventListener('click', () => {
-  const isVisible = seedingSubtask.style.display === 'block';
+  const isVisible = seedingJobBtn.style.display === 'block';
   const display = isVisible ? 'none' : 'block';
 
-  seedingSubtask.style.display = display;
+  seedingJobBtn.style.display = display;
+
   arrow.classList.toggle('open', !isVisible);
 });
-
+*/
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('loginBtn').style.display = 'none';
   document.getElementById('logoutBtn').style.display = 'none';
@@ -131,13 +141,31 @@ toggle.addEventListener('click', () => {
 });
 
 seedingJobBtn.addEventListener('click', () => {
+  jobContainer.innerHTML = '';
+  jobCount = 0;
+  createJobRow(); // Add first row by default
   modal.style.display = 'block';
+});
+
+/*seedingJobBtn.addEventListener('click', () => {
+  modal.style.display = 'block';
+});*/
+
+wateringJobBtn.addEventListener('click', () => {
+  modalWatering.style.display = 'block';
+  jobCountWatering = 0;
+  createJobRowWatering(); // Add first row by default
 });
 
 closeModal.addEventListener('click', () => {
   modal.style.display = 'none';
   document.getElementById('SeedingJobName').value = '';
   document.getElementById('jobNameError').textContent = '';
+});
+
+closeModalWatering.addEventListener('click', () => {
+  modalWatering.style.display = 'none';
+  document.getElementById('WateringJobName').value = '';
 });
 
 window.addEventListener('click', (e) => {
@@ -148,6 +176,75 @@ window.addEventListener('click', (e) => {
   }
 });
 
+window.addEventListener('click', (e) => {
+  if (e.target === modalWatering) {
+    modalWatering.style.display = 'none';
+    document.getElementById('WateringJobName').value = '';
+  }
+});
+
+// Watering Job Management
+scheduleRadios.forEach(radio => {
+  radio.addEventListener('change', () => {
+    if (document.querySelector('input[name="scheduleOption"]:checked').value === "scheduled") {
+      scheduleFields.style.display = "flex";
+    } else {
+      scheduleFields.style.display = "none";
+    }
+  });
+});
+
+let jobCountWatering = 0;
+
+const jobContainerWatering = document.getElementById('jobContainerWatering');
+const addPlantBtnWatering = document.getElementById('addPlantBtnWatering');
+const executeBtnWatering = document.getElementById('executeBtnWatering');
+
+function createJobRowWatering() {
+  jobCountWatering++;
+
+  const row = document.createElement('div');
+  row.classList.add('job-row');
+  row.setAttribute('data-index', jobCountWatering);
+  row.innerHTML = `
+  <div class="job-header">
+      <span class="delete-job" title="Remove this plant job">&#128465;</span>
+    </div>
+    <div class="plant-row">
+      <label for="plant-${jobCountWatering}">Plant</label>
+      <select id="plant-${jobCountWatering}" 
+        <option value="">--Choose Plant--</option>
+        <option value="Plant1">Plant1</option>
+        <option value="Plant2">Plant2</option>
+        <option value="Plant3">Plant3</option>
+      </select>
+    </div>
+    <div class="coord-row">
+      <div>
+        <label>Amount of water</label>
+        <input type="number" class="watering amount" placeholder="20 ml">
+      </div>
+      <div>
+        <label>Z Coordinate</label>
+        <input type="number" class="coord-input zCoord" placeholder="10-50">
+      </div>
+    </div>
+    <div class="errorMsg"></div>
+  `;
+
+  // Add delete event
+  row.querySelector('.delete-job').addEventListener('click', () => {
+    row.remove();
+  });
+
+  jobContainerWatering.appendChild(row);
+}
+
+addPlantBtnWatering.addEventListener('click', () => {
+  createJobRowWatering();
+});
+
+// Seeding Job Management
 let jobCount = 0;
 
 const jobContainer = document.getElementById('jobContainer');
@@ -303,13 +400,6 @@ async function InsertSeedingJob(x, y, plant, depth) {
   if (!response.ok) throw new Error(result.error);
   console.log(result.message);
 }
-
-seedingJobBtn.addEventListener('click', () => {
-  jobContainer.innerHTML = '';
-  jobCount = 0;
-  createJobRow(); // Add first row by default
-  modal.style.display = 'block';
-});
 
 // get plants from server
 function getPlants() {
