@@ -1,5 +1,3 @@
-import { Queue } from "../jobs/Queue.js";
-
 const SCHEDULE_CHECKING_INTERVAL = 900000 // 15*60*1000 = 15min
 const SCHEDULE_TOLERANCE = 10000; // 10 Second execution tolerance
 

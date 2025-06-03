@@ -32,7 +32,8 @@ class Backend {
   generateFrontendData() {
     return {
       "status": this.statusManager.status,
-      "notifications": this.notification_history
+      "notifications": this.notification_history,
+      "executionPipeline": this.scheduleManager.jobsToExecute
     }
   }
 

@@ -83,15 +83,6 @@ app.post('/api/user/:username/:password', async (req,res) => {
   }
 });
 
-
-app.get('/api/executionPipeline', async (req, res) => {
-  if (backend_initialized) {
-    res.status(200).json(backend.scheduleManager.jobsToExecute);
-  } else {
-    res.status(200).json(new Array());
-  }
-})
-
 app.get('/api/status', (req, res) => {
   if (backend_initialized) {
     res.status(200).json({ status: backend.statusManager.status });
@@ -108,7 +99,8 @@ app.get('/api/frontendData', (req, res) => {
   else {
     res.status(200).json({
       "status": "Offline",
-      "notifications": []
+      "notifications": [],
+      "executionPipeline": []
     });
   }
 });

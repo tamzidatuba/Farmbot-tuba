@@ -11,10 +11,10 @@ class GoHomeJob extends Job {
         super("GoHome");
 
         let moveToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING, SAFETY_HEIGHT);
-        this.taskQueue.enqueue(moveToSafetyHeight);
+        this.taskQueue.push(moveToSafetyHeight);
 
         let goHome = new MoveTask(FarmbotStatus.MOVING, 0, 0);
-        this.taskQueue.enqueue(goHome);
+        this.taskQueue.push(goHome);
     }
 }
 
