@@ -6,8 +6,6 @@ const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
 const jobNameError = document.getElementById('jobNameError');
 
-
-
 //grid ids
 const canvas = document.getElementById('gridCanvas');
 const ctx = canvas.getContext('2d');
@@ -47,9 +45,11 @@ const majorTickY = 100;
 //farmbot status
 const statusBox = document.getElementById('farmbot-status');
 const statusHistory = document.getElementById('status-history');
-const statusContainer = document.getElementById('robot-status-container');
-let isHistoryVisible = false;
-const title = statusHistory.querySelector('.history-title');
+const title = statusHistory.querySelector('.history-header');
+let maxHistoryEntries = 10;
+const historyBox = document.getElementById('notification-history');
+const entryLimitSelect = document.getElementById('entry-limit');
+entryLimitSelect.value = maxHistoryEntries;
 
 
 const settingsBtn = document.querySelector('.settings-btn');
@@ -510,12 +510,6 @@ canvas.addEventListener('mouseleave', () => {
   coordDisplay.style.display = 'none';
 });
 
-// Handle extension of status box
-statusBox.addEventListener('click', () => {
-  isHistoryVisible = !isHistoryVisible;
-  statusHistory.classList.toggle('hidden', !isHistoryVisible);
-});
-
 
 // Update status box
 function updateStatus() {
@@ -527,6 +521,39 @@ function updateStatus() {
   })
 }
 
+// button for max history entries
+entryLimitSelect.addEventListener('change', () => {
+  if (maxHistoryEntries < parseInt(entryLimitSelect.value)) {
+    maxHistoryEntries = parseInt(entryLimitSelect.value);
+    // Clear the current status history
+    while (statusHistory.children.length > 1) {
+      statusHistory.removeChild(statusHistory.lastChild);
+    }
+    // Add new entries to the status history
+    for (const status in historyList) {  
+      if (statusHistory.children.length < maxHistoryEntries + 1) {
+        const entry = document.createElement('div');
+        entry.textContent = historyList[status];
+        statusHistory.appendChild(entry);
+      }
+    }
+  } else {
+    maxHistoryEntries = parseInt(entryLimitSelect.value);
+    while (statusHistory.children.length > 1) {
+      statusHistory.removeChild(statusHistory.lastChild);
+    }
+    // Add new entries to the status history
+    for (const status in historyList) {  
+      if (statusHistory.children.length < maxHistoryEntries + 1) {
+        const entry = document.createElement('div');
+        entry.textContent = historyList[status];
+        statusHistory.appendChild(entry);
+      }
+    }
+  }
+  
+});
+
 // Update status history
 function updateStatusHistory() {
   fetch('/api/notifications', {method: 'GET',
@@ -534,16 +561,19 @@ function updateStatusHistory() {
   .then(response => response.json())
   .then(data => {
     // Check if the data has changed
-    if (historyList.toString() != data.toString()) {
+    var temp = historyList.slice().reverse();
+    if (temp.toString() != data.toString()) {
       // Clear the current status history
       while (statusHistory.children.length > 1) {
         statusHistory.removeChild(statusHistory.lastChild);
       }
       // Add new entries to the status history
-      for (const status in data) {
-        const entry = document.createElement('div');
-        entry.textContent = data[status];
-        statusHistory.insertBefore(entry, title.nextSibling);
+      for (const status in data.reverse()) {  
+        if (statusHistory.children.length < maxHistoryEntries + 1) {
+          const entry = document.createElement('div');
+          entry.textContent = data[status];
+          statusHistory.appendChild(entry);
+        }
       }
       historyList = data;
       }
