@@ -10,9 +10,13 @@ class MoveZTask extends Task {
         return this.z == state.location_data.position.z; //&& state["informational_settings"]["busy"] == false;
     }
 
-    execute(farmbot, lastState) {
+    async execute(farmbot, lastState) {
         this.z = Math.max(this.z, lastState.location_data.position.z);
-        farmbot.moveAbsolute({ x: lastState.location_data.position.x, y: lastState.location_data.position.y, z: this.z, speed: 100 });
+        try {
+            await farmbot.moveAbsolute({ x: lastState.location_data.position.x, y: lastState.location_data.position.y, z: this.z, speed: 100 });
+        } catch(e) {
+            console.log(e)
+        }
         //console.log("Task: Moving to:", { x: lastState["location_data"]["position"]["x"], y: lastState["location_data"]["position"]["y"], z: this.z, speed: 100 });
     }
 }

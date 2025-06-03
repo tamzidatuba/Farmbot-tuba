@@ -15,8 +15,14 @@ class MoveTask extends Task {
         //return this.position.x == state.x && this.position.y == state.y && this.position.z == state.z
     }
 
-    execute(farmbot, lastState) {
-        farmbot.moveAbsolute({ x: this.x, y: this.y, z: lastState.location_data.position.z, speed: this.speed });
+    async execute(farmbot, lastState) {
+        try {
+            await farmbot.moveAbsolute({ x: this.x, y: this.y, z: lastState.location_data.position.z, speed: this.speed});
+        } catch(e) {
+            console.log(e)
+        }
+
+        
         //console.log("Task: Moving to", { x: this.x, y: this.y, z: this.z, speed: 100 });
     }
 }
