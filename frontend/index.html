@@ -98,12 +98,17 @@
       <canvas id="gridCanvas" width="790" height="650"></canvas>
     </div>
     <div id="hover-coordinates"></div>
-     <div id="farmbot-status-container">
-      <div id="farmbot-status">Status: Initializing...</div> <!-- Robot status -->
-      <div id="status-history" class="hidden">
+    <div id="farmbot-status">Status: Initializing...</div> <!-- Robot status -->
+    <div id="status-history">
+      <div class="history-header">
         <h3 class="history-title">Notification History</h3>
-      </div> <!-- notification history-->
-    </div>
+        <select id="entry-limit">
+          <option value="10">10 entries</option>
+          <option value="25">25 entries</option>
+          <option value="50">50 entries</option>
+        </select>
+      </div>
+    </div> <!-- notification history-->
     <button id="pauseJobBtn" class="pause-btn">⏸ Pause Job</button>
 
   </div>

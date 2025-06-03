@@ -47,9 +47,10 @@ const majorTickY = 100;
 //farmbot status
 const statusBox = document.getElementById('farmbot-status');
 const statusHistory = document.getElementById('status-history');
-const statusContainer = document.getElementById('robot-status-container');
-let isHistoryVisible = false;
-const title = statusHistory.querySelector('.history-title');
+const title = statusHistory.querySelector('.history-header');
+let maxHistoryEntries = 10;
+const historyBox = document.getElementById('notification-history');
+const entryLimitSelect = document.getElementById('entry-limit');
 
 
 const settingsBtn = document.querySelector('.settings-btn');
@@ -510,12 +511,6 @@ canvas.addEventListener('mouseleave', () => {
   coordDisplay.style.display = 'none';
 });
 
-// Handle extension of status box
-statusBox.addEventListener('click', () => {
-  isHistoryVisible = !isHistoryVisible;
-  statusHistory.classList.toggle('hidden', !isHistoryVisible);
-});
-
 
 // Update status box
 function updateStatus() {
@@ -526,6 +521,31 @@ function updateStatus() {
     statusBox.textContent = 'Status: ' + data.status;
   })
 }
+
+// button for max history entries
+entryLimitSelect.addEventListener('change', () => {
+  if (maxHistoryEntries < parseInt(entryLimitSelect.value)) {
+    maxHistoryEntries = parseInt(entryLimitSelect.value);
+    // Clear the current status history
+    while (statusHistory.children.length > 1) {
+      statusHistory.removeChild(statusHistory.lastChild);
+    }
+    // Add new entries to the status history
+    for (const status in historyList) {  
+      if (statusHistory.children.length < maxHistoryEntries + 1) {
+        const entry = document.createElement('div');
+        entry.textContent = historyList[status];
+        statusHistory.insertBefore(entry, title.nextSibling);
+      }
+    }
+  } else {
+    maxHistoryEntries = parseInt(entryLimitSelect.value);
+    while (statusHistory.children.length > maxHistoryEntries + 1) {
+        statusHistory.removeChild(statusHistory.lastChild);
+    }
+  }
+  
+});
 
 // Update status history
 function updateStatusHistory() {
@@ -540,10 +560,12 @@ function updateStatusHistory() {
         statusHistory.removeChild(statusHistory.lastChild);
       }
       // Add new entries to the status history
-      for (const status in data) {
-        const entry = document.createElement('div');
-        entry.textContent = data[status];
-        statusHistory.insertBefore(entry, title.nextSibling);
+      for (const status in data) {  
+        if (statusHistory.children.length < maxHistoryEntries + 1) {
+          const entry = document.createElement('div');
+          entry.textContent = data[status];
+          statusHistory.insertBefore(entry, title.nextSibling);
+        }
       }
       historyList = data;
       }
