@@ -18,7 +18,7 @@
 
   <div class="modal-content">
     <span class="close" id="closeModal">&times;</span>
-    <h2>Create Seeding Jobs</h2>
+    <h2 id="modalTitle">Create Seeding Job</h2>
     <input type="text" id="SeedingJobName" placeholder="Enter job name" />
     <div id="jobNameError" class="errorMsg"></div>
     <div id="jobContainer"></div>
@@ -77,6 +77,9 @@
         <button id="seedingJobBtn">Create Seeding Job</button>
       </div>
     </li>
+    <li class="menu-item" id="viewJobsBtn">
+      📋 View Jobs
+    </li>
     <li class="menu-item">Plants</li>
     <li class="menu-item">Weather</li>
     <li class="menu-item">Soil Health</li>
@@ -98,7 +101,14 @@
       <canvas id="gridCanvas" width="790" height="650"></canvas>
     </div>
     <div id="hover-coordinates"></div>
-    <div id="farmbot-status">Status: Initializing...</div> <!-- Robot status -->
+     <div id="farmbot-status-container">
+      <div id="farmbot-status">Status: Initializing...</div> <!-- Robot status -->
+      <button id="pauseJobBtn" class="pause-btn">⏸ Pause Job</button>
+      <div id="errorMessage" class="error-box hidden"></div>
+      <div id="status-history" class="hidden">
+        <h3 class="history-title">Notification History</h3>
+      </div> <!-- notification history-->
+    </div>
     <div id="status-history">
       <div class="history-header">
         <h3 class="history-title">Notification History</h3>
@@ -111,6 +121,15 @@
     </div> <!-- notification history-->
     <button id="pauseJobBtn" class="pause-btn">⏸ Pause Job</button>
 
+  </div>
+  <!-- VIEW JOBS MODAL -->
+  <div id="viewJobsModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeViewJobsModal">&times;</span>
+      <h2>📋 Seeding Jobs Overview</h2>
+      <p id="jobCountDisplay"></p> <!-- 👈 Add this -->
+      <div id="jobsList"></div>
+    </div>
   </div>
 
   

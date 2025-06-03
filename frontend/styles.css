@@ -320,33 +320,33 @@ font-size: 0.8rem;
 height: 16px;
 margin-top: 4px;
 }
-.job-row {
-position: relative;
-border: 1px solid #c8e6c9;
-padding: 15px;
-margin-bottom: 15px;
-border-radius: 10px;
-background-color: #F2ECE6;
+
+.plant-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
 }
 
-.job-header {
-display: flex;
-justify-content: flex-end;
-margin-bottom: 10px;
+.plant-row-header label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
 }
 
 .delete-job {
-cursor: pointer;
-font-size: 18px;
-color: #c62828;
-padding: 2px 6px;
-border-radius: 4px;
-transition: background-color 0.2s;
+  cursor: pointer;
+  font-size: 18px;
+  color: #777;
+  margin-left: auto;
 }
 
 .delete-job:hover {
-background-color: #ffcdd2;
+  color: red;
 }
+
+
 
 
 .logout-btn {
@@ -523,22 +523,107 @@ background-color: #ffcdd2;
     }
 
     .pause-btn {
+      position: fixed;
+      top: 20px;
+      right: calc(15% + 260px); /* aligns to the left of status box */
       background-color: #fbc02d;
       color: white;
+      padding: 10px 20px;
+      height: 50px;
       border: none;
-      padding: 10px 15px;
-      position: absolute;
-      top:20px;
-      right:600px;
-      height:50px;
       border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s;
-      width:auto;
+      width: auto; /* 👈 ensures button does not stretch */
+      display: inline-block; /* 👈 ensures it doesn't behave like a block element */
+      font-weight: bold;
+      z-index: 1000;
+      white-space: nowrap;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
+    
     .pause-btn:hover {
       background-color: #f9a825;
     }
+    
+    
+    
+
+    #viewJobsBtn {
+      cursor: pointer;
+      padding: 12px;
+      background-color: #7C9F81;
+      border-radius: 5px;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+    
+    #viewJobsBtn:hover {
+      background-color: #5B7F62;
+    }
+    .error-box {
+      position: fixed;
+      top: 80px;
+      background-color: #fff5f5;
+      color: #c62828;
+      border: 1px solid #f5c6cb;
+      padding: 12px 18px;
+      border-radius: 8px;
+      z-index: 1000;
+      font-size: 14px;
+      font-weight: bold;
+      max-width: 350px;        
+      white-space: normal;     
+      word-break: break-word;   
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: none;     
+    }
+    .job-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .icon-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    
+    .icon-btn {
+      cursor: pointer;
+      font-size: 18px;
+      vertical-align: middle;
+      user-select: none;
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
+    
+    .icon-btn:hover {
+      opacity: 0.8;
+      color: #2e7d32;
+    }
+    
+    
+    
+    
+    .error-box.show {
+      display: block;           
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    
+    
+    
     
 
 

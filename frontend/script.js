@@ -68,6 +68,7 @@ toggle.addEventListener('click', () => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('pauseJobBtn').style.display = 'none';
   document.getElementById('loginBtn').style.display = 'none';
   document.getElementById('logoutBtn').style.display = 'none';
 });
@@ -148,6 +149,8 @@ window.addEventListener('click', (e) => {
   }
 });
 
+let isEditMode = false;
+let jobBeingEdited = null;
 let jobCount = 0;
 
 const jobContainer = document.getElementById('jobContainer');
@@ -161,34 +164,65 @@ function createJobRow() {
   row.classList.add('job-row');
   row.setAttribute('data-index', jobCount);
   row.innerHTML = `
-  <div class="job-header">
+  <div class="plant-row">
+    <div class="plant-row-header">
+      <label for="plant-${jobCount}">Plant Type</label>
       <span class="delete-job" title="Remove this plant job">&#128465;</span>
     </div>
-    <div class="plant-row">
-      <label for="plant-${jobCount}">Plant Type</label>
-      <select id="plant-${jobCount}" class="plantType">
-        <option value="">--Choose Plant--</option>
-        <option value="Tomato">Tomato</option>
-        <option value="Carrot">Carrot</option>
-        <option value="Lettuce">Lettuce</option>
-      </select>
+    <select id="plant-${jobCount}" class="plantType">
+      <option value="">--Choose Plant--</option>
+      <option value="Tomato">Tomato</option>
+      <option value="Radish">Radish</option>
+      <option value="Lettuce">Lettuce</option>
+    </select>
+  </div>
+  <div class="coord-row">
+    <div>
+      <label>X Coordinate</label>
+      <input type="number" class="coord-input xCoord" placeholder="0 - 395">
     </div>
-    <div class="coord-row">
-      <div>
-        <label>X Coordinate</label>
-        <input type="number" class="coord-input xCoord" placeholder="0 - 395">
-      </div>
-      <div>
-        <label>Y Coordinate</label>
-        <input type="number" class="coord-input yCoord" placeholder="0 - 650">
-      </div>
-      <div>
-        <label>Depth (mm)</label>
-        <input type="number" class="coord-input depth" placeholder="> 0">
-      </div>
+    <div>
+      <label>Y Coordinate</label>
+      <input type="number" class="coord-input yCoord" placeholder="0 - 650">
     </div>
-    <div class="errorMsg"></div>
-  `;
+    <div>
+      <label>Depth (mm)</label>
+      <input type="number" class="coord-input depth" placeholder="> 0">
+    </div>
+  </div>
+  <div class="errorMsg"></div>
+`;
+const plantSelect = row.querySelector('.plantType');
+const depthInput = row.querySelector('.depth');
+
+// Set depth and disable field based on selected plant
+function setDepthFromPlant(type) {
+  switch (type.toLowerCase()) {
+    case 'tomato':
+      depthInput.value = 6;
+      break;
+    case 'lettuce':
+      depthInput.value = 3;
+      break;
+    case 'radish':
+      depthInput.value = 10;
+      break;
+    default:
+      depthInput.value = '';
+      break;
+  }
+}
+
+// Set up listener to update depth
+plantSelect.addEventListener('change', () => {
+  setDepthFromPlant(plantSelect.value);
+});
+
+// Disable user editing
+depthInput.disabled = true;
+
+
+
 
   // Add delete event
   row.querySelector('.delete-job').addEventListener('click', () => {
@@ -208,6 +242,8 @@ executeBtn.addEventListener('click', async () => {
   let isValid = true;
   const seenCoordinates = new Set();
 
+  const seeds = [];
+
   for (const row of jobRows) {
     const plant = row.querySelector('.plantType').value;
     const x = Number(row.querySelector('.xCoord').value);
@@ -218,8 +254,7 @@ executeBtn.addEventListener('click', async () => {
 
     const coordKey = `${x},${y}`;
 
-    if (!plant || isNaN(x) || isNaN(y) || isNaN(depth) ||
-        x < 0 || x > 395 || y < 0 || y > 650 || depth <= 0) {
+    if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650 ) {
       errorMsg.textContent = 'Please correct the above values.';
       isValid = false;
     } else if (seenCoordinates.has(coordKey)) {
@@ -227,71 +262,265 @@ executeBtn.addEventListener('click', async () => {
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
+      seeds.push({ planttype: plant, x, y, depth });
       results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
     }
-    results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
+  }
 
-      try {
-        var obj= {
-        x: x,
-        y: y,
-        planttype: plant,
-        depth: depth
-        };
-        await InsertSeedingJob(x, y, plant, depth);
-      } catch (error) {
-        errorMsg.textContent = 'Failed to save job.';
-        console.error(error);
-        isValid = false;
-      }
-    }
+  const jobname = document.getElementById("SeedingJobName").value.trim();
+  jobNameError.textContent = '';
+  const regex = /^[a-zA-Z0-9 ]*$/;
 
-    const input = document.getElementById("SeedingJobName").value.trim(); // Get the latest value
-    jobNameError.textContent = ''; // Clear old error
-    const regex = /^[a-zA-Z0-9 ]*$/;
-
-    if (!regex.test(input)) {
-      jobNameError.textContent = 'Special characters are not allowed in the job name.';
-      isValid = false;
-    }
+  if (!regex.test(jobname)) {
+    jobNameError.textContent = 'Special characters are not allowed in the job name.';
+    isValid = false;
+  }
+  if(jobname===''){
+    jobNameError.textContent = 'Please fill the Jobname';
+    isValid = false;
+  }
 
   if (!isValid) return;
+  console.warn("🚫 Form validation failed. Not sending job.");
 
-  if (jobCount !== 0 && Array.isArray(results) && results.length > 0) {
-    alert("Seeding Jobs Created:\n\n" + results.join("\n"));
-  } else {
-    alert("Seeding Job Task Empty");
+  if (seeds.length === 0) {
+    alert("❌ Please add at least one plant before creating a job.");
+    return;
   }
-  alert("Seeding Jobs Created:\n\n" + results.join("\n"));
+
+  const payload = { jobname, seeds };
+
+  try {
+    if (isEditMode) {
+      // 🔁 UPDATE mode
+      const response = await fetch('/api/jobs/Seeding', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to update job.");
+      alert("Seeding Job Updated ✅");
+    } else {
+      // ➕ CREATE mode
+      const response = await fetch('/api/jobs/Seeding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to create job.");
+      alert("Seeding Job Created ✅");
+    }
+
+    modal.style.display = 'none';
+    jobContainer.innerHTML = '';
+    document.getElementById("SeedingJobName").value = '';
+    jobCount = 0;
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Error: " + err.message);
+  }
+});
+
+
+const viewJobsBtn = document.getElementById('viewJobsBtn');
+const viewJobsModal = document.getElementById('viewJobsModal');
+const closeViewJobsModal = document.getElementById('closeViewJobsModal');
+const jobsList = document.getElementById('jobsList');
+const jobCountDisplay = document.getElementById('jobCountDisplay'); 
+
+function capitalizeFirstLetter(str) {
+  return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
+}
+
+function editJob(job) {
+  viewJobsModal.style.display = 'none';
+  setTimeout(() => {
+    modal.style.display = 'block';
+  }, 200);
+
+  isEditMode = true;
+  jobBeingEdited = job.jobname;
+
+  // Update modal heading and button
+  document.getElementById('modalTitle').textContent = 'Modify Seeding Job';
+  document.getElementById('executeBtn').textContent = 'Update Job';
+
+  // Disable editing job name
+  const jobNameInput = document.getElementById('SeedingJobName');
+  jobNameInput.value = job.jobname;
+  jobNameInput.disabled = true;
+
+  // Clear old plant rows
   jobContainer.innerHTML = '';
   jobCount = 0;
-  modal.style.display = 'none';
+
+  // Add rows from the existing job data
+  job.seeds.forEach(p => {
+    createJobRow(); // creates empty row
+    const row = jobContainer.lastChild;
+  
+    const seedtype = p.seedtype; // fallback
+    const x = p.xcoordinate;
+    const y = p.ycoordinate;
+    const depth = p.depth ;
+  
+    row.querySelector('.plantType').value = capitalizeFirstLetter(seedtype);
+    row.querySelector('.xCoord').value = x;
+    row.querySelector('.yCoord').value = y;
+    row.querySelector('.depth').value = depth;
+  });
+  
+
+  modal.style.display = 'block';
+}
+//VIEW JOBS BUTTON LOGIC
+viewJobsBtn.addEventListener('click', async () => {
+  jobsList.innerHTML = '<p>Loading jobs...</p>';
+  jobCountDisplay.textContent = '';
+  viewJobsModal.style.display = 'block';
+
+  try {
+    const response = await fetch('/api/jobs/Seeding');
+    const jobs = await response.json();
+
+    jobCountDisplay.textContent = `✅ You have created ${jobs.length} seeding job${jobs.length !== 1 ? 's' : ''}.`;
+
+    if (jobs.length === 0) {
+      jobsList.innerHTML = '<p>No jobs found.</p>';
+    } else {
+      jobsList.innerHTML = '';
+      jobs.forEach((job, index) => {
+        const jobDiv = document.createElement('div');
+        jobDiv.className = 'job-row';
+        jobDiv.innerHTML = `
+  <div class="job-header-row">
+    <strong>${job.jobname}</strong>
+    <div class="icon-actions">
+      <span class="icon-btn edit-job-btn" title="Edit" data-index="${index}">✏️</span>
+      <span class="icon-btn delete-job-btn" title="Delete" data-index="${index}">🗑️</span>
+    </div>
+  </div>
+  <div>Plants: ${job.seeds?.length || 0}</div>
+  <button class="execute-job-btn">🚜 Execute</button>
+`;
+
+
+        jobsList.appendChild(jobDiv);
+
+        // edit logic
+    jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
+      editJob(job);
+      });
+
+      // new delete logic
+    jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
+      if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
+    try {
+      const res = await fetch(`/api/jobs/Seeding?jobname=${encodeURIComponent(job.jobname)}`, {
+        method: 'DELETE'
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Failed to delete job.");
+      alert("Job deleted ✅");
+      viewJobsBtn.click(); // Refresh list
+    } catch (err) {
+      console.error(err);
+      alert("❌ Could not delete job: " + err.message);
+    }
+  }
 });
+
+// optional placeholder for future Execute
+jobDiv.querySelector('.execute-job-btn').addEventListener('click', () => {
+  alert("🚜 Execute job feature coming soon!");
+});
+
+      });
+    }
+  } catch (err) {
+    jobsList.innerHTML = '<p>Error loading jobs.</p>';
+    console.error(err);
+  }
+});
+
+closeViewJobsModal.addEventListener('click', () => {
+  viewJobsModal.style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+  if (e.target === viewJobsModal) {
+    viewJobsModal.style.display = 'none';
+  }
+});
+
+
+//PAUSE BUTTON LOGIC
+function updatePauseButtonVisibilityFromStatusManager() {
+  const pauseBtn = document.getElementById('pauseJobBtn');
+
+  fetch('/api/status')
+    .then(res => res.json())
+    .then(data => {
+      const status = data.status || "";
+      const isRunning = ["Seeding", "Watering", "Moving", "Fetching", "Moving to seeding position", "Moving to watering position"].includes(status);
+      pauseBtn.style.display = isRunning ? 'inline-block' : 'none';
+
+      // Update button text depending on paused state
+      pauseBtn.textContent = (status === "Paused") ? '▶ Resume Job' : '⏸ Pause Job';
+    })
+    .catch(err => {
+      console.error("Failed to fetch status:", err);
+      pauseBtn.style.display = 'none'; // hide on error
+    });
+}
 
 
 const pauseBtn = document.getElementById('pauseJobBtn');
+const errorMessageBox = document.getElementById('errorMessage');
 
 pauseBtn.addEventListener('click', async () => {
   const isCurrentlyPaused = pauseBtn.textContent.includes('Resume');
-  const endpoint = isCurrentlyPaused ? '/api/resumejob' : '/api/pausejob';
+  const endpoint = isCurrentlyPaused ? '/api/jobs/resume' : '/api/jobs/pause';
 
   try {
     const res = await fetch(endpoint, { method: 'PUT' });
+    const data = await res.json();
+
     if (res.status === 200) {
-      pauseBtn.textContent = isCurrentlyPaused ? '⏸ Pause Job' : '▶ Resume Job';
+      if (data.message && data.message.includes('No job')) {
+        showError(data.message); // 👈 Show user-friendly error
+      } else {
+        pauseBtn.textContent = isCurrentlyPaused ? '⏸ Pause Job' : '▶ Resume Job';
+        hideError(); // hide if previously shown
+      }
     } else {
-      const errorText = await res.text();
-      alert("Failed: " + errorText);
+      showError(data.error || 'Failed to process the request.');
     }
   } catch (err) {
     console.error(err);
-    alert("Network error: " + err.message);
+    showError('Network error: ' + err.message);
   }
 });
 
+function showError(message) {
+  const errorBox = document.getElementById('errorMessage');
+  errorBox.textContent = `⚠️ ${message}`;
+  errorBox.classList.add('show');
+
+  setTimeout(() => {
+    errorBox.classList.remove('show');
+  }, 3000);
+}
+
+
+
+
 
 async function InsertSeedingJob(x, y, plant, depth) {
-  const response = await fetch('/api/insertjob/Seeding', {
+  const response = await fetch('/api/jobs/Seeding', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -305,11 +534,21 @@ async function InsertSeedingJob(x, y, plant, depth) {
 }
 
 seedingJobBtn.addEventListener('click', () => {
+  // Reset to creation mode
+  isEditMode = false;
+  jobBeingEdited = null;
+
+  document.getElementById('modalTitle').textContent = 'Create Seeding Job';
+  document.getElementById('executeBtn').textContent = 'Create & Save';
+  document.getElementById('SeedingJobName').value = '';
+  document.getElementById('SeedingJobName').disabled = false;
+
   jobContainer.innerHTML = '';
   jobCount = 0;
-  createJobRow(); // Add first row by default
+  createJobRow(); // Add one row by default
   modal.style.display = 'block';
 });
+
 
 // get plants from server
 function getPlants() {
@@ -592,6 +831,8 @@ function updateRobot() {
   //drawRobot();
 
   updateStatusHistory();
+
+  updatePauseButtonVisibilityFromStatusManager();
 
   //just for testing
 }
