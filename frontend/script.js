@@ -171,7 +171,7 @@ function createJobRow() {
     <select id="plant-${jobCount}" class="plantType">
       <option value="">--Choose Plant--</option>
       <option value="Tomato">Tomato</option>
-      <option value="Carrot">Carrot</option>
+      <option value="Radish">Radish</option>
       <option value="Lettuce">Lettuce</option>
     </select>
   </div>
@@ -191,6 +191,35 @@ function createJobRow() {
   </div>
   <div class="errorMsg"></div>
 `;
+const plantSelect = row.querySelector('.plantType');
+const depthInput = row.querySelector('.depth');
+
+// Set depth and disable field based on selected plant
+function setDepthFromPlant(type) {
+  switch (type.toLowerCase()) {
+    case 'tomato':
+      depthInput.value = 6;
+      break;
+    case 'lettuce':
+      depthInput.value = 3;
+      break;
+    case 'radish':
+      depthInput.value = 10;
+      break;
+    default:
+      depthInput.value = '';
+      break;
+  }
+}
+
+// Set up listener to update depth
+plantSelect.addEventListener('change', () => {
+  setDepthFromPlant(plantSelect.value);
+});
+
+// Disable user editing
+depthInput.disabled = true;
+
 
 
 
@@ -224,8 +253,7 @@ executeBtn.addEventListener('click', async () => {
 
     const coordKey = `${x},${y}`;
 
-    if (!plant || isNaN(x) || isNaN(y) || isNaN(depth) ||
-        x < 0 || x > 395 || y < 0 || y > 650 || depth <= 0) {
+    if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650 ) {
       errorMsg.textContent = 'Please correct the above values.';
       isValid = false;
     } else if (seenCoordinates.has(coordKey)) {
@@ -429,6 +457,17 @@ window.addEventListener('click', (e) => {
 
 
 //PAUSE BUTTON LOGIC
+function updatePauseButtonVisibility() {
+  const pauseBtn = document.getElementById('pauseJobBtn');
+  const isRunning = window.statusManager?.runningJob;
+
+  if (isRunning) {
+    pauseBtn.style.display = 'inline-block'; // show when job is running
+  } else {
+    pauseBtn.style.display = 'none'; // hide otherwise
+  }
+}
+
 const pauseBtn = document.getElementById('pauseJobBtn');
 const errorMessageBox = document.getElementById('errorMessage');
 
@@ -752,6 +791,8 @@ function updateRobot() {
   //drawRobot();
 
   updateStatusHistory();
+
+  updatePauseButtonVisibility();
 
   //just for testing
 }
