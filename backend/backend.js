@@ -27,11 +27,18 @@ class Backend {
     this.scheduleManager = new ScheduleManager();
   }
 
+  generateFrontendData() {
+    return {
+      "status": this.statusManager.status,
+      "notifications": this.notification_history
+    }
+  }
+
   appendNotification(notification) {
     // TODO put notification in database
     let date = new Date();
     // append date to the end of the string
-    let dateString = date.getDate().toString().padStart(2, "0") +'.'+ (date.getMonth() + 1).toString().padStart(2, "0") +'.'+ date.getFullYear() +' '+ date.getHours().toString().padStart(2, "0") +':'+ date.getMinutes().toString().padStart(2, "0") +':'+ date.getSeconds().toString().padStart(2, "0") + ": ";
+    let dateString = '[' + date.getDate().toString().padStart(2, "0") +'-'+ (date.getMonth() + 1).toString().padStart(2, "0") +'-'+ date.getFullYear() +'|'+ date.getHours().toString().padStart(2, "0") +':'+ date.getMinutes().toString().padStart(2, "0") +':'+ date.getSeconds().toString().padStart(2, "0") + "] ";
     notification = dateString + notification
     this.notification_history.push(notification);
     while (this.notification_history.length > MAX_NOTIFICATIONS) {

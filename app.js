@@ -21,6 +21,11 @@ let backend_initialized = false;
 app.use(express.static(path.join(__dirname, 'frontend//')));
 app.use(express.json());
 
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
+
 const backend = await initalizeBackend();
 backend_initialized = true;
 
@@ -81,10 +86,6 @@ app.post('/api/user/:username/:password', async (req,res) => {
 });
 
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
-
 app.get('/api/executionPipeline', async (req, res) => {
   if (backend_initialized) {
     res.status(200).json(backend.scheduleManager.jobsToExecute);
@@ -99,6 +100,18 @@ app.get('/api/status', (req, res) => {
   }
   else {
     res.status(200).json({ status: "Offline" });
+  }
+});
+
+app.get('/api/frontendData', (req, res) => {
+  if (backend_initialized) {
+    res.status(200).json(backend.generateFrontendData());
+  }
+  else {
+    res.status(200).json({
+      "status": "Offline",
+      "notifications": []
+    });
   }
 });
 
