@@ -143,16 +143,5 @@ async function initalizeBackend(backend) {
   
   backend.init(farmbot, statusManager);
 }
-/*
-let seedingArgs = {"position": {"x": 100, "y": 100}}
-let seedingJob = new SeedingJob(seedingArgs);
-
-statusManager.startJob(seedingJob);
-
-let WateringArgs ={"position": {"x": 100, "y": 100,"z": -50}, "duration":10}
-let wateringJob = new WateringJob(WateringArgs);
-
-statusManager.startJob(wateringJob);
-*/
 
 export {initalizeBackend, Backend};

@@ -11,7 +11,7 @@ export default function createJobsRouter(backend) {
         try {
             let result = await DatabaseService.InsertJobToDB(jobType, object);
             if (result) {
-                backend.appendNotification("Job " + object.name + " saved at ");
+                backend.appendNotification("Job " + object.name + " saved");
                 res.status(200).json({ message: 'Job saved' });
             }
             else {
@@ -43,11 +43,20 @@ export default function createJobsRouter(backend) {
         const { jobtype, jobname } = req.params;
         try {
             await DatabaseService.DeleteJobFromDB(jobtype, jobname);
-            backend.appendNotification("Job " + id + " deleted at ");
+            backend.appendNotification("Job " + id + " deleted");
             res.status(200).json({ message: 'Job deleted' });
         } catch (err) {
             res.status(500).json({ error: 'Failed to delete job' });
         }
+    });
+
+    //pause job
+    router.put('/pause', async (req, res) => {
+        backend.pauseJob(res);
+    });
+    //resume job
+    router.put('/resume', async (req, res) => {
+        backend.continueJob(res);
     });
 
     router.put('/:jobtype', async (req, res) => {
@@ -55,7 +64,7 @@ export default function createJobsRouter(backend) {
         const object = req.body;
         try {
             await DatabaseService.UpdateJobToDB(jobtype, object);
-            backend.appendNotification("Job " + object.name + " modified at ");
+            backend.appendNotification("Job " + object.name + " modified");
             res.status(200).json({ message: 'Job updated' });
         } catch (err) {
             console.error(err);
@@ -70,15 +79,7 @@ export default function createJobsRouter(backend) {
       backend.queueJob(id, res);
     });
     
-    //pause job
-    router.put('/pause', async (req, res) => {
-      backend.pauseJob(res);
-    });
     
-    //resume job
-    router.put('/resume', async (req, res) => {
-      backend.continueJob(res);
-    });
 
     return router;
 }

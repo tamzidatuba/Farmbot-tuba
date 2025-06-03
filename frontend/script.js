@@ -494,7 +494,7 @@ pauseBtn.addEventListener('click', async () => {
         showError(data.message); // 👈 Show user-friendly error
       } else {
         pauseBtn.textContent = isCurrentlyPaused ? '⏸ Pause Job' : '▶ Resume Job';
-        hideError(); // hide if previously shown
+        //hideError(); // hide if previously shown
       }
     } else {
       showError(data.error || 'Failed to process the request.');
