@@ -6,6 +6,8 @@ import { initalizeBackend } from './backend/backend.js';
 import { WateringJob } from './jobs/WateringJob.js';
 import plantModel from './models/plant.model.js';
 
+
+
 const app = express();
 const PORT = 3000;
 
@@ -133,6 +135,34 @@ app.get('/api/plants', async (req,res) => {
   catch(err){
     console.error(err);
     res.status(500).json({error: "Error in fetching"});
+  }
+});
+
+app.post('/api/user/:username/:password', async (req,res) => {
+  const { username, password } = req.params;
+  try{
+    let users = await DatabaseService.FetchUserfromDBtoFE(username, password);
+    if (users == null){
+      res.status(500).json({error: "Error. Invalid credentials"});
+    }
+    else{
+       res.status(200).json({Message : "Login Successful."});
+    }
+  }
+  catch(err){
+    console.error(err);
+    res.status(500).json({error: "Error. Invalid credentials"});
+  }
+});
+
+app.put('/api/updateuser/:username/:password', async (req, res) => {
+    const { username, password } = req.params;
+  try {
+    const user = await DatabaseService.UpdateUserToDB(username, password);
+    res.status(200).json({ message : "Password Updated"})
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update user' });
   }
 });
 

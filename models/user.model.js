@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
 // create model for user
 const userModel = mongoose.model('user', userSchema);
 
-
+/*
 // insert test user to collection in local db
 async function InsertUser() {
   await userModel.create({ username: 'admin', password: 'admin'});
@@ -28,14 +28,26 @@ async function InsertUser() {
 
 // call function
 await InsertUser();
-
+*/
 async function FetchUser(username, password)
 {
  const userlogin = await userModel.findOne({"username":username, "password":password});
  return userlogin;
 
 }
+ 
+
+async function UpdateUser(username, password)
+{
+  const userlogin = await userModel.findOneAndUpdate({"username": username},{password:password});
 
 
+}
+export default {
+
+  //InsertUser,
+  FetchUser,
+  UpdateUser,
+};
 
 
