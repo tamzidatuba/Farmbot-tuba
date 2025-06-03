@@ -6,8 +6,6 @@ const closeModal = document.getElementById('closeModal');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
 const jobNameError = document.getElementById('jobNameError');
 
-
-
 //grid ids
 const canvas = document.getElementById('gridCanvas');
 const ctx = canvas.getContext('2d');
@@ -51,6 +49,7 @@ const title = statusHistory.querySelector('.history-header');
 let maxHistoryEntries = 10;
 const historyBox = document.getElementById('notification-history');
 const entryLimitSelect = document.getElementById('entry-limit');
+entryLimitSelect.value = maxHistoryEntries;
 
 
 const settingsBtn = document.querySelector('.settings-btn');
@@ -535,13 +534,21 @@ entryLimitSelect.addEventListener('change', () => {
       if (statusHistory.children.length < maxHistoryEntries + 1) {
         const entry = document.createElement('div');
         entry.textContent = historyList[status];
-        statusHistory.insertBefore(entry, title.nextSibling);
+        statusHistory.appendChild(entry);
       }
     }
   } else {
     maxHistoryEntries = parseInt(entryLimitSelect.value);
-    while (statusHistory.children.length > maxHistoryEntries + 1) {
-        statusHistory.removeChild(statusHistory.lastChild);
+    while (statusHistory.children.length > 1) {
+      statusHistory.removeChild(statusHistory.lastChild);
+    }
+    // Add new entries to the status history
+    for (const status in historyList) {  
+      if (statusHistory.children.length < maxHistoryEntries + 1) {
+        const entry = document.createElement('div');
+        entry.textContent = historyList[status];
+        statusHistory.appendChild(entry);
+      }
     }
   }
   
@@ -554,17 +561,18 @@ function updateStatusHistory() {
   .then(response => response.json())
   .then(data => {
     // Check if the data has changed
-    if (historyList.toString() != data.toString()) {
+    var temp = historyList.slice().reverse();
+    if (temp.toString() != data.toString()) {
       // Clear the current status history
       while (statusHistory.children.length > 1) {
         statusHistory.removeChild(statusHistory.lastChild);
       }
       // Add new entries to the status history
-      for (const status in data) {  
+      for (const status in data.reverse()) {  
         if (statusHistory.children.length < maxHistoryEntries + 1) {
           const entry = document.createElement('div');
           entry.textContent = data[status];
-          statusHistory.insertBefore(entry, title.nextSibling);
+          statusHistory.appendChild(entry);
         }
       }
       historyList = data;
