@@ -15,24 +15,35 @@ const JobNotification = Object.freeze({
     JOB_FINISHED: "Job finished"
 });
 
+const MAX_NOTIFICATIONS = 50;
 
 class Backend {
-  constructor(farmbot, statusManager) {
+  constructor() {
     this.notification_history = new Array();
+    this.scheduleManager = new ScheduleManager();
+  }
 
+  init(farmbot, statusManager) {
     this.farmbot = farmbot;
     this.statusManager = statusManager;
     this.statusManager.backend = this;
-    this.scheduleManager = new ScheduleManager();
+  }
+
+  generateFrontendData() {
+    return {
+      "status": this.statusManager.status,
+      "notifications": this.notification_history
+    }
   }
 
   appendNotification(notification) {
     // TODO put notification in database
     let date = new Date();
     // append date to the end of the string
-    notification += date.getDate() +'.'+ (date.getMonth() + 1) +'.'+ date.getFullYear() +' '+ date.getHours() +':'+ date.getMinutes() +':'+ date.getSeconds();;
+    let dateString = '[' + date.getDate().toString().padStart(2, "0") +'-'+ (date.getMonth() + 1).toString().padStart(2, "0") +'-'+ date.getFullYear() +'|'+ date.getHours().toString().padStart(2, "0") +':'+ date.getMinutes().toString().padStart(2, "0") +':'+ date.getSeconds().toString().padStart(2, "0") + "] ";
+    notification = dateString + notification
     this.notification_history.push(notification);
-    while (this.notification_history.length > 10) {
+    while (this.notification_history.length > MAX_NOTIFICATIONS) {
       this.notification_history.shift();
     }
   }
@@ -52,10 +63,10 @@ class Backend {
 
   finishJob() {
     console.log("Finished a Job");
-    this.appendNotification("Job " + this.statusManager.currentJob.name + " finished at ");
+    this.appendNotification("Job " + this.statusManager.currentJob.name + " finished.");
     if (!this.checkForNextJob() && this.statusManager.currentJob.name != "GoHome") {
       this.statusManager.startJob(new GoHomeJob());
-      this.appendNotification("Job GoHome started at ");
+      this.appendNotification("Job GoHome started.");
     }
   }
 
@@ -82,7 +93,7 @@ class Backend {
           return
       }
       this.statusManager.startJob(jobObject);
-      this.appendNotification("Job " + nextJob.name + " started at ");
+      this.appendNotification("Job " + nextJob.name + " started.");
       return true
     }
     return false
@@ -122,7 +133,7 @@ function waitForFirstStatus(farmbot) {
     }, true);
   });
 }
-async function initalizeBackend() {
+async function initalizeBackend(backend) {
   let farmbot = await getFarmbot()
   let statusManager = new StatusManager(farmbot);
   console.log("Farmbot Initialised!");
@@ -130,7 +141,7 @@ async function initalizeBackend() {
   await waitForFirstStatus(farmbot);
   console.log("StatusManager Initialized");
   
-  return new Backend(farmbot, statusManager);
+  backend.init(farmbot, statusManager);
 }
 /*
 let seedingArgs = {"position": {"x": 100, "y": 100}}
@@ -144,4 +155,4 @@ let wateringJob = new WateringJob(WateringArgs);
 statusManager.startJob(wateringJob);
 */
 
-export {initalizeBackend};
+export {initalizeBackend, Backend};
