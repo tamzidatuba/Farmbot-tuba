@@ -195,7 +195,7 @@ async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob)
 }
 
 async function ValidateNewSeedsAgainstPlants(seeds){
-    let plants = await FetchPlantsfromDBtoFE();
+    let plants = await FetchPlantsfromDB();
     let invalidSeeds = [];
 
     for (let seed of seeds) {

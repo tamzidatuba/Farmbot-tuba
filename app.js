@@ -88,7 +88,7 @@ app.put('/api/updateuser/:username/:password', async (req, res) => {
 app.post('/api/user/:username/:password', async (req, res) => {
   const { username, password } = req.params;
   try {
-    let users = await DatabaseService.FetchUserfromDBtoFE(username, password);
+    let users = await DatabaseService.FetchUserfromDB(username, password);
     if (users == null) {
       res.status(500).json({ error: "Error. Invalid credentials" });
     }
