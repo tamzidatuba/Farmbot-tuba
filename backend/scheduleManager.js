@@ -39,8 +39,8 @@ class ScheduleManager {
 
     checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);
-        // TODO ask database for scheduledtasks
-        // let scheduledJobs = DatabaseServive.FetchScheduledJobsFromDB();
+        // TODO ask database for active scheduledtasks
+        // let scheduledJobs = DatabaseServive.FetchActiveScheduledJobsFromDB();
 
         let scheduledJobs = {};//{0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
         let currentTime = Date.now();

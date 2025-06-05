@@ -3,6 +3,7 @@ import { Job } from "./Job.js"
 import { MoveTask } from "./tasks/MoveTask.js";
 import { MoveZTask} from "./tasks/MoveZTask.js";
 import { SetPinTask, VACUUM_PIN } from "./tasks/SetPinTask.js";
+import DatabaseService from "../databaseservice.js";
 
 /*
 Steps:
@@ -55,6 +56,11 @@ class SeedingJob extends Job {
 
             // plant the seeds
             this.taskQueue.push(deactivateVacuumPin);
+            
+            // TODO insert plant into DB
+            // let newPlant = ["position": position, "plantType": seedingArgs.plantType]
+            // DatabaseService.insertPlanttoDB(newPlant)
+
 
             this.taskQueue.push(returnToFieldSafetyHeight);
         }

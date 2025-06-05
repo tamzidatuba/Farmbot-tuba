@@ -33,6 +33,7 @@ class Backend {
   generateFrontendData() {
     return {
       "status": this.statusManager.status,
+      "paused": this.statusManager.isPaused,
       "notifications": this.notification_history,
       "executionPipeline": this.scheduleManager.jobsToExecute
     }
@@ -44,25 +45,12 @@ class Backend {
     let dateString = '[' + date.getDate().toString().padStart(2, "0") +'-'+ (date.getMonth() + 1).toString().padStart(2, "0") +'-'+ date.getFullYear() +'|'+ date.getHours().toString().padStart(2, "0") +':'+ date.getMinutes().toString().padStart(2, "0") +':'+ date.getSeconds().toString().padStart(2, "0") + "] ";
     notification = dateString + notification
     
-    // put notification in database
+    // put notification in DB
     DatabaseService.InsertNotificationToDB(notification)
 
     this.notification_history.push(notification);
     while (this.notification_history.length > MAX_NOTIFICATIONS) {
       this.notification_history.shift();
-    }
-  }
-
-  async queueJob(job_id, res) {
-    try {
-      // TODO wait for get-job method
-      let job = await DatabaseService.getJob(job_id);
-      this.scheduleManager.appendJob(job);
-      this.checkForNextJob();
-      res.status(200).json({ message: 'Job queued' });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to queue job' });
     }
   }
 

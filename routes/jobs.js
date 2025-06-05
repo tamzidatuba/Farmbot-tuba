@@ -75,8 +75,17 @@ export default function createJobsRouter(backend) {
 
     //start job
     router.post('/start/:id', async (req, res) => {
-      const { id } = req.params;
-      backend.queueJob(id, res);
+        const { job_id } = req.params;
+        try {
+            // TODO wait for get-job method
+            let job = await DatabaseService.getJob(job_id);
+            backend.scheduleManager.appendJob(job);
+            backend.checkForNextJob();
+            res.status(200).json({ message: 'Job queued' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Failed to queue job' });
+        }
     });
     
     

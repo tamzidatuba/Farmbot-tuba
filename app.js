@@ -99,8 +99,9 @@ app.get('/api/frontendData', (req, res) => {
   else {
     res.status(201).json({
       "status": "Offline",
+      "paused": false,
       "notifications": [],
-      "executionPipeline": []
+      "executionPipeline": [],
     });
   }
 });
