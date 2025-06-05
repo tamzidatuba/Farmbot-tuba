@@ -45,6 +45,19 @@ async function FetchAllWateringJobsFromDB() {
   }
 }
 
+async function ReturnWateringJob(id)
+{
+    const job = await WaterJobModel.findById(id).select('jobname');
+       if( job !== null && typeof(job) !== "undefined")
+    {
+      return {jobType:"Watering",job};
+    }
+    else{
+      return null;
+    }
+
+}
+
 
 async function UpdateWateringJobToDB(jobname, plantType, x,y, wateringcapacity) {
   const now = new Date();
@@ -60,4 +73,5 @@ export default {
   DeleteWateringJobFromDB,
   FetchAllWateringJobsFromDB,
   UpdateWateringJobToDB,
+  ReturnWateringJob,
 };

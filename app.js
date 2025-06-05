@@ -22,10 +22,15 @@ app.use(express.static(path.join(__dirname, 'frontend//')));
 app.use(express.json());
 
 
+//testing the method return single job for execution
+//let a = await DatabaseService.ReturnSingleJob('682d82fd6037708c0a882e2b');
+//let a1 = await DatabaseService.ReturnSingleJob('683f08e030a1434241a9f615');
+//console.log(a1);
+
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
 
 // Serve index.html on root route
 app.get('/', (req, res) => {
@@ -37,7 +42,7 @@ app.use('/api/jobs', createJobsRouter(backend));
 //to get plants
 app.get('/api/plants', async (req, res) => {
   try {
-    let plants = await DatabaseService.FetchPlantsfromDBtoFE();
+    let plants = await DatabaseService.FetchPlantsfromDB();
     res.status(200).json(plants);
   }
   catch (err) {
@@ -69,7 +74,7 @@ app.put('/api/updateuser/:username/:password', async (req, res) => {
 app.post('/api/user/:username/:password', async (req,res) => {
   const { username, password } = req.params;
   try{
-    let users = await DatabaseService.FetchUserfromDBtoFE(username, password);
+    let users = await DatabaseService.FetchUserfromDB(username, password);
     if (users == null){
       res.status(500).json({error: "Error. Invalid credentials"});
     }
@@ -116,3 +121,4 @@ let wateringJob = { jobType: DatabaseService.JobType.WATERING, name: "MyWatering
 
 backend.scheduleManager.appendScheduledJob(wateringJob);
 backend.checkForNextJob();
+
