@@ -4,8 +4,6 @@ import wateringModule from './models/wateringjob.model.js';
 import notificationModel from './models/notification.model.js';
 import plantModel from './models/plant.model.js';
 import userModel from './models/user.model.js';
-import seedingJobModel from './models/seedingjob.model.js';
-import WaterJobModel from './models/wateringjob.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -153,16 +151,73 @@ async function FetchPlantsfromDB() {
     return plants;
 }
 
-async function FetchUserfromDB(username,password) {
+async function InsertPlantsToDB(plants)
+{
+    for (let plant of plants) {
+        await plantModel.InsertPlantToDB(plant);
+    }    
+}
 
+async function FetchUserfromDB(username,password) {
     const users  = await userModel.FetchUser(username,password);
     return users;
 }
 
 async function UpdateUserToDB(username,password) {
-
     const users  = await userModel.UpdateUser(username,password);
-    
+}
+
+async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob)
+{
+    let existingJobs = await FetchJobsFromDB(JobType.SEEDING);
+    let invalidSeeds = [];
+
+    for (let newSeed of newSeedsToPutInNewJob) {
+        for (let existingJob of existingJobs) {
+            let isValid = true;
+            for (let seedInsideExistingJob of existingJob.seeds) {
+                let distance = GetDistance(newSeed.xcoordinate, newSeed.ycoordinate, seedInsideExistingJob.xcoordinate, seedInsideExistingJob.ycoordinate);
+                if (distance <= PlantRadii[seedInsideExistingJob.seedtype]) {
+                    invalidSeeds.push(newSeed);
+                    isValid = false;
+                }
+                if (!isValid) {
+                    break; // No need to check further seeds in this job
+                }
+            }
+            if (!isValid) {
+                break; // No need to check further jobs
+            }
+        }
+    }
+
+    return invalidSeeds;
+}
+
+async function ValidateNewSeedsAgainstPlants(seeds){
+    let plants = await FetchPlantsfromDBtoFE();
+    let invalidSeeds = [];
+
+    for (let seed of seeds) {
+        let isValid = true;
+        for (let plant of plants) {
+            let distance = GetDistance(seed.xcoordinate, seed.ycoordinate, plant.xcoordinate, plant.ycoordinate);
+            if (distance <= PlantRadii[plant.planttype]) {
+               invalidSeeds.push(seed); 
+                isValid = false;
+            }
+            if (!isValid) {
+                break; // No need to check further plants for this seed
+            }
+        }
+    }
+
+    return invalidSeeds;
+}
+
+
+function GetDistance(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
 }
 
 
@@ -174,12 +229,11 @@ export default {
     UpdateJobToDB,
     InsertNotificationToDB,
     FetchNotificationsFromDB,
+    InsertPlantsToDB,
+    UpdateUserToDB,
+    ValidateNewSeedsAgainstPreviousJobs,
+    ValidateNewSeedsAgainstPlants,
     FetchPlantsfromDB,
     FetchUserfromDB,
-    UpdateUserToDB,
     ReturnSingleJob,
 };
-
-function GetDistance(x1, y1, x2, y2) {
-    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-}

@@ -9,6 +9,27 @@ export default function createJobsRouter(backend) {
         const { jobType } = req.params;
         const object = req.body;
         try {
+            if (jobType === 'Seeding') {
+                const seeds = object.seeds;
+                let invalids = await DatabaseService.ValidateNewSeedsAgainstPreviousJobs(seeds);
+                if (invalids.length > 0) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Some seeds are placed too close to existing seeds inside existing jobs.',
+                        invalidSeeds: invalids,
+                    });
+                }
+                invalids = await DatabaseService.ValidateNewSeedsAgainstPlants(seeds);
+                if (invalids.length > 0) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Some seeds are placed too close to existing plants.',
+                        invalidSeeds: invalids,
+                    });
+                }
+            }
+
+
             let result = await DatabaseService.InsertJobToDB(jobType, object);
             if (result) {
                 backend.appendNotification("Job " + object.name + " saved");
@@ -73,8 +94,8 @@ export default function createJobsRouter(backend) {
             res.status(500).json({ error: 'Failed to update job' });
         }
     });
-
-
+    
+    
     //start job
     router.post('/start/:id', async (req, res) => {
         const { job_id } = req.params;
@@ -93,8 +114,8 @@ export default function createJobsRouter(backend) {
             res.status(500).json({ error: 'Failed to queue job' });
         }
     });
-    
-    
+
+
 
     return router;
 }

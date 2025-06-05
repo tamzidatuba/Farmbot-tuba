@@ -2,8 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
-import { initalizeBackend, Backend} from './backend/backend.js';
-import plantModel from './models/plant.model.js';
+import { initalizeBackend, Backend } from './backend/backend.js';
 import createJobsRouter from './routes/jobs.js';
 
 
@@ -48,7 +47,22 @@ app.get('/api/plants', async (req, res) => {
   catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error in fetching" });
-  }});
+  }
+});
+
+// insert job
+app.post('/api/plants', async (req, res) => {
+  const plants = req.body;
+  try {
+    await DatabaseService.InsertPlantsToDB(plants);
+    res.status(200).json({ message: 'Plant saved' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to save job' });
+  }
+});
+
+
 
 app.get('/api/notifications', (req, res) => {
   if (backend_initialized) {
@@ -61,30 +75,30 @@ app.get('/api/notifications', (req, res) => {
 
 
 app.put('/api/updateuser/:username/:password', async (req, res) => {
-    const { username, password } = req.params;
+  const { username, password } = req.params;
   try {
     const user = await DatabaseService.UpdateUserToDB(username, password);
-    res.status(200).json({ message : "Password Updated"})
+    res.status(200).json({ message: "Password Updated" })
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to update user' });
   }
 });
 
-app.post('/api/user/:username/:password', async (req,res) => {
+app.post('/api/user/:username/:password', async (req, res) => {
   const { username, password } = req.params;
-  try{
-    let users = await DatabaseService.FetchUserfromDB(username, password);
-    if (users == null){
-      res.status(500).json({error: "Error. Invalid credentials"});
+  try {
+    let users = await DatabaseService.FetchUserfromDBtoFE(username, password);
+    if (users == null) {
+      res.status(500).json({ error: "Error. Invalid credentials" });
     }
-    else{
-       res.status(200).json({Message : "Login Successful."});
+    else {
+      res.status(200).json({ Message: "Login Successful." });
     }
   }
-  catch(err){
+  catch (err) {
     console.error(err);
-    res.status(500).json({error: "Error. Invalid credentials"});
+    res.status(500).json({ error: "Error. Invalid credentials" });
   }
 });
 
