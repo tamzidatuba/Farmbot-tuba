@@ -763,6 +763,22 @@ async function InsertSeedingJob(x, y, plant, depth) {
   console.log(result.message);
 }
 
+seedingJobBtn.addEventListener('click', () => {
+  // Reset to creation mode
+  isEditMode = false;
+  jobBeingEdited = null;
+
+  document.getElementById('modalTitle').textContent = 'Create Seeding Job';
+  document.getElementById('executeBtn').textContent = 'Create & Save';
+  document.getElementById('SeedingJobName').value = '';
+  document.getElementById('SeedingJobName').disabled = false;
+
+  jobContainer.innerHTML = '';
+  jobCount = 0;
+  createJobRow(); // Add one row by default
+  modal.style.display = 'block';
+
+
 // get plants from server
 function getPlants() {
   fetch('/api/plants', {method: 'GET',
