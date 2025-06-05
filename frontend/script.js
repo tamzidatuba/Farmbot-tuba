@@ -164,7 +164,7 @@ seedingJobBtn.addEventListener('click', () => {
 wateringJobBtn.addEventListener('click', () => {
   modalWatering.style.display = 'block';
   jobCountWatering = 0;
-  createJobRowWatering(testPlants); // Add first row by default
+  createJobRowWatering(plants); // Add first row by default
 });
 
 closeModal.addEventListener('click', () => {
@@ -327,13 +327,21 @@ executeBtnWatering.addEventListener('click', async () => {
     return;
   }
 
-  const scheduleData = {};
+
   const scheduleOption = document.querySelector('input[name="scheduleOption"]:checked').value;
+
+  const scheduleData = {
+    enabled: scheduleOption === "scheduled",
+    time: null,
+    interval: null
+  };
+  
   if (scheduleOption === "scheduled") {
     const executionTime = document.getElementById("executionTime").value;
     const repeatInterval = document.getElementById("repeatInterval").value;
-
-    scheduleData = {time: executionTime, interval: repeatInterval};
+    console.log("Execution Time:", executionTime);
+    scheduleData.time = executionTime;
+    scheduleData.interval = repeatInterval;
   }
   const payload = { jobname, seeds, scheduleData};
 
