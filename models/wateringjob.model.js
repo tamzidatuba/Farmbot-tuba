@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 // create schema for data
 const wateringSchema = mongoose.Schema({
   jobname: String,
-  plantName: String,
+  plantType: String,
   xcoordinate: Number,
   ycoordinate: Number,
   wateringcapacity: Number,
@@ -16,9 +16,9 @@ const wateringSchema = mongoose.Schema({
 const WaterJobModel = mongoose.model('wateringjob', wateringSchema);
 
 //for the name/type of the plant example :  radish1 or lettuce 2, the coordinates and the millilitres to be watered.
-async function InsertWateringJobToDB(jobname, plantName, x, y, wateringcapacity) {
+async function InsertWateringJobToDB(jobname,plantType, x, y, wateringcapacity) {
 
-  const existingWaterjob = await WaterJobModel.findOne({jobname: jobname},{ plantName: plantName }, { xcoordinate: x }, { ycoordinate: y }, { wateringcapacity: wateringcapacity })
+  const existingWaterjob = await WaterJobModel.findOne({jobname: jobname},{ plantType: plantType }, { xcoordinate: x }, { ycoordinate: y }, { wateringcapacity: wateringcapacity })
   if (existingWaterjob)//if the exact same job already exists give a warning/ to find duplicates
   {
     console.log("This watering request has been made already.");
@@ -26,8 +26,8 @@ async function InsertWateringJobToDB(jobname, plantName, x, y, wateringcapacity)
   }
   else {//  else add the job to the table
     var now = new Date();
-    await WaterJobModel.create({ jobname: jobname, plantName: plantName, xcoordinate: x, ycoordinate: y, wateringcapacity: wateringcapacity, date: now });
-    console.log(plantName + ' added in Database.');
+    await WaterJobModel.create({ jobname: jobname, plantType: plantType, xcoordinate: x, ycoordinate: y, wateringcapacity: wateringcapacity, date: now });
+    console.log(plantType + ' added in Database.');
   }
 }
 
@@ -46,9 +46,9 @@ async function FetchAllWateringJobsFromDB() {
 }
 
 
-async function UpdateWateringJobToDB(jobname, plantName, x,y, wateringcapacity) {
+async function UpdateWateringJobToDB(jobname, plantType, x,y, wateringcapacity) {
   const now = new Date();
-  await WaterJobModel.findOneAndUpdate( {"jobname": jobname},{plantName: plantName, xcoordinate: x, ycoordinate: y, wateringcapacity: wateringcapacity, date: now});
+  await WaterJobModel.findOneAndUpdate( {"jobname": jobname},{plantType: plantType, xcoordinate: x, ycoordinate: y, wateringcapacity: wateringcapacity, date: now});
   console.log("Job has been updated.");
   
 }

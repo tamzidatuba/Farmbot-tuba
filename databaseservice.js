@@ -51,6 +51,7 @@ async function InsertJobToDB(jobType, object) {
     console.log('Job has been inserted');
 }
 
+
 async function FetchJobsFromDB(jobType) {
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
