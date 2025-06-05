@@ -15,12 +15,17 @@ class StatusManager {
 
     constructor(backend) {
         this.backend = backend;
+
+        this.lastState;
+
         this.runningJob = false;
         this.isPaused = false;
+
         this.status = FarmbotStatus.OFFLINE;
+
         this.currentTask;
         this.currentJob;
-        this.lastState;
+        
         this._newStatusRecieved = this._newStatusRecieved.bind(this);
     }
     init(farmbot) {

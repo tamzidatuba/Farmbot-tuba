@@ -25,10 +25,6 @@ class Backend {
     this.currentJobData;
   }
 
-  init(farmbot) {
-    this.farmbot = farmbot;
-  }
-
   generateFrontendData() {
     return {
       "status": this.statusManager.status,
@@ -124,28 +120,19 @@ class Backend {
 
 }
 
-// Method necessary to get the current state of the farmbot. Awaits the status-callback
-function waitForFirstStatus(farmbot) {
-  return new Promise((resolve) => {
-    farmbot.on("status", (msg) => {
-      resolve("Recieved first Status");
-    }, true);
-  });
-}
-
 async function initalizeBackend(backend) {
   let farmbot = await getFarmbot()
   console.log("Farmbot Initialised!");
-  
   backend.statusManager.init(farmbot);
   
-  const firstStatus = waitForFirstStatus(farmbot);
+  // necessary to get the current state of the farmbot. Requests and Awaits the status-callback once
+  const statusPromise = new Promise((resolve) => {
+    farmbot.on("status", (msg) => {resolve("Recieved first Status")}, true);
+  });
   farmbot.readStatus();
-  await firstStatus
-  
+  await statusPromise
+
   console.log("StatusManager Initialized");
-  
-  backend.init(farmbot);
 }
 
 export {
