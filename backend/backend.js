@@ -127,20 +127,22 @@ class Backend {
 // Method necessary to get the current state of the farmbot. Awaits the status-callback
 function waitForFirstStatus(farmbot) {
   return new Promise((resolve) => {
-    farmbot.on("status", (status) => {
-      resolve(status);
+    farmbot.on("status", (msg) => {
+      resolve("Recieved first Status");
     }, true);
   });
 }
+
 async function initalizeBackend(backend) {
   let farmbot = await getFarmbot()
   console.log("Farmbot Initialised!");
   
   backend.statusManager.init(farmbot);
+  
+  const firstStatus = waitForFirstStatus(farmbot);
   farmbot.readStatus();
-
-  await waitForFirstStatus(farmbot);
-
+  await firstStatus
+  
   console.log("StatusManager Initialized");
   
   backend.init(farmbot);
