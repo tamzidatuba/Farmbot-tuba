@@ -60,7 +60,7 @@ class Backend {
     if (this.statusManager.currentJob.name != "GoHome") {
 
       if (!("nextExecution" in this.currentJobData.job)) {
-        DatabaseService.DeleteJobFromDB(jobType, this.currentJobData.job.name)
+        DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.name)
       }
 
       if (!this.checkForNextJob()) {
