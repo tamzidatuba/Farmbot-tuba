@@ -1,3 +1,5 @@
+import DatabaseService from "../databaseservice.js";
+
 const SCHEDULE_CHECKING_INTERVAL = 900000 // 15*60*1000 = 15min
 const SCHEDULE_TOLERANCE = 10000; // 10 Second execution tolerance
 
@@ -38,6 +40,8 @@ class ScheduleManager {
     checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);
         // TODO ask database for scheduledtasks
+        // let scheduledJobs = DatabaseServive.FetchScheduledJobsFromDB();
+
         let scheduledJobs = {};//{0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
         let currentTime = Date.now();
         let nextScheduleCheck = SCHEDULE_CHECKING_INTERVAL;
@@ -65,7 +69,11 @@ class ScheduleManager {
 
     calculateNextSchedule(job) {
         job.nextExecution = job.executionInterval + (Date.now());
-        // TODO modify entry in DB
+
+        // modify entry in DB
+        let jobType = job.jobType
+        delete job[jobType]
+        DatabaseService.UpdateJobToDB(jobType, job);
     }
 }
 

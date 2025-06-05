@@ -21,6 +21,7 @@ class Backend {
   constructor() {
     this.notification_history = new Array();
     this.scheduleManager = new ScheduleManager();
+    this.currentJobData;
   }
 
   init(farmbot, statusManager) {
@@ -38,11 +39,14 @@ class Backend {
   }
 
   appendNotification(notification) {
-    // TODO put notification in database
     let date = new Date();
-    // append date to the end of the string
+    // append date to the front of the string
     let dateString = '[' + date.getDate().toString().padStart(2, "0") +'-'+ (date.getMonth() + 1).toString().padStart(2, "0") +'-'+ date.getFullYear() +'|'+ date.getHours().toString().padStart(2, "0") +':'+ date.getMinutes().toString().padStart(2, "0") +':'+ date.getSeconds().toString().padStart(2, "0") + "] ";
     notification = dateString + notification
+    
+    // put notification in database
+    DatabaseService.InsertNotificationToDB(notification)
+
     this.notification_history.push(notification);
     while (this.notification_history.length > MAX_NOTIFICATIONS) {
       this.notification_history.shift();
@@ -65,9 +69,18 @@ class Backend {
   finishJob() {
     console.log("Finished a Job");
     this.appendNotification("Job " + this.statusManager.currentJob.name + " finished.");
-    if (!this.checkForNextJob() && this.statusManager.currentJob.name != "GoHome") {
-      this.statusManager.startJob(new GoHomeJob());
-      this.appendNotification("Job GoHome started.");
+    if (this.statusManager.currentJob.name != "GoHome") {
+
+      if (!("nextExecution" in this.currentJobData)) {
+        let jobType = this.currentJobData.jobType
+        delete this.currentJobData[jobType]
+        DatabaseService.DeleteJobFromDB(jobType, this.currentJobData.name)
+      }
+
+      if (!this.checkForNextJob()) {
+        this.statusManager.startJob(new GoHomeJob());
+        this.appendNotification("Job GoHome started.");
+      }
     }
   }
 
@@ -76,25 +89,25 @@ class Backend {
       return false
     }
     if (this.scheduleManager.isJobScheduled()) {
-      let nextJob = this.scheduleManager.getScheduledJob();
-      if ("nextExecution" in nextJob) {
-        this.scheduleManager.calculateNextSchedule(nextJob);
+      this.currentJobData = this.scheduleManager.getScheduledJob();
+      if ("nextExecution" in this.currentJobData) {
+        this.scheduleManager.calculateNextSchedule(this.currentJobData);
       }
       // translate job-dictionary into job-object
       let jobObject;
-      switch(nextJob.jobType) {
+      switch(this.currentJobData.jobType) {
         case "seeding": 
-          jobObject = new SeedingJob(nextJob);
+          jobObject = new SeedingJob(this.currentJobData);
           break;
         case "watering":
-          jobObject = new WateringJob(nextJob);
+          jobObject = new WateringJob(this.currentJobData);
           break;
         default:
           console.log("Job has no valid Job-Type. Cancelling...");
           return
       }
       this.statusManager.startJob(jobObject);
-      this.appendNotification("Job " + nextJob.name + " started.");
+      this.appendNotification("Job " + this.currentJobData.name + " started.");
       return true
     }
     return false

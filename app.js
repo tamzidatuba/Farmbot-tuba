@@ -97,7 +97,7 @@ app.get('/api/frontendData', (req, res) => {
     res.status(200).json(backend.generateFrontendData());
   }
   else {
-    res.status(200).json({
+    res.status(201).json({
       "status": "Offline",
       "notifications": [],
       "executionPipeline": []
