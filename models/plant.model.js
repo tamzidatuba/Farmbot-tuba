@@ -13,7 +13,7 @@ mongoose.connect(connectionString)
 
 const plantSchema = new mongoose.Schema({
   planttype: String,
-  plantedate: Date,
+  planteddate: Date,
   xcoordinate: Number,
   ycoordinate: Number,  
 });

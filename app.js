@@ -21,10 +21,15 @@ app.use(express.static(path.join(__dirname, 'frontend//')));
 app.use(express.json());
 
 
+//testing the method return single job for execution
+//let a = await DatabaseService.ReturnSingleJob('682d82fd6037708c0a882e2b');
+//let a1 = await DatabaseService.ReturnSingleJob('683f08e030a1434241a9f615');
+//console.log(a1);
+
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
 
 // Serve index.html on root route
 app.get('/', (req, res) => {
@@ -36,7 +41,7 @@ app.use('/api/jobs', createJobsRouter(backend));
 //to get plants
 app.get('/api/plants', async (req, res) => {
   try {
-    let plants = await DatabaseService.FetchPlantsfromDBtoFE();
+    let plants = await DatabaseService.FetchPlantsfromDB();
     res.status(200).json(plants);
   }
   catch (err) {
@@ -97,15 +102,6 @@ app.post('/api/user/:username/:password', async (req, res) => {
   }
 });
 
-
-app.get('/api/executionPipeline', async (req, res) => {
-  if (backend_initialized) {
-    res.status(200).json(backend.scheduleManager.jobsToExecute);
-  } else {
-    res.status(200).json(new Array());
-  }
-})
-
 app.get('/api/status', (req, res) => {
   if (backend_initialized) {
     res.status(200).json({ status: backend.statusManager.status });
@@ -120,9 +116,11 @@ app.get('/api/frontendData', (req, res) => {
     res.status(200).json(backend.generateFrontendData());
   }
   else {
-    res.status(200).json({
+    res.status(201).json({
       "status": "Offline",
-      "notifications": []
+      "paused": false,
+      "notifications": [],
+      "executionPipeline": [],
     });
   }
 });
@@ -131,9 +129,10 @@ await initalizeBackend(backend);
 backend_initialized = true;
 
 // TODO delete
-let wateringJob = { jobType: "watering", name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }
+let wateringJob = { jobType: DatabaseService.JobType.WATERING, name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }
 //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
 //console.log(plants);
 
 backend.scheduleManager.appendScheduledJob(wateringJob);
 backend.checkForNextJob();
+

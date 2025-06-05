@@ -68,7 +68,7 @@ class StatusManager {
             // Starting the next Task
             this.currentTask = this.currentJob.getNextTask();
             this.status = this.currentTask.status;
-            console.log("Starting a new Task, Status:", this.status);
+            //console.log("Starting a new Task, Status:", this.status);
             this.currentTask.execute(this.farmbot, this.lastState);
         }
 
@@ -101,7 +101,10 @@ class StatusManager {
     }
 
     cancelJob() {
-        
+        this.pauseJob();
+        this.isPaused = false;
+        this.runningJob = false
+        this.backend.finishJob();
     }
 }
 

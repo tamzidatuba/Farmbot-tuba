@@ -51,6 +51,24 @@ async function InsertJobToDB(jobType, object) {
     console.log('Job has been inserted');
 }
 
+async function ReturnSingleJob(id)
+{
+    let job = await seedingModule.ReturnSeedingJob(id);
+    if( job !== null && typeof(job) !== "undefined")
+    {
+        return {job};
+       
+    }
+    job = await wateringModule.ReturnWateringJob(id);
+    if( job !== null && typeof(job) !== "undefined")
+    {
+        return {job};
+    }
+    
+
+}
+
+
 async function FetchJobsFromDB(jobType) {
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
@@ -127,7 +145,7 @@ async function FetchNotificationsFromDB() {
     return notifications;
 }
 
-async function FetchPlantsfromDBtoFE() {
+async function FetchPlantsfromDB() {
 
     const plants  = await plantModel.FetchPlantsFromDB();
     return plants;
@@ -140,16 +158,13 @@ async function InsertPlantsToDB(plants)
     }    
 }
 
-async function FetchUserfromDBtoFE(username,password) {
-
+async function FetchUserfromDB(username,password) {
     const users  = await userModel.FetchUser(username,password);
     return users;
 }
 
 async function UpdateUserToDB(username,password) {
-
     const users  = await userModel.UpdateUser(username,password);
-    
 }
 
 async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob)
@@ -215,9 +230,10 @@ export default {
     InsertNotificationToDB,
     FetchNotificationsFromDB,
     InsertPlantsToDB,
-    FetchPlantsfromDBtoFE,
-    FetchUserfromDBtoFE,
     UpdateUserToDB,
     ValidateNewSeedsAgainstPreviousJobs,
     ValidateNewSeedsAgainstPlants,
+    FetchPlantsfromDB,
+    FetchUserfromDB,
+    ReturnSingleJob,
 };

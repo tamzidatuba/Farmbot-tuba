@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+
 const seedingJobSchema = new mongoose.Schema({
   jobname: String,
   createdat: Date,
@@ -29,6 +30,25 @@ async function InsertSeedingJobToDB(jobname, seeds) {
 
 }
 
+async function ReturnSeedingJob(id)
+{
+    const job = await seedingJobModel.findById(id).select('jobname');
+    if( job !== null && typeof(job) !== "undefined")
+    {
+      return{jobType:"Seeding",job};
+    }
+    else{
+      return null;
+    }
+
+}
+
+
+
+
+//mongoose.Types.ObjectId(req.params.id)
+
+
 async function FetchSeedingJobsFromDB() {
   const jobs = await seedingJobModel.find();
   return jobs;
@@ -51,4 +71,5 @@ export default {
   FetchSeedingJobsFromDB,
   DeleteSeedingJobFromDB,
   UpdateSeedingJobToDB,
+  ReturnSeedingJob,
 };

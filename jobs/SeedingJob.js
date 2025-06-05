@@ -3,6 +3,7 @@ import { Job } from "./Job.js"
 import { MoveTask } from "./tasks/MoveTask.js";
 import { MoveZTask} from "./tasks/MoveZTask.js";
 import { SetPinTask, VACUUM_PIN } from "./tasks/SetPinTask.js";
+import DatabaseService from "../databaseservice.js";
 
 /*
 Steps:
@@ -36,27 +37,32 @@ class SeedingJob extends Job {
         for(const plant in seedingArgs.positions) {
             let position = seedingArgs.positions[plant].position;
                 
-            this.taskQueue.enqueue(goToSafetyHeight);
+            this.taskQueue.push(goToSafetyHeight);
 
-            this.taskQueue.enqueue(goToSeedBowl);
+            this.taskQueue.push(goToSeedBowl);
 
-            this.taskQueue.enqueue(lowerToSeedBowl);
+            this.taskQueue.push(lowerToSeedBowl);
             
             // vacuum the seeds
-            this.taskQueue.enqueue(activateVacuumPin);
+            this.taskQueue.push(activateVacuumPin);
             
-            this.taskQueue.enqueue(returnToSafetyHeight);
+            this.taskQueue.push(returnToSafetyHeight);
 
             position.z = SEED_BOWL_SAFETY_HEIGHT;
             let goToPlantingPosition = new MoveTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, position.x, position.y);
-            this.taskQueue.enqueue(goToPlantingPosition);
+            this.taskQueue.push(goToPlantingPosition);
 
-            this.taskQueue.enqueue(lowerToSeedingHeight);
+            this.taskQueue.push(lowerToSeedingHeight);
 
             // plant the seeds
-            this.taskQueue.enqueue(deactivateVacuumPin);
+            this.taskQueue.push(deactivateVacuumPin);
+            
+            // TODO insert plant into DB
+            // let newPlant = ["position": position, "plantType": seedingArgs.plantType]
+            // DatabaseService.insertPlanttoDB(newPlant)
 
-            this.taskQueue.enqueue(returnToFieldSafetyHeight);
+
+            this.taskQueue.push(returnToFieldSafetyHeight);
         }
         
     }
