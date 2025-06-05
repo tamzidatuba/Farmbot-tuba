@@ -35,6 +35,11 @@ class Plant {
   }
 }
 
+const testPlants = [
+  { x: 10, y: 20, name: "radish1", type: "radish" },
+  { x: 15, y: 25, name: "lettuce1", type: "lettuce" },
+  { x: 30, y: 40, name: "tomato1", type: "tomato" }
+];
 
 // Farm-robot coordinate system
 const coordWidth = 395;
@@ -66,6 +71,9 @@ const logoutBtn = document.getElementById('logoutBtn');
 const loginBtn = document.getElementById('loginBtn');
 const loginModal = document.getElementById('loginModal');
 const closeLoginModal = document.getElementById('closeLoginModal');
+
+let isEditMode = false;
+let jobBeingEdited = null;
 
 /*
 toggle.addEventListener('click', () => {
@@ -195,17 +203,19 @@ scheduleRadios.forEach(radio => {
   });
 });
 
+
+// Watering Job Management
 let jobCountWatering = 0;
 
 const jobContainerWatering = document.getElementById('jobContainerWatering');
 const addPlantBtnWatering = document.getElementById('addPlantBtnWatering');
 const executeBtnWatering = document.getElementById('executeBtnWatering');
 
-function createJobRowWatering() {
+function createJobRowWatering(plants) {
   jobCountWatering++;
 
   const row = document.createElement('div');
-  row.classList.add('job-row');
+  row.classList.add('job-row-watering');
   row.setAttribute('data-index', jobCountWatering);
   row.innerHTML = `
   <div class="job-header">
@@ -213,63 +223,7 @@ function createJobRowWatering() {
     </div>
     <div class="plant-row">
       <label for="plant-${jobCountWatering}">Plant</label>
-      <select id="plant-${jobCountWatering}" 
-        <option value="">--Choose Plant--</option>
-        <option value="Plant1">Plant1</option>
-        <option value="Plant2">Plant2</option>
-        <option value="Plant3">Plant3</option>
-      </select>
-    </div>
-    <div class="coord-row">
-      <div>
-        <label>Amount of water</label>
-        <input type="number" class="watering amount" placeholder="20 ml">
-      </div>
-      <div>
-        <label>Z Coordinate</label>
-        <input type="number" class="coord-input zCoord" placeholder="10-50">
-      </div>
-    </div>
-    <div class="errorMsg"></div>
-  `;
-
-  // Add delete event
-  row.querySelector('.delete-job').addEventListener('click', () => {
-    row.remove();
-  });
-
-  jobContainerWatering.appendChild(row);
-}
-
-addPlantBtnWatering.addEventListener('click', () => {
-  createJobRowWatering();
-});
-
-// Seeding Job Management
-let jobCount = 0;
-
-const jobContainerWatering = document.getElementById('jobContainerWatering');
-const addPlantBtnWatering = document.getElementById('addPlantBtnWatering');
-const executeBtnWatering = document.getElementById('executeBtnWatering');
-
-function createJobRowWatering() {
-  jobCountWatering++;
-
-  const row = document.createElement('div');
-  row.classList.add('job-row');
-  row.setAttribute('data-index', jobCountWatering);
-  row.innerHTML = `
-  <div class="job-header">
-      <span class="delete-job" title="Remove this plant job">&#128465;</span>
-    </div>
-    <div class="plant-row">
-      <label for="plant-${jobCountWatering}">Plant</label>
-      <select id="plant-${jobCountWatering}" 
-        <option value="">--Choose Plant--</option>
-        <option value="Plant1">Plant1</option>
-        <option value="Plant2">Plant2</option>
-        <option value="Plant3">Plant3</option>
-      </select>
+      <select id="plant-${jobCountWatering}" class="plant-select"></select>
     </div>
     <div class="coord-row">
       <div>
@@ -280,10 +234,6 @@ function createJobRowWatering() {
         <label>Y Coordinate</label>
         <input type="number" class="coord-input yCoord" placeholder="0 - 650">
       </div>
-      <div>
-        <label>Depth (mm)</label>
-        <input type="number" class="coord-input depth" placeholder="> 0">
-      </div>
     </div>
     <div class="errorMsg"></div>
   `;
@@ -293,11 +243,30 @@ function createJobRowWatering() {
     row.remove();
   });
 
+  // integrate plant selection
+  // default text
+  const select = row.querySelector('.plant-select');
+  const defaultOption = document.createElement('option');
+  defaultOption.value = "";
+  defaultOption.textContent = "--Choose Plant--";
+  select.appendChild(defaultOption);
+
+  // actual plants
+  plants.forEach(plant => {
+    const option = document.createElement('option');
+    option.value = `${plant.name}`;
+    option.textContent = `${plant.name} (${plant.type}) at X: ${plant.x}, Y: ${plant.y}`;
+    option.dataset.x = plant.x;
+    option.dataset.y = plant.y;
+    option.dataset.type = plant.type;
+    select.appendChild(option);
+  });
+
   jobContainerWatering.appendChild(row);
 }
 
 addPlantBtnWatering.addEventListener('click', () => {
-  createJobRowWatering();
+  createJobRowWatering(testPlants);
 });
 
 executeBtnWatering.addEventListener('click', async () => {
