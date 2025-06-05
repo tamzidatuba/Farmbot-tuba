@@ -777,6 +777,7 @@ seedingJobBtn.addEventListener('click', () => {
   jobCount = 0;
   createJobRow(); // Add one row by default
   modal.style.display = 'block';
+});
 
 
 // get plants from server
@@ -1081,7 +1082,6 @@ getPlants();
 
 // Update every 1 second
 setInterval(updateRobot, 2500);
-
 
 
 
