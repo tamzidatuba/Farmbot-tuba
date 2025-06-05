@@ -177,9 +177,6 @@ window.addEventListener('click', (e) => {
   }
 });
 
-let isEditMode = false;
-let jobBeingEdited = null;
-
 window.addEventListener('click', (e) => {
   if (e.target === modalWatering) {
     modalWatering.style.display = 'none';
@@ -231,6 +228,61 @@ function createJobRowWatering() {
       <div>
         <label>Z Coordinate</label>
         <input type="number" class="coord-input zCoord" placeholder="10-50">
+      </div>
+    </div>
+    <div class="errorMsg"></div>
+  `;
+
+  // Add delete event
+  row.querySelector('.delete-job').addEventListener('click', () => {
+    row.remove();
+  });
+
+  jobContainerWatering.appendChild(row);
+}
+
+addPlantBtnWatering.addEventListener('click', () => {
+  createJobRowWatering();
+});
+
+// Seeding Job Management
+let jobCount = 0;
+
+const jobContainerWatering = document.getElementById('jobContainerWatering');
+const addPlantBtnWatering = document.getElementById('addPlantBtnWatering');
+const executeBtnWatering = document.getElementById('executeBtnWatering');
+
+function createJobRowWatering() {
+  jobCountWatering++;
+
+  const row = document.createElement('div');
+  row.classList.add('job-row');
+  row.setAttribute('data-index', jobCountWatering);
+  row.innerHTML = `
+  <div class="job-header">
+      <span class="delete-job" title="Remove this plant job">&#128465;</span>
+    </div>
+    <div class="plant-row">
+      <label for="plant-${jobCountWatering}">Plant</label>
+      <select id="plant-${jobCountWatering}" 
+        <option value="">--Choose Plant--</option>
+        <option value="Plant1">Plant1</option>
+        <option value="Plant2">Plant2</option>
+        <option value="Plant3">Plant3</option>
+      </select>
+    </div>
+    <div class="coord-row">
+      <div>
+        <label>Amount of water</label>
+        <input type="number" class="watering amount" placeholder="20 ml">
+      </div>
+      <div>
+        <label>Y Coordinate</label>
+        <input type="number" class="coord-input yCoord" placeholder="0 - 650">
+      </div>
+      <div>
+        <label>Depth (mm)</label>
+        <input type="number" class="coord-input depth" placeholder="> 0">
       </div>
     </div>
     <div class="errorMsg"></div>
@@ -696,23 +748,6 @@ async function InsertSeedingJob(x, y, plant, depth) {
   if (!response.ok) throw new Error(result.error);
   console.log(result.message);
 }
-
-seedingJobBtn.addEventListener('click', () => {
-  // Reset to creation mode
-  isEditMode = false;
-  jobBeingEdited = null;
-
-  document.getElementById('modalTitle').textContent = 'Create Seeding Job';
-  document.getElementById('executeBtn').textContent = 'Create & Save';
-  document.getElementById('SeedingJobName').value = '';
-  document.getElementById('SeedingJobName').disabled = false;
-
-  jobContainer.innerHTML = '';
-  jobCount = 0;
-  createJobRow(); // Add one row by default
-  modal.style.display = 'block';
-});
-
 
 // get plants from server
 function getPlants() {
