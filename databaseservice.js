@@ -133,6 +133,13 @@ async function FetchPlantsfromDBtoFE() {
     return plants;
 }
 
+async function InsertPlantsToDB(plants)
+{
+    for (let plant of plants) {
+        await plantModel.InsertPlantToDB(plant);
+    }    
+}
+
 async function FetchUserfromDBtoFE(username,password) {
 
     const users  = await userModel.FetchUser(username,password);
@@ -145,6 +152,59 @@ async function UpdateUserToDB(username,password) {
     
 }
 
+async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob)
+{
+    let existingJobs = await FetchJobsFromDB(JobType.SEEDING);
+    let invalidSeeds = [];
+
+    for (let newSeed of newSeedsToPutInNewJob) {
+        for (let existingJob of existingJobs) {
+            let isValid = true;
+            for (let seedInsideExistingJob of existingJob.seeds) {
+                let distance = GetDistance(newSeed.xcoordinate, newSeed.ycoordinate, seedInsideExistingJob.xcoordinate, seedInsideExistingJob.ycoordinate);
+                if (distance <= PlantRadii[seedInsideExistingJob.seedtype]) {
+                    invalidSeeds.push(newSeed);
+                    isValid = false;
+                }
+                if (!isValid) {
+                    break; // No need to check further seeds in this job
+                }
+            }
+            if (!isValid) {
+                break; // No need to check further jobs
+            }
+        }
+    }
+
+    return invalidSeeds;
+}
+
+async function ValidateNewSeedsAgainstPlants(seeds){
+    let plants = await FetchPlantsfromDBtoFE();
+    let invalidSeeds = [];
+
+    for (let seed of seeds) {
+        let isValid = true;
+        for (let plant of plants) {
+            let distance = GetDistance(seed.xcoordinate, seed.ycoordinate, plant.xcoordinate, plant.ycoordinate);
+            if (distance <= PlantRadii[plant.planttype]) {
+               invalidSeeds.push(seed); 
+                isValid = false;
+            }
+            if (!isValid) {
+                break; // No need to check further plants for this seed
+            }
+        }
+    }
+
+    return invalidSeeds;
+}
+
+
+function GetDistance(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
+}
+
 
 export default {
     InsertJobToDB,
@@ -154,11 +214,10 @@ export default {
     UpdateJobToDB,
     InsertNotificationToDB,
     FetchNotificationsFromDB,
+    InsertPlantsToDB,
     FetchPlantsfromDBtoFE,
     FetchUserfromDBtoFE,
     UpdateUserToDB,
+    ValidateNewSeedsAgainstPreviousJobs,
+    ValidateNewSeedsAgainstPlants,
 };
-
-function GetDistance(x1, y1, x2, y2) {
-    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-}
