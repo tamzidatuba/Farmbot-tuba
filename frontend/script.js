@@ -7,6 +7,7 @@ const closeModal = document.getElementById('closeModal');
 const closeModalWatering = document.getElementById('closeModalWatering');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
 const jobNameError = document.getElementById('jobNameError');
+const jobNameErrorWatering = document.getElementById('jobNameErrorWatering');
 const wateringJobBtn = document.getElementById('wateringJobBtn');
 
 //grid ids
@@ -36,9 +37,9 @@ class Plant {
 }
 
 const testPlants = [
-  { x: 10, y: 20, name: "radish1", type: "radish" },
-  { x: 15, y: 25, name: "lettuce1", type: "lettuce" },
-  { x: 30, y: 40, name: "tomato1", type: "tomato" }
+  { x: 10, y: 20, type: "radish" },
+  { x: 15, y: 25, type: "lettuce" },
+  { x: 30, y: 40, type: "tomato" }
 ];
 
 // Farm-robot coordinate system
@@ -163,7 +164,7 @@ seedingJobBtn.addEventListener('click', () => {
 wateringJobBtn.addEventListener('click', () => {
   modalWatering.style.display = 'block';
   jobCountWatering = 0;
-  createJobRowWatering(); // Add first row by default
+  createJobRowWatering(testPlants); // Add first row by default
 });
 
 closeModal.addEventListener('click', () => {
@@ -175,6 +176,7 @@ closeModal.addEventListener('click', () => {
 closeModalWatering.addEventListener('click', () => {
   modalWatering.style.display = 'none';
   document.getElementById('WateringJobName').value = '';
+  document.getElementById('jobNameErrorWatering').textContent = '';
 });
 
 window.addEventListener('click', (e) => {
@@ -189,6 +191,7 @@ window.addEventListener('click', (e) => {
   if (e.target === modalWatering) {
     modalWatering.style.display = 'none';
     document.getElementById('WateringJobName').value = '';
+    document.getElementById('jobNameErrorWatering').textContent = '';
   }
 });
 
@@ -231,8 +234,8 @@ function createJobRowWatering(plants) {
         <input type="number" class="watering amount" placeholder="20 ml">
       </div>
       <div>
-        <label>Y Coordinate</label>
-        <input type="number" class="coord-input yCoord" placeholder="0 - 650">
+        <label>Z Coordinate (Watering height)</label>
+        <input type="number" class="coord-input zCoord" placeholder="5 - 100">
       </div>
     </div>
     <div class="errorMsg"></div>
@@ -250,12 +253,13 @@ function createJobRowWatering(plants) {
   defaultOption.value = "";
   defaultOption.textContent = "--Choose Plant--";
   select.appendChild(defaultOption);
+  
 
   // actual plants
   plants.forEach(plant => {
     const option = document.createElement('option');
-    option.value = `${plant.name}`;
-    option.textContent = `${plant.name} (${plant.type}) at X: ${plant.x}, Y: ${plant.y}`;
+    option.value = {x: plant.x, y:plant.y}; // value is a tuple of x,y,
+    option.textContent = `${plant.type} at X: ${plant.x}, Y: ${plant.y}`;
     option.dataset.x = plant.x;
     option.dataset.y = plant.y;
     option.dataset.type = plant.type;
@@ -266,27 +270,30 @@ function createJobRowWatering(plants) {
 }
 
 addPlantBtnWatering.addEventListener('click', () => {
-  createJobRowWatering(testPlants);
+  createJobRowWatering(plants);
 });
 
 executeBtnWatering.addEventListener('click', async () => {
-  const jobRows = document.querySelectorAll('.job-row');
+  const jobRows = document.querySelectorAll('.job-row-watering');
   const results = [];
   let isValid = true;
+
+  const seeds = [];
   const seenCoordinates = new Set();
 
+
   for (const row of jobRows) {
-    const plant = row.querySelector('.plant').value;
-    const ml = Number(row.querySelector('.watering').value);
+    const plant = row.querySelector('.plant-select').value;
+    console.log(plant);
     const z = Number(row.querySelector('.zCoord').value);
-    const depth = Number(row.querySelector('.depth').value);
+    console.log(row.querySelector('.watering.amount').value);
+    const watering = Number(row.querySelector('.watering.amount').value);
     const errorMsg = row.querySelector('.errorMsg');
     errorMsg.textContent = '';
 
-    const coordKey = `${x},${y}`;
+    const coordKey = `${plant.x},${plant.y}`;
 
-    if (!plant || isNaN(x) || isNaN(y) || isNaN(depth) ||
-        x < 0 || x > 395 || y < 0 || y > 650 || depth <= 0) {
+    if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 1 || watering > 600 ) {
       errorMsg.textContent = 'Please correct the above values.';
       isValid = false;
     } else if (seenCoordinates.has(coordKey)) {
@@ -294,45 +301,74 @@ executeBtnWatering.addEventListener('click', async () => {
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
-      results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
+      seeds.push({ x: Number(plant.x), y: Number(plant.y)});
+      results.push(`Plant: ${plant}, Z: ${z}, Watering Amount: ${watering}`);
     }
-    results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
+  }
 
-      try {
-        var obj= {
-        x: x,
-        y: y,
-        planttype: plant,
-        depth: depth
-        };
-        await InsertSeedingJob(x, y, plant, depth);
-      } catch (error) {
-        errorMsg.textContent = 'Failed to save job.';
-        console.error(error);
-        isValid = false;
-      }
-    }
+  const jobname = document.getElementById("WateringJobName").value.trim();
+  jobNameErrorWatering.textContent = '';
+  const regex = /^[a-zA-Z0-9 ]*$/;
 
-    const input = document.getElementById("SeedingJobName").value.trim(); // Get the latest value
-    jobNameError.textContent = ''; // Clear old error
-    const regex = /^[a-zA-Z0-9 ]*$/;
-
-    if (!regex.test(input)) {
-      jobNameError.textContent = 'Special characters are not allowed in the job name.';
-      isValid = false;
-    }
+  if (!regex.test(jobname)) {
+    jobNameErrorWatering.textContent = 'Special characters are not allowed in the job name.';
+    isValid = false;
+  }
+  if(jobname===''){
+    jobNameErrorWatering.textContent = 'Please fill the Jobname';
+    isValid = false;
+  }
 
   if (!isValid) return;
+  console.warn("🚫 Form validation failed. Not sending job.");
 
-  if (jobCount !== 0 && Array.isArray(results) && results.length > 0) {
-    alert("Seeding Jobs Created:\n\n" + results.join("\n"));
-  } else {
-    alert("Seeding Job Task Empty");
+  if (seeds.length === 0) {
+    alert("❌ Please add at least one plant before creating a job.");
+    return;
   }
-  alert("Seeding Jobs Created:\n\n" + results.join("\n"));
-  jobContainer.innerHTML = '';
-  jobCount = 0;
-  modal.style.display = 'none';
+
+  const scheduleData = {};
+  const scheduleOption = document.querySelector('input[name="scheduleOption"]:checked').value;
+  if (scheduleOption === "scheduled") {
+    const executionTime = document.getElementById("executionTime").value;
+    const repeatInterval = document.getElementById("repeatInterval").value;
+
+    scheduleData = {time: executionTime, interval: repeatInterval};
+  }
+  const payload = { jobname, seeds, scheduleData};
+
+  try {
+    if (isEditMode) {
+      // 🔁 UPDATE mode
+      const response = await fetch('/api/jobs/Watering', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to update job.");
+      alert("Watering Job Updated ✅");
+    } else {
+      // ➕ CREATE mode
+      const response = await fetch('/api/jobs/Watering', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to create job.");
+      alert("Watering Job Created ✅");
+    }
+
+    modal.style.display = 'none';
+    jobContainer.innerHTML = '';
+    document.getElementById("WateringJobName").value = '';
+    jobCount = 0;
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Error: " + err.message);
+  }
 });
 
 // Seeding Job Management
@@ -699,6 +735,7 @@ function showError(message) {
     errorBox.classList.remove('show');
   }, 3000);
 }
+
 
 
 
