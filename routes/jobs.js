@@ -43,8 +43,8 @@ export default function createJobsRouter(backend) {
         const { jobtype, jobname } = req.params;
         try {
             await DatabaseService.DeleteJobFromDB(jobtype, jobname);
-            //TODO remove job from scheduled Jobs
-            backend.scheduleManager.removeScheduled
+            // remove job from scheduled Jobs
+            backend.scheduleManager.removeScheduledJob(jobName)
             backend.appendNotification("Job " + id + " deleted");
             res.status(200).json({ message: 'Job deleted' });
         } catch (err) {
@@ -80,7 +80,11 @@ export default function createJobsRouter(backend) {
         const { job_id } = req.params;
         try {
             // TODO wait for get-job method
-            let job = await DatabaseService.getJob(job_id);
+            let job = await DatabaseService.ReturnSingleJob(job_id);
+            if( job == null || typeof(job) == "undefined") {
+                res.status(500).json({ error: 'Job is not in Database' });
+                return
+            }
             backend.scheduleManager.appendJob(job);
             backend.checkForNextJob();
             res.status(200).json({ message: 'Job queued' });
