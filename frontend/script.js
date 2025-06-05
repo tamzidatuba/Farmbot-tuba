@@ -36,12 +36,6 @@ class Plant {
   }
 }
 
-const testPlants = [
-  { x: 10, y: 20, type: "radish" },
-  { x: 15, y: 25, type: "lettuce" },
-  { x: 30, y: 40, type: "tomato" }
-];
-
 // Farm-robot coordinate system
 const coordWidth = 395;
 const coordHeight = 650;
@@ -76,16 +70,6 @@ const closeLoginModal = document.getElementById('closeLoginModal');
 let isEditMode = false;
 let jobBeingEdited = null;
 
-/*
-toggle.addEventListener('click', () => {
-  const isVisible = seedingJobBtn.style.display === 'block';
-  const display = isVisible ? 'none' : 'block';
-
-  seedingJobBtn.style.display = display;
-
-  arrow.classList.toggle('open', !isVisible);
-});
-*/
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('pauseJobBtn').style.display = 'none';
   document.getElementById('loginBtn').style.display = 'none';
@@ -284,7 +268,6 @@ executeBtnWatering.addEventListener('click', async () => {
 
   for (const row of jobRows) {
     const plant = row.querySelector('.plant-select').value;
-    console.log(plant);
     const z = Number(row.querySelector('.zCoord').value);
     console.log(row.querySelector('.watering.amount').value);
     const watering = Number(row.querySelector('.watering.amount').value);
@@ -686,27 +669,6 @@ window.addEventListener('click', (e) => {
 });
 
 
-//PAUSE BUTTON LOGIC
-function updatePauseButtonVisibilityFromStatusManager() {
-  const pauseBtn = document.getElementById('pauseJobBtn');
-
-  fetch('/api/status')
-    .then(res => res.json())
-    .then(data => {
-      const status = data.status || "";
-      const isRunning = ["Seeding", "Watering", "Moving", "Fetching", "Moving to seeding position", "Moving to watering position"].includes(status);
-      pauseBtn.style.display = isRunning ? 'inline-block' : 'none';
-
-      // Update button text depending on paused state
-      pauseBtn.textContent = (status === "Paused") ? '▶ Resume Job' : '⏸ Pause Job';
-    })
-    .catch(err => {
-      console.error("Failed to fetch status:", err);
-      pauseBtn.style.display = 'none'; // hide on error
-    });
-}
-
-
 const pauseBtn = document.getElementById('pauseJobBtn');
 const errorMessageBox = document.getElementById('errorMessage');
 
@@ -980,16 +942,6 @@ canvas.addEventListener('mouseleave', () => {
 });
 
 
-// Update status box
-function updateStatus() {
-  fetch('/api/status', {method: 'GET',
-  })
-  .then(response => response.json())
-  .then(data => {
-    statusBox.textContent = 'Status: ' + data.status;
-  })
-}
-
 // button for max history entries
 entryLimitSelect.addEventListener('change', () => {
   if (maxHistoryEntries < parseInt(entryLimitSelect.value)) {
@@ -1023,62 +975,56 @@ entryLimitSelect.addEventListener('change', () => {
   
 });
 
-// Update status history
-function updateStatusHistory() {
-  fetch('/api/notifications', {method: 'GET',
+
+// Update robot status, notifications and execution
+function updateRobot() {
+  //updateStatus();//change this to actually get status
+  fetch('/api/frontendData', {method: 'GET',
   })
   .then(response => response.json())
   .then(data => {
-    // Check if the data has changed
+    // Update robot Status
+    statusBox.textContent = 'Status: ' + data.status;
+    // Update Status History
+    console.log(historyList);
     var temp = historyList.slice().reverse();
-    if (temp.toString() != data.toString()) {
+    if (temp.toString() != data.notifications.toString()) {
       // Clear the current status history
       while (statusHistory.children.length > 1) {
         statusHistory.removeChild(statusHistory.lastChild);
       }
       // Add new entries to the status history
-      for (const status in data.reverse()) {  
+      for (const status in data.notifications.reverse()) {  
         if (statusHistory.children.length < maxHistoryEntries + 1) {
           const entry = document.createElement('div');
-          entry.textContent = data[status];
+          entry.textContent = data.notifications[status];
           statusHistory.appendChild(entry);
         }
       }
-      historyList = data;
-      }
+      historyList = data.notifications;
+    }
+    // Update Pause Button visibility
+    const pauseBtn = document.getElementById('pauseJobBtn');
+    pauseBtn.style.display = data.status === 'ready' || data.status === 'offline' ? 'none' : 'inline-block';
+
+    // Update button text depending on paused state
+    pauseBtn.textContent = data.paused ? '▶ Resume Job' : '⏸ Pause Job';
     })
+    .catch(err => {
+      console.error("Failed to fetch frontend data:", err);
+      pauseBtn.style.display = 'none'; // hide on error
+    });
   }
 
-
-// Simulate robot moving
-function updateRobot() {
-  updateStatus();//change this to actually get status
-
-  //robot.x = Math.floor(Math.random() * coordWidth);
-  //robot.y = Math.floor(Math.random() * coordHeight);
-  //clearCanvas();
-  //drawGrid();
-  //drawRobot();
-
-  updateStatusHistory();
-
-  updatePauseButtonVisibilityFromStatusManager();
-
-  //just for testing
-}
-
-//plants.push(new Plant(100, 100, 'lettuce'));
-//plants.push(new Plant(200, 200, 'radish'));
-//plants.push(new Plant(300, 300, 'tomato'));
-
+  
 // Initial draw
+getPlants();
 drawGrid();
 //drawRobot();
 setTimeout (() => {
   clearCanvas();
   drawGrid();
 }, 100);
-getPlants();
 
 // Update every 1 second
 setInterval(updateRobot, 2500);
