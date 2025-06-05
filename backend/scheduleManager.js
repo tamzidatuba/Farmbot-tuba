@@ -21,7 +21,7 @@ class ScheduleManager {
 
     removeScheduledJob(name) {
         for (const job in this.jobsToExecute) {
-            if (this.jobsToExecute[name].name == name) {
+            if (this.jobsToExecute[job].job.name == name) {
                 this.jobsToExecute.splice(job, 1);
                 break;
             }
@@ -30,7 +30,7 @@ class ScheduleManager {
 
     appendScheduledJob(newJob) {
         for (const job in this.jobsToExecute) {
-            if (this.jobsToExecute[job].name == newJob.name) {
+            if (this.jobsToExecute[job].job.name == newJob.name) {
                 return false;
             }
         }
@@ -56,8 +56,7 @@ class ScheduleManager {
             // calculate the time difference of current time and planned execution time
             let time_difference = scheduledJobs[job_idx].nextExecution - currentTime;
             if (time_difference <= SCHEDULE_TOLERANCE) {
-                scheduledJobs[job_idx].jobType = DatabaseService.JobType.WATERING
-                this.jobsToExecute.push(scheduledJobs[job_idx]);
+                this.jobsToExecute.push({jobType: DatabaseService.JobType.WATERING, job: scheduledJobs[job_idx]});
                 console.log("Scheduled to be executed:", scheduledJobs[job_idx].name);
             } 
             else {
@@ -68,13 +67,11 @@ class ScheduleManager {
         this.currentTimeout = setTimeout(this.checkForScheduledJobs.bind(this), nextScheduleCheck);
     }
 
-    calculateNextSchedule(job) {
-        job.nextExecution = job.executionInterval + (Date.now());
+    calculateNextSchedule(jobData) {
+        jobData.job.nextExecution = jobData.job.executionInterval + (Date.now());
 
         // modify entry in DB
-        let jobType = job.jobType
-        delete job[jobType]
-        DatabaseService.UpdateJobToDB(jobType, job);
+        DatabaseService.UpdateJobToDB(jobData.jobType, jobData.job);
     }
 }
 

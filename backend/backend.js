@@ -59,10 +59,8 @@ class Backend {
     this.appendNotification("Job " + this.statusManager.currentJob.name + " finished.");
     if (this.statusManager.currentJob.name != "GoHome") {
 
-      if (!("nextExecution" in this.currentJobData)) {
-        let jobType = this.currentJobData.jobType
-        delete this.currentJobData[jobType]
-        DatabaseService.DeleteJobFromDB(jobType, this.currentJobData.name)
+      if (!("nextExecution" in this.currentJobData.job)) {
+        DatabaseService.DeleteJobFromDB(jobType, this.currentJobData.job.name)
       }
 
       if (!this.checkForNextJob()) {
@@ -78,8 +76,8 @@ class Backend {
     }
     if (this.scheduleManager.isJobScheduled()) {
       this.currentJobData = this.scheduleManager.getScheduledJob();
-      if ("nextExecution" in this.currentJobData) {
-        this.scheduleManager.calculateNextSchedule(this.currentJobData);
+      if ("nextExecution" in this.currentJobData.job) {
+        this.scheduleManager.calculateNextSchedule(this.currentJobData.job);
       }
       // translate job-dictionary into job-object
       let jobObject;
@@ -95,7 +93,7 @@ class Backend {
           return
       }
       this.statusManager.startJob(jobObject);
-      this.appendNotification("Job " + this.currentJobData.name + " started.");
+      this.appendNotification("Job " + jobObject.name + " started.");
       return true
     }
     return false
