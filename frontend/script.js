@@ -269,7 +269,6 @@ executeBtnWatering.addEventListener('click', async () => {
   for (const row of jobRows) {
     const plant = row.querySelector('.plant-select').value;
     const z = Number(row.querySelector('.zCoord').value);
-    console.log(row.querySelector('.watering.amount').value);
     const watering = Number(row.querySelector('.watering.amount').value);
     const errorMsg = row.querySelector('.errorMsg');
     errorMsg.textContent = '';
@@ -322,7 +321,6 @@ executeBtnWatering.addEventListener('click', async () => {
   if (scheduleOption === "scheduled") {
     const executionTime = document.getElementById("executionTime").value;
     const repeatInterval = document.getElementById("repeatInterval").value;
-    console.log("Execution Time:", executionTime);
     scheduleData.time = executionTime;
     scheduleData.interval = repeatInterval;
   }
@@ -986,7 +984,6 @@ function updateRobot() {
     // Update robot Status
     statusBox.textContent = 'Status: ' + data.status;
     // Update Status History
-    console.log(historyList);
     var temp = historyList.slice().reverse();
     if (temp.toString() != data.notifications.toString()) {
       // Clear the current status history
