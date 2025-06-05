@@ -109,7 +109,7 @@ await initalizeBackend(backend);
 backend_initialized = true;
 
 // TODO delete
-let wateringJob = { jobType: "watering", name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }
+let wateringJob = { jobType: DatabaseService.JobType.WATERING, name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }
 //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
 //console.log(plants);
 

@@ -96,10 +96,10 @@ class Backend {
       // translate job-dictionary into job-object
       let jobObject;
       switch(this.currentJobData.jobType) {
-        case "seeding": 
+        case DatabaseService.JobType.SEEDING: 
           jobObject = new SeedingJob(this.currentJobData);
           break;
-        case "watering":
+        case DatabaseService.JobType.WATERING:
           jobObject = new WateringJob(this.currentJobData);
           break;
         default:

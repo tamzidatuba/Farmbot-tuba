@@ -56,6 +56,7 @@ class ScheduleManager {
             // calculate the time difference of current time and planned execution time
             let time_difference = scheduledJobs[job_idx].nextExecution - currentTime;
             if (time_difference <= SCHEDULE_TOLERANCE) {
+                scheduledJobs[job_idx].jobType = DatabaseService.JobType.WATERING
                 this.jobsToExecute.push(scheduledJobs[job_idx]);
                 console.log("Scheduled to be executed:", scheduledJobs[job_idx].name);
             } 
