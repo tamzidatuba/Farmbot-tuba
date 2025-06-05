@@ -21,13 +21,12 @@ class Backend {
   constructor() {
     this.notification_history = new Array();
     this.scheduleManager = new ScheduleManager();
+    this.statusManager = new StatusManager(this);
     this.currentJobData;
   }
 
-  init(farmbot, statusManager) {
+  init(farmbot) {
     this.farmbot = farmbot;
-    this.statusManager = statusManager;
-    this.statusManager.backend = this;
   }
 
   generateFrontendData() {
@@ -83,10 +82,10 @@ class Backend {
       let jobObject;
       switch(this.currentJobData.jobType) {
         case DatabaseService.JobType.SEEDING: 
-          jobObject = new SeedingJob(this.currentJobData);
+          jobObject = new SeedingJob(this.currentJobData.job);
           break;
         case DatabaseService.JobType.WATERING:
-          jobObject = new WateringJob(this.currentJobData);
+          jobObject = new WateringJob(this.currentJobData.job);
           break;
         default:
           console.log("Job has no valid Job-Type. Cancelling...");
@@ -135,13 +134,19 @@ function waitForFirstStatus(farmbot) {
 }
 async function initalizeBackend(backend) {
   let farmbot = await getFarmbot()
-  let statusManager = new StatusManager(farmbot);
   console.log("Farmbot Initialised!");
+  
+  backend.statusManager.init(farmbot);
+  farmbot.readStatus();
 
   await waitForFirstStatus(farmbot);
+
   console.log("StatusManager Initialized");
   
-  backend.init(farmbot, statusManager);
+  backend.init(farmbot);
 }
 
-export {initalizeBackend, Backend};
+export {
+  initalizeBackend,
+  Backend
+};

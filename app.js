@@ -14,7 +14,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const backend = new Backend();
-let backend_initialized = false;
 
 // Serve static files (CSS, JS) from root
 app.use(express.static(path.join(__dirname, 'frontend//')));
@@ -65,12 +64,7 @@ app.post('/api/plants', async (req, res) => {
 
 
 app.get('/api/notifications', (req, res) => {
-  if (backend_initialized) {
-    res.status(200).json(backend.notification_history);
-  }
-  else {
-    res.status(200).json(new Array());
-  }
+   res.status(200).json(backend.notification_history);
 });
 
 
@@ -103,30 +97,14 @@ app.post('/api/user/:username/:password', async (req, res) => {
 });
 
 app.get('/api/status', (req, res) => {
-  if (backend_initialized) {
-    res.status(200).json({ status: backend.statusManager.status });
-  }
-  else {
-    res.status(200).json({ status: "Offline" });
-  }
+  res.status(200).json({ status: backend.statusManager.status });
 });
 
 app.get('/api/frontendData', (req, res) => {
-  if (backend_initialized) {
-    res.status(200).json(backend.generateFrontendData());
-  }
-  else {
-    res.status(201).json({
-      "status": "Offline",
-      "paused": false,
-      "notifications": [],
-      "executionPipeline": [],
-    });
-  }
+  res.status(200).json(backend.generateFrontendData());
 });
 
 await initalizeBackend(backend);
-backend_initialized = true;
 
 // TODO delete
 let wateringJob = { jobType: DatabaseService.JobType.WATERING, job: {name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }};
