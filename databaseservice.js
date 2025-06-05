@@ -4,6 +4,8 @@ import wateringModule from './models/wateringjob.model.js';
 import notificationModel from './models/notification.model.js';
 import plantModel from './models/plant.model.js';
 import userModel from './models/user.model.js';
+import seedingJobModel from './models/seedingjob.model.js';
+import WaterJobModel from './models/wateringjob.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -49,6 +51,23 @@ async function InsertJobToDB(jobType, object) {
     }
 
     console.log('Job has been inserted');
+}
+
+async function ReturnSingleJob(id)
+{
+    let job = await seedingModule.ReturnSeedingJob(id);
+    if( job !== null && typeof(job) !== "undefined")
+    {
+        return {job};
+       
+    }
+    job = await wateringModule.ReturnWateringJob(id);
+    if( job !== null && typeof(job) !== "undefined")
+    {
+        return {job};
+    }
+    
+
 }
 
 
@@ -128,13 +147,13 @@ async function FetchNotificationsFromDB() {
     return notifications;
 }
 
-async function FetchPlantsfromDBtoFE() {
+async function FetchPlantsfromDB() {
 
     const plants  = await plantModel.FetchPlantsFromDB();
     return plants;
 }
 
-async function FetchUserfromDBtoFE(username,password) {
+async function FetchUserfromDB(username,password) {
 
     const users  = await userModel.FetchUser(username,password);
     return users;
@@ -155,9 +174,10 @@ export default {
     UpdateJobToDB,
     InsertNotificationToDB,
     FetchNotificationsFromDB,
-    FetchPlantsfromDBtoFE,
-    FetchUserfromDBtoFE,
+    FetchPlantsfromDB,
+    FetchUserfromDB,
     UpdateUserToDB,
+    ReturnSingleJob,
 };
 
 function GetDistance(x1, y1, x2, y2) {
