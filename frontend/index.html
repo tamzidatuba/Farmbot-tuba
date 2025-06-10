@@ -36,6 +36,7 @@
     <span class="close" id="closeModalWatering">&times;</span>
     <h2>Create Watering Jobs</h2>
     <input type="text" id="WateringJobName" placeholder="Enter job name" />
+    <div id="jobNameErrorWatering" class="errorMsg"></div>
 
     <!-- Schedule Option -->
     <div class="schedule-options">
@@ -57,8 +58,8 @@
       <label for="repeatInterval">Repeat Interval (in hours):</label>
       <input type="number" id="repeatInterval" min="1" placeholder="e.g., 7 for every 7 hours" />
     </div>
+    <div id="jobScheduleError" class="errorMsg"></div>
 
-    <div id="jobNameErrorWatering" class="errorMsg"></div>
     <div id="jobContainerWatering"></div>
 
     <button id="addPlantBtnWatering">+ Add Plant</button>

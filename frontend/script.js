@@ -307,15 +307,6 @@ executeBtnWatering.addEventListener('click', async () => {
     isValid = false;
   }
 
-  if (!isValid) return;
-  console.warn("🚫 Form validation failed. Not sending job.");
-
-  if (seeds.length === 0) {
-    alert("❌ Please add at least one plant before creating a job.");
-    return;
-  }
-
-
   const scheduleOption = document.querySelector('input[name="scheduleOption"]:checked').value;
 
   const scheduleData = {
@@ -329,13 +320,23 @@ executeBtnWatering.addEventListener('click', async () => {
     const repeatInterval = document.getElementById("repeatInterval").value;
     scheduleData.time = executionTime;
     scheduleData.interval = repeatInterval;
-    if (NaN(scheduleData.time) || NaN(scheduleData.interval)) {
+    if (!scheduleData.time|| !scheduleData.interval || isNaN(scheduleData.interval)) {
+      const errorMsg = document.getElementById("jobScheduleError");
       errorMsg.textContent = 'Please enter a correct schedule.';
       isValid = false;
     }
   }
+
+  if (!isValid) return;
+  console.warn("🚫 Form validation failed. Not sending job.");
+
+  if (seeds.length === 0) {
+    alert("❌ Please add at least one plant before creating a job.");
+    return;
+  }
+
+
   const payload = { jobname, seeds, scheduleData};
-  console.log(JSON.stringify(payload));
 
   try {
     if (isEditMode) {
