@@ -6,15 +6,6 @@ import { MoveZTask} from "./tasks/MoveZTask.js";
 import { FAKE_WATER_PIN } from "./tasks/SetPinTask.js";
 import {TimedPinTask} from "./tasks/TimedPinTask.js";
 
-/*
-Steps:
-- move to watering coordinates (Move Command)
-- water(Toggle Pin Command)
-- repeat till all the given plants are finished
-*/
-
-const MIN_WATERING_HEIGHT = -300 // has to be > field height
-
 class WateringJob extends Job {
     constructor(wateringArgs) {
         super(wateringArgs.jobname);
@@ -32,7 +23,7 @@ class WateringJob extends Job {
             );
             this.taskQueue.push(goToWateringGridPosition);
 
-            let wateringHeight = Math.max(MIN_WATERING_HEIGHT, seedArgs.wateringheight);
+            let wateringHeight = Math.max(FieldConstants.FIELD_HEIGHT, seedArgs.wateringheight);
             let goToWateringHeight = new MoveZTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, wateringHeight);
             this.taskQueue.push(goToWateringHeight);
     
@@ -41,6 +32,7 @@ class WateringJob extends Job {
             let waterSeeds = new TimedPinTask(FarmbotStatus.WATERING, FAKE_WATER_PIN, duration);
             this.taskQueue.push(waterSeeds);
         }
+        this.taskQueue.push(goToSafetyHeight)
 
         
     }

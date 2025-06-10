@@ -109,7 +109,7 @@ await backend_init_promise;
 
 // TODO delete
 let wateringJob = { jobType: DatabaseService.JobType.WATERING, job: {name: "MyWateringJob", seeds: new Array(
-  { xcoordinate: 100, ycoordinate: 100, wateringheight: -50, wateringcapacity: 100 }
+  { xcoordinate: 100, ycoordinate: 100, wateringheight: -50, wateringcapacity: 250 }
 )}};
 //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
 //console.log(plants);
