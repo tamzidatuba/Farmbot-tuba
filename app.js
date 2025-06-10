@@ -108,7 +108,9 @@ app.get('/api/frontendData', (req, res) => {
 await backend_init_promise;
 
 // TODO delete
-let wateringJob = { jobType: DatabaseService.JobType.WATERING, job: {name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }};
+let wateringJob = { jobType: DatabaseService.JobType.WATERING, job: {name: "MyWateringJob", seeds: new Array(
+  { xcoordinate: 100, ycoordinate: 100, wateringheight: -50, wateringcapacity: 100 }
+)}};
 //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
 //console.log(plants);
 

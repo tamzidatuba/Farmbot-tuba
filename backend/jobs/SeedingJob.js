@@ -22,7 +22,7 @@ const SEED_BOWL_SUCTION_HEIGHT = -200;
 
 class SeedingJob extends Job {
     constructor(seedingArgs) {
-        super(seedingArgs.name);
+        super(seedingArgs.jobname);
 
         let goToSafetyHeight = new MoveZTask(FarmbotStatus.FETCHING, SEED_BOWL_SAFETY_HEIGHT);
         let goToSeedBowl = new MoveTask(FarmbotStatus.FETCHING, SEED_BOWL_POSITION.x , SEED_BOWL_POSITION.y);
