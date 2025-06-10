@@ -2,20 +2,22 @@ import { StatusManager } from "./statusManager.js";
 import {getFarmbot} from './farmbotInitializer.js';
 import { ScheduleManager } from "./scheduleManager.js";
 import DatabaseService from '../databaseservice.js';
-import { GoHomeJob } from '../jobs/GoHomeJob.js';
-import { SeedingJob} from '../jobs/SeedingJob.js';
-import { WateringJob} from '../jobs/WateringJob.js';
-
-// TODO delete
-const JobNotification = Object.freeze({
-    JOB_CREATED: "Job created",
-    JOB_MODIFIED: "Job modified",
-    JOB_DELETED: "Job deleted",
-    JOB_STARTED: "Job started",
-    JOB_FINISHED: "Job finished"
-});
+import { GoHomeJob } from './jobs/GoHomeJob.js';
+import { SeedingJob} from './jobs/SeedingJob.js';
+import { WateringJob} from './jobs/WateringJob.js';
 
 const MAX_NOTIFICATIONS = 50;
+
+const FieldConstants = Object.freeze({
+    FIELD_START_X: 0,
+    FIELD_START_Y: 0,
+    FIELD_END_X: 490,
+    FIELD_END_Y: 640,
+    SAFETY_HEIGHT: 0,
+    FIELD_HEIGHT: -285,
+    SEED_CONTAINER_Y: 800,
+    SEED_CONTAINER_HEIGHT: -110
+});
 
 class Backend {
   constructor() {
@@ -116,8 +118,6 @@ class Backend {
   cancelJob() {
     this.statusManager.cancelJob();
   }
-
-
 }
 
 async function initalizeBackend(backend) {
@@ -137,5 +137,6 @@ async function initalizeBackend(backend) {
 
 export {
   initalizeBackend,
-  Backend
+  Backend,
+  FieldConstants
 };

@@ -1,9 +1,10 @@
 import { Task } from "./Task.js"
 
 class MoveZTask extends Task {
-    constructor(status, z) {
+    constructor(status, z, speed = 50) {
         super(status);
         this.z = z;
+        this.speed = speed;
     }
 
     checkCondition(state) {
@@ -11,9 +12,8 @@ class MoveZTask extends Task {
     }
 
     async execute(farmbot, lastState) {
-        //this.z = Math.max(this.z, lastState.location_data.position.z);
         try {
-            await farmbot.moveAbsolute({ x: lastState.location_data.position.x, y: lastState.location_data.position.y, z: this.z, speed: 100 });
+            await farmbot.moveAbsolute({ x: lastState.location_data.position.x, y: lastState.location_data.position.y, z: this.z, speed: this.speed });
         } catch(e) {
             console.log(e)
         }

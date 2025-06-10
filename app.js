@@ -14,6 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const backend = new Backend();
+let backend_init_promise = initalizeBackend(backend);
 
 // Serve static files (CSS, JS) from root
 app.use(express.static(path.join(__dirname, 'frontend//')));
@@ -104,10 +105,12 @@ app.get('/api/frontendData', (req, res) => {
   res.status(200).json(backend.generateFrontendData());
 });
 
-await initalizeBackend(backend);
+await backend_init_promise;
 
 // TODO delete
-let wateringJob = { jobType: DatabaseService.JobType.WATERING, job: {name: "MyWateringJob", positions: new Array({ x: 100, y: 100, z: -50 }), "ml": 500 }};
+let wateringJob = { jobType: DatabaseService.JobType.WATERING, job: {name: "MyWateringJob", seeds: new Array(
+  { xcoordinate: 100, ycoordinate: 100, wateringheight: -50, wateringcapacity: 250 }
+)}};
 //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
 //console.log(plants);
 

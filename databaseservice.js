@@ -28,43 +28,45 @@ async function InsertJobToDB(jobType, object) {
     const now = new Date();
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
+        let existingjob =  await seedingModule.findOne({ "jobname": jobname });
+        if (existingjob) {
+            return "job name already exists";
+        }
 
-        let result = await seedingModule.InsertSeedingJobToDB(jobname, seeds);
-        
-        if (result) {
-            return true;
+        let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
+        if (invalids.length > 0) {
+            return "existing seeds found in previous jobs";
         }
-        else {
-            return false;
+        invalids = await ValidateNewSeedsAgainstPlants(seeds);
+        if (invalids.length > 0) {
+            return "existing seeds found in plants";
         }
+
+        await seedingModule.InsertSeedingJobToDB(jobname, seeds);        
     }
-    
+
     else if (jobType === JobType.WATERING) {
-        const { jobname, plantName, x, y, wateringcapacity } = object;
-
-        if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
-            throw new Error("Invalid watering job data");
+        const { jobname, plantstobewatered } = object;
+        let existingjob = await wateringModule.findOne({ "jobname": jobname });
+        if (existingjob) {
+            return "job name already exists";
         }
-        await wateringModule.InsertWateringJobToDB(jobname, plantName, x, y, wateringcapacity);
+        await wateringModule.InsertWateringJobToDB(jobname, plantstobewatered);
     }
-
-    console.log('Job has been inserted');
+    return true;
 }
 
-async function ReturnSingleJob(id)
-{
+async function ReturnSingleJob(id) {
     let job = await seedingModule.ReturnSeedingJob(id);
-    if( job !== null && typeof(job) !== "undefined")
-    {
-        return {job};
-       
+    if (job !== null && typeof (job) !== "undefined") {
+        return { job };
+
     }
     job = await wateringModule.ReturnWateringJob(id);
-    if( job !== null && typeof(job) !== "undefined")
-    {
-        return {job};
+    if (job !== null && typeof (job) !== "undefined") {
+        return { job };
     }
-    
+
 
 }
 
@@ -147,28 +149,26 @@ async function FetchNotificationsFromDB() {
 
 async function FetchPlantsfromDB() {
 
-    const plants  = await plantModel.FetchPlantsFromDB();
+    const plants = await plantModel.FetchPlantsFromDB();
     return plants;
 }
 
-async function InsertPlantsToDB(plants)
-{
+async function InsertPlantsToDB(plants) {
     for (let plant of plants) {
         await plantModel.InsertPlantToDB(plant);
-    }    
+    }
 }
 
-async function FetchUserfromDB(username,password) {
-    const users  = await userModel.FetchUser(username,password);
+async function FetchUserfromDB(username, password) {
+    const users = await userModel.FetchUser(username, password);
     return users;
 }
 
-async function UpdateUserToDB(username,password) {
-    const users  = await userModel.UpdateUser(username,password);
+async function UpdateUserToDB(username, password) {
+    const users = await userModel.UpdateUser(username, password);
 }
 
-async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob)
-{
+async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
     let existingJobs = await FetchJobsFromDB(JobType.SEEDING);
     let invalidSeeds = [];
 
@@ -194,7 +194,7 @@ async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob)
     return invalidSeeds;
 }
 
-async function ValidateNewSeedsAgainstPlants(seeds){
+async function ValidateNewSeedsAgainstPlants(seeds) {
     let plants = await FetchPlantsfromDB();
     let invalidSeeds = [];
 
@@ -203,7 +203,7 @@ async function ValidateNewSeedsAgainstPlants(seeds){
         for (let plant of plants) {
             let distance = GetDistance(seed.xcoordinate, seed.ycoordinate, plant.xcoordinate, plant.ycoordinate);
             if (distance <= PlantRadii[plant.planttype]) {
-               invalidSeeds.push(seed); 
+                invalidSeeds.push(seed);
                 isValid = false;
             }
             if (!isValid) {
