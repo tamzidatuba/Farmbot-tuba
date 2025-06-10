@@ -10,12 +10,12 @@ export default function createJobsRouter(backend) {
         const object = req.body;
         try {
             let result = await DatabaseService.InsertJobToDB(jobType, object);
-            if (result) {
-                backend.appendNotification("Job " + object.name + " saved");
+            if (result === true) {
+                backend.appendNotification("Job " + object.jobname + " saved");
                 res.status(200).json({ message: 'Job saved' });
             }
             else {
-                res.status(201).json({ message: "The job name already exists." });
+                res.status(500).json({ message: result });
             }
         } catch (err) {
             console.error(err);
@@ -43,7 +43,9 @@ export default function createJobsRouter(backend) {
         const { jobtype, jobname } = req.params;
         try {
             await DatabaseService.DeleteJobFromDB(jobtype, jobname);
-            backend.appendNotification("Job " + id + " deleted");
+            // remove job from scheduled Jobs
+            backend.scheduleManager.removeScheduledJob(jobname)
+            backend.appendNotification("Job " + jobname + " deleted");
             res.status(200).json({ message: 'Job deleted' });
         } catch (err) {
             res.status(500).json({ error: 'Failed to delete job' });
@@ -71,15 +73,26 @@ export default function createJobsRouter(backend) {
             res.status(500).json({ error: 'Failed to update job' });
         }
     });
-
-
+    
+    
     //start job
     router.post('/start/:id', async (req, res) => {
-      const { id } = req.params;
-      backend.queueJob(id, res);
+        const { job_id } = req.params;
+        try {
+            // TODO wait for get-job method
+            let job = await DatabaseService.ReturnSingleJob(job_id);
+            if( job == null || typeof(job) == "undefined") {
+                res.status(500).json({ error: 'Job is not in Database' });
+                return
+            }
+            backend.scheduleManager.appendJob(job);
+            backend.checkForNextJob();
+            res.status(200).json({ message: 'Job queued' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Failed to queue job' });
+        }
     });
     
-    
-
     return router;
 }

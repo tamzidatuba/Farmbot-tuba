@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<!-- MODAL -->
+<!-- SEEDING-MODAL -->
 <div id="seedingModal" class="modal">
  
 
@@ -25,6 +25,45 @@
 
     <button id="addPlantBtn">+ Add Plant</button>
     <button id="executeBtn">Create & Save</button>
+  </div>
+</div>
+
+<!-- WATERING-MODAL -->
+<div id="wateringModal" class="modal">
+ 
+
+  <div class="modal-content">
+    <span class="close" id="closeModalWatering">&times;</span>
+    <h2>Create Watering Jobs</h2>
+    <input type="text" id="WateringJobName" placeholder="Enter job name" />
+    <div id="jobNameErrorWatering" class="errorMsg"></div>
+
+    <!-- Schedule Option -->
+    <div class="schedule-options">
+      <label class="option-label">
+        <input type="radio" name="scheduleOption" value="scheduled" />
+        <span>Scheduled</span>
+      </label>
+      <label class="option-label">
+        <input type="radio" name="scheduleOption" value="not-scheduled" checked />
+        <span>Not Scheduled</span>
+      </label>
+    </div>
+
+    <!-- Hidden schedule details -->
+    <div id="scheduleFields" style="display: none;">
+      <label for="executionTime">Execution Time:</label>
+      <input type="datetime-local" id="executionTime" />
+
+      <label for="repeatInterval">Repeat Interval (in hours):</label>
+      <input type="number" id="repeatInterval" min="1" placeholder="e.g., 7 for every 7 hours" />
+    </div>
+    <div id="jobScheduleError" class="errorMsg"></div>
+
+    <div id="jobContainerWatering"></div>
+
+    <button id="addPlantBtnWatering">+ Add Plant</button>
+    <button id="executeBtnWatering">Create & Save</button>
   </div>
 </div>
 
@@ -73,6 +112,7 @@
       </div>
       <div class="subtask" id="subtaskContainer">
         <button id="seedingJobBtn">Create Seeding Job</button>
+        <button id="wateringJobBtn">Create Watering Job</button>
       </div>
     </li>
     <li class="menu-item" id="viewJobsBtn">
@@ -103,9 +143,6 @@
       <div id="farmbot-status">Status: Initializing...</div> <!-- Robot status -->
       <button id="pauseJobBtn" class="pause-btn">⏸ Pause Job</button>
       <div id="errorMessage" class="error-box hidden"></div>
-      <div id="status-history" class="hidden">
-        <h3 class="history-title">Notification History</h3>
-      </div> <!-- notification history-->
     </div>
     <div id="status-history">
       <div class="history-header">

@@ -1,26 +1,24 @@
-import { Queue } from "./Queue.js"
-
 /*
 A Job is a list of Tasks inside a Queue for the Farmbot to complete
 */
 
 class Job {
     constructor(jobName) {
-        this.taskQueue = new Queue();
+        this.taskQueue = new Array(); //new Queue();
         this.name = jobName
     }
 
     isJobCompleted() {
-        return this.taskQueue.isEmpty;
+        return this.taskQueue.length == 0;
     }
 
     getNextTask() {
-        return this.taskQueue.peek();
+        return this.taskQueue[0];
     }
 
     taskFinished() {
         console.log("Finished a task");
-        this.taskQueue.dequeue();
+        this.taskQueue.shift();
     }
 }
 

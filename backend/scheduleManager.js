@@ -1,7 +1,7 @@
-import { Queue } from "../jobs/Queue.js";
+import DatabaseService from "../databaseservice.js";
 
 const SCHEDULE_CHECKING_INTERVAL = 900000 // 15*60*1000 = 15min
-const SCHEDULE_TOLERANCE = 10000; // 10 Second execution tolerance
+const SCHEDULE_TOLERANCE = 15000; // 15 Second execution tolerance
 
 class ScheduleManager {
 
@@ -21,7 +21,7 @@ class ScheduleManager {
 
     removeScheduledJob(name) {
         for (const job in this.jobsToExecute) {
-            if (this.jobsToExecute[name].name == name) {
+            if (this.jobsToExecute[job].job.name == name) {
                 this.jobsToExecute.splice(job, 1);
                 break;
             }
@@ -30,34 +30,35 @@ class ScheduleManager {
 
     appendScheduledJob(newJob) {
         for (const job in this.jobsToExecute) {
-            if (this.jobsToExecute[job].name == newJob.name) {
+            if (this.jobsToExecute[job].job.name == newJob.name) {
                 return false;
             }
         }
         this.jobsToExecute.push(newJob);
+        console.log("Scheduled to be executed:", newJob.name);
     }
 
     checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);
-        // TODO ask database for scheduledtasks
-        let scheduledJobs = {};//{0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
+        // ask database for active scheduledtasks
+        let scheduledJobs = DatabaseService.FetchJobsFromDB(DatabaseService.JobType.SCHEDULED);
+
+        //let scheduledJobs = {};//{0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
         let currentTime = Date.now();
         let nextScheduleCheck = SCHEDULE_CHECKING_INTERVAL;
 
         for (const job_idx in scheduledJobs) {
             
             //check if scheduled job is active
-            if (!scheduledJobs[job_idx].active) {
+            if (!scheduledJobs[job_idx].enabled) {
                 continue;
             }
 
             // calculate the time difference of current time and planned execution time
-            let time_difference = scheduledJobs[job_idx].nextExecution - currentTime;
+            let time_difference = scheduledJobs[job_idx].nextexecution - currentTime;
             if (time_difference <= SCHEDULE_TOLERANCE) {
-                this.jobsToExecute.push(scheduledJobs[job_idx]);
-                console.log("Scheduled to be executed:", scheduledJobs[job_idx].name);
-            } 
-            else {
+                appendScheduledJob({jobType: DatabaseService.JobType.SCHEDULED, job: scheduledJobs[job_idx]});
+            } else {
                 nextScheduleCheck = Math.min(nextScheduleCheck, time_difference);
             }
         }
@@ -65,9 +66,11 @@ class ScheduleManager {
         this.currentTimeout = setTimeout(this.checkForScheduledJobs.bind(this), nextScheduleCheck);
     }
 
-    calculateNextSchedule(job) {
-        job.nextExecution = job.executionInterval + (Date.now());
-        // TODO modify entry in DB
+    calculateNextSchedule(jobData) {
+        jobData.job.nextexecution = jobData.job.interval + (Date.now());
+
+        // modify entry in DB
+        DatabaseService.UpdateJobToDB(jobData.jobType, jobData.job);
     }
 }
 

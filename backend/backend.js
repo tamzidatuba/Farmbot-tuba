@@ -2,71 +2,73 @@ import { StatusManager } from "./statusManager.js";
 import {getFarmbot} from './farmbotInitializer.js';
 import { ScheduleManager } from "./scheduleManager.js";
 import DatabaseService from '../databaseservice.js';
-import { GoHomeJob } from '../jobs/GoHomeJob.js';
-import { SeedingJob} from '../jobs/SeedingJob.js';
-import { WateringJob} from '../jobs/WateringJob.js';
-
-// TODO delete
-const JobNotification = Object.freeze({
-    JOB_CREATED: "Job created",
-    JOB_MODIFIED: "Job modified",
-    JOB_DELETED: "Job deleted",
-    JOB_STARTED: "Job started",
-    JOB_FINISHED: "Job finished"
-});
+import { GoHomeJob } from './jobs/GoHomeJob.js';
+import { SeedingJob} from './jobs/SeedingJob.js';
+import { WateringJob} from './jobs/WateringJob.js';
 
 const MAX_NOTIFICATIONS = 50;
+
+const FieldConstants = Object.freeze({
+    FIELD_START_X: 0,
+    FIELD_START_Y: 0,
+    FIELD_END_X: 490,
+    FIELD_END_Y: 640,
+    SAFETY_HEIGHT: 0,
+    FIELD_HEIGHT: -285,
+    SEED_CONTAINER_Y: 800,
+    SEED_CONTAINER_HEIGHT: -110
+});
 
 class Backend {
   constructor() {
     this.notification_history = new Array();
     this.scheduleManager = new ScheduleManager();
-  }
-
-  init(farmbot, statusManager) {
-    this.farmbot = farmbot;
-    this.statusManager = statusManager;
-    this.statusManager.backend = this;
+    this.statusManager = new StatusManager(this);
+    this.currentJobData;
   }
 
   generateFrontendData() {
     return {
       "status": this.statusManager.status,
-      "notifications": this.notification_history
+      "paused": this.statusManager.isPaused,
+      "notifications": this.notification_history,
+      "executionPipeline": this.scheduleManager.jobsToExecute
     }
   }
 
   appendNotification(notification) {
-    // TODO put notification in database
     let date = new Date();
-    // append date to the end of the string
+    // append date to the front of the string
     let dateString = '[' + date.getDate().toString().padStart(2, "0") +'-'+ (date.getMonth() + 1).toString().padStart(2, "0") +'-'+ date.getFullYear() +'|'+ date.getHours().toString().padStart(2, "0") +':'+ date.getMinutes().toString().padStart(2, "0") +':'+ date.getSeconds().toString().padStart(2, "0") + "] ";
     notification = dateString + notification
+    
+    // put notification in DB
+    DatabaseService.InsertNotificationToDB(notification)
+
     this.notification_history.push(notification);
     while (this.notification_history.length > MAX_NOTIFICATIONS) {
       this.notification_history.shift();
     }
   }
 
-  async queueJob(job_id, res) {
-    try {
-      // TODO wait for get-job method
-      let job = await DatabaseService.getJob(job_id);
-      this.scheduleManager.appendJob(job);
-      this.checkForNextJob();
-      res.status(200).json({ message: 'Job queued' });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to queue job' });
-    }
-  }
-
-  finishJob() {
+  async finishJob() {
     console.log("Finished a Job");
     this.appendNotification("Job " + this.statusManager.currentJob.name + " finished.");
-    if (!this.checkForNextJob() && this.statusManager.currentJob.name != "GoHome") {
-      this.statusManager.startJob(new GoHomeJob());
-      this.appendNotification("Job GoHome started.");
+    if (this.currentJobData.jobType != DatabaseService.JobType.HOME) {
+
+      if (this.currentJobData.jobType != DatabaseService.JobType.SCHEDULED) {
+        try {
+          await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.name)
+        } catch (e) {
+          console.log("Failed to delete executed Job from DB!")
+        }
+      }
+
+      if (!this.checkForNextJob()) {
+        this.currentJobData = {jobType: DatabaseService.JobType.HOME}
+        this.statusManager.startJob(new GoHomeJob());
+        this.appendNotification("Job GoHome started.");
+      }
     }
   }
 
@@ -75,25 +77,25 @@ class Backend {
       return false
     }
     if (this.scheduleManager.isJobScheduled()) {
-      let nextJob = this.scheduleManager.getScheduledJob();
-      if ("nextExecution" in nextJob) {
-        this.scheduleManager.calculateNextSchedule(nextJob);
-      }
+      this.currentJobData = this.scheduleManager.getScheduledJob();
       // translate job-dictionary into job-object
       let jobObject;
-      switch(nextJob.jobType) {
-        case "seeding": 
-          jobObject = new SeedingJob(nextJob);
+      switch(this.currentJobData.jobType) {
+        case DatabaseService.JobType.SEEDING: 
+          jobObject = new SeedingJob(this.currentJobData.job);
           break;
-        case "watering":
-          jobObject = new WateringJob(nextJob);
+        case DatabaseService.JobType.SCHEDULED:
+          // Calculate next schedule before executing
+          this.scheduleManager.calculateNextSchedule(this.currentJobData.job);
+        case DatabaseService.JobType.WATERING:
+          jobObject = new WateringJob(this.currentJobData.job);
           break;
         default:
           console.log("Job has no valid Job-Type. Cancelling...");
           return
       }
       this.statusManager.startJob(jobObject);
-      this.appendNotification("Job " + nextJob.name + " started.");
+      this.appendNotification("Job " + jobObject.name + " started.");
       return true
     }
     return false
@@ -121,27 +123,25 @@ class Backend {
   cancelJob() {
     this.statusManager.cancelJob();
   }
-
-
 }
 
-// Method necessary to get the current state of the farmbot. Awaits the status-callback
-function waitForFirstStatus(farmbot) {
-  return new Promise((resolve) => {
-    farmbot.on("status", (status) => {
-      resolve(status);
-    }, true);
-  });
-}
 async function initalizeBackend(backend) {
   let farmbot = await getFarmbot()
-  let statusManager = new StatusManager(farmbot);
   console.log("Farmbot Initialised!");
-
-  await waitForFirstStatus(farmbot);
-  console.log("StatusManager Initialized");
+  backend.statusManager.init(farmbot);
   
-  backend.init(farmbot, statusManager);
+  // necessary to get the current state of the farmbot. Requests and Awaits the status-callback once
+  const statusPromise = new Promise((resolve) => {
+    farmbot.on("status", (msg) => {resolve("Recieved first Status")}, true);
+  });
+  farmbot.readStatus();
+  await statusPromise
+
+  console.log("StatusManager Initialized");
 }
 
-export {initalizeBackend, Backend};
+export {
+  initalizeBackend,
+  Backend,
+  FieldConstants
+};

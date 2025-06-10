@@ -11,10 +11,9 @@ mongoose.connect(connectionString)
     .catch((err) => console.error('MongoDB connection error:', err));
 */
 
-const plantSchema = new mongoose.Schema({
+export const plantSchema = new mongoose.Schema({
   plantname: String,
   planttype: String,
-  plantedate: Date,
   xcoordinate: Number,
   ycoordinate: Number,  
 });
@@ -26,19 +25,9 @@ async function InsertPlantToDB(plant) {
 }
 
 async function FetchPlantsFromDB() {
-  const notifications = await plantModel.find().select('planttype xcoordinate ycoordinate');
-  return notifications; 
+  const plants = await plantModel.find().select('planttype xcoordinate ycoordinate');
+  return plants; 
 }
-
-/*const Plant = {
-  plantname: "plant3",
-  planttype: "radish",
-  xcoordinate: 140,
-  ycoordinate: 120,
-};*/
-
-//await InsertPlantToDB(Plant);
-
 
 export default 
 {

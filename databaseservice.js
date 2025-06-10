@@ -4,18 +4,21 @@ import wateringModule from './models/wateringjob.model.js';
 import notificationModel from './models/notification.model.js';
 import plantModel from './models/plant.model.js';
 import userModel from './models/user.model.js';
+import scheduledwateringjobModel from './models/scheduledwateringjob.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
 
 // test connection to local database
 mongoose.connect(connectionString)
-    .then(() => console.log('MongoDB connected'))
-    .catch((err) => console.error('MongoDB connection error:', err));
+    .then(() => console.log('MongoDB connected to perform Database Services.'))
+    .catch((err) => console.error('MongoDB connection error: to Database Services', err));
 
 const JobType = Object.freeze({
     SEEDING: 'Seeding',
     WATERING: 'Watering',
+    SCHEDULED: 'Scheduled',
+    HOME: 'Home',
 });
 
 const PlantRadii = {
@@ -28,42 +31,67 @@ async function InsertJobToDB(jobType, object) {
     const now = new Date();
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
+        let existingjob =  await seedingModule.findOne({ "jobname": jobname });
+        if (existingjob) {
+            return "job name already exists";
+        }
 
-        let result = await seedingModule.InsertSeedingJobToDB(jobname, seeds);
-        
-        if (result) {
-            return true;
+        let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
+        if (invalids.length > 0) {
+            return "existing seeds found in previous jobs";
         }
-        else {
-            return false;
+        invalids = await ValidateNewSeedsAgainstPlants(seeds);
+        if (invalids.length > 0) {
+            return "existing seeds found in plants";
         }
+
+        await seedingModule.InsertSeedingJobToDB(jobname, seeds);        
     }
-    
+
     else if (jobType === JobType.WATERING) {
-        const { jobname, plantName, x, y, wateringcapacity } = object;
-
-        if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
-            throw new Error("Invalid watering job data");
+        const { jobname, plantstobewatered } = object;
+        let existingjob = await wateringModule.findOne({ "jobname": jobname });
+        if (existingjob) {
+            return "job name already exists";
         }
-        await wateringModule.InsertWateringJobToDB(jobname, plantName, x, y, wateringcapacity);
+        await wateringModule.InsertWateringJobToDB(jobname, plantstobewatered);
     }
-
-    console.log('Job has been inserted');
+    return true;
 }
+
+async function ReturnSingleJob(id) {
+    let job = await seedingModule.ReturnSeedingJob(id);
+    if (job !== null && typeof (job) !== "undefined") {
+        return { job };
+
+    }
+    job = await wateringModule.ReturnWateringJob(id);
+    if (job !== null && typeof (job) !== "undefined") {
+        return { job };
+    }
+    job = await scheduledwateringjobModel.FetchSingleScheduledJobFromDB(id);
+    if (job !== null && typeof(job) !== "undefined")
+    {
+        return { job };
+    }
+}
+
 
 async function FetchJobsFromDB(jobType) {
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
     }
-
     let jobs = [];
-
     if (jobType === JobType.SEEDING) {
         jobs = await seedingModule.FetchSeedingJobsFromDB();
-    } else if (jobType === JobType.WATERING) {
+    } 
+    else if (jobType === JobType.WATERING) {
         jobs = await wateringModule.FetchAllWateringJobsFromDB();
     }
-
+    else if (jobType == JobType.SCHEDULED)
+    {
+        jobs = await scheduledwateringjobModel.FetchAllScheduledWateringJobsFromDB();
+    }
     return jobs;
 }
 
@@ -71,26 +99,25 @@ async function DeleteJobFromDB(jobType, jobname) {
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
     }
-
     if (!jobname) {
         throw new Error("Invalid job Name: " + jobname);
     }
-
     if (jobType === JobType.SEEDING) {
         await seedingModule.DeleteSeedingJobFromDB(jobname);
-    } else if (jobType === JobType.WATERING) {
+    } 
+    else if (jobType === JobType.WATERING) {
         await wateringModule.DeleteWateringJobFromDB(jobname);
+    }
+    else if (jobType == JobType.SCHEDULED)
+    {
+        await scheduledwateringjobModel.DeleteScheduledWateringJob(jobname);
     }
 }
 
 async function UpdateJobToDB(jobType, object) {
-    const now = new Date();
-
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
     }
-
-    let payload = {};
 
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
@@ -98,20 +125,8 @@ async function UpdateJobToDB(jobType, object) {
     }
 
     else if (jobType === JobType.WATERING) {
-        const { jobname, plantName, x, y, wateringcapacity } = object;
-
-        if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
-            throw new Error("Invalid watering job data");
-        }
-        payload = {
-            jobname,
-            plantName,
-            x,
-            y,
-            wateringcapacity,
-        };
-
-        await wateringModule.UpdateWateringJobToDB(jobname, plantName, x, y, wateringcapacity);
+        const { jobname, plantstobewatered } = object;
+        await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered);
     }
 
     console.log('Job has been updated.');
@@ -127,22 +142,77 @@ async function FetchNotificationsFromDB() {
     return notifications;
 }
 
-async function FetchPlantsfromDBtoFE() {
+async function FetchPlantsfromDB() {
 
-    const plants  = await plantModel.FetchPlantsFromDB();
+    const plants = await plantModel.FetchPlantsFromDB();
     return plants;
 }
 
-async function FetchUserfromDBtoFE(username,password) {
+async function InsertPlantsToDB(plants) {
+    for (let plant of plants) {
+        await plantModel.InsertPlantToDB(plant);
+    }
+}
 
-    const users  = await userModel.FetchUser(username,password);
+async function FetchUserfromDB(username, password) {
+    const users = await userModel.FetchUser(username, password);
     return users;
 }
 
-async function UpdateUserToDB(username,password) {
+async function UpdateUserToDB(username, password) {
+    const users = await userModel.UpdateUser(username, password);
+}
 
-    const users  = await userModel.UpdateUser(username,password);
-    
+async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
+    let existingJobs = await FetchJobsFromDB(JobType.SEEDING);
+    let invalidSeeds = [];
+
+    for (let newSeed of newSeedsToPutInNewJob) {
+        for (let existingJob of existingJobs) {
+            let isValid = true;
+            for (let seedInsideExistingJob of existingJob.seeds) {
+                let distance = GetDistance(newSeed.xcoordinate, newSeed.ycoordinate, seedInsideExistingJob.xcoordinate, seedInsideExistingJob.ycoordinate);
+                if (distance <= PlantRadii[seedInsideExistingJob.seedtype]) {
+                    invalidSeeds.push(newSeed);
+                    isValid = false;
+                }
+                if (!isValid) {
+                    break; // No need to check further seeds in this job
+                }
+            }
+            if (!isValid) {
+                break; // No need to check further jobs
+            }
+        }
+    }
+
+    return invalidSeeds;
+}
+
+async function ValidateNewSeedsAgainstPlants(seeds) {
+    let plants = await FetchPlantsfromDB();
+    let invalidSeeds = [];
+
+    for (let seed of seeds) {
+        let isValid = true;
+        for (let plant of plants) {
+            let distance = GetDistance(seed.xcoordinate, seed.ycoordinate, plant.xcoordinate, plant.ycoordinate);
+            if (distance <= PlantRadii[plant.planttype]) {
+                invalidSeeds.push(seed);
+                isValid = false;
+            }
+            if (!isValid) {
+                break; // No need to check further plants for this seed
+            }
+        }
+    }
+
+    return invalidSeeds;
+}
+
+
+function GetDistance(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
 }
 
 
@@ -154,11 +224,11 @@ export default {
     UpdateJobToDB,
     InsertNotificationToDB,
     FetchNotificationsFromDB,
-    FetchPlantsfromDBtoFE,
-    FetchUserfromDBtoFE,
+    InsertPlantsToDB,
     UpdateUserToDB,
+    ValidateNewSeedsAgainstPreviousJobs,
+    ValidateNewSeedsAgainstPlants,
+    FetchPlantsfromDB,
+    FetchUserfromDB,
+    ReturnSingleJob,
 };
-
-function GetDistance(x1, y1, x2, y2) {
-    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-}

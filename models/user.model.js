@@ -7,8 +7,8 @@ app.use(express.json());
 
 // test connection to local database
 mongoose.connect(connectionString)
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('MongoDB connection error:', err));
+.then(() => console.log('MongoDB connected to the Users Database.'))
+.catch((err) => console.error('MongoDB connection error: to the Users Database.', err));
 
 // create schema for data
 const userSchema = mongoose.Schema({
