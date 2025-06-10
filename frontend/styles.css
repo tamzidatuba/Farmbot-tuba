@@ -287,6 +287,11 @@ display: flex;
 flex-direction: column;
 }
 
+.job-header {
+display: flex;
+flex-direction: column;
+}
+
 .coord-row {
 display: flex;
 justify-content: space-between;
@@ -329,6 +334,14 @@ padding: 8px;
 border-radius: 5px;
 border: 1px solid #ccc;
 width: 100%;
+}
+
+select.plant-select {
+  text-align: center;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
 }
 
 input.coord-input {

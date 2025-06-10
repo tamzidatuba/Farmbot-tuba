@@ -146,6 +146,7 @@ seedingJobBtn.addEventListener('click', () => {
 });*/
 
 wateringJobBtn.addEventListener('click', () => {
+  jobContainerWatering.innerHTML = '';
   modalWatering.style.display = 'block';
   jobCountWatering = 0;
   createJobRowWatering(plants); // Add first row by default
@@ -205,20 +206,20 @@ function createJobRowWatering(plants) {
   row.classList.add('job-row-watering');
   row.setAttribute('data-index', jobCountWatering);
   row.innerHTML = `
-  <div class="job-header">
+  <div class="plant-row">
+    <div class="plant-row-header">
+      <label for="plant-${jobCountWatering}">Plant</label>
       <span class="delete-job" title="Remove this plant job">&#128465;</span>
     </div>
-    <div class="plant-row">
-      <label for="plant-${jobCountWatering}">Plant</label>
-      <select id="plant-${jobCountWatering}" class="plant-select"></select>
+    <select id="plant-${jobCountWatering}" class="plant-select"></select>
     </div>
     <div class="coord-row">
       <div>
-        <label>Amount of water</label>
+        <label>Water (mm)</label>
         <input type="number" class="watering amount" placeholder="20 ml">
       </div>
       <div>
-        <label>Z Coordinate (Watering height)</label>
+        <label>Watering height</label>
         <input type="number" class="coord-input zCoord" placeholder="5 - 100">
       </div>
     </div>
@@ -242,7 +243,7 @@ function createJobRowWatering(plants) {
   // actual plants
   plants.forEach(plant => {
     const option = document.createElement('option');
-    option.value = {x: plant.x, y:plant.y}; // value is a tuple of x,y,
+    option.value = {plant: plant}; // value is the plant
     option.textContent = `${plant.type} at X: ${plant.x}, Y: ${plant.y}`;
     option.dataset.x = plant.x;
     option.dataset.y = plant.y;
@@ -267,13 +268,17 @@ executeBtnWatering.addEventListener('click', async () => {
 
 
   for (const row of jobRows) {
-    const plant = row.querySelector('.plant-select').value;
+    const plant = row.querySelector('.plant-select');
+    const selectedOption = plant.querySelector('option:checked');
     const z = Number(row.querySelector('.zCoord').value);
     const watering = Number(row.querySelector('.watering.amount').value);
     const errorMsg = row.querySelector('.errorMsg');
+    const x = selectedOption.dataset.x;
+    const y = selectedOption.dataset.y;
+    const type = selectedOption.dataset.type;
     errorMsg.textContent = '';
 
-    const coordKey = `${plant.x},${plant.y}`;
+    const coordKey = `${x},${y}`;
 
     if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 1 || watering > 600 ) {
       errorMsg.textContent = 'Please correct the above values.';
@@ -283,8 +288,9 @@ executeBtnWatering.addEventListener('click', async () => {
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
-      seeds.push({ x: Number(plant.x), y: Number(plant.y)});
-      results.push(`Plant: ${plant}, Z: ${z}, Watering Amount: ${watering}`);
+      seeds.push({ planttype: type, x: Number(x), y: Number(y), z: z, watering: watering });
+      const newPlant = new Plant(Number(x), Number(y), type);
+      results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
     }
   }
 
@@ -323,8 +329,13 @@ executeBtnWatering.addEventListener('click', async () => {
     const repeatInterval = document.getElementById("repeatInterval").value;
     scheduleData.time = executionTime;
     scheduleData.interval = repeatInterval;
+    if (NaN(scheduleData.time) || NaN(scheduleData.interval)) {
+      errorMsg.textContent = 'Please enter a correct schedule.';
+      isValid = false;
+    }
   }
   const payload = { jobname, seeds, scheduleData};
+  console.log(JSON.stringify(payload));
 
   try {
     if (isEditMode) {
@@ -1002,7 +1013,7 @@ function updateRobot() {
     }
     // Update Pause Button visibility
     const pauseBtn = document.getElementById('pauseJobBtn');
-    pauseBtn.style.display = data.status === 'ready' || data.status === 'offline' ? 'none' : 'inline-block';
+    pauseBtn.style.display = data.status === 'Ready' || data.status === 'Offline' ? 'none' : 'inline-block';
 
     // Update button text depending on paused state
     pauseBtn.textContent = data.paused ? '▶ Resume Job' : '⏸ Pause Job';
