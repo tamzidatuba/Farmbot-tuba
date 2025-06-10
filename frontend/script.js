@@ -730,23 +730,6 @@ function showError(message) {
 
 
 
-
-
-
-async function InsertSeedingJob(x, y, plant, depth) {
-  const response = await fetch('/api/jobs/Seeding', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ xcoordinate:x, ycoordinate:y, planttype: plant, depth })
-  });
-
-  const result = await response.json();
-  if (!response.ok) throw new Error(result.error);
-  console.log(result.message);
-}
-
 seedingJobBtn.addEventListener('click', () => {
   // Reset to creation mode
   isEditMode = false;
@@ -785,52 +768,35 @@ function getPlants() {
 //draw plants
 function drawPlant(plant) {
   //ctx.save();
+  const img = new Image();
   const coord = coordToPixel(plant.x, plant.y);
-  if (plant.type == 'lettuce') {
-    const img = new Image();
-    img.src = './icons/lettuce.png';
-    img.onload = () => {
-      const size = 50;
-      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
-    }
-  } else if (plant.type == 'radish') {
-    const img = new Image();
-    img.src = './icons/radish.png';
-    img.onload = () => {
-      const size = 50;
-      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
-    }
-  } else if (plant.type == 'tomato') {
-    const img = new Image();
-    img.src = './icons/tomato.png';
-    img.onload = () => {
-      const size = 50;
-      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
-    }
+  switch (plant.type) {
+    case "Lettuce":
+      img.src = './icons/lettuce.png';
+      drawRadius(coord, 30);
+      break;
+    case "Radish":
+      img.src = './icons/radish.png';
+      drawRadius(coord, 15);
+      break;
+    case "Tomato":
+      img.src = './icons/tomato.png';
+      drawRadius(coord, 15);
+      break;
+  }
+  img.onload = () => {
+    const size = 50;
+    ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
   }
 
-  //add the radius
-  if (plant.type == 'lettuce') {
-    ctx.beginPath();
-    ctx.arc(coord.x, coord.y, 30, 0, 2 * Math.PI);
-    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  } else if (plant.type == 'raddish') {
-    ctx.beginPath();
-    ctx.arc(coord.x, coord.y, 15, 0, 2 * Math.PI);
-    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  } else if (plant.type == 'tomato') {
-    ctx.beginPath();
-    ctx.arc(coord.x, coord.y, 15, 0, 2 * Math.PI);
-    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
-
-  //ctx.restore();
+} 
+// Draws the radius
+function drawRadius(coord, radius) {
+  ctx.beginPath();
+  ctx.arc(coord.x, coord.y, radius, 0, 2 * Math.PI);
+  ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+  ctx.lineWidth = 2;
+  ctx.stroke()
 }
 
 // Draw robot

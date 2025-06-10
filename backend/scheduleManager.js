@@ -50,7 +50,7 @@ class ScheduleManager {
         for (const job_idx in scheduledJobs) {
             
             //check if scheduled job is active
-            if (!scheduledJobs[job_idx].status) {
+            if (!scheduledJobs[job_idx].enabled) {
                 continue;
             }
 
