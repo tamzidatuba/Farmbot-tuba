@@ -293,7 +293,7 @@ executeBtnWatering.addEventListener('click', async () => {
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
-      seeds.push({ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y), wateringheight: z, wateringamount: watering });
+      seeds.push({ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y), wateringheight: z, wateringcapacity: watering });
       const newPlant = new Plant(Number(x), Number(y), type);
       results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
     }
@@ -589,12 +589,10 @@ function editJob(job) {
   job.seeds.forEach(p => {
     createJobRow(); // creates empty row
     const row = jobContainer.lastChild;
-  
     const seedtype = p.seedtype; // fallback
     const x = p.xcoordinate;
     const y = p.ycoordinate;
     const depth = p.depth ;
-  
     row.querySelector('.plantType').value = capitalizeFirstLetter(seedtype);
     row.querySelector('.xCoord').value = x;
     row.querySelector('.yCoord').value = y;
@@ -646,18 +644,26 @@ viewJobsBtn.addEventListener('click', async () => {
       // new delete logic
     jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
       if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
-    try {
-      const res = await fetch(`/api/jobs/Seeding?jobname=${encodeURIComponent(job.jobname)}`, {
-        method: 'DELETE'
-      });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Failed to delete job.");
-      alert("Job deleted ✅");
-      viewJobsBtn.click(); // Refresh list
-    } catch (err) {
-      console.error(err);
-      alert("❌ Could not delete job: " + err.message);
-    }
+        try {
+          const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
+            method: 'DELETE'
+          });
+        
+          const contentType = res.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error);
+            alert("Job deleted ✅");
+            viewJobsBtn.click();
+          } else {
+            const errorText = await res.text();
+            throw new Error("Non-JSON response: " + errorText);
+          }
+        } catch (err) {
+          console.error(err);
+          alert("❌ Could not delete job: " + err.message);
+        }
+        
   }
 });
 
@@ -723,6 +729,24 @@ function showError(message) {
 }
 
 
+
+
+
+
+async function InsertSeedingJob(x, y, plant, depth) {
+  const response = await fetch('/api/jobs/Seeding', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ xcoordinate:x, ycoordinate:y, planttype: plant, depth })
+  });
+
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error);
+  console.log(result.message);
+}
+
 seedingJobBtn.addEventListener('click', () => {
   // Reset to creation mode
   isEditMode = false;
@@ -749,6 +773,7 @@ function getPlants() {
     if (plantsList.toString() != data.toString()) {
     //if (plants.toString() != data.toString()) {
       plants = [];
+      console.log("Plants fetched from server:", data);
       for (const plant of data) {
         plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
       }

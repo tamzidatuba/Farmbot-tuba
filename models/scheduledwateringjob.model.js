@@ -10,8 +10,8 @@ app.use(express.json());
 
 // test connection to local database
 mongoose.connect(connectionString)
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('MongoDB connection error:', err));
+.then(() => console.log('MongoDB connected to Scheduled Watering Jobs Database.'))
+.catch((err) => console.error('MongoDB connection error: to the Scheduled Jobs Database.', err));
 
 // create schema for data
 const ScheduledWateringSchema = mongoose.Schema({
@@ -23,7 +23,7 @@ const ScheduledWateringSchema = mongoose.Schema({
   }],
   nextexecutiontime:String,
   interval: Number,
-  status:Boolean,
+  enabled:Boolean,
 }
 );
 
@@ -31,9 +31,9 @@ const ScheduledWateringSchema = mongoose.Schema({
 const ScheduledWaterJobModel = mongoose.model('scheduledwateringjob', ScheduledWateringSchema);
 
 
-async function InsertScheduledWateringjob(jobname,plantstobewatered,status)
+async function InsertScheduledWateringjob(jobname,plantstobewatered,enabled)
 {
-  const seeds = await ScheduledWaterJobModel.create({jobname: jobname, plantstobewatered: plantstobewatered, status: status})
+  const seeds = await ScheduledWaterJobModel.create({jobname: jobname, plantstobewatered: plantstobewatered, enabled: enabled})
 }
 
 async function DeleteScheduledWateringJob(jobname){
