@@ -15,7 +15,7 @@ export default function createJobsRouter(backend) {
                 res.status(200).json({ message: 'Job saved' });
             }
             else {
-                res.status(201).json({ message: result });
+                res.status(500).json({ message: result });
             }
         } catch (err) {
             console.error(err);
