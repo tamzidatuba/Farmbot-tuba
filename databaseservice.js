@@ -18,6 +18,7 @@ const JobType = Object.freeze({
     SEEDING: 'Seeding',
     WATERING: 'Watering',
     SCHEDULED: 'Scheduled',
+    HOME: 'Home',
 });
 
 const PlantRadii = {

@@ -54,9 +54,9 @@ class Backend {
   async finishJob() {
     console.log("Finished a Job");
     this.appendNotification("Job " + this.statusManager.currentJob.name + " finished.");
-    if (this.statusManager.currentJob.name != "GoHome") {
+    if (this.currentJobData.jobType != DatabaseService.JobType.HOME) {
 
-      if (!("nextExecution" in this.currentJobData.job)) {
+      if (this.currentJobData.jobType != DatabaseService.JobType.SCHEDULED) {
         try {
           await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.name)
         } catch (e) {
@@ -65,6 +65,7 @@ class Backend {
       }
 
       if (!this.checkForNextJob()) {
+        this.currentJobData = {jobType: DatabaseService.JobType.HOME}
         this.statusManager.startJob(new GoHomeJob());
         this.appendNotification("Job GoHome started.");
       }
@@ -77,7 +78,7 @@ class Backend {
     }
     if (this.scheduleManager.isJobScheduled()) {
       this.currentJobData = this.scheduleManager.getScheduledJob();
-      if ("nextExecution" in this.currentJobData.job) {
+      if (this.currentJobData.jobType == DatabaseService.JobType.SCHEDULED) {
         this.scheduleManager.calculateNextSchedule(this.currentJobData.job);
       }
       // translate job-dictionary into job-object
@@ -86,7 +87,7 @@ class Backend {
         case DatabaseService.JobType.SEEDING: 
           jobObject = new SeedingJob(this.currentJobData.job);
           break;
-        case DatabaseService.JobType.WATERING:
+        case DatabaseService.JobType.WATERING || DatabaseService.JobType.SCHEDULED:
           jobObject = new WateringJob(this.currentJobData.job);
           break;
         default:
