@@ -1,6 +1,18 @@
 import mongoose from 'mongoose';
 
+
+/*
+//connect to DB
+const connectionString = 'mongodb://localhost:27017/admin';
+
+// test connection to local database
+mongoose.connect(connectionString)
+    .then(() => console.log('MongoDB connected'))
+    .catch((err) => console.error('MongoDB connection error:', err));
+*/
+
 export const plantSchema = new mongoose.Schema({
+  plantname: String,
   planttype: String,
   xcoordinate: Number,
   ycoordinate: Number,  
