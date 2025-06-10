@@ -1,5 +1,4 @@
 import DatabaseService from "../databaseservice.js";
-import JobType from "../databaseservice.js";
 
 const SCHEDULE_CHECKING_INTERVAL = 900000 // 15*60*1000 = 15min
 const SCHEDULE_TOLERANCE = 15000; // 15 Second execution tolerance
@@ -41,7 +40,7 @@ class ScheduleManager {
     checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);
         // TODO ask database for active scheduledtasks
-        let scheduledJobs = DatabaseService.FetchJobsFromDB(JobType.SCHEDULED);
+        let scheduledJobs = DatabaseService.FetchJobsFromDB(DatabaseService.JobType.SCHEDULED);
 
         //let scheduledJobs = {};//{0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
         let currentTime = Date.now();
