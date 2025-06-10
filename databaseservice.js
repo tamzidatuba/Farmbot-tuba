@@ -4,6 +4,7 @@ import wateringModule from './models/wateringjob.model.js';
 import notificationModel from './models/notification.model.js';
 import plantModel from './models/plant.model.js';
 import userModel from './models/user.model.js';
+import scheduledwateringjobModel from './models/scheduledwateringjob.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -16,6 +17,7 @@ mongoose.connect(connectionString)
 const JobType = Object.freeze({
     SEEDING: 'Seeding',
     WATERING: 'Watering',
+    SCHEDULED: 'Scheduled',
 });
 
 const PlantRadii = {
@@ -66,8 +68,11 @@ async function ReturnSingleJob(id) {
     if (job !== null && typeof (job) !== "undefined") {
         return { job };
     }
-
-
+    job = await scheduledwateringjobModel.FetchSingleScheduledJobFromDB(id);
+    if (job !== null && typeof(job) !== "undefined")
+    {
+        return { job };
+    }
 }
 
 
@@ -75,15 +80,17 @@ async function FetchJobsFromDB(jobType) {
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
     }
-
     let jobs = [];
-
     if (jobType === JobType.SEEDING) {
         jobs = await seedingModule.FetchSeedingJobsFromDB();
-    } else if (jobType === JobType.WATERING) {
+    } 
+    else if (jobType === JobType.WATERING) {
         jobs = await wateringModule.FetchAllWateringJobsFromDB();
     }
-
+    else if (jobType == JobType.SCHEDULED)
+    {
+        jobs = await scheduledwateringjobModel.FetchAllScheduledWateringJobsFromDB();
+    }
     return jobs;
 }
 
@@ -91,15 +98,18 @@ async function DeleteJobFromDB(jobType, jobname) {
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
     }
-
     if (!jobname) {
         throw new Error("Invalid job Name: " + jobname);
     }
-
     if (jobType === JobType.SEEDING) {
         await seedingModule.DeleteSeedingJobFromDB(jobname);
-    } else if (jobType === JobType.WATERING) {
+    } 
+    else if (jobType === JobType.WATERING) {
         await wateringModule.DeleteWateringJobFromDB(jobname);
+    }
+    else if (jobType == jobType.SCHEDULED)
+    {
+        await scheduledwateringjobModel.DeleteScheduledWateringJob(jobname);
     }
 }
 
