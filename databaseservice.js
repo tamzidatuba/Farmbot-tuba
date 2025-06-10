@@ -172,7 +172,8 @@ async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
             let isValid = true;
             for (let seedInsideExistingJob of existingJob.seeds) {
                 let distance = GetDistance(newSeed.xcoordinate, newSeed.ycoordinate, seedInsideExistingJob.xcoordinate, seedInsideExistingJob.ycoordinate);
-                if (distance <= PlantRadii[seedInsideExistingJob.seedtype]) {
+                var seedInsideExistingJobSmallCase = seedInsideExistingJob.seedtype.toLowerCase();
+                if (distance <= PlantRadii[seedInsideExistingJobSmallCase]) {
                     invalidSeeds.push(newSeed);
                     isValid = false;
                 }
@@ -197,7 +198,8 @@ async function ValidateNewSeedsAgainstPlants(seeds) {
         let isValid = true;
         for (let plant of plants) {
             let distance = GetDistance(seed.xcoordinate, seed.ycoordinate, plant.xcoordinate, plant.ycoordinate);
-            if (distance <= PlantRadii[plant.planttype]) {
+            var planttypeSmallCase = plant.planttype.toLowerCase();
+            if (distance <= PlantRadii[planttypeSmallCase]) {
                 invalidSeeds.push(seed);
                 isValid = false;
             }
