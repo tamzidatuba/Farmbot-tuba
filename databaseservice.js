@@ -14,6 +14,7 @@ mongoose.connect(connectionString)
     .then(() => console.log('MongoDB connected to perform Database Services.'))
     .catch((err) => console.error('MongoDB connection error: to Database Services', err));
 
+
 const JobType = Object.freeze({
     SEEDING: 'Seeding',
     WATERING: 'Watering',
