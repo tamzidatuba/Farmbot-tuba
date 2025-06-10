@@ -288,7 +288,7 @@ executeBtnWatering.addEventListener('click', async () => {
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
-      seeds.push({ planttype: type, x: Number(x), y: Number(y), z: z, watering: watering });
+      seeds.push({ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y), wateringheight: z, wateringamount: watering });
       const newPlant = new Plant(Number(x), Number(y), type);
       results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
     }
@@ -484,7 +484,7 @@ executeBtn.addEventListener('click', async () => {
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
-      seeds.push({ planttype: plant, x, y, depth });
+      seeds.push({ planttype: plant, xcoordinate: x, ycoordinate: y, depth });
       results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
     }
   }
@@ -716,24 +716,6 @@ function showError(message) {
   }, 3000);
 }
 
-
-
-
-
-
-async function InsertSeedingJob(x, y, plant, depth) {
-  const response = await fetch('/api/jobs/Seeding', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ x, y, planttype: plant, depth })
-  });
-
-  const result = await response.json();
-  if (!response.ok) throw new Error(result.error);
-  console.log(result.message);
-}
 
 seedingJobBtn.addEventListener('click', () => {
   // Reset to creation mode
