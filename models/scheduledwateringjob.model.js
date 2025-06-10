@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import express from 'express';
 import {plantSchema} from './plant.model.js';
-import wateringjobModel from './wateringjob.model.js';
+
 
 
 const connectionString = 'mongodb://localhost:27017/admin';

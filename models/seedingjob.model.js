@@ -38,7 +38,7 @@ async function DeleteSeedingJobFromDB(jobname) {
   await seedingJobModel.deleteOne({ "jobname": jobname });
 }
 
-async function UpdateSeedingJobToDB(jobname, plants) {
+async function UpdateSeedingJobToDB(jobname, seeds) {
   const now = new Date();
   await seedingJobModel.findOneAndUpdate({ "jobname": jobname }, { jobname: jobname, seeds: seeds });
   console.log("Job has been updated.");

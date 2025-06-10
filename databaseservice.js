@@ -108,20 +108,16 @@ async function DeleteJobFromDB(jobType, jobname) {
     else if (jobType === JobType.WATERING) {
         await wateringModule.DeleteWateringJobFromDB(jobname);
     }
-    else if (jobType == jobType.SCHEDULED)
+    else if (jobType == JobType.SCHEDULED)
     {
         await scheduledwateringjobModel.DeleteScheduledWateringJob(jobname);
     }
 }
 
 async function UpdateJobToDB(jobType, object) {
-    const now = new Date();
-
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
     }
-
-    let payload = {};
 
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
@@ -129,20 +125,8 @@ async function UpdateJobToDB(jobType, object) {
     }
 
     else if (jobType === JobType.WATERING) {
-        const { jobname, plantName, x, y, wateringcapacity } = object;
-
-        if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
-            throw new Error("Invalid watering job data");
-        }
-        payload = {
-            jobname,
-            plantName,
-            x,
-            y,
-            wateringcapacity,
-        };
-
-        await wateringModule.UpdateWateringJobToDB(jobname, plantName, x, y, wateringcapacity);
+        const { jobname, plantstobewatered } = object;
+        await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered);
     }
 
     console.log('Job has been updated.');
