@@ -117,6 +117,6 @@ let wateringJob = { jobType: DatabaseService.JobType.WATERING, job: {jobname: "M
 //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
 //console.log(plants);
 
-backend.scheduleManager.appendScheduledJob(wateringJob);
+//backend.scheduleManager.appendScheduledJob(wateringJob);
 backend.checkForNextJob();
 

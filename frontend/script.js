@@ -794,7 +794,7 @@ function drawPlant(plant) {
 function drawRadius(coord, radius) {
   ctx.beginPath();
   ctx.arc(coord.x, coord.y, radius, 0, 2 * Math.PI);
-  ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+  ctx.strokeStyle = 'rgb(0, 100, 200)'//'rgba(255, 0, 0, 0.5)';
   ctx.lineWidth = 2;
   ctx.stroke()
 }
