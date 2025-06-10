@@ -145,7 +145,7 @@ seedingJobBtn.addEventListener('click', () => {
   modal.style.display = 'block';
 });*/
 
-wateringJobBtn.addEventListener('click', () => {
+wateringJobBtn.addEventListener('click',async () => {
   jobContainerWatering.innerHTML = '';
   modalWatering.style.display = 'block';
   jobCountWatering = 0;
@@ -741,12 +741,12 @@ seedingJobBtn.addEventListener('click', () => {
 
 
 // get plants from server
-function getPlants() {
-  fetch('/api/plants', {method: 'GET',
+async function getPlants() {
+  await fetch('/api/plants', {method: 'GET',
   })
   .then(response => response.json())
   .then(data => {
-    if (plantsList.toString() != data.toString()) {
+    if (plants.toString() != data.toString()) {
     //if (plants.toString() != data.toString()) {
       plants = [];
       console.log("Plants fetched from server:", data);
