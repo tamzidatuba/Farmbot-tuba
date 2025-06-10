@@ -280,11 +280,16 @@ executeBtnWatering.addEventListener('click', async () => {
 
     const coordKey = `${x},${y}`;
 
+    console.log("Selected Plant:", selectedOption.value);
+    console.log("Selected Plant 2:", selectedOption.dataset);
     if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 1 || watering > 600 ) {
       errorMsg.textContent = 'Please correct the above values.';
       isValid = false;
     } else if (seenCoordinates.has(coordKey)) {
       errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
+      isValid = false;
+    } else if (!selectedOption.value) {
+      errorMsg.textContent = 'Please select a plant.';
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
@@ -330,6 +335,7 @@ executeBtnWatering.addEventListener('click', async () => {
   if (!isValid) return;
   console.warn("🚫 Form validation failed. Not sending job.");
 
+  console.log(seeds.length);
   if (seeds.length === 0) {
     alert("❌ Please add at least one plant before creating a job.");
     return;
@@ -361,8 +367,8 @@ executeBtnWatering.addEventListener('click', async () => {
       alert("Watering Job Created ✅");
     }
 
-    modal.style.display = 'none';
-    jobContainer.innerHTML = '';
+    modalWatering.style.display = 'none';
+    jobContainerWatering.innerHTML = '';
     document.getElementById("WateringJobName").value = '';
     jobCount = 0;
 
