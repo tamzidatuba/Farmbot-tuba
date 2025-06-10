@@ -8,6 +8,17 @@ import { WateringJob} from './jobs/WateringJob.js';
 
 const MAX_NOTIFICATIONS = 50;
 
+const FieldConstants = Object.freeze({
+    FIELD_START_X: 0,
+    FIELD_START_Y: 0,
+    FIELD_END_X: 490,
+    FIELD_END_Y: 640,
+    SAFETY_HEIGHT: 0,
+    FIELD_HEIGHT: -285,
+    SEED_CONTAINER_Y: 800,
+    SEED_CONTAINER_HEIGHT: -110
+});
+
 class Backend {
   constructor() {
     this.notification_history = new Array();
@@ -126,5 +137,6 @@ async function initalizeBackend(backend) {
 
 export {
   initalizeBackend,
-  Backend
+  Backend,
+  FieldConstants
 };

@@ -1,8 +1,9 @@
 import { FarmbotStatus } from "../statusManager.js";
+import { FieldConstants } from "../backend.js";
 import { Job } from "./Job.js"
 import { MoveTask } from "./tasks/MoveTask.js";
 import { MoveZTask} from "./tasks/MoveZTask.js";
-import { WATER_PIN } from "./tasks/SetPinTask.js";
+import { FAKE_WATER_PIN } from "./tasks/SetPinTask.js";
 import {TimedPinTask} from "./tasks/TimedPinTask.js";
 
 /*
@@ -13,13 +14,12 @@ Steps:
 */
 
 const MIN_WATERING_HEIGHT = -300 // has to be > field height
-const SAFETY_HEIGHT = 0;
 
 class WateringJob extends Job {
     constructor(wateringArgs) {
         super(wateringArgs.jobname);
         
-        let goToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, SAFETY_HEIGHT);
+        let goToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, FieldConstants.SAFETY_HEIGHT);
         this.taskQueue.push(goToSafetyHeight);
         
         for(const seed in wateringArgs.seeds) {
@@ -38,7 +38,7 @@ class WateringJob extends Job {
     
             let duration = this.convert_ml_into_duration(seedArgs.wateringcapacity);
 
-            let waterSeeds = new TimedPinTask(FarmbotStatus.WATERING, WATER_PIN, duration);
+            let waterSeeds = new TimedPinTask(FarmbotStatus.WATERING, FAKE_WATER_PIN, duration);
             this.taskQueue.push(waterSeeds);
         }
 

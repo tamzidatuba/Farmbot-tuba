@@ -1,8 +1,9 @@
 import { FarmbotStatus } from "../statusManager.js";
+import { FieldConstants } from "../backend.js";
 import { Job } from "./Job.js"
 import { MoveTask } from "./tasks/MoveTask.js";
 import { MoveZTask} from "./tasks/MoveZTask.js";
-import { SetPinTask, VACUUM_PIN } from "./tasks/SetPinTask.js";
+import { SetPinTask, FAKE_VACUUM_PIN } from "./tasks/SetPinTask.js";
 import DatabaseService from "../../databaseservice.js";
 
 /*
@@ -14,28 +15,22 @@ Steps:
 - (Move a little up)
 */
 
-const SEEDING_HEIGHT = -350;
-const FIELD_SAFETY_HEIGHT = -300;
-const SEED_BOWL_SAFETY_HEIGHT = 0;
-const SEED_BOWL_POSITION = {"x": 0, "y": 500};
-const SEED_BOWL_SUCTION_HEIGHT = -200;
-
 class SeedingJob extends Job {
     constructor(seedingArgs) {
         super(seedingArgs.jobname);
 
-        let goToSafetyHeight = new MoveZTask(FarmbotStatus.FETCHING, SEED_BOWL_SAFETY_HEIGHT);
-        let goToSeedBowl = new MoveTask(FarmbotStatus.FETCHING, SEED_BOWL_POSITION.x , SEED_BOWL_POSITION.y);
-        let lowerToSeedBowl = new MoveZTask(FarmbotStatus.FETCHING, SEED_BOWL_SUCTION_HEIGHT);
-        let activateVacuumPin = new SetPinTask(FarmbotStatus.FETCHING, VACUUM_PIN, 1);
-        let returnToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, SEED_BOWL_SAFETY_HEIGHT);
-        let lowerToSeedingHeight = new MoveZTask(FarmbotStatus.SEEDING, SEEDING_HEIGHT);
-        let deactivateVacuumPin = new SetPinTask(FarmbotStatus.FETCHING, VACUUM_PIN, 0);
+        let goToSafetyHeight = new MoveZTask(FarmbotStatus.FETCHING, FieldConstants.SAFETY_HEIGHT);
+        let goToSeedBowl = new MoveTask(FarmbotStatus.FETCHING, 0, FieldConstants.SEED_CONTAINER_Y);
+        let lowerToSeedBowl = new MoveZTask(FarmbotStatus.FETCHING, FieldConstants.SEED_CONTAINER_HEIGHT);
+        let activateVacuumPin = new SetPinTask(FarmbotStatus.FETCHING, FAKE_VACUUM_PIN, 1);
+        let returnToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, FieldConstants.SAFETY_HEIGHT);
+        let lowerToSeedingHeight = new MoveZTask(FarmbotStatus.SEEDING, FieldConstants.FIELD_HEIGHT);
+        let deactivateVacuumPin = new SetPinTask(FarmbotStatus.FETCHING, FAKE_VACUUM_PIN, 0);
 
-        let returnToFieldSafetyHeight = new MoveZTask(FarmbotStatus.SEEDING, FIELD_SAFETY_HEIGHT);
+        let returnToFieldSafetyHeight = new MoveZTask(FarmbotStatus.SEEDING, FieldConstants.SAFETY_HEIGHT);
         
-        for(const plant in seedingArgs.positions) {
-            let position = seedingArgs.positions[plant].position;
+        for(const seed in seedingArgs.seeds) {
+            let seedArgs = seedingArgs.seeds[seed]
                 
             this.taskQueue.push(goToSafetyHeight);
 
@@ -48,12 +43,13 @@ class SeedingJob extends Job {
             
             this.taskQueue.push(returnToSafetyHeight);
 
-            position.z = SEED_BOWL_SAFETY_HEIGHT;
-            let goToPlantingPosition = new MoveTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, position.x, position.y);
+            let goToPlantingPosition = new MoveTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, seedArgs.xcoordinate, seedArgs.ycoordinate);
             this.taskQueue.push(goToPlantingPosition);
 
             this.taskQueue.push(lowerToSeedingHeight);
 
+            let goToSeedingDepth = new MoveZTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, FieldConstants.FIELD_HEIGHT + seedArgs.depth)
+            this.taskQueue.push(goToSeedingDepth);
             // plant the seeds
             this.taskQueue.push(deactivateVacuumPin);
             
