@@ -13,17 +13,23 @@ const FarmbotStatus = Object.freeze({
 
 class StatusManager {
 
-    constructor(farmbot) {
-        this.backend;
+    constructor(backend) {
+        this.backend = backend;
+
+        this.lastState;
+
         this.runningJob = false;
         this.isPaused = false;
-        this.farmbot = farmbot;
+
         this.status = FarmbotStatus.OFFLINE;
+
         this.currentTask;
         this.currentJob;
-        this.lastState;
+        
         this._newStatusRecieved = this._newStatusRecieved.bind(this);
-
+    }
+    init(farmbot) {
+        this.farmbot = farmbot;
         // TODO handle unsubscribe
         /*
         farmbot.on("offline",
@@ -80,6 +86,7 @@ class StatusManager {
 
     _newStatusRecieved(data, eventName) {
         this.lastState = data;
+        //console.log(data.pins)
         if (this.runningJob){
             if (this.currentTask.checkCondition(data)) {
                 this.currentJob.taskFinished();

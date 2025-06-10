@@ -5,19 +5,10 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
 const MINIMUM_PIN_ACTIVATION_DURATION = 0.5; // Duration should atleast last 0.5 seconds
 const MAXIMUM_PIN_ACTIVATION_DURATION = 5; // Duration shall not exceed 5 seconds
 
-const WATER_PIN = {
-    pin_type: "BoxLed4", // "Peripheral"
-    pin_id: -1 //this.pinNumber
-};
-const VACUUM_PIM = {
-    pin_type: "BoxLed4", // "Peripheral"
-    pin_id: -1 //this.pinNumber
-};
-
 class TimedPinTask extends Task {
     constructor(status, pinData, duration) { // Duration in seconds as arg
         super(status);
-        this.duration = clamp(duration, 0.5, MAXIMUM_PIN_ACTIVATION_DURATION) * 1000
+        this.duration = clamp(duration, MINIMUM_PIN_ACTIVATION_DURATION, MAXIMUM_PIN_ACTIVATION_DURATION) * 1000
         this.timeout = this.timeout.bind(this);
         
         this.start;
@@ -48,20 +39,17 @@ class TimedPinTask extends Task {
         this.currentTimeout = setTimeout(this.timeout, this.remainingTime);
         this.pinArgs.pin_value = 1;
         farmbot.writePin(this.pinArgs);
-        //farmbot.togglePin({pin_number: this.pinNumber});
     }
 
     timeout() {
         this.pinArgs.pin_value = 0;
         this.farmbot.writePin(this.pinArgs);
-        //this.farmbot.togglePin({pin_number: this.pinNumber});
         this.executionFinished = true;
     }
 
     pauseTask(farmbot) {
         this.pinArgs.pin_value = 0;
         this.farmbot.writePin(this.pinArgs);
-        //farmbot.togglePin({pin_number: this.pinNumber});
         clearTimeout(this.currentTimeout);
         this.remainingTime = this.remainingTime - (Date.now()-this.start);
     }

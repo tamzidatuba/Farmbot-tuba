@@ -14,7 +14,6 @@ mongoose.connect(connectionString)
 export const plantSchema = new mongoose.Schema({
   plantname: String,
   planttype: String,
-  planteddate: Date,
   xcoordinate: Number,
   ycoordinate: Number,  
 });
@@ -29,16 +28,6 @@ async function FetchPlantsFromDB() {
   const notifications = await plantModel.find().select('planttype xcoordinate ycoordinate');
   return notifications; 
 }
-
-/*const Plant = {
-  plantname: "plant3",
-  planttype: "radish",
-  xcoordinate: 140,
-  ycoordinate: 120,
-};*/
-
-//await InsertPlantToDB(Plant);
-
 
 export default 
 {
