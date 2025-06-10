@@ -11,7 +11,7 @@ mongoose.connect(connectionString)
     .catch((err) => console.error('MongoDB connection error:', err));
 */
 
-const plantSchema = new mongoose.Schema({
+export const plantSchema = new mongoose.Schema({
   plantname: String,
   planttype: String,
   planteddate: Date,
