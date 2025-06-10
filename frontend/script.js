@@ -293,7 +293,7 @@ executeBtnWatering.addEventListener('click', async () => {
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
-      seeds.push({ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y), wateringheight: z, wateringamount: watering });
+      seeds.push({ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y), wateringheight: z, wateringcapacity: watering });
       const newPlant = new Plant(Number(x), Number(y), type);
       results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
     }
@@ -749,6 +749,7 @@ function getPlants() {
     if (plantsList.toString() != data.toString()) {
     //if (plants.toString() != data.toString()) {
       plants = [];
+      console.log("Plants fetched from server:", data);
       for (const plant of data) {
         plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
       }
