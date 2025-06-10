@@ -20,9 +20,9 @@ const ScheduledWateringSchema = mongoose.Schema({
     plant : plantSchema,
     wateringheight: Number,
     wateringcapacity: Number,
-    nextexecutiontime:String,
-    interval: Number,
   }],
+  nextexecutiontime:String,
+  interval: Number,
   status:Boolean,
 }
 );
