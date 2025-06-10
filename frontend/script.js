@@ -794,8 +794,8 @@ function drawPlant(plant) {
 function drawRadius(coord, radius) {
   ctx.beginPath();
   ctx.arc(coord.x, coord.y, radius, 0, 2 * Math.PI);
-  ctx.strokeStyle = 'rgb(0, 100, 200)'//'rgba(255, 0, 0, 0.5)';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgb(10, 120, 210)'//'rgba(255, 0, 0, 0.5)';
+  ctx.lineWidth = 3;
   ctx.stroke()
 }
 
@@ -816,7 +816,7 @@ function drawRobot() {
 
 // Draw grid lines for visual reference
 function drawGrid() {
-  ctx.strokeStyle = '#ddd';
+  ctx.strokeStyle = 'rgb(102, 68, 40)'//'#ddd';
   ctx.linewidth = 1;
 
   for (let x = 0; x <= canvasWidth; x += majorTickX) {
