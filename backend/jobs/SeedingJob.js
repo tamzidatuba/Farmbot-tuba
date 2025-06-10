@@ -1,9 +1,9 @@
-import { FarmbotStatus } from "../backend/statusManager.js";
+import { FarmbotStatus } from "../statusManager.js";
 import { Job } from "./Job.js"
 import { MoveTask } from "./tasks/MoveTask.js";
 import { MoveZTask} from "./tasks/MoveZTask.js";
 import { SetPinTask, VACUUM_PIN } from "./tasks/SetPinTask.js";
-import DatabaseService from "../databaseservice.js";
+import DatabaseService from "../../databaseservice.js";
 
 /*
 Steps:

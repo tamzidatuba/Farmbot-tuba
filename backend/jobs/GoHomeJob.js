@@ -1,7 +1,7 @@
 import { Job } from "./Job.js";
 import { MoveTask } from "./tasks/MoveTask.js";
 import { MoveZTask } from "./tasks/MoveZTask.js";
-import { FarmbotStatus } from "../backend/statusManager.js";
+import { FarmbotStatus } from "../statusManager.js";
 
 
 const SAFETY_HEIGHT = 0;
