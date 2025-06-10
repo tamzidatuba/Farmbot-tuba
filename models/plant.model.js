@@ -25,7 +25,7 @@ async function InsertPlantToDB(plant) {
 }
 
 async function FetchPlantsFromDB() {
-  const plants = await plantModel.find().select('seedtype xcoordinate ycoordinate');
+  const plants = await plantModel.find().select('planttype xcoordinate ycoordinate');
   return plants; 
 }
 
