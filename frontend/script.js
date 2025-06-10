@@ -490,7 +490,7 @@ executeBtn.addEventListener('click', async () => {
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
-      seeds.push({ planttype: plant, xcoordinate: x, ycoordinate: y, depth });
+      seeds.push({ seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
       results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
     }
   }
