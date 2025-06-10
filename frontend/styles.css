@@ -560,9 +560,9 @@ margin-top: 4px;
     }
 
     .pause-btn {
-      position: fixed;
+      position: relative;
       top: 20px;
-      right: calc(15% + 260px); /* aligns to the left of status box */
+      right: calc(15% + 360px); 
       background-color: #fbc02d;
       color: white;
       padding: 10px 20px;
