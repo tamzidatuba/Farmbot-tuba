@@ -11,7 +11,7 @@ export default function createJobsRouter(backend) {
         try {
             let result = await DatabaseService.InsertJobToDB(jobType, object);
             if (result === true) {
-                backend.appendNotification("Job " + object.name + " saved");
+                backend.appendNotification("Job " + object.jobname + " saved");
                 res.status(200).json({ message: 'Job saved' });
             }
             else {

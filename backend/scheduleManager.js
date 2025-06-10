@@ -1,4 +1,4 @@
-import DatabaseService from "../databaseservice.js";
+import { DatabaseService, JobType } from "../databaseservice.js";
 
 const SCHEDULE_CHECKING_INTERVAL = 900000 // 15*60*1000 = 15min
 const SCHEDULE_TOLERANCE = 15000; // 15 Second execution tolerance
@@ -40,21 +40,21 @@ class ScheduleManager {
     checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);
         // TODO ask database for active scheduledtasks
-        // let scheduledJobs = DatabaseServive.FetchActiveScheduledJobsFromDB();
+        let scheduledJobs = DatabaseService.FetchJobsFromDB(JobType.SCHEDULED);
 
-        let scheduledJobs = {};//{0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
+        //let scheduledJobs = {};//{0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
         let currentTime = Date.now();
         let nextScheduleCheck = SCHEDULE_CHECKING_INTERVAL;
 
         for (const job_idx in scheduledJobs) {
             
             //check if scheduled job is active
-            if (!scheduledJobs[job_idx].active) {
+            if (!scheduledJobs[job_idx].status) {
                 continue;
             }
 
             // calculate the time difference of current time and planned execution time
-            let time_difference = scheduledJobs[job_idx].nextExecution - currentTime;
+            let time_difference = scheduledJobs[job_idx].nextexecution - currentTime;
             if (time_difference <= SCHEDULE_TOLERANCE) {
                 this.jobsToExecute.push({jobType: DatabaseService.JobType.WATERING, job: scheduledJobs[job_idx]});
                 console.log("Scheduled to be executed:", scheduledJobs[job_idx].name);
@@ -68,7 +68,7 @@ class ScheduleManager {
     }
 
     calculateNextSchedule(jobData) {
-        jobData.job.nextExecution = jobData.job.executionInterval + (Date.now());
+        jobData.job.nextexecution = jobData.job.interval + (Date.now());
 
         // modify entry in DB
         DatabaseService.UpdateJobToDB(jobData.jobType, jobData.job);

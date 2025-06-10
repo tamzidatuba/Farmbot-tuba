@@ -51,13 +51,17 @@ class Backend {
     }
   }
 
-  finishJob() {
+  async finishJob() {
     console.log("Finished a Job");
     this.appendNotification("Job " + this.statusManager.currentJob.name + " finished.");
     if (this.statusManager.currentJob.name != "GoHome") {
 
       if (!("nextExecution" in this.currentJobData.job)) {
-        DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.name)
+        try {
+          await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.name)
+        } catch (e) {
+          console.log("Failed to delete executed Job from DB!")
+        }
       }
 
       if (!this.checkForNextJob()) {

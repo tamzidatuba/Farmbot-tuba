@@ -18,8 +18,8 @@ class WateringJob extends Job {
 
             let goToWateringGridPosition = new MoveTask(
                 FarmbotStatus.MOVING_TO_WATERING_POSITION,
-                seedArgs.xcoordinate,
-                seedArgs.ycoordinate
+                seedArgs.plant.xcoordinate,
+                seedArgs.plant.ycoordinate
             );
             this.taskQueue.push(goToWateringGridPosition);
 
@@ -32,7 +32,8 @@ class WateringJob extends Job {
             let waterSeeds = new TimedPinTask(FarmbotStatus.WATERING, FAKE_WATER_PIN, duration);
             this.taskQueue.push(waterSeeds);
         }
-        this.taskQueue.push(goToSafetyHeight)
+        let returnToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING, FieldConstants.SAFETY_HEIGHT);
+        this.taskQueue.push(returnToSafetyHeight)
 
         
     }
