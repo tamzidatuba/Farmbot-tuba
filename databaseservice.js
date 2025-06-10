@@ -11,8 +11,8 @@ const connectionString = 'mongodb://localhost:27017/admin';
 
 // test connection to local database
 mongoose.connect(connectionString)
-    .then(() => console.log('MongoDB connected to perform Database Services.'))
-    .catch((err) => console.error('MongoDB connection error: to Database Services', err));
+    .then(() => console.log('MongoDB connected'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
 const JobType = Object.freeze({
     SEEDING: 'Seeding',
