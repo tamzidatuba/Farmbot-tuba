@@ -78,16 +78,16 @@ class Backend {
     }
     if (this.scheduleManager.isJobScheduled()) {
       this.currentJobData = this.scheduleManager.getScheduledJob();
-      if (this.currentJobData.jobType == DatabaseService.JobType.SCHEDULED) {
-        this.scheduleManager.calculateNextSchedule(this.currentJobData.job);
-      }
       // translate job-dictionary into job-object
       let jobObject;
       switch(this.currentJobData.jobType) {
         case DatabaseService.JobType.SEEDING: 
           jobObject = new SeedingJob(this.currentJobData.job);
           break;
-        case DatabaseService.JobType.WATERING || DatabaseService.JobType.SCHEDULED:
+        case DatabaseService.JobType.SCHEDULED:
+          // Calculate next schedule before executing
+          this.scheduleManager.calculateNextSchedule(this.currentJobData.job);
+        case DatabaseService.JobType.WATERING:
           jobObject = new WateringJob(this.currentJobData.job);
           break;
         default:
