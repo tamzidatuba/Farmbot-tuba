@@ -51,14 +51,6 @@ const historyBox = document.getElementById('notification-history');
 const entryLimitSelect = document.getElementById('entry-limit');
 entryLimitSelect.value = maxHistoryEntries;
 
-
-const settingsBtn = document.querySelector('.settings-btn');
-const logoutBtn = document.getElementById('logoutBtn');
-const loginBtn = document.getElementById('loginBtn');
-const loginModal = document.getElementById('loginModal');
-const closeLoginModal = document.getElementById('closeLoginModal');
-
-
 toggle.addEventListener('click', () => {
   const isVisible = seedingSubtask.style.display === 'block';
   const display = isVisible ? 'none' : 'block';
@@ -67,59 +59,53 @@ toggle.addEventListener('click', () => {
   arrow.classList.toggle('open', !isVisible);
 });
 
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('pauseJobBtn').style.display = 'none';
-  document.getElementById('loginBtn').style.display = 'none';
-  document.getElementById('logoutBtn').style.display = 'none';
-});
 
-settingsBtn.addEventListener('click', () => {
-  const isVisible = loginBtn.style.display === 'block';
+//for login and logout
+const settingsBtn = document.querySelector('.settings-btn');
+const logoutBtn = document.getElementById('logoutBtn');
+const loginBtn = document.getElementById('loginBtn');
+const loginModal = document.getElementById('loginModal');
+const closeLoginModal = document.getElementById('closeLoginModal');
+ const farmbotMenu = document.getElementById('farmbotMenu');
 
-  loginBtn.style.display = isVisible ? 'none' : 'block';
-  logoutBtn.style.display = isVisible ? 'none' : 'block';
-});
 
+
+//login features
+let isLoggedIn = false;
+
+   window.addEventListener('DOMContentLoaded', () => {
+    loginBtn.style.display = 'none';
+    logoutBtn.style.display = 'none';
+  });
+
+  settingsBtn.addEventListener('click', () => {
+    if (isLoggedIn) {
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
+    } else {
+      logoutBtn.style.display = 'none';
+      loginBtn.style.display = loginBtn.style.display === 'block' ? 'none' : 'block';
+    }
+  });
 
 loginBtn.addEventListener('click', () => {
   loginModal.style.display = 'block';
 });
+logoutBtn.addEventListener('click', () => {
+    isLoggedIn = false;
+    logoutBtn.style.display = 'none';
+    loginBtn.style.display = 'block';
+    alert('Successfully Logged Out');
+    farmbotMenu.textContent = 'Farmbot Menu ';
+  });
 
 closeLoginModal.addEventListener('click', () => {
   loginModal.style.display = 'none';
 });
 
-/*const form = document.getElementById('loginForm');
-    form.addEventListener('submit', function(e) {
-      let valid = true;
-      const username = document.getElementById('username');
-      const password = document.getElementById('password');
-      const usernameError = document.getElementById('usernameError');
-      const passwordError = document.getElementById('passwordError');
 
-      usernameError.textContent = '';
-      passwordError.textContent = '';
 
-      if (username.value.trim() === '') {
-        usernameError.textContent = 'Username is required.';
-        valid = false;
-      } else if (username.value.trim().length < 3) {
-        usernameError.textContent = 'Username must be at least 3 characters.';
-        valid = false;
-      }
-
-      if (password.value.trim() === '') {
-        passwordError.textContent = 'Password is required.';
-        valid = false;
-      } else if (password.value.trim().length < 6) {
-        passwordError.textContent = 'Password must be at least 6 characters.';
-        valid = false;
-      }
-
-      if (!valid) e.preventDefault();
-    });*/
-
-    const form = document.getElementById('loginForm');
+const form = document.getElementById('loginForm');
 
 form.addEventListener('submit', async function(e) {
   e.preventDefault(); // Prevent default form submission
@@ -149,6 +135,12 @@ form.addEventListener('submit', async function(e) {
     if (response.ok) {
       // Success - Login passed
       alert('Login successful!');
+      isLoggedIn = true;
+
+      if (loginModal) loginModal.style.display = 'none';
+      if (loginBtn) loginBtn.style.display = 'none';
+      if (logoutBtn) logoutBtn.style.display = 'inline-block';
+      if (farmbotMenu) farmbotMenu.textContent = 'Farmbot Menu Admin';
       
     } else {
       // API rejected credentials
@@ -171,6 +163,7 @@ window.addEventListener('click', (e) => {
     loginModal.style.display = 'none';
   }
 });
+//end of login and logout feature
 
 toggle.addEventListener('click', () => {
   const isVisible = subtask.style.display === 'block';
