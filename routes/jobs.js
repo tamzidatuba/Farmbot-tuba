@@ -52,6 +52,15 @@ export default function createJobsRouter(backend) {
         }
     });
 
+    router.put("/execute/:id", async (req, res) => {
+        try {
+            //TODO ask DB for job
+            backend.scheduleManager.appendScheduledJob(job);
+        } catch(e) {
+
+        }
+    });
+
     //pause job
     router.put('/pause', async (req, res) => {
         backend.pauseJob(res);

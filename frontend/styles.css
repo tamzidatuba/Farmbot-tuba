@@ -10,7 +10,9 @@ canvas {
   display: block;
   background-color: #A47149;
   cursor: crosshair;
+  background-image: url("noise-texture.png");
 }
+
 
 #hover-coordinates {
   position: absolute;
