@@ -14,19 +14,19 @@ mongoose.connect(connectionString)
 // create schema for data
 const ExecutionQueueSchema = mongoose.Schema({
 
-    job_id : String,
+    job_name : String,
     time_stamp : Number,
 }
 );
 
 export const ExecutionModel =  mongoose.model("execution_pipeline", ExecutionQueueSchema);
 
-async function InsertintoExecutionDB(job_id,time_stamp)
+async function InsertintoExecutionDB(job_name,time_stamp)
 {
-    let existing_new_job = await ExecutionModel.findOne({job_id:job_id});
+    let existing_new_job = await ExecutionModel.findOne({job_name:job_name});
     if(existing_new_job == null || typeof(existing_new_job) == "undefined")
     {
-        let new_job = await ExecutionModel.create({job_id: job_id, time_stamp: time_stamp});
+        let new_job = await ExecutionModel.create({job_name: job_name, time_stamp: time_stamp});
         return new_job;
     }
     else
@@ -35,10 +35,10 @@ async function InsertintoExecutionDB(job_id,time_stamp)
     }
 }
 
-async function RemovefromExecutionDB(job_id)
+async function RemovefromExecutionDB(job_name)
 {
 
-    let new_job = await ExecutionModel.deleteOne({job_id: job_id});
+    let new_job = await ExecutionModel.deleteOne({job_name: job_name});
 
 }
 

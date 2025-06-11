@@ -17,9 +17,9 @@ async function InsertSeedingJobToDB(jobname, seeds) {
   return true;
 }
 
-async function ReturnSeedingJob(id)
+async function ReturnSeedingJob(jobname)
 {
-    const job = await seedingJobModel.findById(id).select('jobname');
+    const job = await seedingJobModel.findOne({"jobname": jobname});
     if( job !== null && typeof(job) !== "undefined")
     {
       return{jobType:"Seeding",job};
