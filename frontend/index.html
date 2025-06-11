@@ -118,10 +118,10 @@
     <li class="menu-item" id="viewJobsBtn">
       📋 View Jobs
     </li>
-    <li class="menu-item">Plants</li>
-    <li class="menu-item">Weather</li>
-    <li class="menu-item">Soil Health</li>
-    <li class="menu-item">Reports</li>
+    <li class="menu-item">Seeding Demo</li>
+    <li class="menu-item">Watering Demo</li>
+    <li class="menu-item">Feedback</li>
+    <li class="menu-item">Help</li>
   </ul>
 </div>
 
@@ -132,16 +132,15 @@
     <button class="logout-btn" id="logoutBtn">🌱Logout🌱</button>
 
     
-    <h1>Welcome to Digital Farming</h1>
-    <p>Use the sidebar to navigate your farming tools.</p>
+    
     <!-- grid container using canvas-->
     <div>
-      <canvas id="gridCanvas" width="790" height="650"></canvas>
+      <canvas id="gridCanvas" width="450" height="500"></canvas>
     </div>
     <div id="hover-coordinates"></div>
      <div id="farmbot-status-container">
       <div id="farmbot-status">Status: Initializing...</div> <!-- Robot status -->
-      <button id="pauseJobBtn" class="pause-btn">⏸ Pause Job</button>
+      <button id="pauseJobBtn" class="pause-btn">⏸</button>
       <div id="errorMessage" class="error-box hidden"></div>
     </div>
     <div id="status-history">
@@ -153,7 +152,6 @@
           <option value="50">50 entries</option>
         </select>
       </div>
-
   </div>
   <!-- VIEW JOBS MODAL -->
   <div id="viewJobsModal" class="modal">

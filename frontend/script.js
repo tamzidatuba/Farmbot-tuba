@@ -89,7 +89,7 @@ seedingJobBtn.addEventListener('click', () => {
   modal.style.display = 'block';
 });*/
 
-wateringJobBtn.addEventListener('click', () => {
+wateringJobBtn.addEventListener('click',async () => {
   jobContainerWatering.innerHTML = '';
   modalWatering.style.display = 'block';
   jobCountWatering = 0;
@@ -639,7 +639,7 @@ const pauseBtn = document.getElementById('pauseJobBtn');
 const errorMessageBox = document.getElementById('errorMessage');
 
 pauseBtn.addEventListener('click', async () => {
-  const isCurrentlyPaused = pauseBtn.textContent.includes('Resume');
+  const isCurrentlyPaused = pauseBtn.textContent.includes('▶');
   const endpoint = isCurrentlyPaused ? '/api/jobs/resume' : '/api/jobs/pause';
 
   try {
@@ -650,7 +650,7 @@ pauseBtn.addEventListener('click', async () => {
       if (data.message && data.message.includes('No job')) {
         showError(data.message); // 👈 Show user-friendly error
       } else {
-        pauseBtn.textContent = isCurrentlyPaused ? '⏸ Pause Job' : '▶ Resume Job';
+        pauseBtn.textContent = isCurrentlyPaused ? '⏸' : '▶';
         //hideError(); // hide if previously shown
       }
     } else {
@@ -692,12 +692,12 @@ seedingJobBtn.addEventListener('click', () => {
 
 
 // get plants from server
-function getPlants() {
-  fetch('/api/plants', {method: 'GET',
+async function getPlants() {
+  await fetch('/api/plants', {method: 'GET',
   })
   .then(response => response.json())
   .then(data => {
-    if (plantsList.toString() != data.toString()) {
+    if (plants.toString() != data.toString()) {
     //if (plants.toString() != data.toString()) {
       plants = [];
       console.log("Plants fetched from server:", data);
@@ -940,7 +940,7 @@ function updateRobot() {
     pauseBtn.style.display = data.status === 'Ready' || data.status === 'Offline' ? 'none' : 'inline-block';
 
     // Update button text depending on paused state
-    pauseBtn.textContent = data.paused ? '▶ Resume Job' : '⏸ Pause Job';
+    pauseBtn.textContent = data.paused ? '▶' : '⏸';
     })
     .catch(err => {
       console.error("Failed to fetch frontend data:", err);

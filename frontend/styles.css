@@ -1,9 +1,6 @@
-#grid-container {
-  margin: 0 auto;
-  width: fit-content;
-  border: 2px solid #333;
-  background-color: #0a0a0a;
-  object-position: relative  ;
+#gridCanvas {
+  top: 12%;
+  position: fixed;
 }
 
 canvas {
@@ -41,12 +38,12 @@ canvas {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     #entry-limit {
       padding: 4px;
-      font-size: 14px;
+      font-size: 12px;
       border-radius: 4px;
       background-color: #7C9F81;
       color: white;
@@ -56,15 +53,16 @@ canvas {
     }
 
     #farmbot-status {
+      font-size: 14px;
       position: absolute;
       display: flex;
-      top: 20px;
-      right: 50%;
+      top: 2%;
+      right: 63%;
       justify-content: center;
       align-items: center;
       text-align: center;
-      width: 240px;
-      height: 50px;
+      width: 230px;
+      height: 48px;
       background-color: #6B8F71;
       color: white;
       border: none;
@@ -78,7 +76,7 @@ canvas {
 
     #status-history {
       position: absolute;
-      width: 400px;
+      width: 320px;
       max-height: 80%;
       top: 2%;
       right: 10%; 
@@ -87,20 +85,20 @@ canvas {
       border-top: none;
       border-radius: 0 0 8px 8px;
       overflow-y: auto;
-      padding: 10px 15px;
+      padding: 8px 15px;
       border-radius: 5px;
-      font-size: 14px;
+      font-size: 10px;
       color: #ffffff;
       box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
     }
 
     .history-title {
       text-align: center;
-      margin: 0 0 10px 0;
-      font-size: 18px;
+      margin: 0 0 8px 0;
+      font-size: 12px;
       font-weight: bold;
       border-bottom: 1px solid #ccc;
-      padding-bottom: 4px;
+      padding-bottom: 2px;
     }
 
 
@@ -112,7 +110,7 @@ body {
 }
 
 .sidebar {
-  width: 220px;
+  width: 15%;
   background-color: #6B8F71;
   color: white;
   padding: 20px;
@@ -132,6 +130,7 @@ body {
 }
 
 .menu-item {
+  font-size: 14px;
   background-color: #7C9F81;
   border-radius: 5px;
   cursor: pointer;
@@ -185,21 +184,29 @@ body {
 
 .settings-btn {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 2%;
+  right: 2%;
   background-color: #6B8F71;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 8px;
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s;
   font-size: 20px; /* affects emoji size too if no span used */
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+#seedingJobBtn {
+  font-size: 12px;
+}
+
+#wateringJobBtn {
+  font-size: 12px;
 }
 
 .settings-btn:hover {
@@ -562,13 +569,14 @@ margin-top: 4px;
     
 
     .pause-btn {
-      position: relative;
-      top: 20px;
-      right: calc(15% + 360px); 
+      position: fixed;
+      top: 2%;
+      right: 43%; /* aligns to the left of status box */
       background-color: #fbc02d;
       color: white;
       padding: 10px 20px;
-      height: 50px;
+      height: 48px;
+      width: 48px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
