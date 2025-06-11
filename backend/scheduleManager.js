@@ -14,17 +14,18 @@ class ScheduleManager {
     }
 
     async loadQueuedjobsFromDB() {
-        // TODO ask DB for queued Jobs from last time
-        /*
-        array.sort(function(job1 ,job2) {
+        // ask DB for queued Jobs from last time
+        
+        let queuedJobs = await DatabaseService.FetchJobsFromDB(DatabaseService.JobType.EXECUTION);
+        queuedJobs.sort(function(job1 ,job2) {
             if (job1.time_stamp > job2.time_stamp) return 1;
             else if (job1.time_stamp < job2.time_stamp) return -1;
             else return 0;
         });
-        for (let job of array) {
-            this.jobsToExecute.push(await DatabaseService.ReturnSingleJob(job.jobname))
+        for (let job of queuedJobs) {
+            this.jobsToExecute.push(await DatabaseService.ReturnSingleJob(job.job_name))
         }
-        */
+        
     }
 
     isJobScheduled() {
@@ -32,8 +33,8 @@ class ScheduleManager {
     }
 
     getScheduledJob() {
-        // TODO remove job from queue DB
-        // DatabaseService.DeleteFromExecutionDB(jobsToExecute[0].name);
+        // remove job from queue DB
+        DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, jobsToExecute[0].jobname);
         return this.jobsToExecute.shift();
     }
 
@@ -41,8 +42,8 @@ class ScheduleManager {
         for (const job in this.jobsToExecute) {
             if (this.jobsToExecute[job].job.name == name) {
                 this.jobsToExecute.splice(job, 1);
-                // TODO remove job from queue DB
-                // DatabaseService.DeleteFromExecutionDB(jobsToExecute[job].name);
+                // remove job from queue DB
+                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, jobsToExecute[job].jobname);
                 break;
             }
         }
@@ -55,7 +56,7 @@ class ScheduleManager {
             }
         }
         // TODO add job to queue DB
-        // DatabaseService.InsertToExecutionDB({job_name: newJob.jobname, time_stamp: Date.now()})
+        DatabaseService.InsertJobToDB(DatabaseService.JobType.EXECUTION, {job_name: newJob.jobname, time_stamp: Date.now()})
         this.jobsToExecute.push(newJob);
         console.log("Scheduled to be executed:", newJob.jobname);
         return true;
