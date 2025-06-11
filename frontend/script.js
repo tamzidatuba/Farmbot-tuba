@@ -745,7 +745,7 @@ viewJobsBtn.addEventListener('click', async () => {
     </div>
   </div>
   <div>Plants: ${job.seeds?.length || 0}</div>
-  <button class="execute-job-btn">🚜 Execute</button>
+  <button class="execute-job-btnseed">🚜 Execute</button>
 `;
 
 
@@ -784,9 +784,43 @@ viewJobsBtn.addEventListener('click', async () => {
 });
 
 // optional placeholder for future Execute
-jobDiv.querySelector('.execute-job-btn').addEventListener('click', () => {
-  alert("🚜 Execute job feature coming soon!");
+jobDiv.querySelector('.execute-job-btnseed').addEventListener('click', async () => {
+  if (confirm(`Are you sure you want to execute job "${job.jobname}"?`)) {
+    try {
+      
+      const res = await fetch(`/api/jobs/execute/${encodeURIComponent(job.jobname)}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token })
+      });
+
+      // Check if response is JSON
+      const contentType = res.headers.get("content-type");
+      let message = "Unknown server response";
+
+      if (contentType && contentType.includes("application/json")) {
+        const result = await res.json();
+
+        if (res.ok) {
+          message = `✅ ${result.message || "Job executed successfully"}`;
+        } else {
+          message = `❌ ${result.error || result.message || "Job execution failed"}`;
+        }
+      } else {
+        const text = await res.text();
+        message = `❌ Unexpected server response: ${text}`;
+      }
+
+      alert(message);
+    } catch (err) {
+      console.error("Execution failed:", err);
+      alert("❌ Could not execute job due to a network or system error.");
+    }
+  }
 });
+
 
       });
     }

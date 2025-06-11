@@ -49,7 +49,7 @@ class ScheduleManager {
         }
     }
 
-    appendScheduledJob(newJob) {
+   /*  appendScheduledJob(newJob) {
         for (const job in this.jobsToExecute) {
             if (this.jobsToExecute[job].job.name == newJob.name) {
                 return false;
@@ -60,7 +60,30 @@ class ScheduleManager {
         this.jobsToExecute.push(newJob);
         console.log("Scheduled to be executed:", newJob.jobname);
         return true;
+    } */
+    appendScheduledJob(newJob) {
+        if (!newJob || !newJob.jobname) {
+            console.error("Invalid job passed to scheduler:", newJob);
+            return false;
+        }
+    
+        for (const job of this.jobsToExecute) {
+            if (job.jobname === newJob.jobname) {
+                return false;
+            }
+        }
+    
+        DatabaseService.InsertJobToDB(DatabaseService.JobType.EXECUTION, {
+            job_name: newJob.jobname,
+            time_stamp: Date.now()
+        });
+    
+        this.jobsToExecute.push(newJob);
+        console.log("Scheduled to be executed:", newJob.jobname);
+        return true;
     }
+    
+    
 
     checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);

@@ -64,7 +64,7 @@ export default function createJobsRouter(backend) {
 
     // queue and execute a given job
     router.put("/execute/:jobname", async (req, res) => {
-        const { jobName } = req.params;
+        const { jobname } = req.params;
         const { token } = req.body
         if (!TokenManager.validateToken(token)) {
             res.status(500).json({error: "You dont have permission to do that"});
@@ -72,14 +72,19 @@ export default function createJobsRouter(backend) {
         }
         try {
             // ask DB for job
-            let job = await DatabaseService.ReturnSingleJob(jobName);
+            
+
+            let job = await DatabaseService.ReturnSingleJob(jobname);
+            console.log("Requested jobname:", jobname);
+            console.log("Validated token:", token);
+            console.log("Fetched job:", job); // check if it's null
             if (job !== null && typeof (job) !== "undefined") {
                 if (backend.scheduleManager.appendScheduledJob(job)) {
                     res.status(200).json({ message: 'Job has been queued' });
                     backend.checkForNextJob();
                 } else res.status(500).json({ message: 'Job has already been queued' });
             } else res.status(500).json({ message: 'Job is not in the Database' });
-        } catch(e) {
+        } catch(err) {
             console.error(err);
             res.status(500).json({ error: 'Failed to queue job' });
         }
