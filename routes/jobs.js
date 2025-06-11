@@ -52,12 +52,21 @@ export default function createJobsRouter(backend) {
         }
     });
 
+    // queue and execute a given job
     router.put("/execute/:id", async (req, res) => {
+        const { jobId } = req.params;
         try {
-            //TODO ask DB for job
-            backend.scheduleManager.appendScheduledJob(job);
+            // ask DB for job
+            let job = DatabaseService.ReturnSingleJob(jobId);
+            if (job !== null && typeof (job) !== "undefined") {
+                if (backend.scheduleManager.appendScheduledJob(job)) {
+                    res.status(200).json({ message: 'Job has been queued' });
+                    backend.checkForNextJob();
+                } else res.status(500).json({ message: 'Job has already been queued' });
+            } else res.status(500).json({ message: 'Job is not in the Database' });
         } catch(e) {
-
+            console.error(err);
+            res.status(500).json({ error: 'Failed to queue job' });
         }
     });
 

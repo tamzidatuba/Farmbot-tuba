@@ -86,7 +86,7 @@ app.put('/api/updateuser/:username/:password', async (req, res) => {
 app.post('/api/login', async (req,res) => {
   const { username, password } = req.body;
   try{
-    let users = await DatabaseService.FetchUserfromDBtoFE(username, password);
+    let users = await DatabaseService.FetchUserfromDB(username, password);
     if (users == null){
       res.status(500).json({error: "Error. Invalid credentials"});
     }
@@ -118,4 +118,4 @@ let wateringJob = { jobType: DatabaseService.JobType.WATERING, job: {jobname: "M
 //console.log(plants);
 
 //backend.scheduleManager.appendScheduledJob(wateringJob);
-backend.checkForNextJob();
+//backend.checkForNextJob();

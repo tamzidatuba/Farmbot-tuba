@@ -36,6 +36,7 @@ class ScheduleManager {
         }
         this.jobsToExecute.push(newJob);
         console.log("Scheduled to be executed:", newJob.name);
+        return true;
     }
 
     checkForScheduledJobs() {

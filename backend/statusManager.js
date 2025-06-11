@@ -29,6 +29,7 @@ class StatusManager {
         this._newStatusRecieved = this._newStatusRecieved.bind(this);
     }
     init(farmbot) {
+        this.status = FarmbotStatus.READY;
         this.farmbot = farmbot;
         // TODO handle unsubscribe
         /*
