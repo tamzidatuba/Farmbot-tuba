@@ -45,10 +45,19 @@ export default function createJobsRouter(backend) {
             await DatabaseService.DeleteJobFromDB(jobtype, jobname);
             // remove job from scheduled Jobs
             backend.scheduleManager.removeScheduledJob(jobname)
-            backend.appendNotification("Job " + id + " deleted");
+            backend.appendNotification("Job " + jobname + " deleted");
             res.status(200).json({ message: 'Job deleted' });
         } catch (err) {
             res.status(500).json({ error: 'Failed to delete job' });
+        }
+    });
+
+    router.put("/execute/:id", async (req, res) => {
+        try {
+            //TODO ask DB for job
+            backend.scheduleManager.appendScheduledJob(job);
+        } catch(e) {
+
         }
     });
 

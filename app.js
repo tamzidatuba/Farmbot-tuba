@@ -25,6 +25,9 @@ app.use(express.json());
 //let a = await DatabaseService.ReturnSingleJob('682d82fd6037708c0a882e2b');
 //let a1 = await DatabaseService.ReturnSingleJob('683f08e030a1434241a9f615');
 //console.log(a1);
+//const sample = await DatabaseService.ReturnSingleJob('6847ee82456f873240345d03');
+//console.log(sample);
+
 
 
 app.listen(PORT, () => {
@@ -80,12 +83,12 @@ app.put('/api/updateuser/:username/:password', async (req, res) => {
   }
 });
 
-app.post('/api/user/:username/:password', async (req, res) => {
-  const { username, password } = req.params;
-  try {
-    let users = await DatabaseService.FetchUserfromDB(username, password);
-    if (users == null) {
-      res.status(500).json({ error: "Error. Invalid credentials" });
+app.post('/api/login', async (req,res) => {
+  const { username, password } = req.body;
+  try{
+    let users = await DatabaseService.FetchUserfromDBtoFE(username, password);
+    if (users == null){
+      res.status(500).json({error: "Error. Invalid credentials"});
     }
     else {
       res.status(200).json({ Message: "Login Successful." });
@@ -114,6 +117,5 @@ let wateringJob = { jobType: DatabaseService.JobType.WATERING, job: {jobname: "M
 //let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
 //console.log(plants);
 
-backend.scheduleManager.appendScheduledJob(wateringJob);
+//backend.scheduleManager.appendScheduledJob(wateringJob);
 backend.checkForNextJob();
-

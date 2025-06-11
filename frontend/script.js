@@ -60,73 +60,17 @@ const historyBox = document.getElementById('notification-history');
 const entryLimitSelect = document.getElementById('entry-limit');
 entryLimitSelect.value = maxHistoryEntries;
 
-
-const settingsBtn = document.querySelector('.settings-btn');
-const logoutBtn = document.getElementById('logoutBtn');
-const loginBtn = document.getElementById('loginBtn');
-const loginModal = document.getElementById('loginModal');
-const closeLoginModal = document.getElementById('closeLoginModal');
+ window.addEventListener('DOMContentLoaded', () => {
+     toggle.style.display = 'none';
+    subtask.style.display='none';
+  });
+ 
 
 let isEditMode = false;
 let jobBeingEdited = null;
 
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('pauseJobBtn').style.display = 'none';
-  document.getElementById('loginBtn').style.display = 'none';
-  document.getElementById('logoutBtn').style.display = 'none';
-});
-
-settingsBtn.addEventListener('click', () => {
-  const isVisible = loginBtn.style.display === 'block';
-
-  loginBtn.style.display = isVisible ? 'none' : 'block';
-  logoutBtn.style.display = isVisible ? 'none' : 'block';
-});
 
 
-loginBtn.addEventListener('click', () => {
-  loginModal.style.display = 'block';
-});
-
-closeLoginModal.addEventListener('click', () => {
-  loginModal.style.display = 'none';
-});
-
-const form = document.getElementById('loginForm');
-    form.addEventListener('submit', function(e) {
-      let valid = true;
-      const username = document.getElementById('username');
-      const password = document.getElementById('password');
-      const usernameError = document.getElementById('usernameError');
-      const passwordError = document.getElementById('passwordError');
-
-      usernameError.textContent = '';
-      passwordError.textContent = '';
-
-      if (username.value.trim() === '') {
-        usernameError.textContent = 'Username is required.';
-        valid = false;
-      } else if (username.value.trim().length < 3) {
-        usernameError.textContent = 'Username must be at least 3 characters.';
-        valid = false;
-      }
-
-      if (password.value.trim() === '') {
-        passwordError.textContent = 'Password is required.';
-        valid = false;
-      } else if (password.value.trim().length < 6) {
-        passwordError.textContent = 'Password must be at least 6 characters.';
-        valid = false;
-      }
-
-      if (!valid) e.preventDefault();
-    });
-// Optional: Close on background click
-window.addEventListener('click', (e) => {
-  if (e.target === loginModal) {
-    loginModal.style.display = 'none';
-  }
-});
 
 toggle.addEventListener('click', () => {
   const isVisible = subtask.style.display === 'block';
@@ -589,12 +533,10 @@ function editJob(job) {
   job.seeds.forEach(p => {
     createJobRow(); // creates empty row
     const row = jobContainer.lastChild;
-  
     const seedtype = p.seedtype; // fallback
     const x = p.xcoordinate;
     const y = p.ycoordinate;
     const depth = p.depth ;
-  
     row.querySelector('.plantType').value = capitalizeFirstLetter(seedtype);
     row.querySelector('.xCoord').value = x;
     row.querySelector('.yCoord').value = y;
@@ -646,18 +588,26 @@ viewJobsBtn.addEventListener('click', async () => {
       // new delete logic
     jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
       if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
-    try {
-      const res = await fetch(`/api/jobs/Seeding?jobname=${encodeURIComponent(job.jobname)}`, {
-        method: 'DELETE'
-      });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Failed to delete job.");
-      alert("Job deleted ✅");
-      viewJobsBtn.click(); // Refresh list
-    } catch (err) {
-      console.error(err);
-      alert("❌ Could not delete job: " + err.message);
-    }
+        try {
+          const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
+            method: 'DELETE'
+          });
+        
+          const contentType = res.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error);
+            alert("Job deleted ✅");
+            viewJobsBtn.click();
+          } else {
+            const errorText = await res.text();
+            throw new Error("Non-JSON response: " + errorText);
+          }
+        } catch (err) {
+          console.error(err);
+          alert("❌ Could not delete job: " + err.message);
+        }
+        
   }
 });
 
@@ -723,6 +673,7 @@ function showError(message) {
 }
 
 
+
 seedingJobBtn.addEventListener('click', () => {
   // Reset to creation mode
   isEditMode = false;
@@ -761,52 +712,35 @@ async function getPlants() {
 //draw plants
 function drawPlant(plant) {
   //ctx.save();
+  const img = new Image();
   const coord = coordToPixel(plant.x, plant.y);
-  if (plant.type == 'lettuce') {
-    const img = new Image();
-    img.src = './icons/lettuce.png';
-    img.onload = () => {
-      const size = 50;
-      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
-    }
-  } else if (plant.type == 'radish') {
-    const img = new Image();
-    img.src = './icons/radish.png';
-    img.onload = () => {
-      const size = 50;
-      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
-    }
-  } else if (plant.type == 'tomato') {
-    const img = new Image();
-    img.src = './icons/tomato.png';
-    img.onload = () => {
-      const size = 50;
-      ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
-    }
+  switch (plant.type) {
+    case "Lettuce":
+      img.src = './icons/lettuce.png';
+      drawRadius(coord, 30);
+      break;
+    case "Radish":
+      img.src = './icons/radish.png';
+      drawRadius(coord, 15);
+      break;
+    case "Tomato":
+      img.src = './icons/tomato.png';
+      drawRadius(coord, 15);
+      break;
+  }
+  img.onload = () => {
+    const size = 50;
+    ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
   }
 
-  //add the radius
-  if (plant.type == 'lettuce') {
-    ctx.beginPath();
-    ctx.arc(coord.x, coord.y, 30, 0, 2 * Math.PI);
-    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  } else if (plant.type == 'raddish') {
-    ctx.beginPath();
-    ctx.arc(coord.x, coord.y, 15, 0, 2 * Math.PI);
-    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  } else if (plant.type == 'tomato') {
-    ctx.beginPath();
-    ctx.arc(coord.x, coord.y, 15, 0, 2 * Math.PI);
-    ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
-
-  //ctx.restore();
+} 
+// Draws the radius
+function drawRadius(coord, radius) {
+  ctx.beginPath();
+  ctx.arc(coord.x, coord.y, radius, 0, 2 * Math.PI);
+  ctx.strokeStyle = 'rgb(10, 120, 210)'//'rgba(255, 0, 0, 0.5)';
+  ctx.lineWidth = 3;
+  ctx.stroke()
 }
 
 // Draw robot
@@ -826,7 +760,7 @@ function drawRobot() {
 
 // Draw grid lines for visual reference
 function drawGrid() {
-  ctx.strokeStyle = '#ddd';
+  ctx.strokeStyle = 'rgb(102, 68, 40)'//'#ddd';
   ctx.linewidth = 1;
 
   for (let x = 0; x <= canvasWidth; x += majorTickX) {
@@ -1027,5 +961,116 @@ setTimeout (() => {
 // Update every 1 second
 setInterval(updateRobot, 2500);
 
+//for login and logout
+const settingsBtn = document.querySelector('.settings-btn');
+const logoutBtn = document.getElementById('logoutBtn');
+const loginBtn = document.getElementById('loginBtn');
+const loginModal = document.getElementById('loginModal');
+const closeLoginModal = document.getElementById('closeLoginModal');
+ const farmbotMenu = document.getElementById('farmbotMenu');
+
+
+
+//login features
+let isLoggedIn = false;
+
+   window.addEventListener('DOMContentLoaded', () => {
+    loginBtn.style.display = 'none';
+    logoutBtn.style.display = 'none';
+  });
+
+    
+  settingsBtn.addEventListener('click', () => {
+    if (isLoggedIn) {
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
+    } else {
+      logoutBtn.style.display = 'none';
+      loginBtn.style.display = loginBtn.style.display === 'block' ? 'none' : 'block';
+    }
+  });
+
+loginBtn.addEventListener('click', () => {
+  loginModal.style.display = 'block';
+});
+logoutBtn.addEventListener('click', () => {
+    isLoggedIn = false;
+    logoutBtn.style.display = 'none';
+    loginBtn.style.display = 'block';
+    alert('Successfully Logged Out');
+    farmbotMenu.textContent = 'Farmbot Menu ';
+    toggle.style.display = 'none';
+    subtask.style.display='none';
+    
+  });
+
+closeLoginModal.addEventListener('click', () => {
+  loginModal.style.display = 'none';
+});
+
+
+
+const form = document.getElementById('loginForm');
+
+form.addEventListener('submit', async function(e) {
+  e.preventDefault(); // Prevent default form submission
+
+  const username = document.getElementById('username');
+  const password = document.getElementById('password');
+  const usernameError = document.getElementById('usernameError');
+  const passwordError = document.getElementById('passwordError');
+
+
+
+  // Send to API
+  try {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username.value.trim(),
+        password: password.value.trim()
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Success - Login passed
+      alert('Login successful!');
+      isLoggedIn = true;
+
+      if (loginModal) loginModal.style.display = 'none';
+      if (loginBtn) loginBtn.style.display = 'none';
+      if (logoutBtn) logoutBtn.style.display = 'inline-block';
+      if (farmbotMenu) farmbotMenu.textContent = 'Farmbot Menu Admin';
+      toggle.style.display = 'block';
+      subtask.style.display='block';
+    
+      
+    } else {
+      // API rejected credentials
+      if (data.message?.toLowerCase().includes('username')) {
+        usernameError.textContent = data.message;
+      } else if (data.message?.toLowerCase().includes('password')) {
+        passwordError.textContent = data.message;
+      } else {
+        alert(data.message || 'Invalid login. Please try again.');
+      }
+    }
+  } catch (error) {
+    console.error('Error logging in:', error);
+    alert('Server error. Please try again later.');
+  }
+});
+// Optional: Close on background click
+window.addEventListener('click', (e) => {
+  if (e.target === loginModal) {
+    loginModal.style.display = 'none';
+  }
+});
+//end of login and logout feature
 
 

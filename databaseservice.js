@@ -11,13 +11,15 @@ const connectionString = 'mongodb://localhost:27017/admin';
 
 // test connection to local database
 mongoose.connect(connectionString)
-    .then(() => console.log('MongoDB connected'))
-    .catch((err) => console.error('MongoDB connection error:', err));
+    .then(() => console.log('MongoDB connected to perform Database Services.'))
+    .catch((err) => console.error('MongoDB connection error: to Database Services', err));
+
 
 const JobType = Object.freeze({
     SEEDING: 'Seeding',
     WATERING: 'Watering',
     SCHEDULED: 'Scheduled',
+    HOME: 'Home',
 });
 
 const PlantRadii = {
@@ -107,20 +109,16 @@ async function DeleteJobFromDB(jobType, jobname) {
     else if (jobType === JobType.WATERING) {
         await wateringModule.DeleteWateringJobFromDB(jobname);
     }
-    else if (jobType == jobType.SCHEDULED)
+    else if (jobType == JobType.SCHEDULED)
     {
         await scheduledwateringjobModel.DeleteScheduledWateringJob(jobname);
     }
 }
 
 async function UpdateJobToDB(jobType, object) {
-    const now = new Date();
-
     if (!Object.values(JobType).includes(jobType)) {
         throw new Error("Invalid job type: " + jobType);
     }
-
-    let payload = {};
 
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
@@ -128,20 +126,8 @@ async function UpdateJobToDB(jobType, object) {
     }
 
     else if (jobType === JobType.WATERING) {
-        const { jobname, plantName, x, y, wateringcapacity } = object;
-
-        if (isNaN(x) || isNaN(y) || isNaN(wateringcapacity)) {
-            throw new Error("Invalid watering job data");
-        }
-        payload = {
-            jobname,
-            plantName,
-            x,
-            y,
-            wateringcapacity,
-        };
-
-        await wateringModule.UpdateWateringJobToDB(jobname, plantName, x, y, wateringcapacity);
+        const { jobname, plantstobewatered } = object;
+        await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered);
     }
 
     console.log('Job has been updated.');
@@ -187,7 +173,8 @@ async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
             let isValid = true;
             for (let seedInsideExistingJob of existingJob.seeds) {
                 let distance = GetDistance(newSeed.xcoordinate, newSeed.ycoordinate, seedInsideExistingJob.xcoordinate, seedInsideExistingJob.ycoordinate);
-                if (distance <= PlantRadii[seedInsideExistingJob.seedtype]) {
+                var seedInsideExistingJobSmallCase = seedInsideExistingJob.seedtype.toLowerCase();
+                if (distance <= PlantRadii[seedInsideExistingJobSmallCase]) {
                     invalidSeeds.push(newSeed);
                     isValid = false;
                 }
@@ -212,7 +199,8 @@ async function ValidateNewSeedsAgainstPlants(seeds) {
         let isValid = true;
         for (let plant of plants) {
             let distance = GetDistance(seed.xcoordinate, seed.ycoordinate, plant.xcoordinate, plant.ycoordinate);
-            if (distance <= PlantRadii[plant.planttype]) {
+            var planttypeSmallCase = plant.planttype.toLowerCase();
+            if (distance <= PlantRadii[planttypeSmallCase]) {
                 invalidSeeds.push(seed);
                 isValid = false;
             }
