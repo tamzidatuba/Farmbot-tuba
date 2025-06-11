@@ -1,6 +1,9 @@
 const toggle = document.getElementById('createTaskToggle');
+const viewJobs = document.getElementById('viewJobs');
 const subtask = document.getElementById('subtaskContainer');
+const subtaskView = document.getElementById('subtaskView');
 const arrow = document.getElementById('arrow');
+const arrowView = document.getElementById('arrowView');
 const modal = document.getElementById('seedingModal');
 const modalWatering = document.getElementById('wateringModal');
 const closeModal = document.getElementById('closeModal');
@@ -72,9 +75,14 @@ entryLimitSelect.value = maxHistoryEntries;
 
 let isEditMode = false;
 let jobBeingEdited = null;
+let editingJobName = '';  
 
 
-
+viewJobs.addEventListener('click', () => {
+  const isVisible = subtaskView.style.display === 'block';
+  subtaskView.style.display = isVisible ? 'none' : 'block';
+  arrowView.classList.toggle('open', !isVisible);
+});
 
 toggle.addEventListener('click', () => {
   const isVisible = subtask.style.display === 'block';
@@ -94,6 +102,17 @@ seedingJobBtn.addEventListener('click', () => {
 });*/
 
 wateringJobBtn.addEventListener('click',async () => {
+  // Reset to creation mode
+  isEditMode = false;
+  editingJobName = '';
+  scheduleRadios.item(1).checked = true;
+  scheduleFields.style.display = "none";
+
+  document.getElementById('modalTitleWatering').textContent = 'Create Watering Job';
+  document.getElementById('executeBtnWatering').textContent = 'Create & Save';
+  document.getElementById('WateringJobName').value = '';
+  document.getElementById('WateringJobName').disabled = false;
+
   jobContainerWatering.innerHTML = '';
   modalWatering.style.display = 'block';
   jobCountWatering = 0;
@@ -147,7 +166,7 @@ const jobContainerWatering = document.getElementById('jobContainerWatering');
 const addPlantBtnWatering = document.getElementById('addPlantBtnWatering');
 const executeBtnWatering = document.getElementById('executeBtnWatering');
 
-function createJobRowWatering(plants) {
+function createJobRowWatering(plants, jobData = null) {
   jobCountWatering++;
 
   const row = document.createElement('div');
@@ -164,7 +183,7 @@ function createJobRowWatering(plants) {
     <div class="coord-row">
       <div>
         <label>Water (mm)</label>
-        <input type="number" class="watering amount" placeholder="20 ml">
+        <input type="number" class="watering amount" placeholder="2-200 ml">
       </div>
       <div>
         <label>Watering height</label>
@@ -196,9 +215,21 @@ function createJobRowWatering(plants) {
     option.dataset.x = plant.x;
     option.dataset.y = plant.y;
     option.dataset.type = plant.type;
+
+    // Preselect if matching
+    if (jobData && jobData.plant.xcoordinate === plant.x && jobData.plant.ycoordinate === plant.y) {
+      option.selected = true;
+    }
+    
+
     select.appendChild(option);
   });
 
+  // Pre-fill other fields if jobData exists
+  if (jobData) {
+    row.querySelector('.watering.amount').value = jobData.amount || '';
+    row.querySelector('.coord-input.yCoord').value = jobData.yCoordinate || '';
+  }
   jobContainerWatering.appendChild(row);
 }
 
@@ -230,7 +261,7 @@ executeBtnWatering.addEventListener('click', async () => {
 
     console.log("Selected Plant:", selectedOption.value);
     console.log("Selected Plant 2:", selectedOption.dataset);
-    if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 1 || watering > 600 ) {
+    if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 2 || watering > 200 ) {
       errorMsg.textContent = 'Please correct the above values.';
       isValid = false;
     } else if (seenCoordinates.has(coordKey)) {
@@ -500,8 +531,144 @@ executeBtn.addEventListener('click', async () => {
   }
 });
 
+const viewJobsBtnWatering = document.getElementById('viewWateringJobsBtn');
+const viewJobsModalWatering = document.getElementById('viewJobsModalWatering');
+const closeViewJobsModalWatering = document.getElementById('closeViewJobsModalWatering');
+const jobsListWatering = document.getElementById('jobsListWatering');
+const jobCountDisplayWatering = document.getElementById('jobCountDisplayWatering'); 
 
-const viewJobsBtn = document.getElementById('viewJobsBtn');
+//VIEW WATERING JOBS BUTTON LOGIC
+viewJobsBtnWatering.addEventListener('click', async () => {
+  jobsListWatering.innerHTML = '<p>Loading jobs...</p>';
+  jobCountDisplayWatering.textContent = '';
+  viewJobsModalWatering.style.display = 'block';
+
+  try {
+    const response = await fetch('/api/jobs/Watering');
+    const jobs = await response.json();
+
+    jobCountDisplayWatering.textContent = `✅ You have created ${jobs.length} watering job${jobs.length !== 1 ? 's' : ''}.`;
+
+    if (jobs.length === 0) {
+      jobsListWatering.innerHTML = '<p>No jobs found.</p>';
+    } else {
+      jobsListWatering.innerHTML = '';
+      jobs.forEach((job, index) => {
+        const jobDiv = document.createElement('div');
+        jobDiv.className = 'job-row';
+        jobDiv.innerHTML = `
+  <div class="job-header-row">
+    <strong>${job.jobname}</strong>
+    <div class="icon-actions">
+      <span class="icon-btn edit-job-btn" title="Edit" data-index="${index}">✏️</span>
+      <span class="icon-btn delete-job-btn" title="Delete" data-index="${index}">🗑️</span>
+    </div>
+  </div>
+  <div>Plants: ${job.seeds?.length || 0}</div>
+  <button class="execute-job-btn">🚜 Execute</button>
+`;
+
+
+        jobsListWatering.appendChild(jobDiv);
+
+        // edit logic
+    jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
+      editWateringJob(job);
+      });
+
+      // new delete logic
+    jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
+      if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
+        try {
+          const res = await fetch(`/api/jobs/Watering/${job.jobname}`, {
+            method: 'DELETE'
+          });
+        
+          const contentType = res.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error);
+            alert("Job deleted ✅");
+            viewJobsBtnWatering.click();
+          } else {
+            const errorText = await res.text();
+            throw new Error("Non-JSON response: " + errorText);
+          }
+        } catch (err) {
+          console.error(err);
+          alert("❌ Could not delete job: " + err.message);
+        }
+        
+  }
+});
+
+// optional placeholder for future Execute
+jobDiv.querySelector('.execute-job-btn').addEventListener('click', () => {
+  alert("🚜 Execute job feature coming soon!");
+});
+
+      });
+    }
+  } catch (err) {
+    jobsListWatering.innerHTML = '<p>Error loading jobs.</p>';
+    console.error(err);
+  }
+});
+
+function editWateringJob(job) {
+  viewJobsModalWatering.style.display = 'none';
+  setTimeout(() => {
+    modalWatering.style.display = 'block';
+  }, 200);
+
+  isEditMode = true;
+  editingJobName = job.jobname;
+
+  // Clear UI and show modal
+  document.getElementById("WateringJobName").value = job.jobname;
+  document.getElementById("WateringJobName").disabled = true;
+  document.getElementById("jobContainerWatering").innerHTML = '';
+  modalWatering.style.display = 'block';
+
+  document.getElementById('executeBtnWatering').textContent = 'Update Job';
+
+  // Fill in plant rows
+  job.seeds.forEach(seed => {
+    const jobData = {
+      plant: {
+        xcoordinate: seed.xcoordinate,
+        ycoordinate: seed.ycoordinate,
+        type: seed.planttype
+      },
+      amount: seed.wateringcapacity,
+      yCoordinate: seed.wateringheight
+    };
+    createJobRowWatering(plants, jobData);
+  });
+
+  // Fill in schedule
+  if (job.scheduleData?.enabled) {
+    scheduleRadios.item(0).checked = true;
+    document.getElementById("executionTime").value = job.scheduleData.time || '';
+    document.getElementById("repeatInterval").value = job.scheduleData.interval || '';
+  } else {
+    scheduleRadios.item(1).checked = true;
+  }
+}
+
+closeViewJobsModalWatering.addEventListener('click', () => {
+  viewJobsModalWatering.style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+  if (e.target === viewJobsModalWatering) {
+    viewJobsModalWatering.style.display = 'none';
+  }
+});
+
+
+
+const viewJobsBtn = document.getElementById('viewSeedingJobsBtn');
 const viewJobsModal = document.getElementById('viewJobsModal');
 const closeViewJobsModal = document.getElementById('closeViewJobsModal');
 const jobsList = document.getElementById('jobsList');
@@ -511,7 +678,7 @@ function capitalizeFirstLetter(str) {
   return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
 }
 
-function editJob(job) {
+function editSeedingJob(job) {
   viewJobsModal.style.display = 'none';
   setTimeout(() => {
     modal.style.display = 'block';
@@ -586,7 +753,7 @@ viewJobsBtn.addEventListener('click', async () => {
 
         // edit logic
     jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
-      editJob(job);
+      editSeedingJob(job);
       });
 
       // new delete logic
@@ -723,15 +890,15 @@ function drawPlant(plant) {
   switch (plant.type) {
     case "lettuce":
       img.src = './icons/lettuce.png';
-      drawRadius(coord, 30);
+      drawRadius(coord, 15);
       break;
     case "radish":
       img.src = './icons/radish.png';
-      drawRadius(coord, 15);
+      drawRadius(coord, 2);
       break;
     case "tomato":
       img.src = './icons/tomato.png';
-      drawRadius(coord, 15);
+      drawRadius(coord, 30);
       break;
   }
   img.onload = () => {
