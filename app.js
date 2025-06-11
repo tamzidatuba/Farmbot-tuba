@@ -5,7 +5,6 @@ import DatabaseService from './databaseservice.js';
 import { initalizeBackend, Backend } from './backend/backend.js';
 import createJobsRouter from './routes/jobs.js';
 import TokenManager from "./backend/tokenManager.js";
-import { assert } from 'console';
 
 
 const app = express();
@@ -47,6 +46,7 @@ app.use('/api/jobs', createJobsRouter(backend));
 app.get('/api/plants', async (req, res) => {
   try {
     let plants = await DatabaseService.FetchPlantsfromDB();
+    backend.plants = plants
     res.status(200).json(plants);
   }
   catch (err) {
@@ -60,6 +60,9 @@ app.post('/api/plants', async (req, res) => {
   const plants = req.body;
   try {
     await DatabaseService.InsertPlantsToDB(plants);
+    for (let plant of plants) {
+      backend.plants.push(plant)
+    }
     res.status(200).json({ message: 'Plant saved' });
   } catch (err) {
     console.error(err);

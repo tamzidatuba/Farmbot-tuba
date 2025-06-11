@@ -25,6 +25,7 @@ class Backend {
     this.scheduleManager = new ScheduleManager();
     this.statusManager = new StatusManager(this);
     this.currentJobData;
+    this.plants = new Array();
   }
 
   generateFrontendData() {
@@ -34,7 +35,7 @@ class Backend {
       "notifications": this.notification_history,
       "executionPipeline": this.scheduleManager.jobsToExecute,
       "farmbotPosition": this.statusManager.lastState.location_data.position,
-      "plants": DatabaseService.FetchPlantsfromDB()
+      "plants": this.plants
     }
   }
 
@@ -138,8 +139,9 @@ async function initalizeBackend(backend) {
   });
   farmbot.readStatus();
   await statusPromise
-
+  
   console.log("StatusManager Initialized");
+  backend.plants = await DatabaseService.FetchPlantsfromDB();
 }
 
 export {
