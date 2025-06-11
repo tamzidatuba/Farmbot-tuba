@@ -25,6 +25,7 @@ class Backend {
     this.scheduleManager = new ScheduleManager();
     this.statusManager = new StatusManager(this);
     this.currentJobData;
+    this.plants = new Array();
   }
 
   generateFrontendData() {
@@ -32,7 +33,9 @@ class Backend {
       "status": this.statusManager.status,
       "paused": this.statusManager.isPaused,
       "notifications": this.notification_history,
-      "executionPipeline": this.scheduleManager.jobsToExecute
+      "executionPipeline": this.scheduleManager.jobsToExecute,
+      "farmbotPosition": this.statusManager.lastState.location_data.position,
+      "plants": this.plants
     }
   }
 
@@ -53,7 +56,7 @@ class Backend {
 
   async finishJob() {
     console.log("Finished a Job");
-    this.appendNotification("Job " + this.statusManager.currentJob.name + " finished.");
+    this.appendNotification("Job '" + this.statusManager.currentJob.name + "' finished.");
     if (this.currentJobData.jobType != DatabaseService.JobType.HOME) {
 
       if (this.currentJobData.jobType != DatabaseService.JobType.SCHEDULED) {
@@ -67,7 +70,7 @@ class Backend {
       if (!this.checkForNextJob()) {
         this.currentJobData = {jobType: DatabaseService.JobType.HOME}
         this.statusManager.startJob(new GoHomeJob());
-        this.appendNotification("Job GoHome started.");
+        this.appendNotification("Job 'GoHome' started.");
       }
     }
   }
@@ -95,7 +98,7 @@ class Backend {
           return
       }
       this.statusManager.startJob(jobObject);
-      this.appendNotification("Job " + jobObject.name + " started.");
+      this.appendNotification("Job '" + jobObject.name + "' started.");
       return true
     }
     return false
@@ -136,8 +139,9 @@ async function initalizeBackend(backend) {
   });
   farmbot.readStatus();
   await statusPromise
-
+  
   console.log("StatusManager Initialized");
+  backend.plants = await DatabaseService.FetchPlantsfromDB();
 }
 
 export {

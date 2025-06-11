@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
 import { initalizeBackend, Backend } from './backend/backend.js';
 import createJobsRouter from './routes/jobs.js';
+import TokenManager from "./backend/tokenManager.js";
 
 
 const app = express();
@@ -45,6 +46,7 @@ app.use('/api/jobs', createJobsRouter(backend));
 app.get('/api/plants', async (req, res) => {
   try {
     let plants = await DatabaseService.FetchPlantsfromDB();
+    backend.plants = plants
     res.status(200).json(plants);
   }
   catch (err) {
@@ -53,11 +55,14 @@ app.get('/api/plants', async (req, res) => {
   }
 });
 
-// insert job
+// insert plant
 app.post('/api/plants', async (req, res) => {
   const plants = req.body;
   try {
     await DatabaseService.InsertPlantsToDB(plants);
+    for (let plant of plants) {
+      backend.plants.push(plant)
+    }
     res.status(200).json({ message: 'Plant saved' });
   } catch (err) {
     console.error(err);
@@ -65,15 +70,13 @@ app.post('/api/plants', async (req, res) => {
   }
 });
 
-
-
-app.get('/api/notifications', (req, res) => {
-   res.status(200).json(backend.notification_history);
-});
-
-
 app.put('/api/updateuser/:username/:password', async (req, res) => {
   const { username, password } = req.params;
+  const { token } = req.body
+  if (!TokenManager.validateToken(token)) {
+    res.status(500).json({error: "You dont have permission to do that"});
+    return
+  }
   try {
     const user = await DatabaseService.UpdateUserToDB(username, password);
     res.status(200).json({ message: "Password Updated" })
@@ -91,7 +94,7 @@ app.post('/api/login', async (req,res) => {
       res.status(500).json({error: "Error. Invalid credentials"});
     }
     else {
-      res.status(200).json({ Message: "Login Successful." });
+      res.status(200).json({ Message: "Login Successful.", token: TokenManager.generateAndReturnToken() });
     }
   }
   catch (err) {
@@ -100,8 +103,9 @@ app.post('/api/login', async (req,res) => {
   }
 });
 
-app.get('/api/status', (req, res) => {
-  res.status(200).json({ status: backend.statusManager.status });
+app.post('/api/logout', async (req,res) => {
+  const { token } = req.body;
+  TokenManager.removeToken(token);
 });
 
 app.get('/api/frontendData', (req, res) => {
