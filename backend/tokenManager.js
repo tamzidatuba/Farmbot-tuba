@@ -1,5 +1,5 @@
 
-const TOKEN_LENGTH = 25;
+const TOKEN_LENGTH = 30;
 
 var tokens = new Array();
 
@@ -43,7 +43,7 @@ function removeToken(token) {
 }
 
 
-export {
+export default {
     generateAndReturnToken,
     validateToken,
     removeToken,
