@@ -33,7 +33,8 @@ class Backend {
       "paused": this.statusManager.isPaused,
       "notifications": this.notification_history,
       "executionPipeline": this.scheduleManager.jobsToExecute,
-      "farmbotPosition": this.statusManager.lastState.location_data.position
+      "farmbotPosition": this.statusManager.lastState.location_data.position,
+      "plants": DatabaseService.FetchPlantsfromDB()
     }
   }
 

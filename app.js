@@ -55,7 +55,7 @@ app.get('/api/plants', async (req, res) => {
   }
 });
 
-// insert job
+// insert plant
 app.post('/api/plants', async (req, res) => {
   const plants = req.body;
   try {
