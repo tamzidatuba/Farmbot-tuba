@@ -67,7 +67,7 @@ async function InsertJobToDB(jobType, object) {
 }
 
 async function ReturnSingleJob(jobname) {
-    let job = await seedingModule.ReturnSeedingJob(job_name);
+    let job = await seedingModule.ReturnSeedingJob(jobname);
     if (job !== null && typeof (job) !== "undefined") {
         return { job };
 
