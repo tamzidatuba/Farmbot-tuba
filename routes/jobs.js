@@ -1,4 +1,5 @@
 import DatabaseService from '../databaseservice.js';
+import TokenManager from '../backend/tokenManager.js';
 import express from 'express';
 
 export default function createJobsRouter(backend) {
@@ -7,15 +8,15 @@ export default function createJobsRouter(backend) {
     // insert job
     router.post('/:jobType', async (req, res) => {
         const { jobType } = req.params;
-        const { object, token } = req.body
+        const { payload, token } = req.body
         if (!TokenManager.validateToken(token)) {
             res.status(500).json({error: "You dont have permission to do that"});
             return
         }
         try {
-            let result = await DatabaseService.InsertJobToDB(jobType, object);
+            let result = await DatabaseService.InsertJobToDB(jobType, payload);
             if (result === true) {
-                backend.appendNotification("Job " + object.jobname + " saved");
+                backend.appendNotification("Job " + payload.jobname + " saved");
                 res.status(200).json({ message: 'Job saved' });
             }
             else {
@@ -95,14 +96,14 @@ export default function createJobsRouter(backend) {
 
     router.put('/:jobtype', async (req, res) => {
         const { jobtype } = req.params;
-        const { object, token } = req.body
+        const { payload, token } = req.body
         if (!TokenManager.validateToken(token)) {
             res.status(500).json({error: "You dont have permission to do that"});
             return
         }
         try {
-            await DatabaseService.UpdateJobToDB(jobtype, object);
-            backend.appendNotification("Job " + object.name + " modified");
+            await DatabaseService.UpdateJobToDB(jobtype, payload);
+            backend.appendNotification("Job " + payload.name + " modified");
             res.status(200).json({ message: 'Job updated' });
         } catch (err) {
             console.error(err);

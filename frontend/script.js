@@ -26,6 +26,8 @@ var plantsList = [];
 
 var plants = [];
 
+var token = "";
+
 
 //plant class
 class Plant {
@@ -294,7 +296,7 @@ executeBtnWatering.addEventListener('click', async () => {
       const response = await fetch('/api/jobs/Watering', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({payload, token})
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to update job.");
@@ -304,7 +306,7 @@ executeBtnWatering.addEventListener('click', async () => {
       const response = await fetch('/api/jobs/Watering', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({payload, token})
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to create job.");
@@ -468,7 +470,7 @@ executeBtn.addEventListener('click', async () => {
       const response = await fetch('/api/jobs/Seeding', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({payload, token})
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to update job.");
@@ -478,7 +480,7 @@ executeBtn.addEventListener('click', async () => {
       const response = await fetch('/api/jobs/Seeding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({payload, token})
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to create job.");
@@ -590,7 +592,8 @@ viewJobsBtn.addEventListener('click', async () => {
       if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
         try {
           const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            body: JSON.stringify(token)
           });
         
           const contentType = res.headers.get("content-type");
@@ -1002,7 +1005,16 @@ logoutBtn.addEventListener('click', () => {
     farmbotMenu.textContent = 'Farmbot Menu ';
     toggle.style.display = 'none';
     subtask.style.display='none';
-    
+    fetch('/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "token": token
+      })
+    });
+    token = "";
   });
 
 closeLoginModal.addEventListener('click', () => {
@@ -1049,6 +1061,8 @@ form.addEventListener('submit', async function(e) {
       if (farmbotMenu) farmbotMenu.textContent = 'Farmbot Menu Admin';
       toggle.style.display = 'block';
       subtask.style.display='block';
+
+      token = data.token;
     
       
     } else {
