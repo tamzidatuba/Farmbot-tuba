@@ -51,9 +51,9 @@ async function FetchAllScheduledWateringJobsFromDB()
   }
 }
 
-async function FetchSingleScheduledJobFromDB(id)
+async function FetchSingleScheduledJobFromDB(jobname)
 {
-  let scheduledwaterjob = await ScheduledWaterJobModel.findById(id);
+  let scheduledwaterjob = await ScheduledWaterJobModel.findOne({"jobname":jobname});
   if (scheduledwaterjob !== null && typeof(scheduledwaterjob) !== "undefined" ){
      return {jobType : "Watering",scheduledwaterjob};
   }

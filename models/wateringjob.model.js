@@ -36,8 +36,8 @@ async function FetchAllWateringJobsFromDB() {
   }
 }
 
-async function ReturnWateringJob(id) {
-  const job = await WaterJobModel.findById(id).select('jobname');
+async function ReturnWateringJob(jobname) {
+  const job = await WaterJobModel.findOne({"jobname":jobname});
   if (job !== null && typeof (job) !== "undefined") {
     return { jobType: "Watering", job };
   }
