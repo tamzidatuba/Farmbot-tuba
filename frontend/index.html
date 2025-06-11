@@ -34,7 +34,7 @@
 
   <div class="modal-content">
     <span class="close" id="closeModalWatering">&times;</span>
-    <h2>Create Watering Jobs</h2>
+    <h2 id="modalTitleWatering">Create Watering Jobs</h2>
     <input type="text" id="WateringJobName" placeholder="Enter job name" />
     <div id="jobNameErrorWatering" class="errorMsg"></div>
 
@@ -115,8 +115,15 @@
         <button id="wateringJobBtn">Create Watering Job</button>
       </div>
     </li>
-    <li class="menu-item" id="viewJobsBtn">
-      📋 View Jobs
+    <li>
+      <div class="menu-item" id="viewJobs">
+        <span>📋 View Jobs</span>
+        <span class="arrow" id="arrowView">&#9654;</span>
+      </div>
+      <div class="subtask" id="subtaskView">
+        <button id="viewSeedingJobsBtn">Seeding Job</button>
+        <button id="viewWateringJobsBtn">Watering Job</button>
+      </div>
     </li>
     <li class="menu-item">Seeding Demo</li>
     <li class="menu-item">Watering Demo</li>
@@ -153,13 +160,23 @@
         </select>
       </div>
   </div>
-  <!-- VIEW JOBS MODAL -->
+  <!-- VIEW SEEDING JOBS MODAL -->
   <div id="viewJobsModal" class="modal">
     <div class="modal-content">
       <span class="close" id="closeViewJobsModal">&times;</span>
       <h2>📋 Seeding Jobs Overview</h2>
       <p id="jobCountDisplay"></p> <!-- 👈 Add this -->
       <div id="jobsList"></div>
+    </div>
+  </div>
+
+  <!-- VIEW WATERING JOBS MODAL -->
+  <div id="viewJobsModalWatering" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeViewJobsModalWatering">&times;</span>
+      <h2>📋 Watering Jobs Overview</h2>
+      <p id="jobCountDisplayWatering"></p> <!-- 👈 Add this -->
+      <div id="jobsListWatering"></div>
     </div>
   </div>
 
