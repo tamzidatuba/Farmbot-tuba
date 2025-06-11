@@ -704,6 +704,7 @@ async function getPlants() {
       for (const plant of data) {
         plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
       }
+      //console.log(plants);
     }
   })
   .catch(error => console.error('Error fetching plants:', error));
@@ -715,15 +716,15 @@ function drawPlant(plant) {
   const img = new Image();
   const coord = coordToPixel(plant.x, plant.y);
   switch (plant.type) {
-    case "Lettuce":
+    case "lettuce":
       img.src = './icons/lettuce.png';
       drawRadius(coord, 30);
       break;
-    case "Radish":
+    case "radish":
       img.src = './icons/radish.png';
       drawRadius(coord, 15);
       break;
-    case "Tomato":
+    case "tomato":
       img.src = './icons/tomato.png';
       drawRadius(coord, 15);
       break;
