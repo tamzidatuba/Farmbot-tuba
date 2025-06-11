@@ -5,6 +5,7 @@ import notificationModel from './models/notification.model.js';
 import plantModel from './models/plant.model.js';
 import userModel from './models/user.model.js';
 import scheduledwateringjobModel from './models/scheduledwateringjob.model.js';
+import ExecutionModel from './models/execution.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -20,6 +21,7 @@ const JobType = Object.freeze({
     WATERING: 'Watering',
     SCHEDULED: 'Scheduled',
     HOME: 'Home',
+    EXECUTION: 'Execution',
 });
 
 const PlantRadii = {
@@ -57,20 +59,24 @@ async function InsertJobToDB(jobType, object) {
         }
         await wateringModule.InsertWateringJobToDB(jobname, plantstobewatered);
     }
+    else if (jobType == JobType.EXECUTION){
+        const {job_name, time_stamp} = object;
+        let new_job = await ExecutionModel.InsertintoExecutionDB(job_name,time_stamp);
+    }
     return true;
 }
 
-async function ReturnSingleJob(id) {
-    let job = await seedingModule.ReturnSeedingJob(id);
+async function ReturnSingleJob(jobname) {
+    let job = await seedingModule.ReturnSeedingJob(job_name);
     if (job !== null && typeof (job) !== "undefined") {
         return { job };
 
     }
-    job = await wateringModule.ReturnWateringJob(id);
+    job = await wateringModule.ReturnWateringJob(jobname);
     if (job !== null && typeof (job) !== "undefined") {
         return { job };
     }
-    job = await scheduledwateringjobModel.FetchSingleScheduledJobFromDB(id);
+    job = await scheduledwateringjobModel.FetchSingleScheduledJobFromDB(jobname);
     if (job !== null && typeof(job) !== "undefined")
     {
         return { job };
@@ -86,12 +92,16 @@ async function FetchJobsFromDB(jobType) {
     if (jobType === JobType.SEEDING) {
         jobs = await seedingModule.FetchSeedingJobsFromDB();
     } 
-    else if (jobType === JobType.WATERING) {
+    else if (jobType === JobType.WATERING) {                
         jobs = await wateringModule.FetchAllWateringJobsFromDB();
     }
-    else if (jobType == JobType.SCHEDULED)
+    // else if (jobType == JobType.SCHEDULED)
+    // {
+    //     jobs = await scheduledwateringjobModel.FetchAllScheduledWateringJobsFromDB();
+    // }
+    else if (jobType == JobType.EXECUTION)
     {
-        jobs = await scheduledwateringjobModel.FetchAllScheduledWateringJobsFromDB();
+        jobs = await ExecutionModel.FetchAllfromExecutionDB();
     }
     return jobs;
 }
@@ -113,6 +123,10 @@ async function DeleteJobFromDB(jobType, jobname) {
     {
         await scheduledwateringjobModel.DeleteScheduledWateringJob(jobname);
     }
+    else if (jobType === JobType.EXECUTION) {
+
+        await ExecutionModel.RemovefromExecutionDB(jobname);
+    } 
 }
 
 async function UpdateJobToDB(jobType, object) {

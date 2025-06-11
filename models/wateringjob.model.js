@@ -10,7 +10,12 @@ const wateringSchema = mongoose.Schema({
       wateringcapacity: Number,
       wateringheight: Number,   
     }
-  ]
+  ],
+  ScheduleData:{
+    firstexecutiontime: String,
+    interval: Number,
+    enabled:Boolean,
+  }
 }
 );
 
@@ -36,8 +41,8 @@ async function FetchAllWateringJobsFromDB() {
   }
 }
 
-async function ReturnWateringJob(id) {
-  const job = await WaterJobModel.findById(id).select('jobname');
+async function ReturnWateringJob(jobname) {
+  const job = await WaterJobModel.findOne({"jobname":jobname});
   if (job !== null && typeof (job) !== "undefined") {
     return { jobType: "Watering", job };
   }
