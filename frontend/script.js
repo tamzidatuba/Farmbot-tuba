@@ -9,6 +9,7 @@ const seedingJobBtn = document.getElementById('seedingJobBtn');
 const jobNameError = document.getElementById('jobNameError');
 const jobNameErrorWatering = document.getElementById('jobNameErrorWatering');
 const wateringJobBtn = document.getElementById('wateringJobBtn');
+//const viewJobsBtn =document.getElementById('viewJobsBtn');
 
 //grid ids
 const canvas = document.getElementById('gridCanvas');
@@ -65,6 +66,7 @@ entryLimitSelect.value = maxHistoryEntries;
  window.addEventListener('DOMContentLoaded', () => {
      toggle.style.display = 'none';
     subtask.style.display='none';
+    viewJobsBtn.style.display='none';
   });
  
 
@@ -1005,6 +1007,7 @@ logoutBtn.addEventListener('click', () => {
     farmbotMenu.textContent = 'Farmbot Menu ';
     toggle.style.display = 'none';
     subtask.style.display='none';
+    viewJobsBtn.style.display='none';
     fetch('/api/logout', {
       method: 'POST',
       headers: {
@@ -1061,7 +1064,8 @@ form.addEventListener('submit', async function(e) {
       if (farmbotMenu) farmbotMenu.textContent = 'Farmbot Menu Admin';
       toggle.style.display = 'block';
       subtask.style.display='block';
-
+      viewJobsBtn.style.display='block';
+      
       token = data.token;
     
       
