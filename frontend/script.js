@@ -66,8 +66,9 @@ const historyBox = document.getElementById('notification-history');
 const entryLimitSelect = document.getElementById('entry-limit');
 entryLimitSelect.value = maxHistoryEntries;
 
+
  window.addEventListener('DOMContentLoaded', () => {
-     toggle.style.display = 'none';
+    toggle.style.display = 'none';
     subtask.style.display='none';
     viewJobsBtn.style.display='none';
   });
@@ -1263,13 +1264,12 @@ form.addEventListener('submit', async function(e) {
       if (loginBtn) loginBtn.style.display = 'none';
       if (logoutBtn) logoutBtn.style.display = 'inline-block';
       if (farmbotMenu) farmbotMenu.textContent = 'Farmbot Menu Admin';
-      toggle.style.display = 'block';
-      subtask.style.display='block';
+      toggle.style.display = 'flex';
+      subtask.style.display='none';
       viewJobsBtn.style.display='block';
       
       token = data.token;
-    
-      
+  
     } else {
       // API rejected credentials
       if (data.message?.toLowerCase().includes('username')) {
@@ -1285,6 +1285,8 @@ form.addEventListener('submit', async function(e) {
     alert('Server error. Please try again later.');
   }
 });
+
+
 // Optional: Close on background click
 window.addEventListener('click', (e) => {
   if (e.target === loginModal) {
