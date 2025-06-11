@@ -7,8 +7,24 @@ class ScheduleManager {
 
     constructor() {
         this.jobsToExecute = new Array();
+
         this.checkForScheduledJobs()
         this.currentTimeout;
+
+    }
+
+    async loadQueuedjobsFromDB() {
+        // TODO ask DB for queued Jobs from last time
+        /*
+        array.sort(function(job1 ,job2) {
+            if (job1.time_stamp > job2.time_stamp) return 1;
+            else if (job1.time_stamp < job2.time_stamp) return -1;
+            else return 0;
+        });
+        for (let job of array) {
+            this.jobsToExecute.push(await DatabaseService.ReturnSingleJob(job.jobname))
+        }
+        */
     }
 
     isJobScheduled() {
@@ -16,6 +32,8 @@ class ScheduleManager {
     }
 
     getScheduledJob() {
+        // TODO remove job from queue DB
+        // DatabaseService.DeleteFromExecutionDB(jobsToExecute[0].name);
         return this.jobsToExecute.shift();
     }
 
@@ -23,6 +41,8 @@ class ScheduleManager {
         for (const job in this.jobsToExecute) {
             if (this.jobsToExecute[job].job.name == name) {
                 this.jobsToExecute.splice(job, 1);
+                // TODO remove job from queue DB
+                // DatabaseService.DeleteFromExecutionDB(jobsToExecute[job].name);
                 break;
             }
         }
@@ -34,8 +54,10 @@ class ScheduleManager {
                 return false;
             }
         }
+        // TODO add job to queue DB
+        // DatabaseService.InsertToExecutionDB({job_name: newJob.jobname, time_stamp: Date.now()})
         this.jobsToExecute.push(newJob);
-        console.log("Scheduled to be executed:", newJob.name);
+        console.log("Scheduled to be executed:", newJob.jobname);
         return true;
     }
 
