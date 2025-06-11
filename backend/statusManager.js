@@ -16,7 +16,13 @@ class StatusManager {
     constructor(backend) {
         this.backend = backend;
 
-        this.lastState;
+        this.lastState = {
+            location_data: { 
+                position: {
+                    x: 0, y: 0, z: 0
+                }
+            }
+        };
 
         this.runningJob = false;
         this.isPaused = false;
