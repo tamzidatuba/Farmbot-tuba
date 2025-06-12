@@ -173,7 +173,7 @@ body {
   border-radius: 5px;
   cursor: pointer;
   width: 100%;
-  font-size: 0.9rem;
+  font-size: 14px;
   text-align: center;
 }
 
@@ -204,14 +204,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-#seedingJobBtn {
-  font-size: 12px;
-}
-
-#wateringJobBtn {
-  font-size: 12px;
 }
 
 .settings-btn:hover {
