@@ -22,10 +22,11 @@ class ScheduleManager {
             else if (job1.time_stamp < job2.time_stamp) return -1;
             else return 0;
         });
+        console.log("Queued jobs from last Uptime: ", queuedJobs);
         for (let job of queuedJobs) {
-            this.jobsToExecute.push(await DatabaseService.ReturnSingleJob(job.job_name))
+            let loadedJob = await DatabaseService.ReturnSingleJob(job.job_name);
+            this.jobsToExecute.push(loadedJob);
         }
-        
     }
 
     isJobScheduled() {
@@ -34,7 +35,7 @@ class ScheduleManager {
 
     getScheduledJob() {
         // remove job from queue DB
-        DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, jobsToExecute[0].jobname);
+        DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, this.jobsToExecute[0].job.jobname);
         return this.jobsToExecute.shift();
     }
 
@@ -43,47 +44,28 @@ class ScheduleManager {
             if (this.jobsToExecute[job].job.name == name) {
                 this.jobsToExecute.splice(job, 1);
                 // remove job from queue DB
-                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, jobsToExecute[job].jobname);
+                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, jobsToExecute[job].job.jobname);
                 break;
             }
         }
     }
 
-   /*  appendScheduledJob(newJob) {
+   appendScheduledJob(newJob) {
         for (const job in this.jobsToExecute) {
-            if (this.jobsToExecute[job].job.name == newJob.name) {
+            if (this.jobsToExecute[job].job.jobname == newJob.job.jobname) {
                 return false;
             }
         }
-        // TODO add job to queue DB
-        DatabaseService.InsertJobToDB(DatabaseService.JobType.EXECUTION, {job_name: newJob.jobname, time_stamp: Date.now()})
-        this.jobsToExecute.push(newJob);
-        console.log("Scheduled to be executed:", newJob.jobname);
-        return true;
-    } */
-    appendScheduledJob(newJob) {
-        if (!newJob || !newJob.jobname) {
-            console.error("Invalid job passed to scheduler:", newJob);
-            return false;
-        }
-    
-        for (const job of this.jobsToExecute) {
-            if (job.jobname === newJob.jobname) {
-                return false;
-            }
-        }
-    
+        // add job to queue DB
         DatabaseService.InsertJobToDB(DatabaseService.JobType.EXECUTION, {
-            job_name: newJob.jobname,
+            job_name: newJob.job.jobname,
             time_stamp: Date.now()
         });
-    
+
         this.jobsToExecute.push(newJob);
-        console.log("Scheduled to be executed:", newJob.jobname);
+        console.log("Scheduled to be executed:", newJob.job.jobname);
         return true;
-    }
-    
-    
+    }     
 
     checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);

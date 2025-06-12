@@ -27,7 +27,7 @@ async function InsertUser() {
 }
 
 // call function
-await InsertUser();
+//await InsertUser();
 
 async function FetchUser(username, password)
 {

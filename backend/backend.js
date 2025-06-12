@@ -79,6 +79,7 @@ class Backend {
     if (this.statusManager.runningJob) {
       return false
     }
+    console.log("QUEUED: ", this.scheduleManager.jobsToExecute)
     if (this.scheduleManager.isJobScheduled()) {
       this.currentJobData = this.scheduleManager.getScheduledJob();
       // translate job-dictionary into job-object
@@ -141,7 +142,8 @@ async function initalizeBackend(backend) {
   await statusPromise
   
   console.log("StatusManager Initialized");
-  backend.scheduleManager.loadQueuedjobsFromDB();
+  
+  await backend.scheduleManager.loadQueuedjobsFromDB();
   backend.plants = await DatabaseService.FetchPlantsfromDB();
   backend.checkForNextJob();
 }
