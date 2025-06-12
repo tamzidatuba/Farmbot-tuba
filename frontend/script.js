@@ -458,7 +458,6 @@ executeBtn.addEventListener('click', async () => {
     const depth = Number(row.querySelector('.depth').value);
     const errorMsg = row.querySelector('.errorMsg');
     errorMsg.textContent = '';
-
     const coordKey = `${x},${y}`;
 
     if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650 ) {
@@ -487,9 +486,10 @@ executeBtn.addEventListener('click', async () => {
     isValid = false;
   }
 
-  if (!isValid) return;
-  console.warn("🚫 Form validation failed. Not sending job.");
-
+  if (!isValid) {
+    console.warn("🚫 Form validation failed. Not sending job.");
+    return;
+  }
   if (seeds.length === 0) {
     alert("❌ Please add at least one plant before creating a job.");
     return;
