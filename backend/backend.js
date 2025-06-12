@@ -141,7 +141,8 @@ async function initalizeBackend(backend) {
   await statusPromise
   
   console.log("StatusManager Initialized");
-  backend.scheduleManager.loadQueuedjobsFromDB();
+  
+  await backend.scheduleManager.loadQueuedjobsFromDB();
   backend.plants = await DatabaseService.FetchPlantsfromDB();
   backend.checkForNextJob();
 }

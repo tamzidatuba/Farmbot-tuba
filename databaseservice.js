@@ -69,17 +69,17 @@ async function InsertJobToDB(jobType, object) {
 async function ReturnSingleJob(jobname) {
     let job = await seedingModule.ReturnSeedingJob(jobname);
     if (job !== null && typeof (job) !== "undefined") {
-        return { job };
+        return job;
 
     }
     job = await wateringModule.ReturnWateringJob(jobname);
     if (job !== null && typeof (job) !== "undefined") {
-        return { job };
+        return job;
     }
     job = await scheduledwateringjobModel.FetchSingleScheduledJobFromDB(jobname);
     if (job !== null && typeof(job) !== "undefined")
     {
-        return { job };
+        return job;
     }
 }
 
