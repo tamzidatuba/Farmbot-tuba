@@ -67,7 +67,6 @@ canvas {
       color: white;
       border: none;
       border-radius: 5px;
-      cursor: pointer;
       text-align: center;
       margin-bottom: 10px;
       pointer-events: auto;
@@ -150,9 +149,15 @@ body {
   transition: transform 0.2s;
 }
 
+
+#viewJobs {
+  display: none;
+}
+
 .arrow.open {
   transform: rotate(90deg);
 }
+
 
 .subtask {
   display: none;
@@ -581,7 +586,7 @@ margin-top: 4px;
       border-radius: 5px;
       cursor: pointer;
       width: auto; /* 👈 ensures button does not stretch */
-      display: inline-block; /* 👈 ensures it doesn't behave like a block element */
+      display: none; /* 👈 ensures it doesn't behave like a block element */
       font-weight: bold;
       z-index: 1000;
       white-space: nowrap;
@@ -592,21 +597,6 @@ margin-top: 4px;
       background-color: #f9a825;
     }
     
-    
-    
-
-    #viewJobsBtn {
-      cursor: pointer;
-      padding: 12px;
-      background-color: #7C9F81;
-      border-radius: 5px;
-      margin-top: 10px;
-      transition: background-color 0.3s;
-    }
-    
-    #viewJobsBtn:hover {
-      background-color: #5B7F62;
-    }
     .error-box {
       position: fixed;
       top: 80px;
