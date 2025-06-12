@@ -23,8 +23,8 @@ const wateringSchema = mongoose.Schema({
 export const WaterJobModel = mongoose.model('wateringjob', wateringSchema);
 
 //for the name/type of the plant example :  radish1 or lettuce 2, the coordinates and the millilitres to be watered.
-async function InsertWateringJobToDB(jobname, plantstobewatered) {
-    await WaterJobModel.create({ jobname: jobname, plantstobewatered: plantstobewatered });
+async function InsertWateringJobToDB(jobname, plantstobewatered, scheduledata) {
+    await WaterJobModel.create({ jobname: jobname, plantstobewatered: plantstobewatered, scheduledata: scheduledata });
 }
 
 async function DeleteWateringJobFromDB(jobname) {
@@ -52,11 +52,10 @@ async function ReturnWateringJob(jobname) {
 
 }
 
-async function UpdateWateringJobToDB(jobname, plantstobewatered) {
+async function UpdateWateringJobToDB(jobname, plantstobewatered, scheduledata) {
   const now = new Date();
-  await WaterJobModel.findOneAndUpdate({ "jobname": jobname }, {jobname: jobname, plantstobewatered: plantstobewatered });
+  await WaterJobModel.findOneAndUpdate({ "jobname": jobname }, {jobname: jobname, plantstobewatered: plantstobewatered, scheduledata: scheduledata });
   console.log("Job has been updated.");
-
 }
 
 export default {
