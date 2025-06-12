@@ -13,6 +13,9 @@ const jobNameError = document.getElementById('jobNameError');
 const jobNameErrorWatering = document.getElementById('jobNameErrorWatering');
 const wateringJobBtn = document.getElementById('wateringJobBtn');
 
+//const body = document.querySelector("body");
+//body.requestFullscreen();
+
 //grid ids
 const canvas = document.getElementById('gridCanvas');
 const ctx = canvas.getContext('2d');
@@ -450,7 +453,6 @@ executeBtn.addEventListener('click', async () => {
   const seenCoordinates = new Set();
 
   const seeds = [];
-
   for (const row of jobRows) {
     const plant = row.querySelector('.plantType').value;
     const x = Number(row.querySelector('.xCoord').value);
@@ -1148,6 +1150,17 @@ function updateRobot() {
 
     // Update button text depending on paused state
     pauseBtn.textContent = data.paused ? '▶' : '⏸';
+
+    //Update plants
+    if (plants.toString() != data.plants.toString()) {
+    //if (plants.toString() != data.toString()) {
+      plants = [];
+      console.log("Plants fetched from server:", data);
+      for (const plant of data.plants) {
+        plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
+      }
+      //console.log(plants);
+    }
     })
     .catch(err => {
       console.error("Failed to fetch frontend data:", err);
