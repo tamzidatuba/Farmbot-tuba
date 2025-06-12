@@ -404,7 +404,7 @@ margin-top: 4px;
   cursor: pointer;
   display: none; 
   transition: background 0.3s;
-  z-index: 10;
+  z-index: 9;
   display: inline-block; 
   width: auto;
 }
@@ -424,7 +424,7 @@ margin-top: 4px;
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s;
-  z-index: 10;
+  z-index: 9;
   display: inline-block; /* ensures it only takes up necessary space */
   width: auto;
 }
@@ -580,7 +580,7 @@ margin-top: 4px;
       width: auto; /* 👈 ensures button does not stretch */
       display: none; /* 👈 ensures it doesn't behave like a block element */
       font-weight: bold;
-      z-index: 1000;
+      z-index: 9;
       white-space: nowrap;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
