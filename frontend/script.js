@@ -636,7 +636,7 @@ function editWateringJob(job) {
   document.getElementById('executeBtnWatering').textContent = 'Update Job';
 
   // Fill in plant rows
-  job.seeds.forEach(seed => {
+  job.plantstobewatered.forEach(seed => {
     const jobData = {
       plant: {
         xcoordinate: seed.xcoordinate,
