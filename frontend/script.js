@@ -473,6 +473,10 @@ executeBtn.addEventListener('click', async () => {
 
       const coordKey = `${x},${y}`;
 
+      if(x=='' || y==''){
+        errorMsg.textContent = 'Please fill the above values.';
+        isValid = false;
+      }
       if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650 ) {
         errorMsg.textContent = 'Please correct the above values.';
         isValid = false;
