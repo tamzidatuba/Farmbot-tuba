@@ -584,7 +584,9 @@ viewJobsBtnWatering.addEventListener('click', async () => {
       if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
         try {
           const res = await fetch(`/api/jobs/Watering/${job.jobname}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({token})
           });
         
           const contentType = res.headers.get("content-type");
@@ -765,7 +767,8 @@ viewJobsBtn.addEventListener('click', async () => {
         try {
           const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
             method: 'DELETE',
-            body: JSON.stringify(token)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({token})
           });
         
           const contentType = res.headers.get("content-type");
