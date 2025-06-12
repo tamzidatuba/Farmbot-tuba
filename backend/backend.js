@@ -79,7 +79,6 @@ class Backend {
     if (this.statusManager.runningJob) {
       return false
     }
-    console.log("QUEUED: ", this.scheduleManager.jobsToExecute)
     if (this.scheduleManager.isJobScheduled()) {
       this.currentJobData = this.scheduleManager.getScheduledJob();
       // translate job-dictionary into job-object
