@@ -278,7 +278,7 @@ executeBtnWatering.addEventListener('click', async () => {
         isValid = false;
       } else {
         seenCoordinates.add(coordKey);
-        seeds.push({ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y), wateringheight: z, wateringcapacity: watering });
+        plantstobewatered.push({plants:{ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y)}, wateringheight: z, wateringcapacity: watering });
         const newPlant = new Plant(Number(x), Number(y), type);
         results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
       }
@@ -1181,8 +1181,8 @@ function updateRobot() {
       console.error("Failed to fetch frontend data:", err);
       pauseBtn.style.display = 'none'; // hide on error
     });
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    drawGrid();
+    //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    //drawGrid();
   }
 
   
