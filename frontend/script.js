@@ -278,7 +278,7 @@ executeBtnWatering.addEventListener('click', async () => {
         isValid = false;
       } else {
         seenCoordinates.add(coordKey);
-        plantstobewatered.push({plants:{ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y)}, wateringheight: z, wateringcapacity: watering });
+        plantstobewatered.push({plant:{ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y)}, wateringheight: z, wateringcapacity: watering });
         const newPlant = new Plant(Number(x), Number(y), type);
         results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
       }
@@ -1238,7 +1238,7 @@ logoutBtn.addEventListener('click', () => {
     farmbotMenu.textContent = 'Farmbot Menu ';
     toggle.style.display = 'none';
     subtask.style.display='none';
-    viewJobs.style.display='none';
+    viewJobsBtn.style.display='none';
     fetch('/api/logout', {
       method: 'POST',
       headers: {
