@@ -4,6 +4,7 @@ import { Job } from "./Job.js"
 import { MoveTask } from "./tasks/MoveTask.js";
 import { MoveZTask} from "./tasks/MoveZTask.js";
 import { SetPinTask, FAKE_VACUUM_PIN } from "./tasks/SetPinTask.js";
+import { DatabaseTask } from "./tasks/DatabaseTask.js";
 import DatabaseService from "../../databaseservice.js";
 
 /*
@@ -25,7 +26,7 @@ class SeedingJob extends Job {
         let activateVacuumPin = new SetPinTask(FarmbotStatus.FETCHING, FAKE_VACUUM_PIN, 1);
         let returnToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, FieldConstants.SAFETY_HEIGHT);
         let lowerToSeedingHeight = new MoveZTask(FarmbotStatus.SEEDING, FieldConstants.FIELD_HEIGHT);
-        let deactivateVacuumPin = new SetPinTask(FarmbotStatus.FETCHING, FAKE_VACUUM_PIN, 0);
+        let deactivateVacuumPin = new SetPinTask(FarmbotStatus.SEEDING, FAKE_VACUUM_PIN, 0);
 
         let returnToFieldSafetyHeight = new MoveZTask(FarmbotStatus.SEEDING, FieldConstants.SAFETY_HEIGHT);
         
@@ -52,6 +53,19 @@ class SeedingJob extends Job {
             this.taskQueue.push(goToSeedingDepth);
             // plant the seeds
             this.taskQueue.push(deactivateVacuumPin);
+
+
+            let new_plant = {
+                planttype: seedArgs.seedtype,
+                xcoordinate: seedArgs.xcoordinate,
+                ycoordiante: seedArgs.ycoordinate
+            }
+            let insertPlantToDB = new DatabaseTask(
+                FarmbotStatus.SEEDING,
+                DatabaseService.InsertPlantsToDB,
+                [new_plant]
+            )
+            this.taskQueue.push(insertPlantToDB)
             
             // TODO insert plant into DB
             // let newPlant = ["position": position, "plantType": seedingArgs.plantType]
