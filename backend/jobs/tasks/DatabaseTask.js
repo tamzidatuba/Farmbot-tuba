@@ -9,7 +9,6 @@ class DatabaseTask extends Task {
         this.dbArgs = dbArgs
         this.promise_fulfilled = false
         this.paused = false;
-        // TODO maybe add speed parameter?
     }
 
     checkCondition(state) {
