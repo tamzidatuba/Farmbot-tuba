@@ -248,36 +248,40 @@ executeBtnWatering.addEventListener('click', async () => {
   const seeds = [];
   const seenCoordinates = new Set();
 
-
+  console.log(jobRows.length);
   for (const row of jobRows) {
-    const plant = row.querySelector('.plant-select');
-    const selectedOption = plant.querySelector('option:checked');
-    const z = Number(row.querySelector('.zCoord').value);
-    const watering = Number(row.querySelector('.watering.amount').value);
-    const errorMsg = row.querySelector('.errorMsg');
-    const x = selectedOption.dataset.x;
-    const y = selectedOption.dataset.y;
-    const type = selectedOption.dataset.type;
-    errorMsg.textContent = '';
-
-    const coordKey = `${x},${y}`;
-
-    console.log("Selected Plant:", selectedOption.value);
-    console.log("Selected Plant 2:", selectedOption.dataset);
-    if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 2 || watering > 200 ) {
-      errorMsg.textContent = 'Please correct the above values.';
-      isValid = false;
-    } else if (seenCoordinates.has(coordKey)) {
-      errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
-      isValid = false;
-    } else if (!selectedOption.value) {
-      errorMsg.textContent = 'Please select a plant.';
-      isValid = false;
-    } else {
-      seenCoordinates.add(coordKey);
-      seeds.push({ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y), wateringheight: z, wateringcapacity: watering });
-      const newPlant = new Plant(Number(x), Number(y), type);
-      results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
+    const inputs = row.querySelectorAll('input, select, textarea');
+    const hasValue = Array.from(inputs).some(input => input.value.trim() !== '');
+    if (hasValue) {
+      const plant = row.querySelector('.plant-select');
+      const selectedOption = plant.querySelector('option:checked');
+      const z = Number(row.querySelector('.zCoord').value);
+      const watering = Number(row.querySelector('.watering.amount').value);
+      const errorMsg = row.querySelector('.errorMsg');
+      const x = selectedOption.dataset.x;
+      const y = selectedOption.dataset.y;
+      const type = selectedOption.dataset.type;
+      errorMsg.textContent = '';
+      
+      const coordKey = `${x},${y}`;
+      
+      console.log("Selected Plant:", selectedOption.value);
+      console.log("Selected Plant 2:", selectedOption.dataset);
+      if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 2 || watering > 200 ) {
+        errorMsg.textContent = 'Please correct the above values.';
+        isValid = false;
+      } else if (seenCoordinates.has(coordKey)) {
+        errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
+        isValid = false;
+      } else if (!selectedOption.value) {
+        errorMsg.textContent = 'Please select a plant.';
+        isValid = false;
+      } else {
+        seenCoordinates.add(coordKey);
+        seeds.push({ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y), wateringheight: z, wateringcapacity: watering });
+        const newPlant = new Plant(Number(x), Number(y), type);
+        results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
+      }
     }
   }
 
@@ -453,26 +457,32 @@ executeBtn.addEventListener('click', async () => {
   const seenCoordinates = new Set();
 
   const seeds = [];
+  console.log(jobRows.length);
+  console.log("Job Rows:", jobRows);
   for (const row of jobRows) {
-    const plant = row.querySelector('.plantType').value;
-    const x = Number(row.querySelector('.xCoord').value);
-    const y = Number(row.querySelector('.yCoord').value);
-    const depth = Number(row.querySelector('.depth').value);
-    const errorMsg = row.querySelector('.errorMsg');
-    errorMsg.textContent = '';
+    const inputs = row.querySelectorAll('input, select, textarea');
+    const hasValue = Array.from(inputs).some(input => input.value.trim() !== '');
+    if (hasValue) {
+      const plant = row.querySelector('.plantType').value;
+      const x = Number(row.querySelector('.xCoord').value);
+      const y = Number(row.querySelector('.yCoord').value);
+      const depth = Number(row.querySelector('.depth').value);
+      const errorMsg = row.querySelector('.errorMsg');
+      errorMsg.textContent = '';
 
-    const coordKey = `${x},${y}`;
+      const coordKey = `${x},${y}`;
 
-    if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650 ) {
-      errorMsg.textContent = 'Please correct the above values.';
-      isValid = false;
-    } else if (seenCoordinates.has(coordKey)) {
-      errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
-      isValid = false;
-    } else {
-      seenCoordinates.add(coordKey);
-      seeds.push({ seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
-      results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
+      if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650 ) {
+        errorMsg.textContent = 'Please correct the above values.';
+        isValid = false;
+      } else if (seenCoordinates.has(coordKey)) {
+        errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
+        isValid = false;
+      } else {
+        seenCoordinates.add(coordKey);
+        seeds.push({ seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
+        results.push(`Plant: ${plant}, X: ${x}, Y: ${y}, Depth: ${depth}mm`);
+      }
     }
   }
 
@@ -498,6 +508,7 @@ executeBtn.addEventListener('click', async () => {
   }
 
   const payload = { jobname, seeds };
+  console.log("Payload to send:", payload);
 
   try {
     if (isEditMode) {
@@ -757,14 +768,13 @@ viewJobsBtn.addEventListener('click', async () => {
     jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
       editSeedingJob(job);
       });
-
       // new delete logic
     jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
       if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
         try {
           const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
             method: 'DELETE',
-            body: JSON.stringify(token)
+            body: JSON.stringify({token})
           });
         
           const contentType = res.headers.get("content-type");
@@ -795,7 +805,7 @@ jobDiv.querySelector('.execute-job-btnseed').addEventListener('click', async () 
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ token })
+        body: JSON.stringify({token})
       });
 
       // Check if response is JSON
@@ -1166,6 +1176,8 @@ function updateRobot() {
       console.error("Failed to fetch frontend data:", err);
       pauseBtn.style.display = 'none'; // hide on error
     });
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    drawGrid();
   }
 
   
