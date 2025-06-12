@@ -1238,7 +1238,8 @@ logoutBtn.addEventListener('click', () => {
     farmbotMenu.textContent = 'Farmbot Menu ';
     toggle.style.display = 'none';
     subtask.style.display='none';
-    viewJobsBtn.style.display='none';
+    viewJobs.style.display='none';
+    subtaskView.style.display='none';
     fetch('/api/logout', {
       method: 'POST',
       headers: {
