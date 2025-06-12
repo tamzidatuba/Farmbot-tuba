@@ -788,7 +788,7 @@ jobDiv.querySelector('.execute-job-btnseed').addEventListener('click', async () 
   if (confirm(`Are you sure you want to execute job "${job.jobname}"?`)) {
     try {
       
-      const res = await fetch(`/api/jobs/execute/${encodeURIComponent(job.jobname)}`, {
+      const res = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

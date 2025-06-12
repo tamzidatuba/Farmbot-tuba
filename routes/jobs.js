@@ -63,7 +63,7 @@ export default function createJobsRouter(backend) {
     });
 
     // queue and execute a given job
-    router.put("/execute/:jobname", async (req, res) => {
+    router.put("/queue/:jobname", async (req, res) => {
         const { jobname } = req.params;
         const { token } = req.body
         if (!TokenManager.validateToken(token)) {
