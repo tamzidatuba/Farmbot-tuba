@@ -1,5 +1,16 @@
 import mongoose from 'mongoose';
 import { plantSchema } from './plant.model.js';
+import express from 'express';
+
+
+const connectionString = 'mongodb://localhost:27017/admin';
+const app = express();
+app.use(express.json());
+
+// test connection to local database
+mongoose.connect(connectionString)
+.then(() => console.log('MongoDB connected to the Watering Job Database.'))
+.catch((err) => console.error('MongoDB connection error: to the Watering Job Database.', err));
 
 // create schema for data
 const wateringSchema = mongoose.Schema({
@@ -11,8 +22,9 @@ const wateringSchema = mongoose.Schema({
       wateringheight: Number,   
     }
   ],
+  is_scheduled : Boolean,
   ScheduleData:{
-    firstexecutiontime: String,
+    next_execution_time: String,
     interval: Number,
     enabled:Boolean,
   }
@@ -23,8 +35,8 @@ const wateringSchema = mongoose.Schema({
 export const WaterJobModel = mongoose.model('wateringjob', wateringSchema);
 
 //for the name/type of the plant example :  radish1 or lettuce 2, the coordinates and the millilitres to be watered.
-async function InsertWateringJobToDB(jobname, plantstobewatered, scheduledata) {
-    await WaterJobModel.create({ jobname: jobname, plantstobewatered: plantstobewatered, scheduledata: scheduledata });
+async function InsertWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduledata) {
+    await WaterJobModel.create({ jobname: jobname, plantstobewatered: plantstobewatered, is_scheduled:is_scheduled,scheduledata: scheduledata });
 }
 
 async function DeleteWateringJobFromDB(jobname) {
@@ -52,9 +64,9 @@ async function ReturnWateringJob(jobname) {
 
 }
 
-async function UpdateWateringJobToDB(jobname, plantstobewatered, scheduledata) {
+async function UpdateWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduledata) {
   const now = new Date();
-  await WaterJobModel.findOneAndUpdate({ "jobname": jobname }, {jobname: jobname, plantstobewatered: plantstobewatered, scheduledata: scheduledata });
+  await WaterJobModel.findOneAndUpdate({ "jobname": jobname }, {jobname: jobname, plantstobewatered: plantstobewatered, is_scheduled: is_scheduled,scheduledata: scheduledata });
   console.log("Job has been updated.");
 }
 
@@ -66,3 +78,6 @@ export default {
   ReturnWateringJob,
   findOne: (args) => WaterJobModel.findOne(args),
 };
+
+
+
