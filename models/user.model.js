@@ -37,7 +37,7 @@ async function UpdateUser(username, password)
   const userlogin = await userModel.findOneAndUpdate({"username": username},{password:password});
 }
 
-await InsertUser('testuser', 'testpassword'); // Uncomment to insert a test user
+// await InsertUser('testuser', 'testpassword'); // Uncomment to insert a test user
 
 export default {
   InsertUser,
