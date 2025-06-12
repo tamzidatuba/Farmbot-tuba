@@ -70,23 +70,23 @@ class ScheduleManager {
     checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);
         // ask database for active scheduledtasks
-        let scheduledJobs = DatabaseService.FetchJobsFromDB(DatabaseService.JobType.SCHEDULED);
+        let scheduledJobs = DatabaseService.FetchJobsFromDB(DatabaseService.JobType.WATERING);
 
         //let scheduledJobs = {};//{0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
         let currentTime = Date.now();
         let nextScheduleCheck = SCHEDULE_CHECKING_INTERVAL;
 
-        for (const job_idx in scheduledJobs) {
+        for (const scheduled_job of scheduledJobs) {
             
             //check if scheduled job is active
-            if (!scheduledJobs[job_idx].enabled) {
+            if (!scheduled_job.isScheduled || scheduled_job.scheduleData.enabled) {
                 continue;
             }
 
             // calculate the time difference of current time and planned execution time
-            let time_difference = scheduledJobs[job_idx].nextexecution - currentTime;
+            let time_difference = scheduled_job.scheduleData.next_execution_time - currentTime;
             if (time_difference <= SCHEDULE_TOLERANCE) {
-                appendScheduledJob({jobType: DatabaseService.JobType.SCHEDULED, job: scheduledJobs[job_idx]});
+                appendScheduledJob({jobType: DatabaseService.JobType.WATERING, job: scheduled_job});
             } else {
                 nextScheduleCheck = Math.min(nextScheduleCheck, time_difference);
             }
@@ -96,7 +96,7 @@ class ScheduleManager {
     }
 
     calculateNextSchedule(jobData) {
-        jobData.job.nextexecution = jobData.job.interval + (Date.now());
+        jobData.job.scheduleData.next_execution_time = jobData.job.scheduleData.interval + (Date.now());
 
         // modify entry in DB
         DatabaseService.UpdateJobToDB(jobData.jobType, jobData.job);

@@ -59,9 +59,9 @@ class Backend {
     this.appendNotification("Job '" + this.statusManager.currentJob.name + "' finished.");
     if (this.currentJobData.jobType != DatabaseService.JobType.HOME) {
 
-      if (this.currentJobData.jobType != DatabaseService.JobType.SCHEDULED) {
+      if (this.currentJobData.jobType != DatabaseService.JobType.WATERING || !this.currentJobData.isScheduled) {
         try {
-          await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.name)
+          await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.jobname)
         } catch (e) {
           console.log("Failed to delete executed Job from DB!")
         }
@@ -87,10 +87,11 @@ class Backend {
         case DatabaseService.JobType.SEEDING: 
           jobObject = new SeedingJob(this.currentJobData.job);
           break;
-        case DatabaseService.JobType.SCHEDULED:
-          // Calculate next schedule before executing
-          this.scheduleManager.calculateNextSchedule(this.currentJobData.job);
         case DatabaseService.JobType.WATERING:
+          if (this.currentJobData.job.isScheduled) {
+            // Calculate next schedule before executing
+            this.scheduleManager.calculateNextSchedule(this.currentJobData.job);
+          }
           jobObject = new WateringJob(this.currentJobData.job);
           break;
         default:
