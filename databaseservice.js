@@ -4,7 +4,6 @@ import wateringModule from './models/wateringjob.model.js';
 import notificationModel from './models/notification.model.js';
 import plantModel from './models/plant.model.js';
 import userModel from './models/user.model.js';
-import scheduledwateringjobModel from './models/scheduledwateringjob.model.js';
 import ExecutionModel from './models/execution.model.js';
 
 //connect to DB
@@ -18,16 +17,15 @@ mongoose.connect(connectionString)
 
 const JobType = Object.freeze({
     SEEDING: 'Seeding',
-    WATERING: 'Watering',
-    SCHEDULED: 'Scheduled',
+    WATERING: 'Watering',    
     HOME: 'Home',
     EXECUTION: 'Execution',
 });
 
 const PlantRadii = {
     lettuce: 15,
-    tomato: 10,
-    carrot: 5,
+    tomato: 30,
+    carrot: 2,
 }
 
 async function InsertJobToDB(jobType, object) {
@@ -75,12 +73,7 @@ async function ReturnSingleJob(jobname) {
     job = await wateringModule.ReturnWateringJob(jobname);
     if (job !== null && typeof (job) !== "undefined") {
         return { job };
-    }
-    job = await scheduledwateringjobModel.FetchSingleScheduledJobFromDB(jobname);
-    if (job !== null && typeof(job) !== "undefined")
-    {
-        return { job };
-    }
+    }    
 }
 
 
@@ -95,10 +88,6 @@ async function FetchJobsFromDB(jobType) {
     else if (jobType === JobType.WATERING) {                
         jobs = await wateringModule.FetchAllWateringJobsFromDB();
     }
-    // else if (jobType == JobType.SCHEDULED)
-    // {
-    //     jobs = await scheduledwateringjobModel.FetchAllScheduledWateringJobsFromDB();
-    // }
     else if (jobType == JobType.EXECUTION)
     {
         jobs = await ExecutionModel.FetchAllfromExecutionDB();
@@ -118,10 +107,6 @@ async function DeleteJobFromDB(jobType, jobname) {
     } 
     else if (jobType === JobType.WATERING) {
         await wateringModule.DeleteWateringJobFromDB(jobname);
-    }
-    else if (jobType == JobType.SCHEDULED)
-    {
-        await scheduledwateringjobModel.DeleteScheduledWateringJob(jobname);
     }
     else if (jobType === JobType.EXECUTION) {
 
