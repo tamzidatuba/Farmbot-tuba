@@ -245,7 +245,7 @@ executeBtnWatering.addEventListener('click', async () => {
   const results = [];
   let isValid = true;
 
-  const seeds = [];
+  const plantstobewatered = [];
   const seenCoordinates = new Set();
 
   console.log(jobRows.length);
@@ -318,17 +318,18 @@ executeBtnWatering.addEventListener('click', async () => {
     }
   }
 
-  if (!isValid) return;
-  console.warn("🚫 Form validation failed. Not sending job.");
+  if (!isValid) {
+    console.warn("🚫 Form validation failed. Not sending job.");
+    return;
+  }
 
-  console.log(seeds.length);
-  if (seeds.length === 0) {
+  if (plantstobewatered.length === 0) {
     alert("❌ Please add at least one plant before creating a job.");
     return;
   }
 
 
-  const payload = { jobname, seeds, scheduleData};
+  const payload = { jobname, plantstobewatered}; // TODO add scheduleData
 
   try {
     if (isEditMode) {
@@ -499,9 +500,10 @@ executeBtn.addEventListener('click', async () => {
     isValid = false;
   }
 
-  if (!isValid) return;
-  console.warn("🚫 Form validation failed. Not sending job.");
-
+  if (!isValid) {
+    console.warn("🚫 Form validation failed. Not sending job.");
+    return;
+  }
   if (seeds.length === 0) {
     alert("❌ Please add at least one plant before creating a job.");
     return;
@@ -594,7 +596,9 @@ viewJobsBtnWatering.addEventListener('click', async () => {
       if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
         try {
           const res = await fetch(`/api/jobs/Watering/${job.jobname}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({token})
           });
         
           const contentType = res.headers.get("content-type");
@@ -646,7 +650,7 @@ function editWateringJob(job) {
   document.getElementById('executeBtnWatering').textContent = 'Update Job';
 
   // Fill in plant rows
-  job.seeds.forEach(seed => {
+  job.plantstobewatered.forEach(seed => {
     const jobData = {
       plant: {
         xcoordinate: seed.xcoordinate,
@@ -774,6 +778,7 @@ viewJobsBtn.addEventListener('click', async () => {
         try {
           const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
             method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({token})
           });
         
