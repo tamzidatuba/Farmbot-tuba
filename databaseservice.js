@@ -53,6 +53,7 @@ async function InsertJobToDB(jobType, object) {
 
     else if (jobType === JobType.WATERING) {
         const { jobname, plantstobewatered } = object;
+        console.log(plantstobewatered)
         let existingjob = await wateringModule.findOne({ "jobname": jobname });
         if (existingjob) {
             return "job name already exists";

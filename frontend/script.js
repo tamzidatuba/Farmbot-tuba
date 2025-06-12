@@ -245,7 +245,7 @@ executeBtnWatering.addEventListener('click', async () => {
   const results = [];
   let isValid = true;
 
-  const seeds = [];
+  const plantstobewatered = [];
   const seenCoordinates = new Set();
 
 
@@ -275,7 +275,7 @@ executeBtnWatering.addEventListener('click', async () => {
       isValid = false;
     } else {
       seenCoordinates.add(coordKey);
-      seeds.push({ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y), wateringheight: z, wateringcapacity: watering });
+      plantstobewatered.push({ plant: {planttype: type, xcoordinate: Number(x), ycoordinate: Number(y)}, wateringheight: z, wateringcapacity: watering });
       const newPlant = new Plant(Number(x), Number(y), type);
       results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
     }
@@ -314,17 +314,18 @@ executeBtnWatering.addEventListener('click', async () => {
     }
   }
 
-  if (!isValid) return;
-  console.warn("🚫 Form validation failed. Not sending job.");
+  if (!isValid) {
+    console.warn("🚫 Form validation failed. Not sending job.");
+    return;
+  }
 
-  console.log(seeds.length);
-  if (seeds.length === 0) {
+  if (plantstobewatered.length === 0) {
     alert("❌ Please add at least one plant before creating a job.");
     return;
   }
 
 
-  const payload = { jobname, seeds, scheduleData};
+  const payload = { jobname, plantstobewatered}; // TODO add scheduleData
 
   try {
     if (isEditMode) {
