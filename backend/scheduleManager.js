@@ -45,9 +45,10 @@ class ScheduleManager {
                 this.jobsToExecute.splice(job, 1);
                 // remove job from queue DB
                 DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, jobsToExecute[job].job.jobname);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
    appendScheduledJob(newJob) {

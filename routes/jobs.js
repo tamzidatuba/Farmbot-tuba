@@ -86,6 +86,19 @@ export default function createJobsRouter(backend) {
         }
     });
 
+    // dequeue a given job
+    router.put("/dequeue/:jobname", async (req, res) => {
+        const { jobname } = req.params;
+        const { token } = req.body
+        if (!TokenManager.validateToken(token)) {
+            res.status(500).json({error: "You dont have permission to do that"});
+            return
+        }
+        if (backend.scheduleManager.removeScheduledJob(jobname)) {
+            res.status(200).json({ message: 'Job has been dequeued' });
+        } else res.status(500).json({ message: 'Job is not in the Queue' });
+    });
+
     //pause job
     router.put('/pause', async (req, res) => {
         backend.pauseJob(res);
