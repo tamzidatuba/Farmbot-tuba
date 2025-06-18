@@ -52,6 +52,7 @@ class ScheduleManager {
     }
 
    appendScheduledJob(newJob) {
+    // Check if job is already queued
         for (const job in this.jobsToExecute) {
             if (this.jobsToExecute[job].job.jobname == newJob.job.jobname) {
                 return false;
@@ -68,12 +69,11 @@ class ScheduleManager {
         return true;
     }     
 
-    checkForScheduledJobs() {
+    async checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);
-        // ask database for active scheduledtasks
-        let scheduledJobs = DatabaseService.FetchJobsFromDB(DatabaseService.JobType.WATERING);
+        // ask database for scheduledtasks
+        let scheduledJobs = await DatabaseService.FetchJobsFromDB(DatabaseService.JobType.WATERING);
 
-        //let scheduledJobs = {};//{0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
         let currentTime = Date.now();
         let nextScheduleCheck = SCHEDULE_CHECKING_INTERVAL;
 
@@ -92,11 +92,12 @@ class ScheduleManager {
                 nextScheduleCheck = Math.min(nextScheduleCheck, time_difference);
             }
         }
-        //console.log("Next schedule check:", nextScheduleCheck)
+        // assign the next timeout based on the next scheduled job
         this.currentTimeout = setTimeout(this.checkForScheduledJobs.bind(this), nextScheduleCheck);
     }
 
     calculateNextSchedule(jobData) {
+        // calculate next execution-time
         jobData.job.scheduleData.next_execution_time = jobData.job.scheduleData.interval + (Date.now());
 
         // modify entry in DB
