@@ -6,7 +6,8 @@ const SCHEDULE_TOLERANCE = 15000; // 15 Second execution tolerance
 
 class ScheduleManager {
 
-    constructor() {
+    constructor(backend) {
+        this.backend = backend;
         this.jobsToExecute = new Array();
 
         this.checkForScheduledJobs()
@@ -27,7 +28,7 @@ class ScheduleManager {
         for (let job of queuedJobs) {
             let loadedJob = await DatabaseService.ReturnSingleJob(job.job_name);
             if (typeof(loadedJob) === "undefined") {
-                console.log("Couldn't find job with " + job.job_name + "in DB");
+                console.log("Couldn't find job with jobname '" + job.job_name + "' in DB");
                 DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job.job_name);
             } else {
                 this.jobsToExecute.push(loadedJob);
@@ -57,7 +58,7 @@ class ScheduleManager {
         return false;
     }
 
-   appendScheduledJob(newJob) {
+   async appendScheduledJob(newJob) {
     // Check if job is already queued
         for (const job in this.jobsToExecute) {
             if (this.jobsToExecute[job].job.jobname == newJob.job.jobname) {
@@ -65,7 +66,7 @@ class ScheduleManager {
             }
         }
         // add job to queue DB
-        DatabaseService.InsertJobToDB(DatabaseService.JobType.EXECUTION, {
+        await DatabaseService.InsertJobToDB(DatabaseService.JobType.EXECUTION, {
             job_name: newJob.job.jobname,
             time_stamp: Date.now()
         });
@@ -100,6 +101,7 @@ class ScheduleManager {
         }
         // assign the next timeout based on the next scheduled job
         this.currentTimeout = setTimeout(this.checkForScheduledJobs.bind(this), nextScheduleCheck);
+        this.backend.checkForNextJob();
     }
 
     calculateNextSchedule(jobData) {

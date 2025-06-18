@@ -22,7 +22,7 @@ const FieldConstants = Object.freeze({
 class Backend {
   constructor() {
     this.notification_history = new Array();
-    this.scheduleManager = new ScheduleManager();
+    this.scheduleManager = new ScheduleManager(this);
     this.statusManager = new StatusManager(this);
     this.currentJobData;
     this.plants = new Array();

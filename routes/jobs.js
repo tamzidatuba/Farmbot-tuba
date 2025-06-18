@@ -75,7 +75,7 @@ export default function createJobsRouter(backend) {
             let job = await DatabaseService.ReturnSingleJob(jobname);
             
             if (job !== null && typeof (job) !== "undefined") {
-                if (backend.scheduleManager.appendScheduledJob(job)) {
+                if (await backend.scheduleManager.appendScheduledJob(job)) {
                     res.status(200).json({ message: 'Job has been queued' });
                     backend.checkForNextJob();
                 } else res.status(500).json({ message: 'Job has already been queued' });
