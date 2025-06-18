@@ -1,5 +1,15 @@
 import mongoose from 'mongoose';
 
+const connectionString = 'mongodb://localhost:27017/admin';
+const app = express();
+app.use(express.json());
+
+// test connection to local database
+mongoose.connect(connectionString)
+.then(() => console.log('MongoDB connected to the Seeding Job Database.'))
+.catch((err) => console.error('MongoDB connection error: to the Seeding Job Database.', err));
+
+
 const seedingJobSchema = new mongoose.Schema({
   jobname: String,
   seeds: [{
