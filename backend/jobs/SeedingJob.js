@@ -59,7 +59,7 @@ class SeedingJob extends Job {
             let new_plant = {
                 planttype: seedArgs.seedtype,
                 xcoordinate: seedArgs.xcoordinate,
-                ycoordiante: seedArgs.ycoordinate
+                ycoordinate: seedArgs.ycoordinate
             }
             let insertPlantToDB = new DatabaseTask(
                 FarmbotStatus.SEEDING,
@@ -67,11 +67,6 @@ class SeedingJob extends Job {
                 [new_plant]
             )
             this.taskQueue.push(insertPlantToDB)
-            
-            // TODO insert plant into DB
-            // let newPlant = ["position": position, "plantType": seedingArgs.plantType]
-            // DatabaseService.insertPlanttoDB(newPlant)
-
 
             this.taskQueue.push(returnToFieldSafetyHeight);
         }
