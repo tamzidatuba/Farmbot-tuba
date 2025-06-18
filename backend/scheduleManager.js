@@ -1,4 +1,3 @@
-import databaseservice from "../databaseservice.js";
 import DatabaseService from "../databaseservice.js";
 
 const SCHEDULE_CHECKING_INTERVAL = 900000 // 15*60*1000 = 15min

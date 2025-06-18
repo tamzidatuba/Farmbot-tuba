@@ -464,7 +464,7 @@ executeBtn.addEventListener('click', async () => {
     const inputs = row.querySelectorAll('input, select, textarea');
     const hasValue = Array.from(inputs).some(input => input.value.trim() !== '');
     if (hasValue) {
-      const plant = row.querySelector('.plantType').value;
+      const plant = row.querySelector('.plantType').value.toLowerCase();
       const x = Number(row.querySelector('.xCoord').value);
       const y = Number(row.querySelector('.yCoord').value);
       const depth = Number(row.querySelector('.depth').value);
