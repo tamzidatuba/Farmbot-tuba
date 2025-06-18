@@ -5,6 +5,7 @@ import notificationModel from './models/notification.model.js';
 import plantModel from './models/plant.model.js';
 import userModel from './models/user.model.js';
 import ExecutionModel from './models/execution.model.js';
+import questionModel from './models/question.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -136,6 +137,22 @@ async function UpdateJobToDB(jobType, object) {
     console.log('Job has been updated.');
 }
 
+async function InsertQuestionsIntoDB(email,question)
+{
+   let question =  await questionModel.InsertQuestionsToDB(email,question);
+}
+
+async function FetchAlltheQuestionsFromDB()
+{
+   let question =  await questionModel.FetchAllQuestionsFromDB();
+}
+
+async function FetchQuestionsFromDBbyEmail(email)
+{
+   let question =  await questionModel.FetchSpecificQuestionsFromDB(email);
+}
+
+
 
 async function InsertNotificationToDB(text) {
     await notificationModel.InsertNotificationToDB(text);
@@ -237,4 +254,7 @@ export default {
     FetchPlantsfromDB,
     FetchUserfromDB,
     ReturnSingleJob,
+    InsertQuestionsIntoDB,
+    FetchAlltheQuestionsFromDB,
+    FetchQuestionsFromDBbyEmail,
 };
