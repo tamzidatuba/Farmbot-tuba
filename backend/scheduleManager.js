@@ -1,3 +1,4 @@
+import databaseservice from "../databaseservice.js";
 import DatabaseService from "../databaseservice.js";
 
 const SCHEDULE_CHECKING_INTERVAL = 900000 // 15*60*1000 = 15min
@@ -25,7 +26,12 @@ class ScheduleManager {
         console.log("Queued jobs from last Uptime: ", queuedJobs);
         for (let job of queuedJobs) {
             let loadedJob = await DatabaseService.ReturnSingleJob(job.job_name);
-            this.jobsToExecute.push(loadedJob);
+            if (typeof(loadedJob) === "undefined") {
+                console.log("Couldn't find job with " + job.job_name + "in DB");
+                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job.job_name);
+            } else {
+                this.jobsToExecute.push(loadedJob);
+            }
         }
     }
 
