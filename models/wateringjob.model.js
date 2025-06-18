@@ -64,9 +64,8 @@ async function ReturnWateringJob(jobname) {
 
 }
 
-async function UpdateWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduledata) {
-  const now = new Date();
-  await WaterJobModel.findOneAndUpdate({ "jobname": jobname }, {jobname: jobname, plantstobewatered: plantstobewatered, is_scheduled: is_scheduled,scheduledata: scheduledata });
+async function UpdateWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData) {
+  await WaterJobModel.findOneAndUpdate({ "jobname": jobname }, {jobname: jobname, plantstobewatered: plantstobewatered, is_scheduled: is_scheduled,ScheduleData: scheduleData });
   console.log("Job has been updated.");
 }
 

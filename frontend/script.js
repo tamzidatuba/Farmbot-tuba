@@ -230,7 +230,6 @@ function createJobRowWatering(plants, jobData = null) {
 
   // Pre-fill other fields if jobData exists
   if (jobData) {
-    console.log(jobData);
     row.querySelector('.watering.amount').value = jobData.amount || '';
     row.querySelector('.coord-input.zCoord').value = jobData.yCoordinate || '';
   }
@@ -312,6 +311,7 @@ executeBtnWatering.addEventListener('click', async () => {
     const executionTime = document.getElementById("executionTime").value;
     const repeatInterval = document.getElementById("repeatInterval").value;
     scheduleData.next_execution_time = new Date(executionTime).getTime();
+    console.log(scheduleData.next_execution_time);
     scheduleData.interval = Number(repeatInterval) * 3600000; // convert hours to milliseconds
     if (!scheduleData.next_execution_time|| !scheduleData.interval || isNaN(scheduleData.interval)) {
       const errorMsg = document.getElementById("jobScheduleError");
@@ -516,7 +516,6 @@ executeBtn.addEventListener('click', async () => {
   }
 
   const payload = { jobname, seeds };
-  console.log("Payload to send:", payload);
 
   try {
     if (isEditMode) {
@@ -657,7 +656,6 @@ function editWateringJob(job) {
 
   // Fill in plant rows
   job.plantstobewatered.forEach(seed => {
-    console.log(seed);
     const jobData = {
       plant: {
         xcoordinate: seed.plant.xcoordinate,
@@ -673,10 +671,14 @@ function editWateringJob(job) {
   // Fill in schedule
   if (job?.is_scheduled) {
     scheduleRadios.item(0).checked = true;
-    document.getElementById("executionTime").value = new Date(job.ScheduleData.next_execution_time) || '';
+    scheduleFields.style.display = "flex";
+    let execution_date = new Date(job.ScheduleData.next_execution_time);
+    execution_date.setMinutes(execution_date.getMinutes() - execution_date.getTimezoneOffset());
+    document.getElementById("executionTime").value = execution_date.toISOString().slice(0,16) || '';
     document.getElementById("repeatInterval").value = job.ScheduleData.interval/3600000 || '';
   } else {
     scheduleRadios.item(1).checked = true;
+    scheduleFields.style.display = "none";
   }
 }
 
