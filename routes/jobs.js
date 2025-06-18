@@ -16,6 +16,7 @@ export default function createJobsRouter(backend) {
         try {
             let result = await DatabaseService.InsertJobToDB(jobType, payload);
             if (result === true) {
+                backend.scheduleManager.checkForScheduledJobs()
                 backend.appendNotification("Job '" + payload.jobname + "' saved");
                 res.status(200).json({ message: 'Job saved' });
             }
@@ -117,6 +118,7 @@ export default function createJobsRouter(backend) {
         }
         try {
             await DatabaseService.UpdateJobToDB(jobtype, payload);
+            backend.scheduleManager.checkForScheduledJobs();
             backend.appendNotification("Job '" + payload.name + "' modified");
             res.status(200).json({ message: 'Job updated' });
         } catch (err) {

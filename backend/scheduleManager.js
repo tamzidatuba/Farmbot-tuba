@@ -8,8 +8,7 @@ class ScheduleManager {
     constructor(backend) {
         this.backend = backend;
         this.jobsToExecute = new Array();
-
-        this.checkForScheduledJobs()
+        
         this.currentTimeout;
 
     }
@@ -86,26 +85,26 @@ class ScheduleManager {
         for (const scheduled_job of scheduledJobs) {
             
             //check if scheduled job is active
-            if (!scheduled_job.isScheduled || scheduled_job.scheduleData.enabled) {
+            if (!scheduled_job.is_scheduled || !scheduled_job.ScheduleData.enabled) {
                 continue;
             }
 
             // calculate the time difference of current time and planned execution time
-            let time_difference = scheduled_job.scheduleData.next_execution_time - currentTime;
+            let time_difference = scheduled_job.ScheduleData.next_execution_time - currentTime;
             if (time_difference <= SCHEDULE_TOLERANCE) {
-                appendScheduledJob({jobType: DatabaseService.JobType.WATERING, job: scheduled_job});
+                await this.appendScheduledJob({jobType: DatabaseService.JobType.WATERING, job: scheduled_job});
             } else {
                 nextScheduleCheck = Math.min(nextScheduleCheck, time_difference);
             }
         }
         // assign the next timeout based on the next scheduled job
         this.currentTimeout = setTimeout(this.checkForScheduledJobs.bind(this), nextScheduleCheck);
-        this.backend.checkForNextJob();
+        if (this.isJobScheduled()) this.backend.checkForNextJob();
     }
 
     calculateNextSchedule(jobData) {
         // calculate next execution-time
-        jobData.job.scheduleData.next_execution_time = jobData.job.scheduleData.interval + (Date.now());
+        jobData.job.ScheduleData.next_execution_time = jobData.job.ScheduleData.interval + (Date.now());
 
         // modify entry in DB
         DatabaseService.UpdateJobToDB(jobData.jobType, jobData.job);

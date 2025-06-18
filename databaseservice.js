@@ -50,16 +50,16 @@ async function InsertJobToDB(jobType, object) {
     }
 
     else if (jobType === JobType.WATERING) {
-        const { jobname, plantstobewatered } = object;
+        const { jobname, plantstobewatered, is_scheduled, scheduleData } = object;
         let existingjob = await wateringModule.findOne({ "jobname": jobname });
         if (existingjob) {
             return "job name already exists";
         }
-        await wateringModule.InsertWateringJobToDB(jobname, plantstobewatered);
+        await wateringModule.InsertWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData);
     }
     else if (jobType == JobType.EXECUTION){
         const {job_name, time_stamp} = object;
-        let new_job = await ExecutionModel.InsertintoExecutionDB(job_name,time_stamp);
+        await ExecutionModel.InsertintoExecutionDB(job_name,time_stamp);
     }
     return true;
 }
@@ -110,6 +110,7 @@ async function DeleteJobFromDB(jobType, jobname) {
         await seedingModule.DeleteSeedingJobFromDB(jobname);
     } 
     else if (jobType === JobType.WATERING) {
+        console.log(jobType, "Deleting Watering job");
         await wateringModule.DeleteWateringJobFromDB(jobname);
     }
     else if (jobType === JobType.EXECUTION) {
@@ -129,8 +130,8 @@ async function UpdateJobToDB(jobType, object) {
     }
 
     else if (jobType === JobType.WATERING) {
-        const { jobname, plantstobewatered } = object;
-        await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered);
+        const { jobname, plantstobewatered, is_scheduled, scheduleData } = object;
+        await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData);
     }
 
     console.log('Job has been updated.');

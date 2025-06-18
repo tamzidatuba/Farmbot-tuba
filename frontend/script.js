@@ -302,16 +302,17 @@ executeBtnWatering.addEventListener('click', async () => {
 
   const scheduleData = {
     enabled: scheduleOption === "scheduled",
-    time: null,
-    interval: null
+    next_execution_time: Number.MAX_SAFE_INTEGER,
+    interval: Number.MAX_SAFE_INTEGER
   };
-  
+  let is_scheduled = false;
   if (scheduleOption === "scheduled") {
+    is_scheduled = true;
     const executionTime = document.getElementById("executionTime").value;
     const repeatInterval = document.getElementById("repeatInterval").value;
-    scheduleData.time = executionTime;
-    scheduleData.interval = repeatInterval;
-    if (!scheduleData.time|| !scheduleData.interval || isNaN(scheduleData.interval)) {
+    scheduleData.next_execution_time = new Date(executionTime).getTime();
+    scheduleData.interval = Number(repeatInterval) * 3600000; // convert hours to milliseconds
+    if (!scheduleData.next_execution_time|| !scheduleData.interval || isNaN(scheduleData.interval)) {
       const errorMsg = document.getElementById("jobScheduleError");
       errorMsg.textContent = 'Please enter a correct schedule.';
       isValid = false;
@@ -329,7 +330,7 @@ executeBtnWatering.addEventListener('click', async () => {
   }
 
 
-  const payload = { jobname, plantstobewatered}; // TODO add scheduleData
+  const payload = { jobname, plantstobewatered, is_scheduled, scheduleData}; // TODO add scheduleData
 
   try {
     if (isEditMode) {
