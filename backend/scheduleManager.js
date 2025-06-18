@@ -1,3 +1,4 @@
+import databaseservice from "../databaseservice.js";
 import DatabaseService from "../databaseservice.js";
 
 const SCHEDULE_CHECKING_INTERVAL = 900000 // 15*60*1000 = 15min
@@ -25,7 +26,12 @@ class ScheduleManager {
         console.log("Queued jobs from last Uptime: ", queuedJobs);
         for (let job of queuedJobs) {
             let loadedJob = await DatabaseService.ReturnSingleJob(job.job_name);
-            this.jobsToExecute.push(loadedJob);
+            if (typeof(loadedJob) === "undefined") {
+                console.log("Couldn't find job with " + job.job_name + "in DB");
+                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job.job_name);
+            } else {
+                this.jobsToExecute.push(loadedJob);
+            }
         }
     }
 
@@ -45,12 +51,14 @@ class ScheduleManager {
                 this.jobsToExecute.splice(job, 1);
                 // remove job from queue DB
                 DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, jobsToExecute[job].job.jobname);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
    appendScheduledJob(newJob) {
+    // Check if job is already queued
         for (const job in this.jobsToExecute) {
             if (this.jobsToExecute[job].job.jobname == newJob.job.jobname) {
                 return false;
@@ -67,36 +75,36 @@ class ScheduleManager {
         return true;
     }     
 
-    checkForScheduledJobs() {
+    async checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);
-        // ask database for active scheduledtasks
-        let scheduledJobs = DatabaseService.FetchJobsFromDB(DatabaseService.JobType.SCHEDULED);
+        // ask database for scheduledtasks
+        let scheduledJobs = await DatabaseService.FetchJobsFromDB(DatabaseService.JobType.WATERING);
 
-        //let scheduledJobs = {};//{0: {"nextExecution": Date.now()+5000, "name": "Job1"}, 1: {"nextExecution": Date.now()+17000, "name": "Job2"}};
         let currentTime = Date.now();
         let nextScheduleCheck = SCHEDULE_CHECKING_INTERVAL;
 
-        for (const job_idx in scheduledJobs) {
+        for (const scheduled_job of scheduledJobs) {
             
             //check if scheduled job is active
-            if (!scheduledJobs[job_idx].enabled) {
+            if (!scheduled_job.isScheduled || scheduled_job.scheduleData.enabled) {
                 continue;
             }
 
             // calculate the time difference of current time and planned execution time
-            let time_difference = scheduledJobs[job_idx].nextexecution - currentTime;
+            let time_difference = scheduled_job.scheduleData.next_execution_time - currentTime;
             if (time_difference <= SCHEDULE_TOLERANCE) {
-                appendScheduledJob({jobType: DatabaseService.JobType.SCHEDULED, job: scheduledJobs[job_idx]});
+                appendScheduledJob({jobType: DatabaseService.JobType.WATERING, job: scheduled_job});
             } else {
                 nextScheduleCheck = Math.min(nextScheduleCheck, time_difference);
             }
         }
-        //console.log("Next schedule check:", nextScheduleCheck)
+        // assign the next timeout based on the next scheduled job
         this.currentTimeout = setTimeout(this.checkForScheduledJobs.bind(this), nextScheduleCheck);
     }
 
     calculateNextSchedule(jobData) {
-        jobData.job.nextexecution = jobData.job.interval + (Date.now());
+        // calculate next execution-time
+        jobData.job.scheduleData.next_execution_time = jobData.job.scheduleData.interval + (Date.now());
 
         // modify entry in DB
         DatabaseService.UpdateJobToDB(jobData.jobType, jobData.job);

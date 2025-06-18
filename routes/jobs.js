@@ -63,7 +63,7 @@ export default function createJobsRouter(backend) {
     });
 
     // queue and execute a given job
-    router.put("/execute/:jobname", async (req, res) => {
+    router.put("/queue/:jobname", async (req, res) => {
         const { jobname } = req.params;
         const { token } = req.body
         if (!TokenManager.validateToken(token)) {
@@ -84,6 +84,19 @@ export default function createJobsRouter(backend) {
             console.error(err);
             res.status(500).json({ error: 'Failed to queue job' });
         }
+    });
+
+    // dequeue a given job
+    router.put("/dequeue/:jobname", async (req, res) => {
+        const { jobname } = req.params;
+        const { token } = req.body
+        if (!TokenManager.validateToken(token)) {
+            res.status(500).json({error: "You dont have permission to do that"});
+            return
+        }
+        if (backend.scheduleManager.removeScheduledJob(jobname)) {
+            res.status(200).json({ message: 'Job has been dequeued' });
+        } else res.status(500).json({ message: 'Job is not in the Queue' });
     });
 
     //pause job

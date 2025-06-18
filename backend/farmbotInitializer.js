@@ -1,14 +1,48 @@
 import { Farmbot } from "farmbot";
 
 const farmbotApiEndpoint = "https://my.farm.bot/api/tokens"
-const farmbotEmail1 = "df-labor2+1@cs.uni-kl.de"
-const farmbotEmail3 = "df-labor2+3@cs.uni-kl.de"
-const fakeBotPw = "84Ostertag!"
+const FAKE_WATER_PIN = {
+    pin_type: "BoxLed3", // "Peripheral"
+    pin_id: -1 //this.pinNumber
+};
+const FAKE_VACUUM_PIN = {
+    pin_type: "BoxLed4", // "Peripheral"
+    pin_id: -1 //this.pinNumber
+};
+
+const FAKE_FARMBOT_1 = {
+  email: "df-labor2+1@cs.uni-kl.de",
+  password: "84Ostertag!",
+  vacuum_pin: FAKE_VACUUM_PIN,
+  water_pin: FAKE_WATER_PIN
+}
+
+const FAKE_FARMBOT_3 = {
+  email: "df-labor2+3@cs.uni-kl.de",
+  password: "84Ostertag!",
+  vacuum_pin: FAKE_VACUUM_PIN,
+  water_pin: FAKE_WATER_PIN
+}
+
+const FARMBOT_42 = {
+  email: "df-labor2+3@cs.uni-kl.de",
+  password: "84Ostertag!",
+  vacuum_pin: {
+      pin_type: "Peripheral",
+      pin_id: 78903
+    },
+  water_pin: {
+      pin_type: "Peripheral", // "Peripheral"
+      pin_id: 78904 
+    }
+}
+
+const FARMBOT_DATA = FAKE_FARMBOT_3
 
 // Requests a API-Token and returns it
 async function _getApiToken() {
     const data = {
-        'user': {'email': farmbotEmail3, 'password': fakeBotPw}
+        'user': {'email': FARMBOT_DATA.email, 'password': FARMBOT_DATA.password}
     }
     const requestOptions = {
         method: "POST",
@@ -46,4 +80,7 @@ async function getFarmbot() {
     }
 }
 
-export {getFarmbot};
+export {
+    getFarmbot,
+    FARMBOT_DATA
+};

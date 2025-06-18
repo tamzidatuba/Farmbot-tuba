@@ -37,8 +37,7 @@ async function InsertintoExecutionDB(job_name,time_stamp)
 
 async function RemovefromExecutionDB(job_name)
 {
-
-    let new_job = await ExecutionModel.deleteOne({job_name: job_name});
+    await ExecutionModel.deleteOne({"job_name": job_name});
 
 }
 

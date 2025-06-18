@@ -1,5 +1,8 @@
 /*
 A Job is a list of Tasks inside a Queue for the Farmbot to complete
+
+
+TODO before executing next task. ensure the last task condition is still met (especialy for move commands)
 */
 
 class Job {

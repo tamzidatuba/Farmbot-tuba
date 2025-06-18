@@ -112,14 +112,5 @@ app.get('/api/frontendData', (req, res) => {
   res.status(200).json(backend.generateFrontendData());
 });
 
+// Handle await backend init
 await backend_init_promise;
-
-// TODO delete
-let wateringJob = { jobType: DatabaseService.JobType.WATERING, job: {jobname: "MyWateringJob", seeds: new Array(
-  { plant: {xcoordinate: 100, ycoordinate: 100}, wateringheight: -50, wateringcapacity: 250 }
-)}};
-//let plants =  await DatabaseService.FetchPlantsfromDBtoFE();
-//console.log(plants);
-
-//backend.scheduleManager.appendScheduledJob(wateringJob);
-//backend.checkForNextJob();
