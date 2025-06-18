@@ -110,7 +110,6 @@ async function DeleteJobFromDB(jobType, jobname) {
         await seedingModule.DeleteSeedingJobFromDB(jobname);
     } 
     else if (jobType === JobType.WATERING) {
-        console.log(jobType, "Deleting Watering job");
         await wateringModule.DeleteWateringJobFromDB(jobname);
     }
     else if (jobType === JobType.EXECUTION) {

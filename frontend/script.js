@@ -220,7 +220,7 @@ function createJobRowWatering(plants, jobData = null) {
     option.dataset.type = plant.type;
 
     // Preselect if matching
-    if (jobData && jobData.plant.xcoordinate === plant.x && jobData.plant.ycoordinate === plant.y) {
+    if (jobData && jobData.plant.xcoordinate == plant.x && jobData.plant.ycoordinate == plant.y) {
       option.selected = true;
     }
     
@@ -230,8 +230,9 @@ function createJobRowWatering(plants, jobData = null) {
 
   // Pre-fill other fields if jobData exists
   if (jobData) {
+    console.log(jobData);
     row.querySelector('.watering.amount').value = jobData.amount || '';
-    row.querySelector('.coord-input.yCoord').value = jobData.yCoordinate || '';
+    row.querySelector('.coord-input.zCoord').value = jobData.yCoordinate || '';
   }
   jobContainerWatering.appendChild(row);
 }
@@ -330,7 +331,7 @@ executeBtnWatering.addEventListener('click', async () => {
   }
 
 
-  const payload = { jobname, plantstobewatered, is_scheduled, scheduleData}; // TODO add scheduleData
+  const payload = { jobname, plantstobewatered, is_scheduled, scheduleData};
 
   try {
     if (isEditMode) {
@@ -584,7 +585,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
       <span class="icon-btn delete-job-btn" title="Delete" data-index="${index}">🗑️</span>
     </div>
   </div>
-  <div>Plants: ${job.seeds?.length || 0}</div>
+  <div>Plants: ${job.plantstobewatered?.length || 0}</div>
   <button class="execute-job-btn">🚜 Execute</button>
 `;
 
@@ -656,11 +657,12 @@ function editWateringJob(job) {
 
   // Fill in plant rows
   job.plantstobewatered.forEach(seed => {
+    console.log(seed);
     const jobData = {
       plant: {
-        xcoordinate: seed.xcoordinate,
-        ycoordinate: seed.ycoordinate,
-        type: seed.planttype
+        xcoordinate: seed.plant.xcoordinate,
+        ycoordinate: seed.plant.ycoordinate,
+        type: seed.plant.planttype
       },
       amount: seed.wateringcapacity,
       yCoordinate: seed.wateringheight
@@ -669,10 +671,10 @@ function editWateringJob(job) {
   });
 
   // Fill in schedule
-  if (job.scheduleData?.enabled) {
+  if (job?.is_scheduled) {
     scheduleRadios.item(0).checked = true;
-    document.getElementById("executionTime").value = job.scheduleData.time || '';
-    document.getElementById("repeatInterval").value = job.scheduleData.interval || '';
+    document.getElementById("executionTime").value = new Date(job.ScheduleData.next_execution_time) || '';
+    document.getElementById("repeatInterval").value = job.ScheduleData.interval/3600000 || '';
   } else {
     scheduleRadios.item(1).checked = true;
   }

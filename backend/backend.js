@@ -57,9 +57,9 @@ class Backend {
   async finishJob() {
     console.log("Finished a Job");
     this.appendNotification("Job '" + this.statusManager.currentJob.name + "' finished.");
-    if (this.currentJobData.jobType != DatabaseService.JobType.HOME) {
+    if (this.currentJobData.jobType !== DatabaseService.JobType.HOME) {
 
-      if (this.currentJobData.jobType != DatabaseService.JobType.WATERING || !this.currentJobData.job.is_scheduled) {
+      if (this.currentJobData.jobType !== DatabaseService.JobType.WATERING || !this.currentJobData.job.is_scheduled) {
         try {
           await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.jobname)
         } catch (e) {
@@ -125,6 +125,7 @@ class Backend {
   }
 
   cancelJob() {
+    this.appendNotification("Job '" + jobObject.name + "' got cancelled.");
     this.statusManager.cancelJob();
   }
 }

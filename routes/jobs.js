@@ -102,6 +102,7 @@ export default function createJobsRouter(backend) {
 
     //pause job
     router.put('/pause', async (req, res) => {
+        // TODO check Token validation
         backend.pauseJob(res);
     });
     //resume job
