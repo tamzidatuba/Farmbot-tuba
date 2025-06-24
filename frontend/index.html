@@ -67,6 +67,19 @@
   </div>
 </div>
 
+<!-- WATERING DEMO MODAL -->
+<div id="wateringDemoModal" class="modal">
+   <div class="modal-content">
+     <span class="close" id="closeModalWateringDemo">&times;</span>
+     <h2>Select a plant for watering</h2>
+     <select id="plantDropdown">
+       <option>Loading...</option>
+     </select>
+     <br /><br />
+     <button id="executeBtn">Execute</button>
+   </div>
+ </div>
+
 <!-- LOGIN MODAL -->
 <div id="loginModal" class="modal">
    
@@ -126,7 +139,7 @@
       </div>
     </li>
     <li class="menu-item">Seeding Demo</li>
-    <li class="menu-item">Watering Demo</li>
+    <li class="menu-item" id="wateringDemoBtn">Watering Demo</li>
     <li class="menu-item">Feedback</li>
     <li class="menu-item">Help</li>
   </ul>
@@ -183,5 +196,6 @@
   
 
   <script type="module" src="./script.js"></script>
+  <script type="module" src="./wateringDemo.js"></script>
 </body>
 </html>
