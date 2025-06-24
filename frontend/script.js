@@ -996,14 +996,14 @@ function drawGrid() {
   ctx.strokeStyle = 'rgb(102, 68, 40)'//'#ddd';
   ctx.linewidth = 1;
 
-  for (let x = 0; x <= canvasWidth; x += majorTickX) {
+  for (let x = 0; x <= coordWidth; x += majorTickX) {
     ctx.beginPath();
     ctx.moveTo(coordToPixel(x, 0).x, 0);
     ctx.lineTo(coordToPixel(x, 0).x, canvasHeight);
     ctx.stroke();
   }
 
-  for (let y = 0; y <= canvasHeight; y += majorTickY) {
+  for (let y = 0; y <= coordHeight; y += majorTickY) {
     ctx.beginPath();
     ctx.moveTo(0, coordToPixel(0, y).y);
     ctx.lineTo(canvasWidth, coordToPixel(0, y).y);
