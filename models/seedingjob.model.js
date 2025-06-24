@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import express from 'express';
 
 const connectionString = 'mongodb://localhost:27017/admin';
 const app = express();

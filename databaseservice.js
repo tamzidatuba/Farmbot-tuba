@@ -137,19 +137,21 @@ async function UpdateJobToDB(jobType, object) {
     console.log('Job has been updated.');
 }
 
+
+
 async function InsertQuestionsIntoDB(email,question)
 {
-   let question =  await questionModel.InsertQuestionsToDB(email,question);
+   let question1 =  await questionModel.InsertQuestionsToDB(email,question);
 }
 
 async function FetchAlltheQuestionsFromDB()
 {
-   let question =  await questionModel.FetchAllQuestionsFromDB();
+   let question2 =  await questionModel.FetchAllQuestionsFromDB();
 }
 
 async function FetchQuestionsFromDBbyEmail(email)
 {
-   let question =  await questionModel.FetchSpecificQuestionsFromDB(email);
+   let question3 =  await questionModel.FetchSpecificQuestionsFromDB(email);
 }
 
 

@@ -55,15 +55,15 @@ app.get('/api/plants', async (req, res) => {
   }
 });
 
-app.post('/api/questions', async ( eq, res) => {
-  const { email, questions } = req.body
+app.post('/api/questions', async ( req, res) => {
+  const { email, question } = req.body
 try {
-    let questions = await DatabaseService.InsertQuestionsIntoDB(email,questions);
+    let questions = await DatabaseService.InsertQuestionsIntoDB(email, question);
     res.status(200).json(questions);
   }
   catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error in fetching" });
+    res.status(500).json({ error: "Failed to save question." });
   }
 });
 
