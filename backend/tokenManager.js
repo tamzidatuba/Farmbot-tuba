@@ -34,6 +34,10 @@ function validateToken(token) {
     return tokens.includes(token);
 }
 
+function getUser(token) {
+    return validateToken(token) ? "Admin": "Visitor";
+} 
+
 function removeToken(token) {
     const index = tokens.indexOf(token);
 
@@ -46,5 +50,6 @@ function removeToken(token) {
 export default {
     generateAndReturnToken,
     validateToken,
+    getUser,
     removeToken,
 }
