@@ -1,5 +1,10 @@
 import { Task } from "./Task.js";
 
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
+
+const MINIMUM_PIN_ACTIVATION_DURATION = 0.5; // Duration should atleast last 0.5 seconds
+const MAXIMUM_PIN_ACTIVATION_DURATION = 5; // Duration shall not exceed 5 seconds
+
 class TimedTask extends Task {
     constructor(status, duration) {
         super(status);
