@@ -67,6 +67,31 @@ try {
   }
 });
 
+app.get('/api/getquestions', async (req,res) => {
+try{
+  let getquestions = await DatabaseService.FetchAlltheQuestionsFromDB();
+  res.status(200).json(getquestions);
+}
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: "Failed to fetch questions."});
+}
+});
+
+app.get('/api/getsinglequestion', async (req,res) => {
+  const{email} = req.body;
+try{
+  let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyEmail(email);
+  res.status(200).json(getsinglequestion);
+}
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: "Failed to fetch question."});
+}
+});
+
 // insert plant
 app.post('/api/plants', async (req, res) => {
   const plants = req.body;

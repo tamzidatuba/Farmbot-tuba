@@ -15,6 +15,7 @@ export const  askQuestionSchema = new mongoose.Schema(
     {
         email : String,
         question : String,
+        //answer: String,
     }
 
 );

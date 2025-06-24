@@ -147,11 +147,13 @@ async function InsertQuestionsIntoDB(email,question)
 async function FetchAlltheQuestionsFromDB()
 {
    let question2 =  await questionModel.FetchAllQuestionsFromDB();
+   return question2;
 }
 
 async function FetchQuestionsFromDBbyEmail(email)
 {
    let question3 =  await questionModel.FetchSpecificQuestionsFromDB(email);
+   return question3;
 }
 
 
