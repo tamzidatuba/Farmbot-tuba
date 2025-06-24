@@ -1,4 +1,14 @@
 import mongoose from 'mongoose';
+import express from 'express';
+
+const connectionString = 'mongodb://localhost:27017/admin';
+const app = express();
+app.use(express.json());
+
+// test connection to local database
+mongoose.connect(connectionString)
+.then(() => console.log('MongoDB connected to the Notifications Database.'))
+.catch((err) => console.error('MongoDB connection error: to the Notifications Database.', err));
 
 const notificationSchema = new mongoose.Schema({
   notificationtext: String,

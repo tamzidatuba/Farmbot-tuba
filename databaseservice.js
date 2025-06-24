@@ -5,6 +5,7 @@ import notificationModel from './models/notification.model.js';
 import plantModel from './models/plant.model.js';
 import userModel from './models/user.model.js';
 import ExecutionModel from './models/execution.model.js';
+import questionModel from './models/question.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -137,6 +138,26 @@ async function UpdateJobToDB(jobType, object) {
 }
 
 
+
+async function InsertQuestionsIntoDB(question, answer)
+{
+   let question1 =  await questionModel.InsertQuestionsToDB(question, answer);
+}
+
+async function FetchAlltheQuestionsFromDB()
+{
+   let question2 =  await questionModel.FetchAllQuestionsFromDB();
+   return question2;
+}
+
+async function FetchQuestionsFromDBbyQuestion(question)
+{
+   let question3 =  await questionModel.FetchSpecificQuestionsFromDB(question);
+   return question3;
+}
+
+
+
 async function InsertNotificationToDB(text) {
     await notificationModel.InsertNotificationToDB(text);
 }
@@ -238,4 +259,7 @@ export default {
     FetchPlantsfromDB,
     FetchUserfromDB,
     ReturnSingleJob,
+    InsertQuestionsIntoDB,
+    FetchAlltheQuestionsFromDB,
+    FetchQuestionsFromDBbyQuestion,
 };
