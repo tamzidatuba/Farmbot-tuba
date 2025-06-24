@@ -27,7 +27,7 @@ async function InsertQuestionsToDB(question, answer)
     return question1;
 }
 
-async function FetchSpecificQuestionsFromDB(email)
+async function FetchSpecificQuestionsFromDB(question)
 {
     let questions = await questionModel.findOne({"question":question});
     return questions;
