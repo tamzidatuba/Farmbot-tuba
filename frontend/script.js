@@ -673,8 +673,10 @@ function editWateringJob(job) {
     scheduleRadios.item(0).checked = true;
     scheduleFields.style.display = "flex";
     let execution_date = new Date(job.ScheduleData.next_execution_time);
+    // convert to local-time
     execution_date.setMinutes(execution_date.getMinutes() - execution_date.getTimezoneOffset());
     document.getElementById("executionTime").value = execution_date.toISOString().slice(0,16) || '';
+    // convert from millisceonds to hours
     document.getElementById("repeatInterval").value = job.ScheduleData.interval/3600000 || '';
   } else {
     scheduleRadios.item(1).checked = true;
@@ -875,7 +877,11 @@ pauseBtn.addEventListener('click', async () => {
   const endpoint = isCurrentlyPaused ? '/api/jobs/resume' : '/api/jobs/pause';
 
   try {
-    const res = await fetch(endpoint, { method: 'PUT' });
+    const res = await fetch(endpoint, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({token})
+    });
     const data = await res.json();
 
     if (res.status === 200) {
