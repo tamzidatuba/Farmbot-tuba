@@ -102,11 +102,22 @@ export default function createJobsRouter(backend) {
 
     //pause job
     router.put('/pause', async (req, res) => {
-        // TODO check Token validation
+        const { token } = req.body
+        // check Token validation
+        if (!TokenManager.validateToken(token)) {
+            res.status(500).json({error: "You dont have permission to do that"});
+            return
+        }
         backend.pauseJob(res);
     });
     //resume job
     router.put('/resume', async (req, res) => {
+        const { token } = req.body
+        // check Token validation
+        if (!TokenManager.validateToken(token)) {
+            res.status(500).json({error: "You dont have permission to do that"});
+            return
+        }
         backend.continueJob(res);
     });
 

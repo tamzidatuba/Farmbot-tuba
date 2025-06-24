@@ -35,8 +35,8 @@ class SetPinTask extends Task {
 
     checkCondition(state) {
         return true;
-        // TODO check if actual farmbot water-pin in state data
-        if (this.pinNumber in state.pins) {
+        // TODO check if actual farmbot pin_id in state data
+        if (this.pinArgs.pin_number.args.pin_id in state.pins) {
             return state.pins[this.pinNumber].value == this.value;
         }
         return false;

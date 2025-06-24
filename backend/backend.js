@@ -107,9 +107,13 @@ class Backend {
 
   pauseJob(res) {
     if (this.statusManager.runningJob && !this.statusManager.isPaused) {
-      console.log(this.statusManager.runningJob);
-      this.statusManager.pauseJob()
-      res.status(200).json({ message: 'Paused a running job' });
+      if (this.currentJobData.jobType == DatabaseService.JobType.SEEDING) {
+        this.cancelJob();
+        res.status(200).json({ message: 'Cancelled a seeding job' });
+      } else {
+        this.statusManager.pauseJob()
+        res.status(200).json({ message: 'Paused a running job' });
+      }
     } else {
       res.status(500).json({ error: 'There is no job currently running' });
     }
@@ -125,7 +129,7 @@ class Backend {
   }
 
   cancelJob() {
-    this.appendNotification("Job '" + jobObject.name + "' got cancelled.");
+    this.appendNotification("Job '" + this.currentJobData.job.name + "' got cancelled.");
     this.statusManager.cancelJob();
   }
 }
