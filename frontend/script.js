@@ -938,10 +938,7 @@ document.getElementById('openQuestionFormBtn').addEventListener('click', () => {
 });
 
 // Handle form submission 
-
-const form = document.getElementById('questionForm');
-
-form.addEventListener('submit', async function(e) {
+document.getElementById('questionForm').addEventListener('submit', (e) => {
   e.preventDefault();
 
 
