@@ -59,7 +59,7 @@ app.post('/api/questions', async ( req, res) => {
   const { question, answer } = req.body
 try {
     let questions = await DatabaseService.InsertQuestionsIntoDB(question, answer);
-    res.status(200).json({message:"Thank you! Your question has been submitted."});
+    res.status(200).json(questions);
   }
   catch (err) {
     console.error(err);
