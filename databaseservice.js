@@ -25,7 +25,7 @@ const JobType = Object.freeze({
 const PlantRadii = {
     lettuce: 15,
     tomato: 30,
-    carrot: 2,
+    radish: 2,
 }
 
 async function InsertJobToDB(jobType, object) {
@@ -171,14 +171,15 @@ async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
     let existingJobs = await FetchJobsFromDB(JobType.SEEDING);
     let invalidSeeds = [];
 
-    for (let newSeed of newSeedsToPutInNewJob) {
+    for (let newseed of newSeedsToPutInNewJob) {
         for (let existingJob of existingJobs) {
             let isValid = true;
-            for (let seedInsideExistingJob of existingJob.seeds) {
-                let distance = GetDistance(newSeed.xcoordinate, newSeed.ycoordinate, seedInsideExistingJob.xcoordinate, seedInsideExistingJob.ycoordinate);
-                var seedInsideExistingJobSmallCase = seedInsideExistingJob.seedtype.toLowerCase();
-                if (distance <= PlantRadii[seedInsideExistingJobSmallCase]) {
-                    invalidSeeds.push(newSeed);
+            for (let existingseed of existingJob.seeds) {
+                let distance = GetDistance(newseed.xcoordinate, newseed.ycoordinate, existingseed.xcoordinate, existingseed.ycoordinate);
+                let existingseedtype = existingseed.seedtype.toLowerCase();
+                let newseedtype = newseed.seedtype.toLowerCase();
+                if (distance <= PlantRadii[existingseedtype] + PlantRadii[newseedtype]) {
+                    invalidSeeds.push(newseed);
                     isValid = false;
                 }
                 if (!isValid) {
@@ -188,7 +189,7 @@ async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
             if (!isValid) {
                 break; // No need to check further jobs
             }
-        }
+        }        
     }
 
     return invalidSeeds;
