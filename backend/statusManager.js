@@ -93,7 +93,8 @@ class StatusManager {
 
     _newStatusRecieved(data, eventName) {
         this.lastState = data;
-        //console.log(data.pins)
+        //console.log("Busy:", data.informational_settings.busy);
+        //console.log("Pins:", data.pins);
         if (this.runningJob){
             if (this.currentTask.checkCondition(data)) {
                 this.currentJob.taskFinished();

@@ -129,7 +129,7 @@ class Backend {
   }
 
   cancelJob() {
-    this.appendNotification("Job '" + jobObject.name + "' got cancelled.");
+    this.appendNotification("Job '" + this.currentJobData.job.name + "' got cancelled.");
     this.statusManager.cancelJob();
   }
 }

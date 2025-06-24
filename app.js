@@ -55,6 +55,43 @@ app.get('/api/plants', async (req, res) => {
   }
 });
 
+app.post('/api/questions', async ( req, res) => {
+  const { question, answer } = req.body
+try {
+    let questions = await DatabaseService.InsertQuestionsIntoDB(question, answer);
+    res.status(200).json(questions);
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to save question." });
+  }
+});
+
+app.get('/api/getquestions', async (req,res) => {
+try{
+  let getquestions = await DatabaseService.FetchAlltheQuestionsFromDB();
+  res.status(200).json(getquestions);
+}
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: "Failed to fetch questions."});
+}
+});
+
+app.get('/api/getsinglequestion', async (req,res) => {
+  const{ question } = req.body;
+try{
+  let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyEmail(question);
+  res.status(200).json(getsinglequestion);
+}
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: "Failed to fetch question."});
+}
+});
+
 // insert plant
 app.post('/api/plants', async (req, res) => {
   const plants = req.body;
