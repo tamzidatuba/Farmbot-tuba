@@ -82,7 +82,7 @@ catch(err)
 app.get('/api/getsinglequestion', async (req,res) => {
   const{ question } = req.body;
 try{
-  let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyEmail(question);
+  let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyQuestion(question);
   res.status(200).json(getsinglequestion);
 }
 catch(err)
