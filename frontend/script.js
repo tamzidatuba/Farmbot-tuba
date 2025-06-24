@@ -943,7 +943,7 @@ const form = document.getElementById('questionForm');
 
 form.addEventListener('submit', async function(e) {
   e.preventDefault();
-<<<<<<< frontend/script.js
+
 
   const email = document.getElementById('email').value.trim();
   const question = document.getElementById('question').value.trim();
@@ -964,7 +964,7 @@ form.addEventListener('submit', async function(e) {
   }
 
   
->>>>>>> frontend/script.js
+
 });
 
 
