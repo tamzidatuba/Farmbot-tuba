@@ -1,5 +1,6 @@
 import { token } from "./scripts/auth.js";
 import { drawGrid } from "./scripts/canvas.js";
+import { updateRobot } from "./scripts/notificationhistory.js";
 
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
@@ -19,8 +20,7 @@ const wateringJobBtn = document.getElementById('wateringJobBtn');
 //const body = document.querySelector("body");
 //body.requestFullscreen();
 
-// List to compare history with data base
-var historyList = [];
+
 
 // List to compare plants with data base
 var plantsList = [];
@@ -41,14 +41,8 @@ const scheduleRadios = document.querySelectorAll('input[name="scheduleOption"]')
 scheduleRadios.item(1).checked = true; // Default to "Not Scheduled""
 
 
-//farmbot status
-const statusBox = document.getElementById('farmbot-status');
-const statusHistory = document.getElementById('status-history');
-const title = statusHistory.querySelector('.history-header');
-let maxHistoryEntries = 10;
-const historyBox = document.getElementById('notification-history');
-const entryLimitSelect = document.getElementById('entry-limit');
-entryLimitSelect.value = maxHistoryEntries;
+
+
 
 
  window.addEventListener('DOMContentLoaded', () => {
@@ -924,105 +918,35 @@ async function getPlants() {
       for (const plant of data) {
         plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
       }
-      //console.log(plants);
     }
   })
   .catch(error => console.error('Error fetching plants:', error));
 }
 
-// button for max history entries
-entryLimitSelect.addEventListener('change', () => {
-  if (maxHistoryEntries < parseInt(entryLimitSelect.value)) {
-    maxHistoryEntries = parseInt(entryLimitSelect.value);
-    // Clear the current status history
-    while (statusHistory.children.length > 1) {
-      statusHistory.removeChild(statusHistory.lastChild);
-    }
-    // Add new entries to the status history
-    for (const status in historyList) {  
-      if (statusHistory.children.length < maxHistoryEntries + 1) {
-        const entry = document.createElement('div');
-        entry.textContent = historyList[status];
-        statusHistory.appendChild(entry);
-      }
-    }
-  } else {
-    maxHistoryEntries = parseInt(entryLimitSelect.value);
-    while (statusHistory.children.length > 1) {
-      statusHistory.removeChild(statusHistory.lastChild);
-    }
-    // Add new entries to the status history
-    for (const status in historyList) {  
-      if (statusHistory.children.length < maxHistoryEntries + 1) {
-        const entry = document.createElement('div');
-        entry.textContent = historyList[status];
-        statusHistory.appendChild(entry);
-      }
-    }
-  }
-  
-});
-
-
-// Update robot status, notifications and execution
-function updateRobot() {
-  //updateStatus();//change this to actually get status
-  fetch('/api/frontendData', {method: 'GET',
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Update robot Status
-    statusBox.textContent = 'Status: ' + data.status;
-    // Update Status History
-    var temp = historyList.slice().reverse();
-    if (temp.toString() != data.notifications.toString()) {
-      // Clear the current status history
-      while (statusHistory.children.length > 1) {
-        statusHistory.removeChild(statusHistory.lastChild);
-      }
-      // Add new entries to the status history
-      for (const status in data.notifications.reverse()) {  
-        if (statusHistory.children.length < maxHistoryEntries + 1) {
-          const entry = document.createElement('div');
-          entry.textContent = data.notifications[status];
-          statusHistory.appendChild(entry);
-        }
-      }
-      historyList = data.notifications;
-    }
-    // Update Pause Button visibility
-    const pauseBtn = document.getElementById('pauseJobBtn');
-    pauseBtn.style.display = data.status === 'Ready' || data.status === 'Offline' ? 'none' : 'inline-block';
-
-    // Update button text depending on paused state
-    pauseBtn.textContent = data.paused ? '▶' : '⏸';
-
-    //Update plants
-    if (plants.toString() != data.plants.toString()) {
-    //if (plants.toString() != data.toString()) {
-      plants = [];
-      console.log("Plants fetched from server:", data);
-      for (const plant of data.plants) {
-        plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
-      }
-      //console.log(plants);
-    }
-    })
-    .catch(err => {
-      console.error("Failed to fetch frontend data:", err);
-      pauseBtn.style.display = 'none'; // hide on error
-    });
-    //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    //drawGrid();
-  }
-
-  
-// Initial draw
-await getPlants();
+await getPlants(); // get data of plants
+await updateRobot(plants);
+setInterval(async () => await updateRobot(plants), 2500); // Update every 1 second
 drawGrid(plants); // draw plants
 //drawRobot();
 
 
-// Update every 1 second
-setInterval(updateRobot, 2500);
+//ask questions
+document.getElementById('openQuestionFormBtn').addEventListener('click', () => {
+  const section = document.getElementById('questionSection');
+  section.style.display = section.style.display === 'none' ? 'block' : 'none';
+});
+
+// Handle form submission 
+document.getElementById('questionForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const question = document.getElementById('question').value;
+  const status= document.getElementById('questionStatus'); 
+  // Simulated success message 
+  //status.textContent = 'Thank you! Your question has been submitted.';
+  alert('Thank you! Your question has been submitted.');  
+  e.target.reset();
+  document.getElementById('questionSection').style.display='none';
+});
+
 
