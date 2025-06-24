@@ -924,9 +924,29 @@ async function getPlants() {
 }
 
 await getPlants(); // get data of plants
-
 await updateRobot(plants);
 setInterval(async () => await updateRobot(plants), 2500); // Update every 1 second
-
-//drawRobot();
 drawGrid(plants); // draw plants
+//drawRobot();
+
+
+//ask questions
+document.getElementById('openQuestionFormBtn').addEventListener('click', () => {
+  const section = document.getElementById('questionSection');
+  section.style.display = section.style.display === 'none' ? 'block' : 'none';
+});
+
+// Handle form submission 
+document.getElementById('questionForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const question = document.getElementById('question').value;
+  const status= document.getElementById('questionStatus'); 
+  // Simulated success message 
+  //status.textContent = 'Thank you! Your question has been submitted.';
+  alert('Thank you! Your question has been submitted.');  
+  e.target.reset();
+  document.getElementById('questionSection').style.display='none';
+});
+
+

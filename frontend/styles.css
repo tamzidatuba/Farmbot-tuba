@@ -650,6 +650,88 @@ margin-top: 4px;
       }
     }
     
+
+    /* Icon Button */
+#openQuestionFormBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #5B7F62;
+  color: white;
+  border: none;
+  font-size: 15px;
+  border-radius: 30%;
+  width: 70px;
+  height: 40px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+#openQuestionFormBtn:hover {
+  background-color: #5B7F62;
+}
+
+/* Bottom Panel Form */
+#questionSection {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  display: none;
+}
+
+#questionSection h3 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+#questionForm {
+  display: flex;
+  flex-direction: column;
+}
+
+#questionForm label {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+#questionForm input,
+#questionForm textarea {
+  font-size: 14px;
+  padding: 6px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#questionForm button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#questionForm button[type="submit"]:hover {
+  background-color: hsl(133, 21%, 69%);
+}
+
+#questionStatus {
+  margin-top: 8px;
+  font-size: 13px;
+  color: green;
+}
+
     
     
     
