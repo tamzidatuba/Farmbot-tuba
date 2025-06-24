@@ -139,9 +139,9 @@ async function UpdateJobToDB(jobType, object) {
 
 
 
-async function InsertQuestionsIntoDB(email,question)
+async function InsertQuestionsIntoDB(question, answer)
 {
-   let question1 =  await questionModel.InsertQuestionsToDB(email,question);
+   let question1 =  await questionModel.InsertQuestionsToDB(question, answer);
 }
 
 async function FetchAlltheQuestionsFromDB()
@@ -150,9 +150,9 @@ async function FetchAlltheQuestionsFromDB()
    return question2;
 }
 
-async function FetchQuestionsFromDBbyEmail(email)
+async function FetchQuestionsFromDBbyQuestion(question)
 {
-   let question3 =  await questionModel.FetchSpecificQuestionsFromDB(email);
+   let question3 =  await questionModel.FetchSpecificQuestionsFromDB(question);
    return question3;
 }
 
@@ -260,5 +260,5 @@ export default {
     ReturnSingleJob,
     InsertQuestionsIntoDB,
     FetchAlltheQuestionsFromDB,
-    FetchQuestionsFromDBbyEmail,
+    FetchQuestionsFromDBbyQuestion,
 };

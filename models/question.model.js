@@ -13,24 +13,23 @@ mongoose.connect(connectionString)
 
 export const  askQuestionSchema = new mongoose.Schema(
     {
-        email : String,
         question : String,
-        //answer: String,
+        answer: String,
     }
 
 );
 
 const questionModel = mongoose.model('questions', askQuestionSchema);
 
-async function InsertQuestionsToDB(email, question)
+async function InsertQuestionsToDB(question, answer)
 {
-    let answer  = await questionModel.create({email: email, question: question});
-    return answer;
+    let question1  = await questionModel.create({question: question, answer: answer});
+    return question1;
 }
 
 async function FetchSpecificQuestionsFromDB(email)
 {
-    let questions = await questionModel.findOne({"email":email});
+    let questions = await questionModel.findOne({"question":question});
     return questions;
 }
 

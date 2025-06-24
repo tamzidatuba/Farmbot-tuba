@@ -56,9 +56,9 @@ app.get('/api/plants', async (req, res) => {
 });
 
 app.post('/api/questions', async ( req, res) => {
-  const { email, question } = req.body
+  const { question, answer } = req.body
 try {
-    let questions = await DatabaseService.InsertQuestionsIntoDB(email, question);
+    let questions = await DatabaseService.InsertQuestionsIntoDB(question, answer);
     res.status(200).json(questions);
   }
   catch (err) {
@@ -80,9 +80,9 @@ catch(err)
 });
 
 app.get('/api/getsinglequestion', async (req,res) => {
-  const{email} = req.body;
+  const{ question } = req.body;
 try{
-  let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyEmail(email);
+  let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyEmail(question);
   res.status(200).json(getsinglequestion);
 }
 catch(err)
