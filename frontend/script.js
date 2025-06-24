@@ -938,16 +938,34 @@ document.getElementById('openQuestionFormBtn').addEventListener('click', () => {
 });
 
 // Handle form submission 
-document.getElementById('questionForm').addEventListener('submit', (e) => {
+
+const form = document.getElementById('questionForm');
+
+form.addEventListener('submit', async function(e) {
   e.preventDefault();
-  const email = document.getElementById('email').value;
-  const question = document.getElementById('question').value;
-  const status = document.getElementById('questionStatus');
-  // Simulated success message 
-  //status.textContent = 'Thank you! Your question has been submitted.';
-  alert('Thank you! Your question has been submitted.');
-  e.target.reset();
-  document.getElementById('questionSection').style.display = 'none';
+<<<<<<< frontend/script.js
+
+  const email = document.getElementById('email').value.trim();
+  const question = document.getElementById('question').value.trim();
+
+  const response = await fetch('/api/questions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, question })
+  });
+
+  const data = await response.json();
+
+  if (response.ok) {
+    alert(data.message);
+    form.reset(); // clears fields after successful submission
+  } else {
+    alert(data.message || 'Something went wrong.');
+  }
+
+  
+>>>>>>> frontend/script.js
 });
+
 
 
