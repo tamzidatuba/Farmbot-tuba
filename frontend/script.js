@@ -1204,13 +1204,13 @@ function updateRobot() {
 
   
 // Initial draw
-getPlants();
+await getPlants();
 drawGrid();
 //drawRobot();
-setTimeout (() => {
+/*setTimeout (() => {
   clearCanvas();
   drawGrid();
-}, 100);
+}, 100);*/
 
 // Update every 1 second
 setInterval(updateRobot, 2500);
