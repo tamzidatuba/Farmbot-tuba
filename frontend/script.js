@@ -45,16 +45,16 @@ scheduleRadios.item(1).checked = true; // Default to "Not Scheduled""
 
 
 
- window.addEventListener('DOMContentLoaded', () => {
-    toggle.style.display = 'none';
-    //subtask.style.display='none';
-    viewJobs.style.display='none';
-  });
- 
+window.addEventListener('DOMContentLoaded', () => {
+  toggle.style.display = 'none';
+  //subtask.style.display='none';
+  viewJobs.style.display = 'none';
+});
+
 
 let isEditMode = false;
 let jobBeingEdited = null;
-let editingJobName = '';  
+let editingJobName = '';
 
 
 viewJobs.addEventListener('click', () => {
@@ -80,7 +80,7 @@ seedingJobBtn.addEventListener('click', () => {
   modal.style.display = 'block';
 });*/
 
-wateringJobBtn.addEventListener('click',async () => {
+wateringJobBtn.addEventListener('click', async () => {
   // Reset to creation mode
   isEditMode = false;
   editingJobName = '';
@@ -184,12 +184,12 @@ function createJobRowWatering(plants, jobData = null) {
   defaultOption.value = "";
   defaultOption.textContent = "--Choose Plant--";
   select.appendChild(defaultOption);
-  
+
 
   // actual plants
   plants.forEach(plant => {
     const option = document.createElement('option');
-    option.value = {plant: plant}; // value is the plant
+    option.value = { plant: plant }; // value is the plant
     option.textContent = `${plant.type} at X: ${plant.x}, Y: ${plant.y}`;
     option.dataset.x = plant.x;
     option.dataset.y = plant.y;
@@ -199,7 +199,7 @@ function createJobRowWatering(plants, jobData = null) {
     if (jobData && jobData.plant.xcoordinate == plant.x && jobData.plant.ycoordinate == plant.y) {
       option.selected = true;
     }
-    
+
 
     select.appendChild(option);
   });
@@ -238,12 +238,12 @@ executeBtnWatering.addEventListener('click', async () => {
       const y = selectedOption.dataset.y;
       const type = selectedOption.dataset.type;
       errorMsg.textContent = '';
-      
+
       const coordKey = `${x},${y}`;
-      
+
       console.log("Selected Plant:", selectedOption.value);
       console.log("Selected Plant 2:", selectedOption.dataset);
-      if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 2 || watering > 200 ) {
+      if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 2 || watering > 200) {
         errorMsg.textContent = 'Please correct the above values.';
         isValid = false;
       } else if (seenCoordinates.has(coordKey)) {
@@ -254,7 +254,7 @@ executeBtnWatering.addEventListener('click', async () => {
         isValid = false;
       } else {
         seenCoordinates.add(coordKey);
-        plantstobewatered.push({plant:{ planttype: type, xcoordinate: Number(x), ycoordinate: Number(y)}, wateringheight: z, wateringcapacity: watering });
+        plantstobewatered.push({ plant: { planttype: type, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
         const newPlant = new Plant(Number(x), Number(y), type);
         results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
       }
@@ -269,7 +269,7 @@ executeBtnWatering.addEventListener('click', async () => {
     jobNameErrorWatering.textContent = 'Special characters are not allowed in the job name.';
     isValid = false;
   }
-  if(jobname===''){
+  if (jobname === '') {
     jobNameErrorWatering.textContent = 'Please fill the Jobname';
     isValid = false;
   }
@@ -289,7 +289,7 @@ executeBtnWatering.addEventListener('click', async () => {
     scheduleData.next_execution_time = new Date(executionTime).getTime();
     console.log(scheduleData.next_execution_time);
     scheduleData.interval = Number(repeatInterval) * 3600000; // convert hours to milliseconds
-    if (!scheduleData.next_execution_time|| !scheduleData.interval || isNaN(scheduleData.interval)) {
+    if (!scheduleData.next_execution_time || !scheduleData.interval || isNaN(scheduleData.interval)) {
       const errorMsg = document.getElementById("jobScheduleError");
       errorMsg.textContent = 'Please enter a correct schedule.';
       isValid = false;
@@ -307,7 +307,7 @@ executeBtnWatering.addEventListener('click', async () => {
   }
 
 
-  const payload = { jobname, plantstobewatered, is_scheduled, scheduleData};
+  const payload = { jobname, plantstobewatered, is_scheduled, scheduleData };
 
   try {
     if (isEditMode) {
@@ -315,7 +315,7 @@ executeBtnWatering.addEventListener('click', async () => {
       const response = await fetch('/api/jobs/Watering', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({payload, token})
+        body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to update job.");
@@ -325,7 +325,7 @@ executeBtnWatering.addEventListener('click', async () => {
       const response = await fetch('/api/jobs/Watering', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({payload, token})
+        body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to create job.");
@@ -385,34 +385,34 @@ function createJobRow() {
   </div>
   <div class="errorMsg"></div>
 `;
-const plantSelect = row.querySelector('.plantType');
-const depthInput = row.querySelector('.depth');
+  const plantSelect = row.querySelector('.plantType');
+  const depthInput = row.querySelector('.depth');
 
-// Set depth and disable field based on selected plant
-function setDepthFromPlant(type) {
-  switch (type.toLowerCase()) {
-    case 'tomato':
-      depthInput.value = 6;
-      break;
-    case 'lettuce':
-      depthInput.value = 3;
-      break;
-    case 'radish':
-      depthInput.value = 10;
-      break;
-    default:
-      depthInput.value = '';
-      break;
+  // Set depth and disable field based on selected plant
+  function setDepthFromPlant(type) {
+    switch (type.toLowerCase()) {
+      case 'tomato':
+        depthInput.value = 6;
+        break;
+      case 'lettuce':
+        depthInput.value = 3;
+        break;
+      case 'radish':
+        depthInput.value = 10;
+        break;
+      default:
+        depthInput.value = '';
+        break;
+    }
   }
-}
 
-// Set up listener to update depth
-plantSelect.addEventListener('change', () => {
-  setDepthFromPlant(plantSelect.value);
-});
+  // Set up listener to update depth
+  plantSelect.addEventListener('change', () => {
+    setDepthFromPlant(plantSelect.value);
+  });
 
-// Disable user editing
-depthInput.disabled = true;
+  // Disable user editing
+  depthInput.disabled = true;
 
 
 
@@ -451,11 +451,11 @@ executeBtn.addEventListener('click', async () => {
 
       const coordKey = `${x},${y}`;
 
-      if(x=='' || y==''){
+      if (x == '' || y == '') {
         errorMsg.textContent = 'Please fill the above values.';
         isValid = false;
       }
-      if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650 ) {
+      if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650) {
         errorMsg.textContent = 'Please correct the above values.';
         isValid = false;
       } else if (seenCoordinates.has(coordKey)) {
@@ -477,7 +477,7 @@ executeBtn.addEventListener('click', async () => {
     jobNameError.textContent = 'Special characters are not allowed in the job name.';
     isValid = false;
   }
-  if(jobname===''){
+  if (jobname === '') {
     jobNameError.textContent = 'Please fill the Jobname';
     isValid = false;
   }
@@ -499,7 +499,7 @@ executeBtn.addEventListener('click', async () => {
       const response = await fetch('/api/jobs/Seeding', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({payload, token})
+        body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to update job.");
@@ -509,7 +509,7 @@ executeBtn.addEventListener('click', async () => {
       const response = await fetch('/api/jobs/Seeding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({payload, token})
+        body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to create job.");
@@ -531,7 +531,7 @@ const viewJobsBtnWatering = document.getElementById('viewWateringJobsBtn');
 const viewJobsModalWatering = document.getElementById('viewJobsModalWatering');
 const closeViewJobsModalWatering = document.getElementById('closeViewJobsModalWatering');
 const jobsListWatering = document.getElementById('jobsListWatering');
-const jobCountDisplayWatering = document.getElementById('jobCountDisplayWatering'); 
+const jobCountDisplayWatering = document.getElementById('jobCountDisplayWatering');
 
 //VIEW WATERING JOBS BUTTON LOGIC
 viewJobsBtnWatering.addEventListener('click', async () => {
@@ -568,42 +568,42 @@ viewJobsBtnWatering.addEventListener('click', async () => {
         jobsListWatering.appendChild(jobDiv);
 
         // edit logic
-    jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
-      editWateringJob(job);
-      });
+        jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
+          editWateringJob(job);
+        });
 
-      // new delete logic
-    jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-      if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
-        try {
-          const res = await fetch(`/api/jobs/Watering/${job.jobname}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({token})
-          });
-        
-          const contentType = res.headers.get("content-type");
-          if (contentType && contentType.includes("application/json")) {
-            const result = await res.json();
-            if (!res.ok) throw new Error(result.error);
-            alert("Job deleted ✅");
-            viewJobsBtnWatering.click();
-          } else {
-            const errorText = await res.text();
-            throw new Error("Non-JSON response: " + errorText);
+        // new delete logic
+        jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
+          if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
+            try {
+              const res = await fetch(`/api/jobs/Watering/${job.jobname}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+              });
+
+              const contentType = res.headers.get("content-type");
+              if (contentType && contentType.includes("application/json")) {
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.error);
+                alert("Job deleted ✅");
+                viewJobsBtnWatering.click();
+              } else {
+                const errorText = await res.text();
+                throw new Error("Non-JSON response: " + errorText);
+              }
+            } catch (err) {
+              console.error(err);
+              alert("❌ Could not delete job: " + err.message);
+            }
+
           }
-        } catch (err) {
-          console.error(err);
-          alert("❌ Could not delete job: " + err.message);
-        }
-        
-  }
-});
+        });
 
-// optional placeholder for future Execute
-jobDiv.querySelector('.execute-job-btn').addEventListener('click', () => {
-  alert("🚜 Execute job feature coming soon!");
-});
+        // optional placeholder for future Execute
+        jobDiv.querySelector('.execute-job-btn').addEventListener('click', () => {
+          alert("🚜 Execute job feature coming soon!");
+        });
 
       });
     }
@@ -651,9 +651,9 @@ function editWateringJob(job) {
     let execution_date = new Date(job.ScheduleData.next_execution_time);
     // convert to local-time
     execution_date.setMinutes(execution_date.getMinutes() - execution_date.getTimezoneOffset());
-    document.getElementById("executionTime").value = execution_date.toISOString().slice(0,16) || '';
+    document.getElementById("executionTime").value = execution_date.toISOString().slice(0, 16) || '';
     // convert from millisceonds to hours
-    document.getElementById("repeatInterval").value = job.ScheduleData.interval/3600000 || '';
+    document.getElementById("repeatInterval").value = job.ScheduleData.interval / 3600000 || '';
   } else {
     scheduleRadios.item(1).checked = true;
     scheduleFields.style.display = "none";
@@ -676,7 +676,7 @@ const viewJobsBtn = document.getElementById('viewSeedingJobsBtn');
 const viewJobsModal = document.getElementById('viewJobsModal');
 const closeViewJobsModal = document.getElementById('closeViewJobsModal');
 const jobsList = document.getElementById('jobsList');
-const jobCountDisplay = document.getElementById('jobCountDisplay'); 
+const jobCountDisplay = document.getElementById('jobCountDisplay');
 
 function capitalizeFirstLetter(str) {
   return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
@@ -711,13 +711,13 @@ function editSeedingJob(job) {
     const seedtype = p.seedtype; // fallback
     const x = p.xcoordinate;
     const y = p.ycoordinate;
-    const depth = p.depth ;
+    const depth = p.depth;
     row.querySelector('.plantType').value = capitalizeFirstLetter(seedtype);
     row.querySelector('.xCoord').value = x;
     row.querySelector('.yCoord').value = y;
     row.querySelector('.depth').value = depth;
   });
-  
+
 
   modal.style.display = 'block';
 }
@@ -756,74 +756,74 @@ viewJobsBtn.addEventListener('click', async () => {
         jobsList.appendChild(jobDiv);
 
         // edit logic
-    jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
-      editSeedingJob(job);
-      });
-      // new delete logic
-    jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-      if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
-        try {
-          const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({token})
-          });
-        
-          const contentType = res.headers.get("content-type");
-          if (contentType && contentType.includes("application/json")) {
-            const result = await res.json();
-            if (!res.ok) throw new Error(result.error);
-            alert("Job deleted ✅");
-            viewJobsBtn.click();
-          } else {
-            const errorText = await res.text();
-            throw new Error("Non-JSON response: " + errorText);
+        jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
+          editSeedingJob(job);
+        });
+        // new delete logic
+        jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
+          if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
+            try {
+              const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+              });
+
+              const contentType = res.headers.get("content-type");
+              if (contentType && contentType.includes("application/json")) {
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.error);
+                alert("Job deleted ✅");
+                viewJobsBtn.click();
+              } else {
+                const errorText = await res.text();
+                throw new Error("Non-JSON response: " + errorText);
+              }
+            } catch (err) {
+              console.error(err);
+              alert("❌ Could not delete job: " + err.message);
+            }
+
           }
-        } catch (err) {
-          console.error(err);
-          alert("❌ Could not delete job: " + err.message);
-        }
-        
-  }
-});
+        });
 
-// optional placeholder for future Execute
-jobDiv.querySelector('.execute-job-btnseed').addEventListener('click', async () => {
-  if (confirm(`Are you sure you want to execute job "${job.jobname}"?`)) {
-    try {
-      
-      const res = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({token})
-      });
+        // optional placeholder for future Execute
+        jobDiv.querySelector('.execute-job-btnseed').addEventListener('click', async () => {
+          if (confirm(`Are you sure you want to execute job "${job.jobname}"?`)) {
+            try {
 
-      // Check if response is JSON
-      const contentType = res.headers.get("content-type");
-      let message = "Unknown server response";
+              const res = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token })
+              });
 
-      if (contentType && contentType.includes("application/json")) {
-        const result = await res.json();
+              // Check if response is JSON
+              const contentType = res.headers.get("content-type");
+              let message = "Unknown server response";
 
-        if (res.ok) {
-          message = `✅ ${result.message || "Job executed successfully"}`;
-        } else {
-          message = `❌ ${result.error || result.message || "Job execution failed"}`;
-        }
-      } else {
-        const text = await res.text();
-        message = `❌ Unexpected server response: ${text}`;
-      }
+              if (contentType && contentType.includes("application/json")) {
+                const result = await res.json();
 
-      alert(message);
-    } catch (err) {
-      console.error("Execution failed:", err);
-      alert("❌ Could not execute job due to a network or system error.");
-    }
-  }
-});
+                if (res.ok) {
+                  message = `✅ ${result.message || "Job executed successfully"}`;
+                } else {
+                  message = `❌ ${result.error || result.message || "Job execution failed"}`;
+                }
+              } else {
+                const text = await res.text();
+                message = `❌ Unexpected server response: ${text}`;
+              }
+
+              alert(message);
+            } catch (err) {
+              console.error("Execution failed:", err);
+              alert("❌ Could not execute job due to a network or system error.");
+            }
+          }
+        });
 
 
       });
@@ -856,7 +856,7 @@ pauseBtn.addEventListener('click', async () => {
     const res = await fetch(endpoint, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({token})
+      body: JSON.stringify({ token })
     });
     const data = await res.json();
 
@@ -907,20 +907,21 @@ seedingJobBtn.addEventListener('click', () => {
 
 // get plants from server
 async function getPlants() {
-  await fetch('/api/plants', {method: 'GET',
+  await fetch('/api/plants', {
+    method: 'GET',
   })
-  .then(response => response.json())
-  .then(data => {
-    if (plants.toString() != data.toString()) {
-    //if (plants.toString() != data.toString()) {
-      plants = [];
-      console.log("Plants fetched from server:", data);
-      for (const plant of data) {
-        plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
+    .then(response => response.json())
+    .then(data => {
+      if (plants.toString() != data.toString()) {
+        //if (plants.toString() != data.toString()) {
+        plants = [];
+        console.log("Plants fetched from server:", data);
+        for (const plant of data) {
+          plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
+        }
       }
-    }
-  })
-  .catch(error => console.error('Error fetching plants:', error));
+    })
+    .catch(error => console.error('Error fetching plants:', error));
 }
 
 await getPlants(); // get data of plants
@@ -941,12 +942,12 @@ document.getElementById('questionForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const email = document.getElementById('email').value;
   const question = document.getElementById('question').value;
-  const status= document.getElementById('questionStatus'); 
+  const status = document.getElementById('questionStatus');
   // Simulated success message 
   //status.textContent = 'Thank you! Your question has been submitted.';
-  alert('Thank you! Your question has been submitted.');  
+  alert('Thank you! Your question has been submitted.');
   e.target.reset();
-  document.getElementById('questionSection').style.display='none';
+  document.getElementById('questionSection').style.display = 'none';
 });
 
 
