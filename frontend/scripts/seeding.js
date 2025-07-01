@@ -13,7 +13,6 @@ const jobNameError = document.getElementById('jobNameError');
 let isEditMode = false;
 const closeModal = document.getElementById('closeModal');
 const viewJobsModal = document.getElementById('viewJobsModal');
-let jobBeingEdited = null;
 const viewJobsBtn = document.getElementById('viewSeedingJobsBtn');
 const jobsList = document.getElementById('jobsList');
 const jobCountDisplay = document.getElementById('jobCountDisplay');
@@ -238,7 +237,6 @@ function editSeedingJob(job) {
   }, 200);
 
   isEditMode = true;
-  jobBeingEdited = job.jobname;
 
   // Update modal heading and button
   document.getElementById('modalTitle').textContent = getTranslation("modifyJob");
@@ -399,7 +397,6 @@ window.addEventListener('click', (e) => {
 seedingJobBtn.addEventListener('click', () => {
   // Reset to creation mode
   isEditMode = false;
-  jobBeingEdited = null;
 
   document.getElementById('modalTitle').textContent = getTranslation("seedingJob");
   document.getElementById('executeBtn').textContent = getTranslation("createAndSave");
