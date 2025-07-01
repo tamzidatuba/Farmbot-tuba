@@ -1,3 +1,4 @@
+import { get } from "mongoose";
 import { token } from "./auth.js";
 import { setLanguage } from "./translation.js";
 import { getTranslation } from "./translation.js";
@@ -299,7 +300,7 @@ viewJobsBtn.addEventListener('click', async () => {
     </div>
   </div>
   <div>Plants: ${job.seeds?.length || 0}</div>
-  <button class="execute-job-btnseed">🚜 Execute</button>
+  <button class="execute-job-btnseed" data-i18n="execute">🚜 Execute</button>
 `;
 
 
@@ -311,7 +312,7 @@ viewJobsBtn.addEventListener('click', async () => {
         });
         // new delete logic
         jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-          if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
+          if (confirm(getTranslation("deleteConfirm" + `${job.jobname}`)) {
             try {
               const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
                 method: 'DELETE',
@@ -327,7 +328,7 @@ viewJobsBtn.addEventListener('click', async () => {
                 viewJobsBtn.click();
               } else {
                 const errorText = await res.text();
-                throw new Error(getTranslation("nonJSON") + errorText);
+                throw new Error("Non JSON response: " + errorText);
               }
             } catch (err) {
               console.error(err);
@@ -352,24 +353,24 @@ viewJobsBtn.addEventListener('click', async () => {
 
               // Check if response is JSON
               const contentType = res.headers.get("content-type");
-              let message = "Unknown server response";
+              let message = getTranslation("unknownResponse");
 
               if (contentType && contentType.includes("application/json")) {
                 const result = await res.json();
 
                 if (res.ok) {
-                  message = `✅ ${result.message || "Job queued successfully"}`;
+                  message = `✅ ${result.message || getTranslation("queueSuccess")}`;
                 } else {
-                  message = `❌ ${result.error || result.message || "Job queueing failed"}`;
+                  message = `❌ ${result.error || result.message || getTranslation("queueFail")}`;
                 }
               } else {
                 const text = await res.text();
-                message = `❌ Unexpected server response: ${text}`;
+                message = getTranslation("unexpectedResponse") + `${text}`;
               }
 
               alert(message);
             } catch (err) {
-              console.error("Execution failed:", err);
+              console.error(getTranslation("executeFail"), err);
               alert(getTranslation("networkError"));
             }
           }
