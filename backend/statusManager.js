@@ -1,12 +1,13 @@
+import { getTranslation } from "../frontend/scripts/translation.js";
 const FarmbotStatus = Object.freeze({
-    OFFLINE: "Offline",
-    READY: "Ready",
-    MOVING: "Moving",
-    MOVING_TO_SEEDING_POSITION: "Moving to seeding position",
-    MOVING_TO_WATERING_POSITION: "Moving to watering position",
-    FETCHING: "Fetching",
-    SEEDING: "Seeding",
-    WATERING: "Watering",
+    OFFLINE: getTranslation("offline"),
+    READY: getTranslation("ready"),
+    MOVING: getTranslation("moving"),
+    MOVING_TO_SEEDING_POSITION: getTranslation("movingToSeedingPosition"),
+    MOVING_TO_WATERING_POSITION: getTranslation("movingToWateringPosition"),
+    FETCHING: getTranslation("fetching"),
+    SEEDING: getTranslation("seeding"),
+    WATERING: getTranslation("watering"),
     //PAUSED: 8
 });
 
