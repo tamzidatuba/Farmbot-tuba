@@ -68,8 +68,8 @@ function drawRobot() {
 
 
 // Draw grid lines for visual reference
-export function drawGrid(recievedPlants) {
-    plants = recievedPlants;
+export function drawGrid() {
+    plants = window.plants;
     ctx.strokeStyle = 'rgb(102, 68, 40)'//'#ddd';
     ctx.linewidth = 1;
 

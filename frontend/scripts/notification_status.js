@@ -14,7 +14,7 @@ const historyBox = document.getElementById('notification-history');
 
 
 // Update robot status, notifications and execution
-export async function updateRobot(plants) {
+export async function updateRobot() {
   //updateStatus();//change this to actually get status
   await fetch('/api/frontendData', {method: 'GET',
   })
@@ -47,12 +47,12 @@ export async function updateRobot(plants) {
     pauseBtn.textContent = data.paused ? '▶' : '⏸';
 
     //Update plants
-    if (plants.toString() != data.plants.toString()) {
+    if (window.plants.toString() != data.plants.toString()) {
     //if (plants.toString() != data.toString()) {
-      plants.length = 0; // clear it
+      window.plants.length = 0; // clear it
       console.log("Plants fetched from server:", data);
       for (const plant of data.plants) {
-        plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
+        window.plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
       }
     }
     })

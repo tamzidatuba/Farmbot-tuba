@@ -1,6 +1,6 @@
 import { token } from "./scripts/auth.js";
 import { drawGrid } from "./scripts/canvas.js";
-import { updateRobot } from "./scripts/notificationhistory.js";
+import { updateRobot } from "./scripts/notification_status.js";
 
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
@@ -20,11 +20,8 @@ const wateringJobBtn = document.getElementById('wateringJobBtn');
 //const body = document.querySelector("body");
 //body.requestFullscreen();
 
-
-
 // List to compare plants with data base
-var plantsList = [];
-var plants = [];
+window.plants = [];
 
 //plant class
 class Plant {
@@ -39,11 +36,6 @@ class Plant {
 const scheduleFields = document.getElementById("scheduleFields");
 const scheduleRadios = document.querySelectorAll('input[name="scheduleOption"]');
 scheduleRadios.item(1).checked = true; // Default to "Not Scheduled""
-
-
-
-
-
 
 window.addEventListener('DOMContentLoaded', () => {
   toggle.style.display = 'none';
@@ -95,7 +87,7 @@ wateringJobBtn.addEventListener('click', async () => {
   jobContainerWatering.innerHTML = '';
   modalWatering.style.display = 'block';
   jobCountWatering = 0;
-  createJobRowWatering(plants); // Add first row by default
+  createJobRowWatering(window.plants); // Add first row by default
 });
 
 closeModal.addEventListener('click', () => {
@@ -213,7 +205,7 @@ function createJobRowWatering(plants, jobData = null) {
 }
 
 addPlantBtnWatering.addEventListener('click', () => {
-  createJobRowWatering(plants);
+  createJobRowWatering(window.plants);
 });
 
 executeBtnWatering.addEventListener('click', async () => {
@@ -670,8 +662,6 @@ window.addEventListener('click', (e) => {
   }
 });
 
-
-
 const viewJobsBtn = document.getElementById('viewSeedingJobsBtn');
 const viewJobsModal = document.getElementById('viewJobsModal');
 const closeViewJobsModal = document.getElementById('closeViewJobsModal');
@@ -912,12 +902,12 @@ async function getPlants() {
   })
     .then(response => response.json())
     .then(data => {
-      if (plants.toString() != data.toString()) {
+      if (window.plants.toString() != data.toString()) {
         //if (plants.toString() != data.toString()) {
-        plants = [];
+        window.plants.length = 0; // Clear the existing plants array
         console.log("Plants fetched from server:", data);
         for (const plant of data) {
-          plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
+          window.plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
         }
       }
     })
@@ -925,9 +915,9 @@ async function getPlants() {
 }
 
 await getPlants(); // get data of plants
-await updateRobot(plants);
-setInterval(async () => await updateRobot(plants), 2500); // Update every 1 second
-drawGrid(plants); // draw plants
+await updateRobot();
+setInterval(async () => await updateRobot(), 2500); // Update every 1 second
+drawGrid(); // draw plants
 //drawRobot();
 
 
