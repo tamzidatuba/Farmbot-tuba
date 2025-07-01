@@ -1,23 +1,5 @@
 import { Task } from "./Task.js"
 
-const FAKE_WATER_PIN = {
-    pin_type: "BoxLed3", // "Peripheral"
-    pin_id: -1 //this.pinNumber
-};
-const FAKE_VACUUM_PIN = {
-    pin_type: "BoxLed4", // "Peripheral"
-    pin_id: -1 //this.pinNumber
-};
-
-const VACUUM_PIN = {
-    pin_type: "Peripheral",
-    pin_id: 78903
-}
-const WATER_PIN = {
-    pin_type: "Peripheral", // "Peripheral"
-    pin_id: 78904 //this.pinNumber
-};
-
 class SetPinTask extends Task {
     constructor(status, pinData, value) {
         super(status);
@@ -52,9 +34,5 @@ class SetPinTask extends Task {
 }
 
 export {
-    SetPinTask,
-    WATER_PIN, 
-    VACUUM_PIN,
-    FAKE_WATER_PIN,
-    FAKE_VACUUM_PIN,
+    SetPinTask
 };
