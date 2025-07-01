@@ -22,6 +22,7 @@ class Plant {
   }
 }
 
+
 window.addEventListener('DOMContentLoaded', () => {
   toggle.style.display = 'none';
   //subtask.style.display='none';
@@ -39,7 +40,6 @@ toggle.addEventListener('click', () => {
   subtask.style.display = isVisible ? 'none' : 'block';
   arrow.classList.toggle('open', !isVisible);
 });
-
 
 // get plants from server
 async function getPlants() {

@@ -1,4 +1,6 @@
 import { token } from "./auth.js";
+import { setLanguage } from "./scripts/translation.js";
+import { getTranslation } from "./scripts/translation.js";
 
 // Seeding Job Management
 let jobCount = 0;
@@ -83,21 +85,28 @@ function createJobRow() {
   // Disable user editing
   depthInput.disabled = true;
 
-
-
-
   // Add delete event
   row.querySelector('.delete-job').addEventListener('click', () => {
     row.remove();
   });
 
   jobContainer.appendChild(row);
+  setLanguage(document.documentElement.lang); // Set correct language
 }
 
 seedingJobBtn.addEventListener('click', () => {
+  // Reset to creation mode
+  isEditMode = false;
+  jobBeingEdited = null;
+
+  document.getElementById('modalTitle').textContent = getTranslation("seedingJob");
+  document.getElementById('executeBtn').textContent = getTranslation("createAndSave");
+  document.getElementById('SeedingJobName').value = '';
+  document.getElementById('SeedingJobName').disabled = false;
+
   jobContainer.innerHTML = '';
   jobCount = 0;
-  createJobRow(); // Add first row by default
+  createJobRow(); // Add one row by default
   modal.style.display = 'block';
 });
 
@@ -129,14 +138,14 @@ executeBtn.addEventListener('click', async () => {
       const coordKey = `${x},${y}`;
 
       if (x == '' || y == '') {
-        errorMsg.textContent = 'Please fill the above values.';
+        errorMsg.textContent = getTranslation("fillValues");
         isValid = false;
       }
       if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650) {
-        errorMsg.textContent = 'Please correct the above values.';
+        errorMsg.textContent = getTranslation("correctValues");
         isValid = false;
       } else if (seenCoordinates.has(coordKey)) {
-        errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
+        errorMsg.textContent = getTranslation("duplicates");
         isValid = false;
       } else {
         seenCoordinates.add(coordKey);
@@ -151,20 +160,20 @@ executeBtn.addEventListener('click', async () => {
   const regex = /^[a-zA-Z0-9 ]*$/;
 
   if (!regex.test(jobname)) {
-    jobNameError.textContent = 'Special characters are not allowed in the job name.';
+    jobNameError.textContent = getTranslation("specialChars");
     isValid = false;
   }
   if (jobname === '') {
-    jobNameError.textContent = 'Please fill the Jobname';
+    jobNameError.textContent = getTranslation("fillJobname");
     isValid = false;
   }
 
   if (!isValid) {
-    console.warn("🚫 Form validation failed. Not sending job.");
+    console.warn(getTranslation("formValidation"));
     return;
   }
   if (seeds.length === 0) {
-    alert("❌ Please add at least one plant before creating a job.");
+    alert(getTranslation("noPlant"));
     return;
   }
 
@@ -179,8 +188,8 @@ executeBtn.addEventListener('click', async () => {
         body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Failed to update job.");
-      alert("Seeding Job Updated ✅");
+      if (!response.ok) throw new Error(data.error || getTranslation("updateFail"));
+      alert(getTranslation("seedingUpdated"));
     } else {
       // ➕ CREATE mode
       const response = await fetch('/api/jobs/Seeding', {
@@ -189,8 +198,8 @@ executeBtn.addEventListener('click', async () => {
         body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Failed to create job.");
-      alert("Seeding Job Created ✅");
+      if (!response.ok) throw new Error(data.error || getTranslation("createFail"));
+      alert(getTranslation("seedingcreated"));
     }
 
     modal.style.display = 'none';
@@ -200,7 +209,7 @@ executeBtn.addEventListener('click', async () => {
 
   } catch (err) {
     console.error(err);
-    alert("❌ Error: " + err.message);
+    alert(getTranslation("error") + err.message);
   }
 });
 
@@ -232,8 +241,8 @@ function editSeedingJob(job) {
   jobBeingEdited = job.jobname;
 
   // Update modal heading and button
-  document.getElementById('modalTitle').textContent = 'Modify Seeding Job';
-  document.getElementById('executeBtn').textContent = 'Update Job';
+  document.getElementById('modalTitle').textContent = getTranslation("modifyJob");
+  document.getElementById('executeBtn').textContent = getTranslation("updateJob");
 
   // Disable editing job name
   const jobNameInput = document.getElementById('SeedingJobName');
@@ -264,7 +273,7 @@ function editSeedingJob(job) {
 
 //VIEW JOBS BUTTON LOGIC
 viewJobsBtn.addEventListener('click', async () => {
-  jobsList.innerHTML = '<p>Loading jobs...</p>';
+  jobsList.innerHTML = getTranslation("loadingJobs");;
   jobCountDisplay.textContent = '';
   viewJobsModal.style.display = 'block';
 
@@ -275,7 +284,7 @@ viewJobsBtn.addEventListener('click', async () => {
     jobCountDisplay.textContent = `✅ You have created ${jobs.length} seeding job${jobs.length !== 1 ? 's' : ''}.`;
 
     if (jobs.length === 0) {
-      jobsList.innerHTML = '<p>No jobs found.</p>';
+      jobsList.innerHTML = getTranslation("notFound");
     } else {
       jobsList.innerHTML = '';
       jobs.forEach((job, index) => {
@@ -314,15 +323,15 @@ viewJobsBtn.addEventListener('click', async () => {
               if (contentType && contentType.includes("application/json")) {
                 const result = await res.json();
                 if (!res.ok) throw new Error(result.error);
-                alert("Job deleted ✅");
+                alert(getTranslation("jobDeleted"));
                 viewJobsBtn.click();
               } else {
                 const errorText = await res.text();
-                throw new Error("Non-JSON response: " + errorText);
+                throw new Error(getTranslation("nonJSON") + errorText);
               }
             } catch (err) {
               console.error(err);
-              alert("❌ Could not delete job: " + err.message);
+              alert(getTranslation("error") + err.message);
             }
 
           }
@@ -330,7 +339,7 @@ viewJobsBtn.addEventListener('click', async () => {
 
         // optional placeholder for future Execute
         jobDiv.querySelector('.execute-job-btnseed').addEventListener('click', async () => {
-          if (confirm(`Are you sure you want to execute job "${job.jobname}"?`)) {
+          if (confirm(getTranslation("executeConfirm") + "${job.jobname} ?")) {
             try {
 
               const res = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
@@ -361,7 +370,7 @@ viewJobsBtn.addEventListener('click', async () => {
               alert(message);
             } catch (err) {
               console.error("Execution failed:", err);
-              alert("❌ Could not execute job due to a network or system error.");
+              alert(getTranslation("networkError"));
             }
           }
         });
@@ -370,7 +379,7 @@ viewJobsBtn.addEventListener('click', async () => {
       });
     }
   } catch (err) {
-    jobsList.innerHTML = '<p>Error loading jobs.</p>';
+    jobsList.innerHTML = getTranslation("loadingError");
     console.error(err);
   }
 });
@@ -392,8 +401,8 @@ seedingJobBtn.addEventListener('click', () => {
   isEditMode = false;
   jobBeingEdited = null;
 
-  document.getElementById('modalTitle').textContent = 'Create Seeding Job';
-  document.getElementById('executeBtn').textContent = 'Create & Save';
+  document.getElementById('modalTitle').textContent = getTranslation("seedingJob");
+  document.getElementById('executeBtn').textContent = getTranslation("createAndSave");
   document.getElementById('SeedingJobName').value = '';
   document.getElementById('SeedingJobName').disabled = false;
 

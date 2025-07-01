@@ -1,3 +1,4 @@
+import { getTranslation } from "./translation.js";
 export let token = '';
 
 //for login and logout
@@ -39,8 +40,8 @@ logoutBtn.addEventListener('click', () => {
     isLoggedIn = false;
     logoutBtn.style.display = 'none';
     loginBtn.style.display = 'block';
-    alert('Successfully Logged Out');
-    farmbotMenu.textContent = 'Farmbot Menu ';
+    alert(getTranslation('logoutSuccess'));
+    farmbotMenu.textContent = getTranslation('menu');
     toggle.style.display = 'none';
     subtask.style.display = 'none';
     viewJobs.style.display = 'none';
@@ -88,13 +89,13 @@ form.addEventListener('submit', async function (e) {
 
         if (response.ok) {
             // Success - Login passed
-            alert('Login successful!');
+            alert(getTranslation('successLogin'));
             isLoggedIn = true;
 
             if (loginModal) loginModal.style.display = 'none';
             if (loginBtn) loginBtn.style.display = 'none';
             if (logoutBtn) logoutBtn.style.display = 'inline-block';
-            if (farmbotMenu) farmbotMenu.textContent = 'Farmbot Menu Admin';
+            if (farmbotMenu) farmbotMenu.textContent = getTranslation('menuAdmin');
             toggle.style.display = 'flex';
             //subtask.style.display='none';
             viewJobs.style.display = 'flex';
@@ -109,12 +110,12 @@ form.addEventListener('submit', async function (e) {
             } else if (data.message?.toLowerCase().includes('password')) {
                 passwordError.textContent = data.message;
             } else {
-                alert(data.message || 'Invalid login. Please try again.');
+                alert(data.message || getTranslation('invalidLogin'));
             }
         }
     } catch (error) {
-        console.error('Error logging in:', error);
-        alert('Server error. Please try again later.');
+        console.error(getTranslation("errorLogin"), error);
+        alert(getTranslation("errorServer"));
     }
 });
 

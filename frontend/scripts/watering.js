@@ -1,4 +1,5 @@
 import { token } from "./auth.js";
+import { getTranslation } from "./translation.js";
 
 const modalWatering = document.getElementById('wateringModal');
 const closeModalWatering = document.getElementById('closeModalWatering');
@@ -30,18 +31,18 @@ function createJobRowWatering(jobData = null) {
   row.innerHTML = `
   <div class="plant-row">
     <div class="plant-row-header">
-      <label for="plant-${jobCountWatering}">Plant</label>
-      <span class="delete-job" title="Remove this plant job">&#128465;</span>
+      <label for="plant-${jobCountWatering}" data-i18n="plantRowHeader">Plant</label>
+      <span class="delete-job" data-i18n-title="removePlant" title="Remove this plant job">&#128465;</span>
     </div>
     <select id="plant-${jobCountWatering}" class="plant-select"></select>
     </div>
     <div class="coord-row">
       <div>
-        <label>Water (mm)</label>
+        <label data-i18n="water">Water (mm)</label>
         <input type="number" class="watering amount" placeholder="2-200 ml">
       </div>
       <div>
-        <label>Watering height</label>
+        <label data-i18n="height">Watering height</label>
         <input type="number" class="coord-input zCoord" placeholder="5 - 100">
       </div>
     </div>
@@ -58,6 +59,7 @@ function createJobRowWatering(jobData = null) {
   const select = row.querySelector('.plant-select');
   const defaultOption = document.createElement('option');
   defaultOption.value = "";
+  defaultOption.dataset.i18n = "selectDefault";
   defaultOption.textContent = "--Choose Plant--";
   select.appendChild(defaultOption);
 
@@ -86,6 +88,7 @@ function createJobRowWatering(jobData = null) {
     row.querySelector('.coord-input.zCoord').value = jobData.yCoordinate || '';
   }
   jobContainerWatering.appendChild(row);
+  setLanguage(document.documentElement.lang);
 }
 
 
@@ -100,8 +103,8 @@ wateringJobBtn.addEventListener('click', async () => {
   scheduleRadios.item(1).checked = true;
   scheduleFields.style.display = "none";
 
-  document.getElementById('modalTitleWatering').textContent = 'Create Watering Job';
-  document.getElementById('executeBtnWatering').textContent = 'Create & Save';
+  document.getElementById('modalTitleWatering').textContent = getTranslation('wateringJob');
+  document.getElementById('executeBtnWatering').textContent = getTranslation('createAndSave');
   document.getElementById('WateringJobName').value = '';
   document.getElementById('WateringJobName').disabled = false;
 
@@ -167,13 +170,13 @@ executeBtnWatering.addEventListener('click', async () => {
       console.log("Selected Plant:", selectedOption.value);
       console.log("Selected Plant 2:", selectedOption.dataset);
       if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 2 || watering > 200) {
-        errorMsg.textContent = 'Please correct the above values.';
+        errorMsg.textContent = getTranslation("fillValues");
         isValid = false;
       } else if (seenCoordinates.has(coordKey)) {
-        errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
+        errorMsg.textContent = getTranslation("duplicates");
         isValid = false;
       } else if (!selectedOption.value) {
-        errorMsg.textContent = 'Please select a plant.';
+        errorMsg.textContent = getTranslation("selectPlant");
         isValid = false;
       } else {
         seenCoordinates.add(coordKey);
@@ -189,11 +192,11 @@ executeBtnWatering.addEventListener('click', async () => {
   const regex = /^[a-zA-Z0-9 ]*$/;
 
   if (!regex.test(jobname)) {
-    jobNameErrorWatering.textContent = 'Special characters are not allowed in the job name.';
+    jobNameErrorWatering.textContent = getTranslation("specialChars");
     isValid = false;
   }
   if (jobname === '') {
-    jobNameErrorWatering.textContent = 'Please fill the Jobname';
+    jobNameErrorWatering.textContent = getTranslation("fillJobname");
     isValid = false;
   }
 
@@ -214,18 +217,18 @@ executeBtnWatering.addEventListener('click', async () => {
     scheduleData.interval = Number(repeatInterval) * 3600000; // convert hours to milliseconds
     if (!scheduleData.next_execution_time || !scheduleData.interval || isNaN(scheduleData.interval)) {
       const errorMsg = document.getElementById("jobScheduleError");
-      errorMsg.textContent = 'Please enter a correct schedule.';
+      errorMsg.textContent = getTranslation("correctSchedule");
       isValid = false;
     }
   }
 
   if (!isValid) {
-    console.warn("🚫 Form validation failed. Not sending job.");
+    console.warn(getTranslation("formValidation"));
     return;
   }
 
   if (plantstobewatered.length === 0) {
-    alert("❌ Please add at least one plant before creating a job.");
+    alert(getTranslation("noPlant"));
     return;
   }
 
@@ -241,8 +244,8 @@ executeBtnWatering.addEventListener('click', async () => {
         body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Failed to update job.");
-      alert("Watering Job Updated ✅");
+      if (!response.ok) throw new Error(data.error || getTranslation("updateFail"));
+      alert(getTranslation("wateringUpdated"));
     } else {
       // ➕ CREATE mode
       const response = await fetch('/api/jobs/Watering', {
@@ -251,8 +254,8 @@ executeBtnWatering.addEventListener('click', async () => {
         body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Failed to create job.");
-      alert("Watering Job Created ✅");
+      if (!response.ok) throw new Error(data.error || getTranslation("createFail"));
+      alert(getTranslation("wateringcreated"));
     }
 
     modalWatering.style.display = 'none';
@@ -283,7 +286,7 @@ function editWateringJob(job) {
   document.getElementById("jobContainerWatering").innerHTML = '';
   modalWatering.style.display = 'block';
 
-  document.getElementById('executeBtnWatering').textContent = 'Update Job';
+  document.getElementById('executeBtnWatering').textContent = getTranslation('updateJob');
 
   // Fill in plant rows
   job.plantstobewatered.forEach(seed => {
@@ -317,7 +320,7 @@ function editWateringJob(job) {
 
 //VIEW WATERING JOBS BUTTON LOGIC
 viewJobsBtnWatering.addEventListener('click', async () => {
-  jobsListWatering.innerHTML = '<p>Loading jobs...</p>';
+  jobsListWatering.innerHTML =getTranslation('loadingJobs');
   jobCountDisplayWatering.textContent = '';
   viewJobsModalWatering.style.display = 'block';
 
@@ -328,7 +331,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
     jobCountDisplayWatering.textContent = `✅ You have created ${jobs.length} watering job${jobs.length !== 1 ? 's' : ''}.`;
 
     if (jobs.length === 0) {
-      jobsListWatering.innerHTML = '<p>No jobs found.</p>';
+      jobsListWatering.innerHTML = getTranslation('notFound');
     } else {
       jobsListWatering.innerHTML = '';
       jobs.forEach((job, index) => {
@@ -356,7 +359,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
 
         // new delete logic
         jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-          if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
+          if (confirm(getTranslation("deleteConfirm") +  `${job.jobname}`)) {
             try {
               const res = await fetch(`/api/jobs/Watering/${job.jobname}`, {
                 method: 'DELETE',
@@ -368,15 +371,15 @@ viewJobsBtnWatering.addEventListener('click', async () => {
               if (contentType && contentType.includes("application/json")) {
                 const result = await res.json();
                 if (!res.ok) throw new Error(result.error);
-                alert("Job deleted ✅");
+                alert(getTranslation("jobDeleted"));
                 viewJobsBtnWatering.click();
               } else {
                 const errorText = await res.text();
-                throw new Error("Non-JSON response: " + errorText);
+                throw new Error(getTranslation("nonJSON") + errorText);
               }
             } catch (err) {
               console.error(err);
-              alert("❌ Could not delete job: " + err.message);
+              alert(getTranslation("deleteError") + err.message);
             }
 
           }
@@ -384,7 +387,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
 
         // optional placeholder for future Execute
         jobDiv.querySelector('.execute-job-btn').addEventListener('click', async () => {
-          if (confirm(`Are you sure you want to execute job "${job.jobname}"?`)) {
+          if (confirm(getTranslation("executeConfirm") + `${job.jobname}`)) {
             try {
 
               const res = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
@@ -397,32 +400,32 @@ viewJobsBtnWatering.addEventListener('click', async () => {
 
               // Check if response is JSON
               const contentType = res.headers.get("content-type");
-              let message = "Unknown server response";
+              let message = getTranslation("unkownError");
 
               if (contentType && contentType.includes("application/json")) {
                 const result = await res.json();
 
                 if (res.ok) {
-                  message = `✅ ${result.message || "Job queued successfully"}`;
+                  message = `✅ ${result.message || getTranslation("queueSuccess")}`;
                 } else {
-                  message = `❌ ${result.error || result.message || "Job queueing failed"}`;
+                  message = `❌ ${result.error || result.message || getTranslation("queueFail")}`;
                 }
               } else {
                 const text = await res.text();
-                message = `❌ Unexpected server response: ${text}`;
+                message = getTranslation("unexpectedResponse") + "${text}";
               }
 
               alert(message);
             } catch (err) {
-              console.error("Execution failed:", err);
-              alert("❌ Could not execute job due to a network or system error.");
+              console.error(getTranslation("executeFail"), err);
+              alert(getTranslation("networkError"));
             }
           }
         });
       });
     }
   } catch (err) {
-    jobsListWatering.innerHTML = '<p>Error loading jobs.</p>';
+    jobsListWatering.innerHTML = getTranslation("loadingError");
     console.error(err);
   }
 });
