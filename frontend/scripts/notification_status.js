@@ -9,6 +9,9 @@ var historyList = [];
 //farmbot status
 const statusBox = document.getElementById('farmbot-status');
 const statusHistory = document.getElementById('status-history');
+const pauseBtn = document.getElementById('pauseJobBtn');
+
+
 const title = statusHistory.querySelector('.history-header');
 const historyBox = document.getElementById('notification-history');
 
@@ -95,3 +98,42 @@ export async function updateRobot() {
     }
   }  
 });
+
+
+pauseBtn.addEventListener('click', async () => {
+  const isCurrentlyPaused = pauseBtn.textContent.includes('▶');
+  const endpoint = isCurrentlyPaused ? '/api/jobs/resume' : '/api/jobs/pause';
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+
+    if (res.status === 200) {
+      if (data.message && data.message.includes('No job')) {
+        showError(data.message); // 👈 Show user-friendly error
+      } else {
+        pauseBtn.textContent = isCurrentlyPaused ? '⏸' : '▶';
+        //hideError(); // hide if previously shown
+      }
+    } else {
+      showError(data.error || 'Failed to process the request.');
+    }
+  } catch (err) {
+    console.error(err);
+    showError('Network error: ' + err.message);
+  }
+});
+
+function showError(message) {
+  const errorBox = document.getElementById('errorMessage');
+  errorBox.textContent = `⚠️ ${message}`;
+  errorBox.classList.add('show');
+
+  setTimeout(() => {
+    errorBox.classList.remove('show');
+  }, 3000);
+}
