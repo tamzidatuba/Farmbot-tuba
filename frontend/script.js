@@ -1321,31 +1321,24 @@ form.addEventListener('submit', async function(e) {
   }
 });
 
-//help button
-  const helpButton = document.getElementById("help-button");
-  const helpTexts = document.querySelectorAll(".help-text");
-  const menuItems = document.querySelectorAll(".menu-item");
-  let helpVisible = false;
-
-  helpButton.addEventListener("click", function () {
-    helpVisible = !helpVisible;
-
-    // Toggle help boxes
-    helpTexts.forEach(text => {
-      text.style.display = helpVisible ? "block" : "none";
-    });
-
-    // Dim background (or adjust menu items)
-    document.body.classList.toggle("help-active", helpVisible);
-  });
-  
-  /*document.getElementById("help-button").addEventListener("click", function () {
+document.getElementById("help-button").addEventListener("click", function () {
     const helpTexts = document.querySelectorAll(".help-text");
-    helpTexts.forEach(function (text) {
-      text.style.display = (text.style.display === "none") ? "block" : "none";
-    });
-  });*/
+    const overlay = document.getElementById("helpTranslucent");
 
+    const isVisible = helpTexts[0].style.display === "block";
+
+    helpTexts.forEach(function (text) {
+      text.style.display = isVisible ? "none" : "block";
+    });
+
+    overlay.style.display = isVisible ? "none" : "block";
+  });
+
+  // to close help
+  document.getElementById("helpTranslucent").addEventListener("click", function () {
+    document.querySelectorAll(".help-text").forEach(text => text.style.display = "none");
+    this.style.display = "none";
+  });
 
 // Optional: Close on background click
 window.addEventListener('click', (e) => {
