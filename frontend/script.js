@@ -1,6 +1,7 @@
 import { token } from "./scripts/auth.js";
 import { drawGrid } from "./scripts/canvas.js";
 import { updateRobot } from "./scripts/notification_status.js";
+import "./scripts/watering.js";
 
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
@@ -37,17 +38,15 @@ const scheduleFields = document.getElementById("scheduleFields");
 const scheduleRadios = document.querySelectorAll('input[name="scheduleOption"]');
 scheduleRadios.item(1).checked = true; // Default to "Not Scheduled""
 
+let isEditMode = false;
+let jobBeingEdited = null;
+
+
 window.addEventListener('DOMContentLoaded', () => {
   toggle.style.display = 'none';
   //subtask.style.display='none';
   viewJobs.style.display = 'none';
 });
-
-
-let isEditMode = false;
-let jobBeingEdited = null;
-let editingJobName = '';
-
 
 viewJobs.addEventListener('click', () => {
   const isVisible = subtaskView.style.display === 'block';
@@ -72,23 +71,7 @@ seedingJobBtn.addEventListener('click', () => {
   modal.style.display = 'block';
 });*/
 
-wateringJobBtn.addEventListener('click', async () => {
-  // Reset to creation mode
-  isEditMode = false;
-  editingJobName = '';
-  scheduleRadios.item(1).checked = true;
-  scheduleFields.style.display = "none";
 
-  document.getElementById('modalTitleWatering').textContent = 'Create Watering Job';
-  document.getElementById('executeBtnWatering').textContent = 'Create & Save';
-  document.getElementById('WateringJobName').value = '';
-  document.getElementById('WateringJobName').disabled = false;
-
-  jobContainerWatering.innerHTML = '';
-  modalWatering.style.display = 'block';
-  jobCountWatering = 0;
-  createJobRowWatering(window.plants); // Add first row by default
-});
 
 closeModal.addEventListener('click', () => {
   modal.style.display = 'none';
@@ -96,11 +79,7 @@ closeModal.addEventListener('click', () => {
   document.getElementById('jobNameError').textContent = '';
 });
 
-closeModalWatering.addEventListener('click', () => {
-  modalWatering.style.display = 'none';
-  document.getElementById('WateringJobName').value = '';
-  document.getElementById('jobNameErrorWatering').textContent = '';
-});
+
 
 window.addEventListener('click', (e) => {
   if (e.target === modal) {
@@ -110,230 +89,6 @@ window.addEventListener('click', (e) => {
   }
 });
 
-window.addEventListener('click', (e) => {
-  if (e.target === modalWatering) {
-    modalWatering.style.display = 'none';
-    document.getElementById('WateringJobName').value = '';
-    document.getElementById('jobNameErrorWatering').textContent = '';
-  }
-});
-
-// Watering Job Management
-scheduleRadios.forEach(radio => {
-  radio.addEventListener('change', () => {
-    if (document.querySelector('input[name="scheduleOption"]:checked').value === "scheduled") {
-      scheduleFields.style.display = "flex";
-    } else {
-      scheduleFields.style.display = "none";
-    }
-  });
-});
-
-
-// Watering Job Management
-let jobCountWatering = 0;
-
-const jobContainerWatering = document.getElementById('jobContainerWatering');
-const addPlantBtnWatering = document.getElementById('addPlantBtnWatering');
-const executeBtnWatering = document.getElementById('executeBtnWatering');
-
-function createJobRowWatering(plants, jobData = null) {
-  jobCountWatering++;
-
-  const row = document.createElement('div');
-  row.classList.add('job-row-watering');
-  row.setAttribute('data-index', jobCountWatering);
-  row.innerHTML = `
-  <div class="plant-row">
-    <div class="plant-row-header">
-      <label for="plant-${jobCountWatering}">Plant</label>
-      <span class="delete-job" title="Remove this plant job">&#128465;</span>
-    </div>
-    <select id="plant-${jobCountWatering}" class="plant-select"></select>
-    </div>
-    <div class="coord-row">
-      <div>
-        <label>Water (mm)</label>
-        <input type="number" class="watering amount" placeholder="2-200 ml">
-      </div>
-      <div>
-        <label>Watering height</label>
-        <input type="number" class="coord-input zCoord" placeholder="5 - 100">
-      </div>
-    </div>
-    <div class="errorMsg"></div>
-  `;
-
-  // Add delete event
-  row.querySelector('.delete-job').addEventListener('click', () => {
-    row.remove();
-  });
-
-  // integrate plant selection
-  // default text
-  const select = row.querySelector('.plant-select');
-  const defaultOption = document.createElement('option');
-  defaultOption.value = "";
-  defaultOption.textContent = "--Choose Plant--";
-  select.appendChild(defaultOption);
-
-
-  // actual plants
-  plants.forEach(plant => {
-    const option = document.createElement('option');
-    option.value = { plant: plant }; // value is the plant
-    option.textContent = `${plant.type} at X: ${plant.x}, Y: ${plant.y}`;
-    option.dataset.x = plant.x;
-    option.dataset.y = plant.y;
-    option.dataset.type = plant.type;
-
-    // Preselect if matching
-    if (jobData && jobData.plant.xcoordinate == plant.x && jobData.plant.ycoordinate == plant.y) {
-      option.selected = true;
-    }
-
-
-    select.appendChild(option);
-  });
-
-  // Pre-fill other fields if jobData exists
-  if (jobData) {
-    row.querySelector('.watering.amount').value = jobData.amount || '';
-    row.querySelector('.coord-input.zCoord').value = jobData.yCoordinate || '';
-  }
-  jobContainerWatering.appendChild(row);
-}
-
-addPlantBtnWatering.addEventListener('click', () => {
-  createJobRowWatering(window.plants);
-});
-
-executeBtnWatering.addEventListener('click', async () => {
-  const jobRows = document.querySelectorAll('.job-row-watering');
-  const results = [];
-  let isValid = true;
-
-  const plantstobewatered = [];
-  const seenCoordinates = new Set();
-
-  console.log(jobRows.length);
-  for (const row of jobRows) {
-    const inputs = row.querySelectorAll('input, select, textarea');
-    const hasValue = Array.from(inputs).some(input => input.value.trim() !== '');
-    if (hasValue) {
-      const plant = row.querySelector('.plant-select');
-      const selectedOption = plant.querySelector('option:checked');
-      const z = Number(row.querySelector('.zCoord').value);
-      const watering = Number(row.querySelector('.watering.amount').value);
-      const errorMsg = row.querySelector('.errorMsg');
-      const x = selectedOption.dataset.x;
-      const y = selectedOption.dataset.y;
-      const type = selectedOption.dataset.type;
-      errorMsg.textContent = '';
-
-      const coordKey = `${x},${y}`;
-
-      console.log("Selected Plant:", selectedOption.value);
-      console.log("Selected Plant 2:", selectedOption.dataset);
-      if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 2 || watering > 200) {
-        errorMsg.textContent = 'Please correct the above values.';
-        isValid = false;
-      } else if (seenCoordinates.has(coordKey)) {
-        errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
-        isValid = false;
-      } else if (!selectedOption.value) {
-        errorMsg.textContent = 'Please select a plant.';
-        isValid = false;
-      } else {
-        seenCoordinates.add(coordKey);
-        plantstobewatered.push({ plant: { planttype: type, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
-        const newPlant = new Plant(Number(x), Number(y), type);
-        results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
-      }
-    }
-  }
-
-  const jobname = document.getElementById("WateringJobName").value.trim();
-  jobNameErrorWatering.textContent = '';
-  const regex = /^[a-zA-Z0-9 ]*$/;
-
-  if (!regex.test(jobname)) {
-    jobNameErrorWatering.textContent = 'Special characters are not allowed in the job name.';
-    isValid = false;
-  }
-  if (jobname === '') {
-    jobNameErrorWatering.textContent = 'Please fill the Jobname';
-    isValid = false;
-  }
-
-  const scheduleOption = document.querySelector('input[name="scheduleOption"]:checked').value;
-
-  const scheduleData = {
-    enabled: scheduleOption === "scheduled",
-    next_execution_time: Number.MAX_SAFE_INTEGER,
-    interval: Number.MAX_SAFE_INTEGER
-  };
-  let is_scheduled = false;
-  if (scheduleOption === "scheduled") {
-    is_scheduled = true;
-    const executionTime = document.getElementById("executionTime").value;
-    const repeatInterval = document.getElementById("repeatInterval").value;
-    scheduleData.next_execution_time = new Date(executionTime).getTime();
-    console.log(scheduleData.next_execution_time);
-    scheduleData.interval = Number(repeatInterval) * 3600000; // convert hours to milliseconds
-    if (!scheduleData.next_execution_time || !scheduleData.interval || isNaN(scheduleData.interval)) {
-      const errorMsg = document.getElementById("jobScheduleError");
-      errorMsg.textContent = 'Please enter a correct schedule.';
-      isValid = false;
-    }
-  }
-
-  if (!isValid) {
-    console.warn("🚫 Form validation failed. Not sending job.");
-    return;
-  }
-
-  if (plantstobewatered.length === 0) {
-    alert("❌ Please add at least one plant before creating a job.");
-    return;
-  }
-
-
-  const payload = { jobname, plantstobewatered, is_scheduled, scheduleData };
-
-  try {
-    if (isEditMode) {
-      // 🔁 UPDATE mode
-      const response = await fetch('/api/jobs/Watering', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ payload, token })
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Failed to update job.");
-      alert("Watering Job Updated ✅");
-    } else {
-      // ➕ CREATE mode
-      const response = await fetch('/api/jobs/Watering', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ payload, token })
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Failed to create job.");
-      alert("Watering Job Created ✅");
-    }
-
-    modalWatering.style.display = 'none';
-    jobContainerWatering.innerHTML = '';
-    document.getElementById("WateringJobName").value = '';
-    jobCount = 0;
-
-  } catch (err) {
-    console.error(err);
-    alert("❌ Error: " + err.message);
-  }
-});
 
 // Seeding Job Management
 let jobCount = 0;
@@ -519,148 +274,7 @@ executeBtn.addEventListener('click', async () => {
   }
 });
 
-const viewJobsBtnWatering = document.getElementById('viewWateringJobsBtn');
-const viewJobsModalWatering = document.getElementById('viewJobsModalWatering');
-const closeViewJobsModalWatering = document.getElementById('closeViewJobsModalWatering');
-const jobsListWatering = document.getElementById('jobsListWatering');
-const jobCountDisplayWatering = document.getElementById('jobCountDisplayWatering');
 
-//VIEW WATERING JOBS BUTTON LOGIC
-viewJobsBtnWatering.addEventListener('click', async () => {
-  jobsListWatering.innerHTML = '<p>Loading jobs...</p>';
-  jobCountDisplayWatering.textContent = '';
-  viewJobsModalWatering.style.display = 'block';
-
-  try {
-    const response = await fetch('/api/jobs/Watering');
-    const jobs = await response.json();
-
-    jobCountDisplayWatering.textContent = `✅ You have created ${jobs.length} watering job${jobs.length !== 1 ? 's' : ''}.`;
-
-    if (jobs.length === 0) {
-      jobsListWatering.innerHTML = '<p>No jobs found.</p>';
-    } else {
-      jobsListWatering.innerHTML = '';
-      jobs.forEach((job, index) => {
-        const jobDiv = document.createElement('div');
-        jobDiv.className = 'job-row';
-        jobDiv.innerHTML = `
-  <div class="job-header-row">
-    <strong>${job.jobname}</strong>
-    <div class="icon-actions">
-      <span class="icon-btn edit-job-btn" title="Edit" data-index="${index}">✏️</span>
-      <span class="icon-btn delete-job-btn" title="Delete" data-index="${index}">🗑️</span>
-    </div>
-  </div>
-  <div>Plants: ${job.plantstobewatered?.length || 0}</div>
-  <button class="execute-job-btn">🚜 Execute</button>
-`;
-
-
-        jobsListWatering.appendChild(jobDiv);
-
-        // edit logic
-        jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
-          editWateringJob(job);
-        });
-
-        // new delete logic
-        jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-          if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
-            try {
-              const res = await fetch(`/api/jobs/Watering/${job.jobname}`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token })
-              });
-
-              const contentType = res.headers.get("content-type");
-              if (contentType && contentType.includes("application/json")) {
-                const result = await res.json();
-                if (!res.ok) throw new Error(result.error);
-                alert("Job deleted ✅");
-                viewJobsBtnWatering.click();
-              } else {
-                const errorText = await res.text();
-                throw new Error("Non-JSON response: " + errorText);
-              }
-            } catch (err) {
-              console.error(err);
-              alert("❌ Could not delete job: " + err.message);
-            }
-
-          }
-        });
-
-        // optional placeholder for future Execute
-        jobDiv.querySelector('.execute-job-btn').addEventListener('click', () => {
-          alert("🚜 Execute job feature coming soon!");
-        });
-
-      });
-    }
-  } catch (err) {
-    jobsListWatering.innerHTML = '<p>Error loading jobs.</p>';
-    console.error(err);
-  }
-});
-
-function editWateringJob(job) {
-  viewJobsModalWatering.style.display = 'none';
-  setTimeout(() => {
-    modalWatering.style.display = 'block';
-  }, 200);
-
-  isEditMode = true;
-  editingJobName = job.jobname;
-
-  // Clear UI and show modal
-  document.getElementById("WateringJobName").value = job.jobname;
-  document.getElementById("WateringJobName").disabled = true;
-  document.getElementById("jobContainerWatering").innerHTML = '';
-  modalWatering.style.display = 'block';
-
-  document.getElementById('executeBtnWatering').textContent = 'Update Job';
-
-  // Fill in plant rows
-  job.plantstobewatered.forEach(seed => {
-    const jobData = {
-      plant: {
-        xcoordinate: seed.plant.xcoordinate,
-        ycoordinate: seed.plant.ycoordinate,
-        type: seed.plant.planttype
-      },
-      amount: seed.wateringcapacity,
-      yCoordinate: seed.wateringheight
-    };
-    createJobRowWatering(plants, jobData);
-  });
-
-  // Fill in schedule
-  if (job?.is_scheduled) {
-    scheduleRadios.item(0).checked = true;
-    scheduleFields.style.display = "flex";
-    let execution_date = new Date(job.ScheduleData.next_execution_time);
-    // convert to local-time
-    execution_date.setMinutes(execution_date.getMinutes() - execution_date.getTimezoneOffset());
-    document.getElementById("executionTime").value = execution_date.toISOString().slice(0, 16) || '';
-    // convert from millisceonds to hours
-    document.getElementById("repeatInterval").value = job.ScheduleData.interval / 3600000 || '';
-  } else {
-    scheduleRadios.item(1).checked = true;
-    scheduleFields.style.display = "none";
-  }
-}
-
-closeViewJobsModalWatering.addEventListener('click', () => {
-  viewJobsModalWatering.style.display = 'none';
-});
-
-window.addEventListener('click', (e) => {
-  if (e.target === viewJobsModalWatering) {
-    viewJobsModalWatering.style.display = 'none';
-  }
-});
 
 const viewJobsBtn = document.getElementById('viewSeedingJobsBtn');
 const viewJobsModal = document.getElementById('viewJobsModal');
@@ -711,6 +325,7 @@ function editSeedingJob(job) {
 
   modal.style.display = 'block';
 }
+
 //VIEW JOBS BUTTON LOGIC
 viewJobsBtn.addEventListener('click', async () => {
   jobsList.innerHTML = '<p>Loading jobs...</p>';
@@ -833,49 +448,6 @@ window.addEventListener('click', (e) => {
     viewJobsModal.style.display = 'none';
   }
 });
-
-
-const pauseBtn = document.getElementById('pauseJobBtn');
-const errorMessageBox = document.getElementById('errorMessage');
-
-pauseBtn.addEventListener('click', async () => {
-  const isCurrentlyPaused = pauseBtn.textContent.includes('▶');
-  const endpoint = isCurrentlyPaused ? '/api/jobs/resume' : '/api/jobs/pause';
-
-  try {
-    const res = await fetch(endpoint, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token })
-    });
-    const data = await res.json();
-
-    if (res.status === 200) {
-      if (data.message && data.message.includes('No job')) {
-        showError(data.message); // 👈 Show user-friendly error
-      } else {
-        pauseBtn.textContent = isCurrentlyPaused ? '⏸' : '▶';
-        //hideError(); // hide if previously shown
-      }
-    } else {
-      showError(data.error || 'Failed to process the request.');
-    }
-  } catch (err) {
-    console.error(err);
-    showError('Network error: ' + err.message);
-  }
-});
-
-function showError(message) {
-  const errorBox = document.getElementById('errorMessage');
-  errorBox.textContent = `⚠️ ${message}`;
-  errorBox.classList.add('show');
-
-  setTimeout(() => {
-    errorBox.classList.remove('show');
-  }, 3000);
-}
-
 
 
 seedingJobBtn.addEventListener('click', () => {
