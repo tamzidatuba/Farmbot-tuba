@@ -62,8 +62,6 @@ closeLoginModal.addEventListener('click', () => {
     loginModal.style.display = 'none';
 });
 
-
-
 const form = document.getElementById('loginForm');
 
 form.addEventListener('submit', async function (e) {
@@ -73,8 +71,6 @@ form.addEventListener('submit', async function (e) {
     const password = document.getElementById('password');
     const usernameError = document.getElementById('usernameError');
     const passwordError = document.getElementById('passwordError');
-
-
 
     // Send to API
     try {
@@ -131,4 +127,3 @@ window.addEventListener('click', (e) => {
     }
 });
 //end of login and logout feature
-

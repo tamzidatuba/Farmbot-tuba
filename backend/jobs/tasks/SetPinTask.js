@@ -31,10 +31,12 @@ class SetPinTask extends Task {
             pin_value: this.value,
             pin_mode: 0
         };
+
+        this.executionFinished = false;
     }
 
     checkCondition(state) {
-        return true;
+        return this.executionFinished;
         // TODO check if actual farmbot pin_id in state data
         if (this.pinArgs.pin_number.args.pin_id in state.pins) {
             return state.pins[this.pinNumber].value == this.value;
@@ -42,8 +44,9 @@ class SetPinTask extends Task {
         return false;
     }
 
-    execute(farmbot, lastState) {
-        farmbot.writePin(this.pinArgs);
+    async execute(farmbot, lastState) {
+        await farmbot.writePin(this.pinArgs);
+        this.executionFinished = true;
     }
 
 }

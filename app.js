@@ -59,7 +59,7 @@ app.post('/api/questions', async ( req, res) => {
   const { question, answer } = req.body
 try {
     let questions = await DatabaseService.InsertQuestionsIntoDB(question, answer);
-    res.status(200).json(questions);
+    res.status(200).json({message:"Thank you! Your question has been submitted."});
   }
   catch (err) {
     console.error(err);
@@ -82,7 +82,7 @@ catch(err)
 app.get('/api/getsinglequestion', async (req,res) => {
   const{ question } = req.body;
 try{
-  let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyEmail(question);
+  let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyQuestion(question);
   res.status(200).json(getsinglequestion);
 }
 catch(err)
@@ -147,6 +147,33 @@ app.post('/api/logout', async (req,res) => {
 
 app.get('/api/frontendData', (req, res) => {
   res.status(200).json(backend.generateFrontendData());
+});
+
+app.post('/api/demo/watering', async (req, res) => {
+  const { payload, token } = req.body
+  const job_data = {jobType: DatabaseService.JobType.WATERING, job: payload, demo: true}
+  console.log(payload.plantstobewatered[0].plant);
+  // append demo to schedule_manager
+  if(!backend.demo_job_queued && backend.scheduleManager.appendDemoJob(job_data)) {
+    backend.checkForNextJob();
+    res.status(200).json({ message: "Queued watering demo" });
+    backend.appendNotification(TokenManager.getUser(token) + " queued a Watering-Demo");
+  } else {
+    res.status(500).json({ error: 'Watering-Demo is already queued' });
+  }
+});
+
+app.post('/api/demo/seeding', async (req, res) => {
+  const { payload, token } = req.body
+  const job_data = {jobType: DatabaseService.JobType.SEEDING, job: payload, demo: true}
+  // append demo to schedule_manager
+  if(!backend.demo_job_queued && backend.scheduleManager.appendDemoJob(job_data)) {
+    backend.checkForNextJob();
+    backend.appendNotification(TokenManager.getUser(token) + " queued a Seeding-Demo");
+    res.status(200).json({ message: "Queued seeding demo" })
+  } else {
+    res.status(500).json({ error: 'Seeding-Demo is already queued' });
+  }
 });
 
 // Handle await backend init
