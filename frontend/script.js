@@ -106,27 +106,27 @@ function createJobRow() {
   row.innerHTML = `
   <div class="plant-row">
     <div class="plant-row-header">
-      <label for="plant-${jobCount}">Plant Type</label>
-      <span class="delete-job" title="Remove this plant job">&#128465;</span>
+      <label data-i18n="plantType" for="plant-${jobCount}">Plant Type</label>
+      <span class="delete-job" data-i18n-title="removePlant" title="Remove this plant job">&#128465;</span>
     </div>
     <select id="plant-${jobCount}" class="plantType">
-      <option value="">--Choose Plant--</option>
-      <option value="Tomato">Tomato</option>
-      <option value="Radish">Radish</option>
-      <option value="Lettuce">Lettuce</option>
+      <option value="" data-i18n="selectDefault">--Choose Plant--</option>
+      <option value="Tomato" data-i18n="tomato">Tomato</option>
+      <option value="Radish" data-i18n="radish">Radish</option>
+      <option value="Lettuce" data-i18n="lettuce">Lettuce</option>
     </select>
   </div>
   <div class="coord-row">
     <div>
-      <label>X Coordinate</label>
+      <label data-i18n="x">X Coordinate</label>
       <input type="number" class="coord-input xCoord" placeholder="0 - 395">
     </div>
     <div>
-      <label>Y Coordinate</label>
+      <label data-i18n="y">Y Coordinate</label>
       <input type="number" class="coord-input yCoord" placeholder="0 - 650">
     </div>
     <div>
-      <label>Depth (mm)</label>
+      <label data-i18n="depth">Depth (mm)</label>
       <input type="number" class="coord-input depth" placeholder="> 0">
     </div>
   </div>
@@ -170,6 +170,7 @@ function createJobRow() {
   });
 
   jobContainer.appendChild(row);
+  setLanguage(document.documentElement.lang); // Set correct language
 }
 
 addPlantBtn.addEventListener('click', () => {
@@ -198,15 +199,15 @@ executeBtn.addEventListener('click', async () => {
 
       const coordKey = `${x},${y}`;
 
-      if (x == '' || y == '') {
-        errorMsg.textContent = 'Please fill the above values.';
+      if(x=='' || y==''){
+        errorMsg.textContent = getTranslation("fillValues");
         isValid = false;
       }
-      if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650) {
-        errorMsg.textContent = 'Please correct the above values.';
+      if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650 ) {
+        errorMsg.textContent = getTranslation("correctValues");
         isValid = false;
       } else if (seenCoordinates.has(coordKey)) {
-        errorMsg.textContent = 'Duplicate coordinates detected. Please re-enter.';
+        errorMsg.textContent = getTranslation("duplicates");
         isValid = false;
       } else {
         seenCoordinates.add(coordKey);
@@ -221,20 +222,20 @@ executeBtn.addEventListener('click', async () => {
   const regex = /^[a-zA-Z0-9 ]*$/;
 
   if (!regex.test(jobname)) {
-    jobNameError.textContent = 'Special characters are not allowed in the job name.';
+    jobNameError.textContent = getTranslation("specialChars");
     isValid = false;
   }
-  if (jobname === '') {
-    jobNameError.textContent = 'Please fill the Jobname';
+  if(jobname===''){
+    jobNameError.textContent = getTranslation("fillJobname");
     isValid = false;
   }
 
   if (!isValid) {
-    console.warn("🚫 Form validation failed. Not sending job.");
+    console.warn(getTranslation("formValidation"));
     return;
   }
   if (seeds.length === 0) {
-    alert("❌ Please add at least one plant before creating a job.");
+    alert(getTranslation("noPlant"));
     return;
   }
 
@@ -249,8 +250,8 @@ executeBtn.addEventListener('click', async () => {
         body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Failed to update job.");
-      alert("Seeding Job Updated ✅");
+      if (!response.ok) throw new Error(data.error || getTranslation("updateFail"));
+      alert(getTranslation("seedingUpdated"));
     } else {
       // ➕ CREATE mode
       const response = await fetch('/api/jobs/Seeding', {
@@ -259,8 +260,8 @@ executeBtn.addEventListener('click', async () => {
         body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Failed to create job.");
-      alert("Seeding Job Created ✅");
+      if (!response.ok) throw new Error(data.error || getTranslation("createFail"));
+      alert(getTranslation("seedingcreated"));
     }
 
     modal.style.display = 'none';
@@ -270,7 +271,7 @@ executeBtn.addEventListener('click', async () => {
 
   } catch (err) {
     console.error(err);
-    alert("❌ Error: " + err.message);
+    alert(getTranslation("error") + err.message);
   }
 });
 
@@ -359,36 +360,36 @@ viewJobsBtn.addEventListener('click', async () => {
         jobsList.appendChild(jobDiv);
 
         // edit logic
-        jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
-          editSeedingJob(job);
-        });
-        // new delete logic
-        jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-          if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
-            try {
-              const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token })
-              });
-
-              const contentType = res.headers.get("content-type");
-              if (contentType && contentType.includes("application/json")) {
-                const result = await res.json();
-                if (!res.ok) throw new Error(result.error);
-                alert("Job deleted ✅");
-                viewJobsBtn.click();
-              } else {
-                const errorText = await res.text();
-                throw new Error("Non-JSON response: " + errorText);
-              }
-            } catch (err) {
-              console.error(err);
-              alert("❌ Could not delete job: " + err.message);
-            }
-
+    jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
+      editSeedingJob(job);
+      });
+      // new delete logic
+    jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
+      if (confirm(`Are you sure you want to delete job "${job.jobname}"?`)) {
+        try {
+          const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({token})
+          });
+        
+          const contentType = res.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error);
+            alert(getTranslation("jobDeleted"));
+            viewJobsBtn.click();
+          } else {
+            const errorText = await res.text();
+            throw new Error(getTranslation("nonJSON") + errorText);
           }
-        });
+        } catch (err) {
+          console.error(err);
+          alert(getTranslation("error") + err.message);
+        }
+        
+  }
+});
 
         // optional placeholder for future Execute
         jobDiv.querySelector('.execute-job-btnseed').addEventListener('click', async () => {
@@ -432,7 +433,7 @@ viewJobsBtn.addEventListener('click', async () => {
       });
     }
   } catch (err) {
-    jobsList.innerHTML = '<p>Error loading jobs.</p>';
+    jobsList.innerHTML = getTranslation("loadingError");
     console.error(err);
   }
 });

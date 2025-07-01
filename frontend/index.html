@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Digital Farming Dashboard</title>
+  <title data-i18n="title">Digital Farming Dashboard</title>
   <link rel="stylesheet" href="./styles.css">
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
@@ -18,13 +18,13 @@
 
   <div class="modal-content">
     <span class="close" id="closeModal">&times;</span>
-    <h2 id="modalTitle">Create Seeding Job</h2>
-    <input type="text" id="SeedingJobName" placeholder="Enter job name" />
+    <h2 id="modalTitle" data-i18n="seedingJob">Create Seeding Job</h2>
+    <input type="text" id="SeedingJobName" data-i18n-placeholder="enterName" placeholder="Enter job name" />
     <div id="jobNameError" class="errorMsg"></div>
     <div id="jobContainer"></div>
 
-    <button id="addPlantBtn">+ Add Plant</button>
-    <button id="executeBtn">Create & Save</button>
+    <button id="addPlantBtn" data-i18n="addPlant">+ Add Plant</button>
+    <button id="executeBtn" data-i18n="createAndSave">Create & Save</button>
   </div>
 </div>
 
@@ -34,36 +34,36 @@
 
   <div class="modal-content">
     <span class="close" id="closeModalWatering">&times;</span>
-    <h2 id="modalTitleWatering">Create Watering Jobs</h2>
-    <input type="text" id="WateringJobName" placeholder="Enter job name" />
+    <h2 id="modalTitleWatering" data-i18n="wateringJob">Create Watering Job</h2>
+    <input type="text" id="WateringJobName" data-i18n-placeholder="enterName" placeholder="Enter job name" />
     <div id="jobNameErrorWatering" class="errorMsg"></div>
 
     <!-- Schedule Option -->
     <div class="schedule-options">
       <label class="option-label">
         <input type="radio" name="scheduleOption" value="scheduled" />
-        <span>Scheduled</span>
+        <span data-i18n="scheduled">Scheduled</span>
       </label>
       <label class="option-label">
         <input type="radio" name="scheduleOption" value="not-scheduled" checked />
-        <span>Not Scheduled</span>
+        <span data-i18n="notScheduled">Not Scheduled</span>
       </label>
     </div>
 
     <!-- Hidden schedule details -->
     <div id="scheduleFields" style="display: none;">
-      <label for="executionTime">Execution Time:</label>
+      <label for="executionTime" data-i18n="executionTime">Execution Time:</label>
       <input type="datetime-local" id="executionTime" />
 
-      <label for="repeatInterval">Repeat Interval (in hours):</label>
+      <label for="repeatInterval" data-i18n="repeatInterval">Repeat Interval (in hours):</label>
       <input type="number" id="repeatInterval" min="1" placeholder="e.g., 7 for every 7 hours" />
     </div>
     <div id="jobScheduleError" class="errorMsg"></div>
 
     <div id="jobContainerWatering"></div>
 
-    <button id="addPlantBtnWatering">+ Add Plant</button>
-    <button id="executeBtnWatering">Create & Save</button>
+    <button id="addPlantBtnWatering" data-i18n="addPlant">+ Add Plant</button>
+    <button id="executeBtnWatering" data-i18n="createAndSave">Create & Save</button>
   </div>
 </div>
 
@@ -71,12 +71,12 @@
 <div id="wateringDemoModal" class="modal">
    <div class="modal-content">
      <span class="close" id="closeModalWateringDemo">&times;</span>
-     <h2>Select a plant for watering</h2>
+     <h2 data-i18n="wateringDemo">Select a plant for watering</h2>
      <select id="plantDropdown">
-       <option>Loading...</option>
+       <option data-i18n="loading">Loading...</option>
      </select>
      <br /><br />
-     <button id="executeBtnWateringDemo">Execute</button>
+     <button id="executeBtnWateringDemo" data-i18n="execute">Execute</button>
    </div>
  </div>
 
@@ -101,25 +101,25 @@
      <div class="login-container">
       <span class="close" id="closeLoginModal">&times;</span>
     
-    <h2>
+    <h2 data-i18n="login">
       <img src="https://static.vecteezy.com/system/resources/previews/036/004/484/non_2x/green-leaf-icon-on-white-background-for-graphic-and-web-design-simple-sign-internet-concept-symbol-for-website-button-or-mobile-app-vector.jpg" alt="Leaf Icon" />
        Login
     </h2>
   
     <form id="loginForm">
       <div class="form-group">
-        <label for="username">Username:</label>
+        <label for="username" data-i18n="username">Username:</label>
         <input type="text" id="username" name="username" />
         <div id="usernameError" class="error"></div>
       </div>
 
       <div class="form-group">
-        <label for="password">Password:</label>
+        <label for="password" data-i18n="password">Password:</label>
         <input type="password" id="password" name="password" />
         <div id="passwordError" class="error"></div>
       </div>
 
-      <button type="submit">Login</button>
+      <button type="submit" data-i18n="login">Login</button>
     </form>
 
     
@@ -130,40 +130,44 @@
 
 
 <div class="sidebar">
-  <h2 id="farmbotMenu">FarmBot Menu</h2>
+  <h2 id="farmbotMenu" data-i18n="menu">FarmBot Menu</h2>
   <ul>
     <li>
       <div class="menu-item" id="createTaskToggle">
-        <span>Create Task</span>
+        <span data-i18n="task">Create Task</span>
         <span class="arrow" id="arrow">&#9654;</span>
       </div>
       <div class="subtask" id="subtaskContainer">
-        <button id="seedingJobBtn">Seeding Job</button>
-        <button id="wateringJobBtn">Watering Job</button>
+        <button id="seedingJobBtn" data-i18n="seeding">🌱 Seeding Job</button>
+        <button id="wateringJobBtn" data-i18n="watering">💧 Watering Job</button>
       </div>
     </li>
     <li>
       <div class="menu-item" id="viewJobs">
-        <span>📋 View Jobs</span>
+        <span data-i18n="view">📋 View Jobs</span>
         <span class="arrow" id="arrowView">&#9654;</span>
       </div>
       <div class="subtask" id="subtaskView">
-        <button id="viewSeedingJobsBtn">Seeding Job</button>
-        <button id="viewWateringJobsBtn">Watering Job</button>
+        <button id="viewSeedingJobsBtn" data-i18n="seeding">🌱 Seeding Job</button>
+        <button id="viewWateringJobsBtn" data-i18n="watering">💧 Watering Job</button>
       </div>
     </li>
-    <li class="menu-item" id="seedingDemoBtn">Seeding Demo</li>
-    <li class="menu-item" id="wateringDemoBtn">Watering Demo</li>
-    <li class="menu-item">Feedback</li>
-    <li class="menu-item">Help</li>
+    <li class="menu-item" data-i18n="seedingDemo">Seeding Demo</li>
+    <li class="menu-item" id="wateringDemoBtn" data-i18n="wateringDemo">Watering Demo</li>
+    <li class="menu-item" data-i18n="feedback">Feedback</li>
+    <li class="menu-item" data-i18n="help">Help</li>
   </ul>
+  <select id="languageSelector">
+    <option value="en" selected>English</option>
+    <option value="de">Deutsch</option>
+  </select>
 </div>
 
 
   <div class="main">
     <button class="settings-btn" id="settings-btn"><span class="gear-emoji">⚙</span></button>
-    <button class="login-btn" id="loginBtn">🌱LogIn🌱</button>
-    <button class="logout-btn" id="logoutBtn">🌱Logout🌱</button>
+    <button class="login-btn" id="loginBtn" data-i18n="login">🌱Login🌱</button>
+    <button class="logout-btn" id="logoutBtn" data-i18n="logout">🌱Logout🌱</button>
 
     
     
@@ -173,17 +177,17 @@
     </div>
     <div id="hover-coordinates"></div>
      <div id="farmbot-status-container">
-      <div id="farmbot-status">Status: Offline</div> <!-- Robot status -->
+      <div id="farmbot-status" data-i18n="initialStatus">Status: Offline</div> <!-- Robot status -->
       <button id="pauseJobBtn" class="pause-btn">⏸</button>
       <div id="errorMessage" class="error-box hidden"></div>
     </div>
     <div id="status-history">
       <div class="history-header">
-        <h3 class="history-title">Notification History</h3>
-        <select id="entry-limit" name="10 entries">
-          <option value="10" selected>10 entries</option>
-          <option value="25">25 entries</option>
-          <option value="50">50 entries</option>
+        <h3 class="history-title" data-i18n="history">Notification History</h3>
+        <select id="entry-limit" name="10">
+          <option value="10" selected>10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
         </select>
       </div>
   </div>
@@ -191,7 +195,7 @@
   <div id="viewJobsModal" class="modal">
     <div class="modal-content">
       <span class="close" id="closeViewJobsModal">&times;</span>
-      <h2>📋 Seeding Jobs Overview</h2>
+      <h2 data-i18n="seedingOverview">📋 Seeding Jobs Overview</h2>
       <p id="jobCountDisplay"></p> <!-- 👈 Add this -->
       <div id="jobsList"></div>
     </div>
@@ -201,7 +205,7 @@
   <div id="viewJobsModalWatering" class="modal">
     <div class="modal-content">
       <span class="close" id="closeViewJobsModalWatering">&times;</span>
-      <h2>📋 Watering Jobs Overview</h2>
+      <h2 data-i18n="wateringoverview">📋 Watering Jobs Overview</h2>
       <p id="jobCountDisplayWatering"></p> <!-- 👈 Add this -->
       <div id="jobsListWatering"></div>
     </div>
@@ -228,7 +232,10 @@
   </form>
 </div>
 
-
+  
+  <script type="module" src="./scripts/i18n.js"></script>
+  <script type="module" src="./scripts/translation.js"></script>
+  <script type="module" src="./scripts/auth.js"></script>
   <script type="module" src="./script.js"></script>
   <script type="module" src="./wateringDemo.js"></script>
   <script type="module" src="./seedingdemo.js"></script>
