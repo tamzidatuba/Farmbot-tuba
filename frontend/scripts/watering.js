@@ -376,7 +376,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
                 viewJobsBtnWatering.click();
               } else {
                 const errorText = await res.text();
-                throw new Error(getTranslation("nonJSON") + errorText);
+                throw new Error("Non JSON response: " + errorText);
               }
             } catch (err) {
               console.error(err);
