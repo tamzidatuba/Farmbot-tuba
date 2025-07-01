@@ -1,4 +1,3 @@
-import { get } from "mongoose";
 import { token } from "./auth.js";
 import { setLanguage } from "./translation.js";
 import { getTranslation } from "./translation.js";
