@@ -11,6 +11,7 @@ let jobCountWatering = 0;
 let plants = window.plants || []; // Ensure plants is initialized
 const scheduleFields = document.getElementById("scheduleFields");
 const scheduleRadios = document.querySelectorAll('input[name="scheduleOption"]');
+scheduleRadios.item(1).checked = true; // Default to "Not Scheduled""
 const viewJobsModalWatering = document.getElementById('viewJobsModalWatering');
 const addPlantBtnWatering = document.getElementById('addPlantBtnWatering');
 const viewJobsBtnWatering = document.getElementById('viewWateringJobsBtn');
@@ -437,16 +438,3 @@ window.addEventListener('click', (e) => {
     viewJobsModalWatering.style.display = 'none';
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
