@@ -1,48 +1,44 @@
 document.addEventListener("DOMContentLoaded", () => {
     const demoBtn       = document.getElementById("seedingDemoBtn");
     const modal         = document.getElementById("seedingDemoModal");
-    const closeModalBtn = document.getElementById("closeModalSeedingDemo");
-    const plantDropdown = document.getElementById("plantDropdown");
+    const closeModal    = document.getElementById("closeModalSeedingDemo");
     const executeBtn    = document.getElementById("executeBtnSeedingDemo");
+    const depthMap      = { Tomato: 6, Radish: 10, Lettuce: 3, default: 5 };
     let plants          = [];
   
-    // map plant types → default seeding depths (in mm)
-    const depthMap = {
-      Tomato: 6,
-      Radish: 10,
-      Lettuce: 3,
-      default: 5
-    };
-  
-    // Open modal & fetch plants
+    // 1) Open & populate
     demoBtn.addEventListener("click", () => {
       modal.style.display = "block";
       getPlants();
     });
   
-    // Close handlers
-    closeModalBtn.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
+    // 2) Close modal
+    closeModal.addEventListener("click", () => modal.style.display = "none");
     window.addEventListener("click", e => {
       if (e.target === modal) modal.style.display = "none";
     });
   
-    // Execute Seeding Demo
+    // 3) Execute the Seeding Demo POST
     executeBtn.addEventListener("click", async () => {
-      const sel = plants[plantDropdown.value];
+      const select = document.getElementById("plantDropdownSeeding");
+      const idx    = parseInt(select.value, 10);
+      const sel    = plants[idx];
+  
       if (!sel) {
-        console.error("No plant selected or still loading.");
-        return modal.style.display = "none";
+        console.error("Nothing selected or still loading.");
+        modal.style.display = "none";
+        return;
       }
   
-      // choose a random spot (1–100)
-      const x = Math.floor(Math.random()*100) + 1;
-      const y = Math.floor(Math.random()*100) + 1;
+      // pick a random spot (1–100)
+      const x = Math.floor(Math.random() * 100) + 1;
+      const y = Math.floor(Math.random() * 100) + 1;
   
-      // derive depth by plant type
-      const depth = depthMap[sel.planttype.toLowerCase()] ?? depthMap.default;
+      // derive depth
+      const depth = depthMap[ capitalize(sel.planttype) ] 
+                  ?? depthMap.default;
   
+      // build payload
       const payload = {
         jobname: "Seeding Demo",
         seeds: [{
@@ -53,13 +49,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }]
       };
   
+      // TODO: swap in your real auth token here
+      const token = ""; 
+  
       try {
         const res = await fetch("/api/demo/seeding", {
           method:  "POST",
           headers: { "Content-Type": "application/json" },
-          body:    JSON.stringify({ payload, token: "" })
+          body:    JSON.stringify({ payload, token })
         });
-        if (!res.ok) console.error("Seeding demo failed:", res.statusText);
+        if (!res.ok) {
+          console.error("Seeding demo failed:", res.status, res.statusText);
+        } else {
+          console.log("Seeding demo queued successfully!");
+        }
       } catch (err) {
         console.error("Error executing seeding demo:", err);
       }
@@ -67,29 +70,43 @@ document.addEventListener("DOMContentLoaded", () => {
       modal.style.display = "none";
     });
   
-    // fetch available plants
+    // 4) Fetch + fill dropdown
     async function getPlants() {
-      plantDropdown.innerHTML = "<option>Loading…</option>";
+      const select = document.getElementById("plantDropdownSeeding");
+      if (!select) {
+        console.error("No #plantDropdownSeeding in DOM");
+        return;
+      }
+      select.innerHTML = "";
+  
       try {
         const res  = await fetch("/api/plants");
         const data = await res.json();
-        plants = data;
-        plantDropdown.innerHTML = "";
-        data.forEach((p, i) => {
-          const opt = document.createElement("option");
-          opt.value = i;
-          opt.textContent = 
-            `${capitalize(p.planttype)} @ (${p.xcoordinate}, ${p.ycoordinate})`;
-          plantDropdown.appendChild(opt);
+        plants      = Array.isArray(data) ? data : [];
+  
+        if (plants.length === 0) {
+          select.innerHTML = "<option>(no plants found)</option>";
+          return;
+        }
+  
+        plants.forEach((p, i) => {
+          const label = [
+            capitalize(p.planttype),
+            `X : ${p.xcoordinate}`,
+            `Y : ${p.ycoordinate}`
+          ].join(" ");
+  
+          select.add(new Option(label, i));
         });
-      } catch (e) {
-        console.error("Error fetching plants:", e);
-        plantDropdown.innerHTML = "<option>Error loading</option>";
+      }
+      catch (err) {
+        console.error("Error fetching plants:", err);
+        select.innerHTML = "<option>Error loading plants</option>";
       }
     }
   
     function capitalize(s) {
-      return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+      return String(s).charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     }
   });
   
