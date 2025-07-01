@@ -1321,6 +1321,14 @@ form.addEventListener('submit', async function(e) {
   }
 });
 
+//help button
+document.getElementById("menu-item").addEventListener("click", function () {
+    const helpTexts = document.querySelectorAll(".help-text");
+    helpTexts.forEach(function (text) {
+      text.style.display = (text.style.display === "none") ? "block" : "none";
+    });
+  });
+
 
 // Optional: Close on background click
 window.addEventListener('click', (e) => {
