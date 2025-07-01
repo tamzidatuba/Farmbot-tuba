@@ -1,6 +1,6 @@
 import { translations } from "./i18n.js";
 
-languageSelector = document.getElementById("languageSelector");
+const languageSelector = document.getElementById("languageSelector");
 
 export function setLanguage(lang=localStorage.getItem("preferredLanguage") || "en") {
   const elements = document.querySelectorAll("[data-i18n], [data-i18n-title], [data-i18n-placeholder]");

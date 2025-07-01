@@ -1,6 +1,6 @@
 import { token } from "./auth.js";
-import { setLanguage } from "./scripts/translation.js";
-import { getTranslation } from "./scripts/translation.js";
+import { setLanguage } from "./translation.js";
+import { getTranslation } from "./translation.js";
 
 // Seeding Job Management
 let jobCount = 0;
