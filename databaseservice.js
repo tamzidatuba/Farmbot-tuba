@@ -188,6 +188,10 @@ async function UpdateUserToDB(username, password) {
     const users = await userModel.UpdateUser(username, password);
 }
 
+async function DeletePlantFromDB(xcoordinate, ycoordinate) {
+    await plantModel.DeletePlantFromDB(xcoordinate, ycoordinate);
+}
+
 async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
     let existingJobs = await FetchJobsFromDB(JobType.SEEDING);
     let invalidSeeds = [];
@@ -262,4 +266,5 @@ export default {
     InsertQuestionsIntoDB,
     FetchAlltheQuestionsFromDB,
     FetchQuestionsFromDBbyQuestion,
+    DeletePlantFromDB,
 };

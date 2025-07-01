@@ -28,8 +28,14 @@ async function FetchPlantsFromDB() {
   return plants; 
 }
 
+async function DeletePlantFromDB(xcoordinate, ycoordinate)
+{
+    await ExecutionModel.deleteOne({"xcoordinate": xcoordinate, "ycoordinate": ycoordinate});
+}
+
 export default 
 {
   InsertPlantToDB,
   FetchPlantsFromDB,
+  DeletePlantFromDB,
 };

@@ -103,7 +103,30 @@ app.post('/api/plants', async (req, res) => {
     res.status(200).json({ message: 'Plant saved' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to save job' });
+    res.status(500).json({ error: 'Failed to save plant' });
+  }
+});
+
+// insert plant
+app.delete('/api/plant', async (req, res) => {
+  const { token, xcoordinate, ycoordinate} = req.body;
+  if (!TokenManager.validateToken(token)) {
+    res.status(500).json({error: "You dont have permission to do that"});
+    return
+  }
+  try {
+    await DatabaseService.DeleteJobFromDB(xcoordinate, ycoordinate);
+    for (const plant in backend.plants) {
+      if (backend.plants[plant].xcoordinate == xcoordinate && backend.plants[plant].ycoordinate == ycoordinate) {
+
+          // remove job from queue
+          backend.plants.splice(plant, 1);
+      }
+    }
+    res.status(200).json({ message: 'Plant deleted' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to delete plant' });
   }
 });
 
