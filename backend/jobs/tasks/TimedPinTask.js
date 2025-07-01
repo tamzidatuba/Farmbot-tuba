@@ -43,8 +43,8 @@ class TimedPinTask extends Task {
 
     timeout() {
         this.pinArgs.pin_value = 0;
-        this.farmbot.writePin(this.pinArgs);
         this.executionFinished = true;
+        this.farmbot.writePin(this.pinArgs);
     }
 
     pauseTask(farmbot) {

@@ -74,6 +74,7 @@ export default function createJobsRouter(backend) {
         try {
             // ask DB for job
             let job = await DatabaseService.ReturnSingleJob(jobname);
+            console.log(job);
             
             if (job !== null && typeof (job) !== "undefined") {
                 if (await backend.scheduleManager.appendScheduledJob(job)) {
@@ -131,7 +132,7 @@ export default function createJobsRouter(backend) {
         try {
             await DatabaseService.UpdateJobToDB(jobtype, payload);
             backend.scheduleManager.checkForScheduledJobs();
-            backend.appendNotification("Job '" + payload.name + "' modified");
+            backend.appendNotification("Job '" + payload.jobname + "' modified");
             res.status(200).json({ message: 'Job updated' });
         } catch (err) {
             console.error(err);

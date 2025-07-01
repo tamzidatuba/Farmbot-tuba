@@ -601,8 +601,41 @@ viewJobsBtnWatering.addEventListener('click', async () => {
         });
 
         // optional placeholder for future Execute
-        jobDiv.querySelector('.execute-job-btn').addEventListener('click', () => {
-          alert("🚜 Execute job feature coming soon!");
+        jobDiv.querySelector('.execute-job-btn').addEventListener('click', async () => {
+          if (confirm(`Are you sure you want to execute job "${job.jobname}"?`)) {
+            try {
+
+              const res = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token })
+              });
+
+              // Check if response is JSON
+              const contentType = res.headers.get("content-type");
+              let message = "Unknown server response";
+
+              if (contentType && contentType.includes("application/json")) {
+                const result = await res.json();
+
+                if (res.ok) {
+                  message = `✅ ${result.message || "Job queued successfully"}`;
+                } else {
+                  message = `❌ ${result.error || result.message || "Job queueing failed"}`;
+                }
+              } else {
+                const text = await res.text();
+                message = `❌ Unexpected server response: ${text}`;
+              }
+
+              alert(message);
+            } catch (err) {
+              console.error("Execution failed:", err);
+              alert("❌ Could not execute job due to a network or system error.");
+            }
+          }
         });
 
       });
@@ -808,9 +841,9 @@ viewJobsBtn.addEventListener('click', async () => {
                 const result = await res.json();
 
                 if (res.ok) {
-                  message = `✅ ${result.message || "Job executed successfully"}`;
+                  message = `✅ ${result.message || "Job queued successfully"}`;
                 } else {
-                  message = `❌ ${result.error || result.message || "Job execution failed"}`;
+                  message = `❌ ${result.error || result.message || "Job queueing failed"}`;
                 }
               } else {
                 const text = await res.text();

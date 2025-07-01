@@ -73,7 +73,7 @@ async function ReturnSingleJob(jobname) {
     }
     job = await wateringModule.ReturnWateringJob(jobname);
     if (job !== null && typeof (job) !== "undefined") {
-        return { job };
+        return job;
     }    
 }
 

@@ -157,7 +157,7 @@ app.post('/api/demo/watering', async (req, res) => {
   if(!backend.demo_job_queued && backend.scheduleManager.appendDemoJob(job_data)) {
     backend.checkForNextJob();
     res.status(200).json({ message: "Queued watering demo" });
-    backend.appendNotification(tokenManager.getUser(token) + " queued a Watering-Demo");
+    backend.appendNotification(TokenManager.getUser(token) + " queued a Watering-Demo");
   } else {
     res.status(500).json({ error: 'Watering-Demo is already queued' });
   }
@@ -169,7 +169,7 @@ app.post('/api/demo/seeding', async (req, res) => {
   // append demo to schedule_manager
   if(!backend.demo_job_queued && backend.scheduleManager.appendDemoJob(job_data)) {
     backend.checkForNextJob();
-    backend.appendNotification(tokenManager.getUser(token) + " queued a Seeding-Demo");
+    backend.appendNotification(TokenManager.getUser(token) + " queued a Seeding-Demo");
     res.status(200).json({ message: "Queued seeding demo" })
   } else {
     res.status(500).json({ error: 'Seeding-Demo is already queued' });
