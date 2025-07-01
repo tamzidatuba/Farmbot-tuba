@@ -7,7 +7,6 @@ const closeModalWatering = document.getElementById('closeModalWatering');
 const jobNameErrorWatering = document.getElementById('jobNameErrorWatering');
 const wateringJobBtn = document.getElementById('wateringJobBtn');
 let isEditMode = false;
-let editingJobName = '';
 const jobContainerWatering = document.getElementById('jobContainerWatering');
 let jobCountWatering = 0;
 let plants = window.plants || []; // Ensure plants is initialized
@@ -66,7 +65,7 @@ function createJobRowWatering(jobData = null) {
 
 
   // actual plants
-  plants.forEach(plant => {
+  window.plants.forEach(plant => {
     const option = document.createElement('option');
     option.value = { plant: plant }; // value is the plant
     option.textContent = `${plant.type} at X: ${plant.x}, Y: ${plant.y}`;
@@ -100,7 +99,6 @@ addPlantBtnWatering.addEventListener('click', () => {
 wateringJobBtn.addEventListener('click', async () => {
   // Reset to creation mode
   isEditMode = false;
-  editingJobName = '';
   scheduleRadios.item(1).checked = true;
   scheduleFields.style.display = "none";
 
@@ -279,7 +277,6 @@ function editWateringJob(job) {
   }, 200);
 
   isEditMode = true;
-  editingJobName = job.jobname;
 
   // Clear UI and show modal
   document.getElementById("WateringJobName").value = job.jobname;
@@ -300,7 +297,7 @@ function editWateringJob(job) {
       amount: seed.wateringcapacity,
       yCoordinate: seed.wateringheight
     };
-    createJobRowWatering(plants, jobData);
+    createJobRowWatering(jobData);
   });
 
   // Fill in schedule
