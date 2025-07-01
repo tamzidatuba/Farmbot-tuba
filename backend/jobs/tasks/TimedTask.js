@@ -11,6 +11,8 @@ class TimedTask extends Task {
         this.duration = clamp(duration, MINIMUM_DURATION, MAXIMUM_DURATION) * 1000
         this.timeout = this.timeout.bind(this);
         
+        this.farmbot;
+
         this.start;
         this.currentTimeout;
         this.remainingTime = this.duration;
@@ -19,12 +21,14 @@ class TimedTask extends Task {
     }
 
     async execute(farmbot, lastState) {
+        this.farmbot = farmbot;
         this.start = Date.now();
         this.currentTimeout = setTimeout(this.timeout, this.remainingTime);
     }
 
     timeout() {
         this.executionFinished = true;
+        this.farmbot.readStatus();
     }
 
     pauseTask(farmbot) {

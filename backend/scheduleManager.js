@@ -27,7 +27,11 @@ class ScheduleManager {
             let loadedJob = await DatabaseService.ReturnSingleJob(job.job_name);
             if (typeof(loadedJob) === "undefined") {
                 console.log("Couldn't find job with jobname '" + job.job_name + "' in DB");
-                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job.job_name);
+                try {
+                    await DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job.job_name);
+                } catch {
+                    console.log("!!! Corrupted Job in Execution DB detected. Please delete manually !!!");
+                }
             } else {
                 this.jobsToExecute.push(loadedJob);
             }
@@ -52,10 +56,9 @@ class ScheduleManager {
     removeScheduledJob(name) {
         for (const job_idx in this.jobsToExecute) {
             if (this.jobsToExecute[job_idx].job.name == name) {
-                const job_data = this.jobsToExecute[job_idx];
 
                 // remove job from queue
-                this.jobsToExecute.splice(job_idx, 1);
+                const job_data = this.jobsToExecute.splice(job_idx, 1)[0];
 
                 // handle demo job
                 if("demo" in job_data) {

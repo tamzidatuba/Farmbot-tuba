@@ -16,10 +16,11 @@ class WateringJob extends Job {
         for(const seed in wateringArgs.plantstobewatered) {
             let seedArgs = wateringArgs.plantstobewatered[seed];
 
+            let xCoordinate = this.clampXToField(seedArgs.plant.xcoordinate);
+            let yCoordinate = this.clampYToField(seedArgs.plant.ycoordinate);
             let goToWateringGridPosition = new MoveTask(
                 FarmbotStatus.MOVING_TO_WATERING_POSITION,
-                seedArgs.plant.xcoordinate,
-                seedArgs.plant.ycoordinate
+                xCoordinate, yCoordinate
             );
             this.taskQueue.push(goToWateringGridPosition);
 

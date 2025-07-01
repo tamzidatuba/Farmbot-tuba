@@ -274,8 +274,6 @@ executeBtn.addEventListener('click', async () => {
   }
 });
 
-
-
 const viewJobsBtn = document.getElementById('viewSeedingJobsBtn');
 const viewJobsModal = document.getElementById('viewJobsModal');
 const closeViewJobsModal = document.getElementById('closeViewJobsModal');
@@ -413,9 +411,9 @@ viewJobsBtn.addEventListener('click', async () => {
                 const result = await res.json();
 
                 if (res.ok) {
-                  message = `✅ ${result.message || "Job executed successfully"}`;
+                  message = `✅ ${result.message || "Job queued successfully"}`;
                 } else {
-                  message = `❌ ${result.error || result.message || "Job execution failed"}`;
+                  message = `❌ ${result.error || result.message || "Job queueing failed"}`;
                 }
               } else {
                 const text = await res.text();
