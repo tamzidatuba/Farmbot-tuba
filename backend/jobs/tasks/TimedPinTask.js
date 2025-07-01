@@ -41,10 +41,11 @@ class TimedPinTask extends Task {
         farmbot.writePin(this.pinArgs);
     }
 
-    timeout() {
+    async timeout() {
         this.pinArgs.pin_value = 0;
         this.executionFinished = true;
-        this.farmbot.writePin(this.pinArgs);
+        await this.farmbot.writePin(this.pinArgs);
+        this.farmbot.readStatus();
     }
 
     pauseTask(farmbot) {

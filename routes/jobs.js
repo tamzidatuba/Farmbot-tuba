@@ -74,7 +74,6 @@ export default function createJobsRouter(backend) {
         try {
             // ask DB for job
             let job = await DatabaseService.ReturnSingleJob(jobname);
-            console.log(job);
             
             if (job !== null && typeof (job) !== "undefined") {
                 if (await backend.scheduleManager.appendScheduledJob(job)) {
