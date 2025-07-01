@@ -6,9 +6,9 @@ const FarmbotStatus = Object.freeze({
     MOVING: getTranslation("moving"),
     MOVING_TO_SEEDING_POSITION: getTranslation("movingToSeedingPosition"),
     MOVING_TO_WATERING_POSITION: getTranslation("movingToWateringPosition"),
-    FETCHING: getTranslation("fetching"),
-    SEEDING: getTranslation("seeding"),
-    WATERING: getTranslation("watering"),
+    FETCHING: getTranslation("statusFetching"),
+    SEEDING: getTranslation("statusSeeding"),
+    WATERING: getTranslation("statusWatering"),
     //PAUSED: 8
 });
 */

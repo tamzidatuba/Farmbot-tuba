@@ -2,6 +2,8 @@ import { token } from "./scripts/auth.js";
 import { drawGrid } from "./scripts/canvas.js";
 import { updateRobot } from "./scripts/notification_status.js";
 import "./scripts/watering.js";
+import { setLanguage } from "./scripts/translation.js";
+import { getTranslation } from "./scripts/translation.js";
 
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
@@ -10,13 +12,9 @@ const subtaskView = document.getElementById('subtaskView');
 const arrow = document.getElementById('arrow');
 const arrowView = document.getElementById('arrowView');
 const modal = document.getElementById('seedingModal');
-const modalWatering = document.getElementById('wateringModal');
 const closeModal = document.getElementById('closeModal');
-const closeModalWatering = document.getElementById('closeModalWatering');
 const seedingJobBtn = document.getElementById('seedingJobBtn');
 const jobNameError = document.getElementById('jobNameError');
-const jobNameErrorWatering = document.getElementById('jobNameErrorWatering');
-const wateringJobBtn = document.getElementById('wateringJobBtn');
 
 //const body = document.querySelector("body");
 //body.requestFullscreen();
@@ -34,12 +32,10 @@ class Plant {
 }
 
 //Watering Schedule
-const scheduleFields = document.getElementById("scheduleFields");
 const scheduleRadios = document.querySelectorAll('input[name="scheduleOption"]');
 scheduleRadios.item(1).checked = true; // Default to "Not Scheduled""
 
 let isEditMode = false;
-let jobBeingEdited = null;
 
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -295,8 +291,8 @@ function editSeedingJob(job) {
   jobBeingEdited = job.jobname;
 
   // Update modal heading and button
-  document.getElementById('modalTitle').textContent = 'Modify Seeding Job';
-  document.getElementById('executeBtn').textContent = 'Update Job';
+  document.getElementById('modalTitle').textContent = getTranslation("modifyJob");
+  document.getElementById('executeBtn').textContent = getTranslation("updateJob");
 
   // Disable editing job name
   const jobNameInput = document.getElementById('SeedingJobName');
@@ -327,7 +323,7 @@ function editSeedingJob(job) {
 
 //VIEW JOBS BUTTON LOGIC
 viewJobsBtn.addEventListener('click', async () => {
-  jobsList.innerHTML = '<p>Loading jobs...</p>';
+  jobsList.innerHTML = getTranslation("loadingJobs");
   jobCountDisplay.textContent = '';
   viewJobsModal.style.display = 'block';
 
@@ -338,7 +334,7 @@ viewJobsBtn.addEventListener('click', async () => {
     jobCountDisplay.textContent = `✅ You have created ${jobs.length} seeding job${jobs.length !== 1 ? 's' : ''}.`;
 
     if (jobs.length === 0) {
-      jobsList.innerHTML = '<p>No jobs found.</p>';
+      jobsList.innerHTML = getTranslation("notFound");
     } else {
       jobsList.innerHTML = '';
       jobs.forEach((job, index) => {
@@ -393,7 +389,7 @@ viewJobsBtn.addEventListener('click', async () => {
 
         // optional placeholder for future Execute
         jobDiv.querySelector('.execute-job-btnseed').addEventListener('click', async () => {
-          if (confirm(`Are you sure you want to execute job "${job.jobname}"?`)) {
+          if (confirm(getTranslation("executeConfirm") + "${job.jobname}")) {
             try {
 
               const res = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
@@ -424,7 +420,7 @@ viewJobsBtn.addEventListener('click', async () => {
               alert(message);
             } catch (err) {
               console.error("Execution failed:", err);
-              alert("❌ Could not execute job due to a network or system error.");
+              alert(getTranslation("networkError"));
             }
           }
         });
@@ -454,8 +450,8 @@ seedingJobBtn.addEventListener('click', () => {
   isEditMode = false;
   jobBeingEdited = null;
 
-  document.getElementById('modalTitle').textContent = 'Create Seeding Job';
-  document.getElementById('executeBtn').textContent = 'Create & Save';
+  document.getElementById('modalTitle').textContent = getTranslation("seedingJob");
+  document.getElementById('executeBtn').textContent = getTranslation("createAndSave");
   document.getElementById('SeedingJobName').value = '';
   document.getElementById('SeedingJobName').disabled = false;
 
