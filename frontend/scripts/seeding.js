@@ -310,7 +310,7 @@ viewJobsBtn.addEventListener('click', async () => {
         });
         // new delete logic
         jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-          if (confirm(getTranslation("deleteConfirm" + `${job.jobname}`)) {
+          if (confirm(getTranslation("deleteConfirm") + `${job.jobname}`)) {
             try {
               const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
                 method: 'DELETE',
