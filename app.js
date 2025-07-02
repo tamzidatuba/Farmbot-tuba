@@ -182,7 +182,6 @@ app.post('/api/demo/watering', async (req, res) => {
     backend.appendNotification(TokenManager.getUser(token) + " queued a Watering-Demo");
     backend.checkForNextJob();
     res.status(200).json({ message: "A watering Demo has been queued." });
-    backend.appendNotification(TokenManager.getUser(token) + " queued a Watering-Demo.");
   } else {
     res.status(500).json({ error: 'Watering-Demo is already queued.' });
   }

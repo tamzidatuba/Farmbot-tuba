@@ -41,7 +41,7 @@ const FARMBOT_42 = {
   }
 }
 
-const FARMBOT_DATA = FAKE_FARMBOT_3
+const FARMBOT_DATA = FAKE_FARMBOT_3;
 
 // Requests a API-Token and returns it
 async function _getApiToken() {
