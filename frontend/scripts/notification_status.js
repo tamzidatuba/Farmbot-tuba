@@ -1,4 +1,5 @@
 import { token } from "./auth.js";
+import { Plant } from "../script.js";
 
 let maxHistoryEntries = 10;
 // button for max history entries
@@ -52,7 +53,7 @@ export async function updateRobot() {
     pauseBtn.textContent = data.paused ? '▶' : '⏸';
 
     //Update plants
-    if (window.plants.toString() != data.plants.toString()) {
+    if (arraysEqual(window.plants, removeId(data.plants))) {
     //if (plants.toString() != data.toString()) {
       window.plants.length = 0; // clear it
       console.log("Plants fetched from server:", data);
@@ -68,6 +69,20 @@ export async function updateRobot() {
     //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     //drawGrid();
   }
+
+  function removeId(obj) {
+    const { _id, ...rest } = obj;
+    return rest;
+  }
+
+function arraysEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
+
+  return arr1.every((obj1, index) => {
+    const obj2 = arr2[index];
+    return JSON.stringify(obj1) === JSON.stringify(obj2);
+  });
+}
 
 
   entryLimitSelect.addEventListener('change', () => {

@@ -15,7 +15,7 @@ const arrowView = document.getElementById('arrowView');
 window.plants = [];
 
 //plant class
-class Plant {
+export class Plant {
   constructor(x, y, type) {
     this.x = x;
     this.y = y;
