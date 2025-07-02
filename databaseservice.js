@@ -40,11 +40,11 @@ async function InsertJobToDB(jobType, object) {
 
         let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
         if (invalids.length > 0) {
-            return "These seeds already exist in one of the previous jobs.";
+            return "Coordinates given have overlap with one of the seeds inside one of previous jobs.";
         }
         invalids = await ValidateNewSeedsAgainstPlants(seeds);
         if (invalids.length > 0) {
-            return "These seeds have already been planted.";
+            return "Coordinates given have overlap with plants.";
         }
 
         await seedingModule.InsertSeedingJobToDB(jobname, seeds);        
@@ -129,13 +129,13 @@ async function UpdateJobToDB(jobType, object) {
 
         let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
         if (invalids.length > 0) {
-            return "These seeds already exist in one of the previous jobs.";
+            return "New coordinates have overlap with one of the seeds inside one of previous jobs.";
         }
         invalids = await ValidateNewSeedsAgainstPlants(seeds);
         if (invalids.length > 0) {
-            return "These seeds have already been planted.";
+            return "New coordinates have overlap with plants.";
         }
-        
+
         await seedingModule.UpdateSeedingJobToDB(jobname, seeds);
     }
 
@@ -145,6 +145,7 @@ async function UpdateJobToDB(jobType, object) {
     }
 
     console.log('The Job has been updated in the Database.');
+    return true;
 }
 
 

@@ -10,7 +10,7 @@ export default function createJobsRouter(backend) {
         const { jobType } = req.params;
         const { payload, token } = req.body
         if (!TokenManager.validateToken(token)) {
-            res.status(500).json({error: "You dont have permission to do that"});
+            res.status(500).json({ error: "You dont have permission to do that" });
             return
         }
         try {
@@ -49,7 +49,7 @@ export default function createJobsRouter(backend) {
         const { jobtype, jobname } = req.params;
         const { token } = req.body
         if (!TokenManager.validateToken(token)) {
-            res.status(500).json({error: "You dont have permission to do that"});
+            res.status(500).json({ error: "You dont have permission to do that" });
             return
         }
         try {
@@ -68,20 +68,20 @@ export default function createJobsRouter(backend) {
         const { jobname } = req.params;
         const { token } = req.body
         if (!TokenManager.validateToken(token)) {
-            res.status(500).json({error: "You dont have permission to do that"});
+            res.status(500).json({ error: "You dont have permission to do that" });
             return
         }
         try {
             // ask DB for job
             let job = await DatabaseService.ReturnSingleJob(jobname);
-            
+
             if (job !== null && typeof (job) !== "undefined") {
                 if (await backend.scheduleManager.appendScheduledJob(job)) {
                     res.status(200).json({ message: 'Job has been queued' });
                     backend.checkForNextJob();
                 } else res.status(500).json({ message: 'Job has already been queued' });
             } else res.status(500).json({ message: 'Job is not in the Database' });
-        } catch(err) {
+        } catch (err) {
             console.error(err);
             res.status(500).json({ error: 'Failed to queue job' });
         }
@@ -92,7 +92,7 @@ export default function createJobsRouter(backend) {
         const { jobname } = req.params;
         const { token } = req.body
         if (!TokenManager.validateToken(token)) {
-            res.status(500).json({error: "You dont have permission to do that"});
+            res.status(500).json({ error: "You dont have permission to do that" });
             return
         }
         if (backend.scheduleManager.removeScheduledJob(jobname)) {
@@ -105,7 +105,7 @@ export default function createJobsRouter(backend) {
         const { token } = req.body
         // check Token validation
         if (!TokenManager.validateToken(token)) {
-            res.status(500).json({error: "You dont have permission to do that"});
+            res.status(500).json({ error: "You dont have permission to do that" });
             return
         }
         backend.pauseJob(res);
@@ -115,7 +115,7 @@ export default function createJobsRouter(backend) {
         const { token } = req.body
         // check Token validation
         if (!TokenManager.validateToken(token)) {
-            res.status(500).json({error: "You dont have permission to do that"});
+            res.status(500).json({ error: "You dont have permission to do that" });
             return
         }
         backend.continueJob(res);
@@ -125,19 +125,26 @@ export default function createJobsRouter(backend) {
         const { jobtype } = req.params;
         const { payload, token } = req.body
         if (!TokenManager.validateToken(token)) {
-            res.status(500).json({error: "You dont have permission to do that"});
+            res.status(500).json({ error: "You dont have permission to do that" });
             return
         }
         try {
-            await DatabaseService.UpdateJobToDB(jobtype, payload);
-            backend.scheduleManager.checkForScheduledJobs();
-            backend.appendNotification("Job '" + payload.jobname + "' modified");
-            res.status(200).json({ message: 'Job updated' });
+            let result = await DatabaseService.UpdateJobToDB(jobtype, payload);
+            if (result === true) {
+                await DatabaseService.UpdateJobToDB(jobtype, payload);
+                backend.scheduleManager.checkForScheduledJobs();
+                backend.appendNotification("Job '" + payload.jobname + "' modified");
+                res.status(200).json({ message: 'Job updated' });
+            }
+            else
+            {
+                res.status(500).json({ error: result });
+            }
         } catch (err) {
             console.error(err);
             res.status(500).json({ error: 'Failed to update job' });
         }
     });
-    
+
     return router;
 }
