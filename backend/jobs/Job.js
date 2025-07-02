@@ -1,3 +1,4 @@
+import { FieldConstants } from "../backend.js";
 /*
 A Job is a list of Tasks inside a Queue for the Farmbot to complete
 
@@ -22,6 +23,13 @@ class Job {
     taskFinished() {
         console.log("Finished a task");
         this.taskQueue.shift();
+    }
+
+    clampXToField(x) {
+        return Math.min(Math.max(x, FieldConstants.FIELD_START_X), FieldConstants.FIELD_END_X);
+    }
+    clampYToField(y) {
+        return Math.min(Math.max(y, FieldConstants.FIELD_START_Y), FieldConstants.FIELD_END_Y);
     }
 }
 

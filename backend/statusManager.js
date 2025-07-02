@@ -1,3 +1,17 @@
+/*
+import {getTranslation} from "../frontend/scripts/translation.js";
+const FarmbotStatus = Object.freeze({
+    OFFLINE: getTranslation("offline"),
+    READY: getTranslation("ready"),
+    MOVING: getTranslation("moving"),
+    MOVING_TO_SEEDING_POSITION: getTranslation("movingToSeedingPosition"),
+    MOVING_TO_WATERING_POSITION: getTranslation("movingToWateringPosition"),
+    FETCHING: getTranslation("statusFetching"),
+    SEEDING: getTranslation("statusSeeding"),
+    WATERING: getTranslation("statusWatering"),
+    //PAUSED: 8
+});
+*/
 const FarmbotStatus = Object.freeze({
     OFFLINE: "Offline",
     READY: "Ready",
@@ -27,6 +41,8 @@ class StatusManager {
         this.runningJob = false;
         this.isPaused = false;
 
+        this.is_pausing = false;
+        this.wants_to_resume = false;
         this.status = FarmbotStatus.OFFLINE;
 
         this.currentTask;
@@ -93,7 +109,8 @@ class StatusManager {
 
     _newStatusRecieved(data, eventName) {
         this.lastState = data;
-        //console.log(data.pins)
+        //console.log("Busy:", data.informational_settings.busy);
+        //console.log("Pins:", data.pins);
         if (this.runningJob){
             if (this.currentTask.checkCondition(data)) {
                 this.currentJob.taskFinished();
@@ -102,13 +119,23 @@ class StatusManager {
         }
     }
 
-    pauseJob() {
+    async pauseJob() {
+        if(this.is_pausing) return
+        
         //this.status = FarmbotStatus.PAUSED;
         this.isPaused = true;
-        this.currentTask.pauseTask(this.farmbot);
+        this.is_pausing = true;
+        await this.currentTask.pauseTask(this.farmbot);
+        this.is_pausing = false;
+        if(this.wants_to_resume) this.continueJob();
     }
 
     continueJob() {
+        if(this.is_pausing) {
+            this.wants_to_resume = true;
+            return;
+        }
+        else this.wants_to_resume = false;
         this.isPaused = false;
         this.status = this.currentTask.status;
         this.currentTask.continueTask(this.farmbot, this.lastState);

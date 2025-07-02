@@ -5,6 +5,7 @@ import notificationModel from './models/notification.model.js';
 import plantModel from './models/plant.model.js';
 import userModel from './models/user.model.js';
 import ExecutionModel from './models/execution.model.js';
+import questionModel from './models/question.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -25,7 +26,7 @@ const JobType = Object.freeze({
 const PlantRadii = {
     lettuce: 15,
     tomato: 30,
-    carrot: 2,
+    radish: 2,
 }
 
 async function InsertJobToDB(jobType, object) {
@@ -34,32 +35,32 @@ async function InsertJobToDB(jobType, object) {
         const { jobname, seeds } = object;
         let existingjob =  await seedingModule.findOne({ "jobname": jobname });
         if (existingjob) {
-            return "job name already exists";
+            return "The Job name already exists in the database.";
         }
 
         let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
         if (invalids.length > 0) {
-            return "existing seeds found in previous jobs";
+            return "Coordinates given have overlap with one of the seeds inside one of previous jobs.";
         }
         invalids = await ValidateNewSeedsAgainstPlants(seeds);
         if (invalids.length > 0) {
-            return "existing seeds found in plants";
+            return "Coordinates given have overlap with plants.";
         }
 
         await seedingModule.InsertSeedingJobToDB(jobname, seeds);        
     }
 
     else if (jobType === JobType.WATERING) {
-        const { jobname, plantstobewatered } = object;
+        const { jobname, plantstobewatered, is_scheduled, scheduleData } = object;
         let existingjob = await wateringModule.findOne({ "jobname": jobname });
         if (existingjob) {
-            return "job name already exists";
+            return "The Job name already exists in the Database.";
         }
-        await wateringModule.InsertWateringJobToDB(jobname, plantstobewatered);
+        await wateringModule.InsertWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData);
     }
     else if (jobType == JobType.EXECUTION){
         const {job_name, time_stamp} = object;
-        let new_job = await ExecutionModel.InsertintoExecutionDB(job_name,time_stamp);
+        await ExecutionModel.InsertintoExecutionDB(job_name,time_stamp);
     }
     return true;
 }
@@ -72,7 +73,7 @@ async function ReturnSingleJob(jobname) {
     }
     job = await wateringModule.ReturnWateringJob(jobname);
     if (job !== null && typeof (job) !== "undefined") {
-        return { job };
+        return job;
     }    
 }
 
@@ -125,16 +126,47 @@ async function UpdateJobToDB(jobType, object) {
 
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
+
+        let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
+        if (invalids.length > 0) {
+            return "New coordinates have overlap with one of the seeds inside one of previous jobs.";
+        }
+        invalids = await ValidateNewSeedsAgainstPlants(seeds);
+        if (invalids.length > 0) {
+            return "New coordinates have overlap with plants.";
+        }
+
         await seedingModule.UpdateSeedingJobToDB(jobname, seeds);
     }
 
     else if (jobType === JobType.WATERING) {
-        const { jobname, plantstobewatered } = object;
-        await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered);
+        const { jobname, plantstobewatered, is_scheduled, scheduleData } = object;
+        await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData);
     }
 
-    console.log('Job has been updated.');
+    console.log('The Job has been updated in the Database.');
+    return true;
 }
+
+
+
+async function InsertQuestionsIntoDB(question, answer)
+{
+   let question1 =  await questionModel.InsertQuestionsToDB(question, answer);
+}
+
+async function FetchAlltheQuestionsFromDB()
+{
+   let question2 =  await questionModel.FetchAllQuestionsFromDB();
+   return question2;
+}
+
+async function FetchQuestionsFromDBbyQuestion(question)
+{
+   let question3 =  await questionModel.FetchSpecificQuestionsFromDB(question);
+   return question3;
+}
+
 
 
 async function InsertNotificationToDB(text) {
@@ -167,18 +199,23 @@ async function UpdateUserToDB(username, password) {
     const users = await userModel.UpdateUser(username, password);
 }
 
+async function DeletePlantFromDB(xcoordinate, ycoordinate) {
+    await plantModel.DeletePlantFromDB(xcoordinate, ycoordinate);
+}
+
 async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
     let existingJobs = await FetchJobsFromDB(JobType.SEEDING);
     let invalidSeeds = [];
 
-    for (let newSeed of newSeedsToPutInNewJob) {
+    for (let newseed of newSeedsToPutInNewJob) {
         for (let existingJob of existingJobs) {
             let isValid = true;
-            for (let seedInsideExistingJob of existingJob.seeds) {
-                let distance = GetDistance(newSeed.xcoordinate, newSeed.ycoordinate, seedInsideExistingJob.xcoordinate, seedInsideExistingJob.ycoordinate);
-                var seedInsideExistingJobSmallCase = seedInsideExistingJob.seedtype.toLowerCase();
-                if (distance <= PlantRadii[seedInsideExistingJobSmallCase]) {
-                    invalidSeeds.push(newSeed);
+            for (let existingseed of existingJob.seeds) {
+                let distance = GetDistance(newseed.xcoordinate, newseed.ycoordinate, existingseed.xcoordinate, existingseed.ycoordinate);
+                let existingseedtype = existingseed.seedtype.toLowerCase();
+                let newseedtype = newseed.seedtype.toLowerCase();
+                if (distance <= PlantRadii[existingseedtype] + PlantRadii[newseedtype]) {
+                    invalidSeeds.push(newseed);
                     isValid = false;
                 }
                 if (!isValid) {
@@ -188,7 +225,7 @@ async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
             if (!isValid) {
                 break; // No need to check further jobs
             }
-        }
+        }        
     }
 
     return invalidSeeds;
@@ -237,4 +274,8 @@ export default {
     FetchPlantsfromDB,
     FetchUserfromDB,
     ReturnSingleJob,
+    InsertQuestionsIntoDB,
+    FetchAlltheQuestionsFromDB,
+    FetchQuestionsFromDBbyQuestion,
+    DeletePlantFromDB,
 };

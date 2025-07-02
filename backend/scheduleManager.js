@@ -8,8 +8,7 @@ class ScheduleManager {
     constructor(backend) {
         this.backend = backend;
         this.jobsToExecute = new Array();
-
-        this.checkForScheduledJobs()
+        
         this.currentTimeout;
 
     }
@@ -28,7 +27,11 @@ class ScheduleManager {
             let loadedJob = await DatabaseService.ReturnSingleJob(job.job_name);
             if (typeof(loadedJob) === "undefined") {
                 console.log("Couldn't find job with jobname '" + job.job_name + "' in DB");
-                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job.job_name);
+                try {
+                    await DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job.job_name);
+                } catch {
+                    console.log("!!! Corrupted Job in Execution DB detected. Please delete manually !!!");
+                }
             } else {
                 this.jobsToExecute.push(loadedJob);
             }
@@ -41,16 +44,29 @@ class ScheduleManager {
 
     getScheduledJob() {
         // remove job from queue DB
-        DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, this.jobsToExecute[0].job.jobname);
+        try {
+            DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, this.jobsToExecute[0].job.jobname);
+        }
+        catch {
+            console.log("Job is not in Execution DB");
+        }
         return this.jobsToExecute.shift();
     }
 
     removeScheduledJob(name) {
-        for (const job in this.jobsToExecute) {
-            if (this.jobsToExecute[job].job.name == name) {
-                this.jobsToExecute.splice(job, 1);
+        for (const job_idx in this.jobsToExecute) {
+            if (this.jobsToExecute[job_idx].job.name == name) {
+
+                // remove job from queue
+                const job_data = this.jobsToExecute.splice(job_idx, 1)[0];
+
+                // handle demo job
+                if("demo" in job_data) {
+                    this.backend.demo_job_queued = false;
+                    return true
+                }
                 // remove job from queue DB
-                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, jobsToExecute[job].job.jobname);
+                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job_data.job.jobname);
                 return true;
             }
         }
@@ -58,7 +74,7 @@ class ScheduleManager {
     }
 
    async appendScheduledJob(newJob) {
-    // Check if job is already queued
+        // Check if job is already queued
         for (const job in this.jobsToExecute) {
             if (this.jobsToExecute[job].job.jobname == newJob.job.jobname) {
                 return false;
@@ -73,7 +89,20 @@ class ScheduleManager {
         this.jobsToExecute.push(newJob);
         console.log("Scheduled to be executed:", newJob.job.jobname);
         return true;
-    }     
+    }
+    
+    appendDemoJob(demo_job) {
+        // Check if job is already queued
+        for (const queued_job of this.jobsToExecute) {
+            if ( queued_job.job.jobname == demo_job.job.jobname) {
+                return false;
+            }
+        }
+        this.backend.demo_job_queued = true;
+        this.jobsToExecute.push(demo_job);
+        console.log("Scheduled to be executed:", demo_job.job.jobname);
+        return true
+    }
 
     async checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);
@@ -86,26 +115,26 @@ class ScheduleManager {
         for (const scheduled_job of scheduledJobs) {
             
             //check if scheduled job is active
-            if (!scheduled_job.isScheduled || scheduled_job.scheduleData.enabled) {
+            if (!scheduled_job.is_scheduled || !scheduled_job.ScheduleData.enabled) {
                 continue;
             }
 
             // calculate the time difference of current time and planned execution time
-            let time_difference = scheduled_job.scheduleData.next_execution_time - currentTime;
+            let time_difference = scheduled_job.ScheduleData.next_execution_time - currentTime;
             if (time_difference <= SCHEDULE_TOLERANCE) {
-                appendScheduledJob({jobType: DatabaseService.JobType.WATERING, job: scheduled_job});
+                await this.appendScheduledJob({jobType: DatabaseService.JobType.WATERING, job: scheduled_job});
             } else {
                 nextScheduleCheck = Math.min(nextScheduleCheck, time_difference);
             }
         }
         // assign the next timeout based on the next scheduled job
         this.currentTimeout = setTimeout(this.checkForScheduledJobs.bind(this), nextScheduleCheck);
-        this.backend.checkForNextJob();
+        if (this.isJobScheduled()) this.backend.checkForNextJob();
     }
 
     calculateNextSchedule(jobData) {
         // calculate next execution-time
-        jobData.job.scheduleData.next_execution_time = jobData.job.scheduleData.interval + (Date.now());
+        jobData.job.ScheduleData.next_execution_time = jobData.job.ScheduleData.interval + (Date.now());
 
         // modify entry in DB
         DatabaseService.UpdateJobToDB(jobData.jobType, jobData.job);
