@@ -29,12 +29,16 @@ const FARMBOT_42 = {
   password: "84Ostertag!",
   vacuum_pin: {
       pin_type: "Peripheral",
-      pin_id: 78903
+      pin_id: 77683
     },
   water_pin: {
       pin_type: "Peripheral", // "Peripheral"
       pin_id: 78904 
-    }
+    },
+  lighting_pin: {
+      pin_type: "Peripheral",
+      pin_id: 78905
+  }
 }
 
 const FARMBOT_DATA = FAKE_FARMBOT_3
