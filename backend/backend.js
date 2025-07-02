@@ -16,7 +16,8 @@ const FieldConstants = Object.freeze({
     SAFETY_HEIGHT: 0,
     FIELD_HEIGHT: -285,
     SEED_CONTAINER_Y: 850,
-    SEED_CONTAINER_HEIGHT: -109
+    SEED_CONTAINER_HEIGHT: -109,
+    MAX_SEEDING_DEPTH: 15,
 });
 
 class Backend {

@@ -56,7 +56,7 @@ class SeedingJob extends Job {
 
             this.taskQueue.push(lowerToSeedingHeight);
 
-            let goToSeedingDepth = new MoveZTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, FieldConstants.FIELD_HEIGHT - seedArgs.depth)
+            let goToSeedingDepth = new MoveZTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, FieldConstants.FIELD_HEIGHT - Math.max(seedArgs.depth, FieldConstants.MAX_SEEDING_DEPTH));
             this.taskQueue.push(goToSeedingDepth);
             // plant the seeds
             this.taskQueue.push(deactivateVacuumPin);

@@ -41,6 +41,8 @@ class StatusManager {
         this.runningJob = false;
         this.isPaused = false;
 
+        this.is_pausing = false;
+        this.wants_to_resume = false;
         this.status = FarmbotStatus.OFFLINE;
 
         this.currentTask;
@@ -117,13 +119,23 @@ class StatusManager {
         }
     }
 
-    pauseJob() {
+    async pauseJob() {
+        if(this.is_pausing) return
+        
         //this.status = FarmbotStatus.PAUSED;
         this.isPaused = true;
-        this.currentTask.pauseTask(this.farmbot);
+        this.is_pausing = true;
+        await this.currentTask.pauseTask(this.farmbot);
+        this.is_pausing = false;
+        if(this.wants_to_resume) this.continueJob();
     }
 
     continueJob() {
+        if(this.is_pausing) {
+            this.wants_to_resume = true;
+            return;
+        }
+        else this.wants_to_resume = false;
         this.isPaused = false;
         this.status = this.currentTask.status;
         this.currentTask.continueTask(this.farmbot, this.lastState);

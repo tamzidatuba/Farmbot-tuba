@@ -24,7 +24,7 @@ class WateringJob extends Job {
             );
             this.taskQueue.push(goToWateringGridPosition);
 
-            let goToWateringHeight = new MoveZTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, FieldConstants.FIELD_HEIGHT + seedArgs.wateringheight);
+            let goToWateringHeight = new MoveZTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, FieldConstants.FIELD_HEIGHT + Math.abs(seedArgs.wateringheight));
             this.taskQueue.push(goToWateringHeight);
     
             let duration = this.convert_ml_into_duration(seedArgs.wateringcapacity);
