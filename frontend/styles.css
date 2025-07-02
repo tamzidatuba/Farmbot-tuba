@@ -680,7 +680,7 @@ margin-top: 4px;
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #5B7F62;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   font-size: 15px;
@@ -703,7 +703,7 @@ margin-top: 4px;
 .language-select {
   text-align: center;
   font-size: 14px;
-  background-color: #7C9F81;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   border-radius: 5px;
@@ -717,7 +717,7 @@ margin-top: 4px;
 
 
 #openQuestionFormBtn:hover {
-  background-color: #5B7F62;
+  background-color: var(--buttons-hover-color);
 }
 
 /* Bottom Panel Form */
@@ -760,7 +760,7 @@ margin-top: 4px;
 }
 
 #questionForm button[type="submit"] {
-  background-color: #28a745;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   padding: 8px;
@@ -770,13 +770,13 @@ margin-top: 4px;
 }
 
 #questionForm button[type="submit"]:hover {
-  background-color: hsl(133, 21%, 69%);
+  background-color: var(--buttons-hover-color);
 }
 
 #questionStatus {
   margin-top: 8px;
   font-size: 13px;
-  color: green;
+  color: var(--elements-color);/*green;*/
 }
 
     
