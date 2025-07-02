@@ -91,7 +91,11 @@ class Backend {
       let jobObject;
       switch(this.currentJobData.jobType) {
         case DatabaseService.JobType.SEEDING: 
-          jobObject = new SeedingJob(this.currentJobData.job);
+          if ("demo" in this.currentJobData) {
+            jobObject = new SeedingJob(this.currentJobData.job, true);
+          } else {
+            jobObject = new SeedingJob(this.currentJobData.job)
+          }
           break;
         case DatabaseService.JobType.WATERING:
           if (this.currentJobData.job.is_scheduled) {
