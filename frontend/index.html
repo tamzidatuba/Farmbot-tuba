@@ -155,20 +155,16 @@
     </li>
     <!----help option----->
     <div class="help-translucent" id="helpTranslucent"></div>
-    <li class="menu-item">Seeding Demo 
-    <div class="help-text" style="display: none; color: gray;">Click to simulate a demo of planting seeds.</div>
+    <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo">Seeding Demo
+    <div class="help-text" style="display: outside; color: gray;">Click to simulate a demo of planting seeds.</div>
     </li>
-    <li class="menu-item">Watering Demo
-    <div class="help-text" style="display: none; color: gray;">Click to simulate a demo of watering seeds.</div>
+    <li class="menu-item" id="wateringDemoBtn" data-i18n="wateringDemo">Watering Demo
+    <div class="help-text" style="display: outside; color: gray;">Click to simulate a demo of watering seeds.</div>
     </li>
-    <li class="menu-item">Feedback
-    <div class="help-text" style="display: none; color: gray;">In case you wish to give a feedback, please click here.</div>
+    <li class="menu-item" data-i18n="feedback">Feedback
+      <div class="help-text" style="display: none; color: gray;">In case you wish to give a feedback, please click here.</div>
     </li>
-    <li class="menu-item" id ="help-button">Help</li>
-    <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo">Seeding Demo</li>
-    <li class="menu-item" id="wateringDemoBtn" data-i18n="wateringDemo">Watering Demo</li>
-    <li class="menu-item" data-i18n="feedback">Feedback</li>
-    <li class="menu-item" data-i18n="help">Help</li>
+    <li class="menu-item" id="help-button" data-i18n="help">Help</li>
   </ul>
   <div class="language-menu">
     <select id="languageSelector" class="menu-item language-select"></select>
@@ -185,7 +181,7 @@
     
     <!-- grid container using canvas-->
     <div>
-      <canvas id="gridCanvas" width="450" height="500"></canvas>
+      <canvas id="gridCanvas" width="550" height="650"></canvas>
      <div class="help-text-grid" style="display:outside; color: gray;">This is a visual representation of the Farmbot.<br> 
       You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile.</div>
     </div>
@@ -195,7 +191,6 @@
       </div> <!-- Robot status -->
    <div class="help-text-status" style="display:outside; color: gray;"> You can see the status of the Farmbot here.<br> 
         It shows whether the farmbot is currently offline or Ready to work or moving.</div>
-      <canvas id="gridCanvas" width="550" height="650"></canvas>
     </div>
     <div id="hover-coordinates"></div>
      <div id="farmbot-status-container">
@@ -255,9 +250,7 @@
   </form>
 </div>
 
-  
-
-  <script type="module" src="./help_button.js"></script>
+  <script type="module" src="./scripts/help_button.js"></script>
   <script type="module" src="./scripts/i18n.js"></script>
   <script type="module" src="./scripts/translation.js"></script>
   <script type="module" src="./scripts/auth.js"></script>
