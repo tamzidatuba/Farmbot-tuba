@@ -4,7 +4,7 @@ A Task is a single Instruction for the Farmbot with a condition to check if its 
 
 class Task {
     constructor(status) {
-        this.status = status
+        this.status = status;
     }
 
     checkCondition(state) {
@@ -12,8 +12,9 @@ class Task {
     }
 
     async pauseTask(farmbot) {
-        await farmbot.emergencyLock()
-        farmbot.emergencyUnlock();
+        await farmbot.emergencyLock();
+        await farmbot.emergencyUnlock();
+        return;
     }
 
     continueTask(farmbot, lastState) {

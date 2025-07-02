@@ -48,11 +48,12 @@ class TimedPinTask extends Task {
         this.farmbot.readStatus();
     }
 
-    pauseTask(farmbot) {
+    async pauseTask(farmbot) {
         this.pinArgs.pin_value = 0;
         this.farmbot.writePin(this.pinArgs);
         clearTimeout(this.currentTimeout);
         this.remainingTime = this.remainingTime - (Date.now()-this.start);
+        return;
     }
 
     checkCondition(state) {

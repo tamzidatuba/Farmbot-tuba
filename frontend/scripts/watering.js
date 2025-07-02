@@ -1,6 +1,7 @@
 import { token } from "./auth.js";
 import { getTranslation } from "./translation.js";
 import { setLanguage } from "./translation.js";
+import { Plant } from "../script.js";
 
 const modalWatering = document.getElementById('wateringModal');
 const closeModalWatering = document.getElementById('closeModalWatering');

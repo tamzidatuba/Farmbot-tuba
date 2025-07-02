@@ -77,6 +77,11 @@ async function getFarmbot() {
 
         let farmbot = new Farmbot({ token: tokenData["token"]["encoded"] });
         farmbot.connect()
+        try {
+            await farmbot.emergencyUnlock();
+        } catch(error) {
+            console.log(error);
+        }
         return farmbot
 
     } catch (error) {
