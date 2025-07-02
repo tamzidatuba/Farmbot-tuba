@@ -2,6 +2,7 @@ import { drawGrid } from "./scripts/canvas.js";
 import { updateRobot } from "./scripts/notification_status.js";
 import "./scripts/watering.js";
 import "./scripts/seeding.js";
+import { getTranslation } from "./scripts/translation.js";
 
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
@@ -96,6 +97,6 @@ form.addEventListener('submit', async function(e) {
     alert(data.message);
     form.reset(); // clears fields after successful submission
   } else {
-    alert(data.message || 'Something went wrong.');
+    alert(data.message || getTranslation("somethingWrong"));
   }
 });

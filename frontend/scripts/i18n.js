@@ -1,5 +1,8 @@
 export const translations = {
   en: {
+    // English translations
+    _name : 'English',
+    // Main dashboard translations
     title: 'Digital Farming Dashboard',
     seedingJob: 'Create Seeding Job',
     addPlant: '+ Add Plant',
@@ -81,6 +84,7 @@ export const translations = {
     processError: '❌ Error processing request.',
     deleteError: '❌ Error deleting job: ',
     unkownError: '❌ Unknown server response.',
+    somethingWrong: '❌ Something went wrong. Please try again.',
     //login:
     successLogin: 'Login successful!',
     menuAdmin: 'Farmbot Menu Admin',
@@ -97,8 +101,18 @@ export const translations = {
     statusFetching: 'Fetching',
     statusSeeding: 'Seeding',
     statusWatering: 'Watering',
+    //Q&A
+    question: 'Ask a Question',
+    mail: 'Your Email:',
+    mailExample: 'you@example.com',
+    questionBox: 'Your Question:',
+    writeQuestion: 'Write your question here...',
+    submit: 'Submit',
   },
   de: {
+    // German translations
+    _name : 'Deutsch',
+    // Main dashboard translations
     title: 'Digital Farming Dashboard',
     seedingJob: 'Aussaats Auftrag erstellen',
     addPlant: '+ Pflanze hinzufügen',
@@ -180,6 +194,7 @@ export const translations = {
     processError: '❌ Fehler bei der Verarbeitung der Anfrage.',
     deleteError: '❌ Fehler beim Löschen des Auftrags: ',
     unkownError: '❌ Unbekannte Serverantwort.',
+    somethingWrong: '❌ Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.',
     //login:
     successLogin: 'Anmelden erfolgreich!',
     menuAdmin: 'Farmbot Menü Admin',
@@ -196,5 +211,12 @@ export const translations = {
     statusFetching: 'Am Abrufen',
     statusSeeding: 'Am Aussähen',
     statusWatering: 'Am Bewässern',
+    //Q&A
+    question: 'Frage stellen',
+    mail: 'Ihre E-Mail:',
+    mailExample: 'muster@mail.de',
+    questionBox: 'Ihre Frage:',
+    writeQuestion: 'Schreiben Sie Ihre Frage hier...',
+    submit: 'Absenden',
   }
 }

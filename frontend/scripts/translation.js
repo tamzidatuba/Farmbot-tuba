@@ -38,9 +38,31 @@ export function getTranslation(key) {
   return translations[lang][key] || key;
 }
 
+function createLanguageButtons() {
+  languageSelector.innerHTML = ""; // Clear existing buttons if any
+
+  const currentLang = localStorage.getItem("preferredLanguage") || "en";
+
+  for (const langCode in translations) {
+    console.log(`Creating button for language: ${langCode}`);
+    const langName = translations[langCode]._name;
+    const option = document.createElement("option");
+
+    option.value = langCode;
+    option.textContent = langName;
+
+    if (langCode === currentLang) {
+      option.selected = true; // Set the current language as selected
+    }
+
+    languageSelector.appendChild(option);
+  }
+}
+
 // Load preferred language
 window.addEventListener("DOMContentLoaded", () => {
   const savedLang = localStorage.getItem("preferredLanguage") || "en";
-  document.getElementById("languageSelector").value = savedLang;
+  languageSelector.value = savedLang;
   setLanguage(savedLang);
+  createLanguageButtons();
 });
