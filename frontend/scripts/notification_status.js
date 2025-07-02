@@ -1,7 +1,6 @@
 import { token } from "./auth.js";
 import { Plant } from "../script.js";
 import { getTranslation } from "./translation.js";
-import { text } from "express";
 
 let maxHistoryEntries = 10;
 // button for max history entries
