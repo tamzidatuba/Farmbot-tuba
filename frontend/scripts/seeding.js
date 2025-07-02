@@ -29,27 +29,27 @@ function createJobRow() {
   row.innerHTML = `
   <div class="plant-row">
     <div class="plant-row-header">
-      <label for="plant-${jobCount}">Plant Type</label>
-      <span class="delete-job" title="Remove this plant job">&#128465;</span>
+      <label data-i18n="plantType" for="plant-${jobCount}">Plant Type</label>
+      <span class="delete-job" data-i18n-title="removePlant" title="Remove this plant job">&#128465;</span>
     </div>
     <select id="plant-${jobCount}" class="plantType">
-      <option value="">--Choose Plant--</option>
-      <option value="Tomato">Tomato</option>
-      <option value="Radish">Radish</option>
-      <option value="Lettuce">Lettuce</option>
+      <option data-i18n="selectDefault" value="">--Choose Plant--</option>
+      <option data-i18n="tomato" value="Tomato">Tomato</option>
+      <option data-i18n="radish" value="Radish">Radish</option>
+      <option data-i18n="lettuce" value="Lettuce">Lettuce</option>
     </select>
   </div>
   <div class="coord-row">
     <div>
-      <label>X Coordinate</label>
+      <label data-i18n="x">X Coordinate</label>
       <input type="number" class="coord-input xCoord" placeholder="0 - 395">
     </div>
     <div>
-      <label>Y Coordinate</label>
+      <label data-i18n="y">Y Coordinate</label>
       <input type="number" class="coord-input yCoord" placeholder="0 - 650">
     </div>
     <div>
-      <label>Depth (mm)</label>
+      <label data-i18n="depth">Depth (mm)</label>
       <input type="number" class="coord-input depth" placeholder="> 0">
     </div>
   </div>
@@ -278,7 +278,7 @@ viewJobsBtn.addEventListener('click', async () => {
     const response = await fetch('/api/jobs/Seeding');
     const jobs = await response.json();
 
-    jobCountDisplay.textContent = `✅ You have created ${jobs.length} seeding job${jobs.length !== 1 ? 's' : ''}.`;
+    jobCountDisplay.textContent =  getTranslation("seedingSoFar") + `${jobs.length}`;
 
     if (jobs.length === 0) {
       jobsList.innerHTML = getTranslation("notFound");
@@ -291,12 +291,12 @@ viewJobsBtn.addEventListener('click', async () => {
   <div class="job-header-row">
     <strong>${job.jobname}</strong>
     <div class="icon-actions">
-      <span class="icon-btn edit-job-btn" title="Edit" data-index="${index}">✏️</span>
-      <span class="icon-btn delete-job-btn" title="Delete" data-index="${index}">🗑️</span>
+      <span class="icon-btn edit-job-btn" title=${getTranslation("edit")} data-index="${index}">✏️</span>
+      <span class="icon-btn delete-job-btn" title=${getTranslation("delete")} data-index="${index}">🗑️</span>
     </div>
   </div>
-  <div>Plants: ${job.seeds?.length || 0}</div>
-  <button class="execute-job-btnseed" data-i18n="execute">🚜 Execute</button>
+  <div >${getTranslation("plants")}: ${job.seeds?.length || 0}</div>
+  <button class="execute-job-btnseed" >${getTranslation("execute")}</button>
 `;
 
 
@@ -308,7 +308,7 @@ viewJobsBtn.addEventListener('click', async () => {
         });
         // new delete logic
         jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-          if (confirm(getTranslation("deleteConfirm") + `${job.jobname}`)) {
+          if (confirm(getTranslation("deleteConfirm") + job.jobname)) {
             try {
               const res = await fetch(`/api/jobs/Seeding/${job.jobname}`, {
                 method: 'DELETE',
