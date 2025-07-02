@@ -1,3 +1,5 @@
+import { token } from "./auth.js";
+
 let maxHistoryEntries = 10;
 // button for max history entries
 const entryLimitSelect = document.getElementById('entry-limit');
