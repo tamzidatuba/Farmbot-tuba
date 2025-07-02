@@ -1,3 +1,17 @@
+:root {
+  --background-color: #333f49;
+  --buttons-color: #643a2a;
+  --buttons-hover-color: #42261c;
+  --elements-color: #195632;
+}
+/* 
+Green: #195632,
+Light Blue: #006ba1,
+Dark Blue: #003b5c,
+Brown: #643a2a, // Dark Brown: #42261c,
+Grey: 333f49
+*/
+
 #gridCanvas {
   top: 12%;
   position: fixed;
@@ -63,7 +77,7 @@ canvas {
       text-align: center;
       width: 230px;
       height: 48px;
-      background-color: #195632;
+      background-color: var(--elements-color);
       color: white;
       border: none;
       border-radius: 5px;
@@ -79,7 +93,7 @@ canvas {
       max-height: 80%;
       top: 2%;
       right: 10%; 
-      background-color: #195632;
+      background-color: var(--elements-color);
       border: none;
       border-top: none;
       border-radius: 0 0 8px 8px;
@@ -105,12 +119,12 @@ canvas {
 body {
   display: flex;
   min-height: 100vh;
-  background-color: #333f49;
+  background-color: var(--background-color);
 }
 
 .sidebar {
   width: 15%;
-  background-color: #195632;
+  background-color: var(--elements-color);
   color: white;
   padding: 20px;
 }
@@ -130,7 +144,7 @@ body {
 
 .menu-item {
   font-size: 14px;
-  background-color: #643a2a;
+  background-color: var(--buttons-color);
   border-radius: 5px;
   cursor: pointer;
   padding: 12px;
@@ -141,7 +155,7 @@ body {
 }
 
 .menu-item:hover {
-  background-color: #42261c;
+  background-color: var(--buttons-hover-color);
 }
 
 .arrow {
@@ -167,7 +181,7 @@ body {
 .subtask button {
   margin-top: 8px;
   padding: 8px 12px;
-  background-color: #643a2a;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   border-radius: 5px;
@@ -178,7 +192,7 @@ body {
 }
 
 .subtask button:hover {
-  background-color: #42261c;
+  background-color: var(--buttons-hover-color);
 }
 
 .main {
@@ -191,7 +205,7 @@ body {
   position: absolute;
   top: 2%;
   right: 2%;
-  background-color: #643a2a;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   padding: 8px;
@@ -207,7 +221,7 @@ body {
 }
 
 .settings-btn:hover {
-  background-color: #42261c;
+  background-color: var(--buttons-hover-color);
 }
 
 .gear-emoji {
@@ -242,7 +256,7 @@ gap: 15px;
 
 .modal-content h2 {
 margin-bottom: 10px;
-color: #643a2a;
+color: var(--buttons-color);
 text-align: center;
 }
 
@@ -260,7 +274,7 @@ border: 1px solid #ccc;
 }
 
 .modal-content button {
-background-color: #643a2a;
+background-color: var(--buttons-color);
 color: white;
 padding: 10px;
 border: none;
@@ -270,7 +284,7 @@ margin-top: 10px;
 }
 
 .modal-content button:hover {
-background-color: #42261c;
+background-color: var(--buttons-hover-color);
 }
 
 .close {
@@ -324,7 +338,7 @@ flex-direction: column;
 }
 
 .option-label input[type="radio"] {
-  accent-color: #643a2a; /* Green */
+  accent-color: var(--buttons-color); /* Green */
 }
 
 #scheduleFields {
@@ -396,7 +410,7 @@ margin-top: 4px;
   position: absolute;
   top: 60px;
   right: 20px;
-  background-color: #643a2a;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   padding: 8px 10px;
@@ -410,13 +424,13 @@ margin-top: 4px;
 }
 
 .logout-btn:hover {
-  background-color: #42261c;
+  background-color: var(--buttons-hover-color);
 }
 .login-btn {
   position: absolute;
   top: 60px;
   right: 20px;
-  background-color: #643a2a;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   padding: 8px 12px;
@@ -430,7 +444,7 @@ margin-top: 4px;
 }
 
 .login-btn:hover {
-  background-color: #42261c;
+  background-color: var(--buttons-hover-color);
 }
 
 
@@ -484,14 +498,14 @@ margin-top: 4px;
 
 #loginModal input[type="text"]:focus,
 #loginModal input[type="password"]:focus {
-  border-color: #643a2a;
+  border-color: var(--buttons-color);
   outline: none;
 }
 
 #loginModal button[type="submit"] {
   width: 100%;
   padding: 10px;
-  background-color: #643a2a;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   border-radius: 6px;
@@ -501,7 +515,7 @@ margin-top: 4px;
 }
 
 #loginModal button[type="submit"]:hover {
-  background-color: #42261c;
+  background-color: var(--buttons-hover-color);
 }
  .login-container {
       background-color: #EAE3DC;
@@ -552,7 +566,7 @@ margin-top: 4px;
     button {
       width: 100%;
       padding: 10px;
-      background-color: #643a2a;
+      background-color: var(--buttons-color);
       color: white;
       border: none;
       border-radius: 5px;
@@ -560,7 +574,7 @@ margin-top: 4px;
     }
 
     button:hover {
-      background-color: #42261c;
+      background-color: var(--buttons-hover-color);
     }
 
     
@@ -628,7 +642,7 @@ margin-top: 4px;
     
     .icon-btn:hover {
       opacity: 0.8;
-      color: #643a2a;
+      color: var(--buttons-color);
     }
     
     
