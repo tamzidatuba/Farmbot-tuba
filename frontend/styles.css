@@ -1,7 +1,7 @@
 :root {
-  --background-color: #333f49;
-  --buttons-color: #643a2a;
-  --buttons-hover-color: #42261c;
+  --background-color: white;
+  --buttons-color: #ae1757;
+  --buttons-hover-color: #670e33;
   --elements-color: #195632;
 }
 /* 
@@ -9,7 +9,9 @@ Green: #195632,
 Light Blue: #006ba1,
 Dark Blue: #003b5c,
 Brown: #643a2a, // Dark Brown: #42261c,
-Grey: 333f49
+Grey: #333f49,
+Magenta: #ae1757,
+Yellow: #f7be00
 */
 
 #gridCanvas {
