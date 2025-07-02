@@ -51,7 +51,7 @@ app.get('/api/plants', async (req, res) => {
   }
   catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error in fetching" });
+    res.status(500).json({ error: "Error in fetching plants from the database." });
   }
 });
 
@@ -63,7 +63,7 @@ try {
   }
   catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to save question." });
+    res.status(500).json({ error: "Failed to save question to Database." });
   }
 });
 
@@ -75,7 +75,7 @@ try{
 catch(err)
 {
   console.error(err);
-  res.status(500).json({ error: "Failed to fetch questions."});
+  res.status(500).json({ error: "Failed to fetch questions and answers from the database."});
 }
 });
 
@@ -88,7 +88,7 @@ try{
 catch(err)
 {
   console.error(err);
-  res.status(500).json({ error: "Failed to fetch question."});
+  res.status(500).json({ error: "Failed to fetch question and answer from database."});
 }
 });
 
@@ -101,10 +101,10 @@ app.post('/api/plants', async (req, res) => {
     for (let plant of plants) {
       backend.plants.push(plant)
     }
-    res.status(200).json({ message: 'Plant saved' });
+    res.status(200).json({ message: 'The Plant has been saved to the database.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to save plant' });
+    res.status(500).json({ error: 'Failed to save plant to the database.' });
   }
 });
 */
@@ -124,10 +124,10 @@ app.delete('/api/plant', async (req, res) => {
           backend.plants.splice(plant, 1);
       }
     }
-    res.status(200).json({ message: 'Plant deleted' });
+    res.status(200).json({ message: 'The Plant has been deleted from the database.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to delete plant' });
+    res.status(500).json({ error: 'Failed to delete plant from database.' });
   }
 });
 
@@ -140,10 +140,10 @@ app.put('/api/updateuser/:username/:password', async (req, res) => {
   }
   try {
     const user = await DatabaseService.UpdateUserToDB(username, password);
-    res.status(200).json({ message: "Password Updated" })
+    res.status(200).json({ message: "The Password has been Updated." })
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to update user' });
+    res.status(500).json({ error: 'Failed to update user in Database.' });
   }
 });
 
@@ -152,7 +152,7 @@ app.post('/api/login', async (req,res) => {
   try{
     let users = await DatabaseService.FetchUserfromDB(username, password);
     if (users == null){
-      res.status(500).json({error: "Error. Invalid credentials"});
+      res.status(500).json({error: "Error. Invalid credentials for login."});
     }
     else {
       res.status(200).json({ Message: "Login Successful.", token: TokenManager.generateAndReturnToken() });
@@ -160,7 +160,7 @@ app.post('/api/login', async (req,res) => {
   }
   catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error. Invalid credentials" });
+    res.status(500).json({ error: "Error. Invalid credentials for login." });
   }
 });
 
@@ -181,9 +181,10 @@ app.post('/api/demo/watering', async (req, res) => {
   if(!backend.demo_job_queued && backend.scheduleManager.appendDemoJob(job_data)) {
     backend.appendNotification(TokenManager.getUser(token) + " queued a Watering-Demo");
     backend.checkForNextJob();
-    res.status(200).json({ message: "Queued watering demo" });
+    res.status(200).json({ message: "A watering Demo has been queued." });
+    backend.appendNotification(TokenManager.getUser(token) + " queued a Watering-Demo.");
   } else {
-    res.status(500).json({ error: 'Watering-Demo is already queued' });
+    res.status(500).json({ error: 'Watering-Demo is already queued.' });
   }
 });
 
@@ -192,11 +193,11 @@ app.post('/api/demo/seeding', async (req, res) => {
   const job_data = {jobType: DatabaseService.JobType.SEEDING, job: payload, demo: true}
   // append demo to schedule_manager
   if(!backend.demo_job_queued && backend.scheduleManager.appendDemoJob(job_data)) {
-    backend.appendNotification(TokenManager.getUser(token) + " queued a Seeding-Demo");
     backend.checkForNextJob();
-    res.status(200).json({ message: "Queued seeding demo" })
+    backend.appendNotification(TokenManager.getUser(token) + " queued a Seeding-Demo.");
+    res.status(200).json({ message: "A seeding demo has been queued." })
   } else {
-    res.status(500).json({ error: 'Seeding-Demo is already queued' });
+    res.status(500).json({ error: 'Seeding-Demo is already queued.' });
   }
 });
 

@@ -35,16 +35,16 @@ async function InsertJobToDB(jobType, object) {
         const { jobname, seeds } = object;
         let existingjob =  await seedingModule.findOne({ "jobname": jobname });
         if (existingjob) {
-            return "job name already exists";
+            return "The Job name already exists in the database.";
         }
 
         let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
         if (invalids.length > 0) {
-            return "existing seeds found in previous jobs";
+            return "These seeds already exist in one of the previous jobs.";
         }
         invalids = await ValidateNewSeedsAgainstPlants(seeds);
         if (invalids.length > 0) {
-            return "existing seeds found in plants";
+            return "These seeds have already been planted.";
         }
 
         await seedingModule.InsertSeedingJobToDB(jobname, seeds);        
@@ -54,7 +54,7 @@ async function InsertJobToDB(jobType, object) {
         const { jobname, plantstobewatered, is_scheduled, scheduleData } = object;
         let existingjob = await wateringModule.findOne({ "jobname": jobname });
         if (existingjob) {
-            return "job name already exists";
+            return "The Job name already exists in the Database.";
         }
         await wateringModule.InsertWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData);
     }
@@ -134,7 +134,7 @@ async function UpdateJobToDB(jobType, object) {
         await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData);
     }
 
-    console.log('Job has been updated.');
+    console.log('The Job has been updated in the Database.');
 }
 
 
