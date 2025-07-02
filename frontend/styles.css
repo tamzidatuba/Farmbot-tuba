@@ -8,6 +8,7 @@ canvas {
   background-color: #A47149;
   cursor: crosshair;
   background-image: url("noise.png");
+  left: 25%;
 }
 
 
@@ -109,7 +110,7 @@ body {
 }
 
 .sidebar {
-  width: 15%;
+  width: 18%;
   display: flex;
   flex-direction: column;
   background-color: #6B8F71;
