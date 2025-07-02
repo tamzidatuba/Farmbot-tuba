@@ -128,6 +128,7 @@ body {
 .sidebar {
   width: 18%;
   background-color: var(--elements-color);
+  text-align: left;
   display: flex;
   flex-direction: column;
   color: white;
@@ -198,7 +199,7 @@ body {
   cursor: pointer;
   width: 100%;
   font-size: 14px;
-  text-align: center;
+  text-align: left;
 }
 
 .subtask button:hover {
@@ -695,7 +696,6 @@ margin-top: 4px;
 .language-menu {
   padding: 12px;
   margin-top: auto;
-  z-index: 1000;
 }
 
 .language-select {
@@ -710,7 +710,6 @@ margin-top: 4px;
   transition: background 0.3s;
   appearance: none; /* hide native arrow in some browsers */
   outline: none;
-  z-index: 1000;
 }
 
 

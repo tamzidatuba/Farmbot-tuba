@@ -1,3 +1,5 @@
+import { getTranslation } from './scripts/translation.js';
+
 document.addEventListener("DOMContentLoaded", () => {
   const demoBtn = document.getElementById("wateringDemoBtn");
   const modal = document.getElementById("wateringDemoModal");
@@ -24,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   executeBtn.addEventListener("click", async () => {
     const selectedPlantId = plants[plantDropdown.value];
     try {
-      if (selectedPlantId !== "Loading...") {
+      if (selectedPlantId !== getTranslation("loading")) {
         const plantstobewatered = [{plant: selectedPlantId, wateringcapacity: 10, wateringheight: 70}];
         const payload = {jobname: "Watering Demo", plantstobewatered: plantstobewatered, is_scheduled: false, scheduleData: null};
         const token = "";
@@ -59,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("Plant:", plant);
           const option = document.createElement("option");
           option.value = plant_data;
-          option.textContent = `${capitalizeFirstLetter(plant.planttype)} at X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+          option.textContent = `${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
           plantDropdown.appendChild(option);
         }
       }

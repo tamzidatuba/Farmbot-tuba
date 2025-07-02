@@ -43,11 +43,11 @@
     <div class="schedule-options">
       <label class="option-label">
         <input type="radio" name="scheduleOption" value="scheduled" />
-        <span data-i18n="scheduled">Scheduled</span>
+        <span data-i18n="scheduled">Repetitive Watering</span>
       </label>
       <label class="option-label">
         <input type="radio" name="scheduleOption" value="not-scheduled" checked />
-        <span data-i18n="notScheduled">Not Scheduled</span>
+        <span data-i18n="notScheduled">Single Watering</span>
       </label>
     </div>
 
@@ -72,7 +72,7 @@
 <div id="wateringDemoModal" class="modal">
    <div class="modal-content">
      <span class="close" id="closeModalWateringDemo">&times;</span>
-     <h2 data-i18n="wateringDemo">Select a plant for watering</h2>
+     <h2 data-i18n="wateringDemoText">Select a plant for watering</h2>
      <select id="plantDropdown">
        <option data-i18n="loading">Loading...</option>
      </select>
@@ -85,12 +85,12 @@
 <div id="seedingDemoModal" class="modal">
   <div class="modal-content">
     <span class="close" id="closeModalSeedingDemo">&times;</span>
-    <h2>Select a plant for seeding</h2>
+    <h2 data-i18n="seedingDemoText">Select a plant for seeding</h2>
     <select id="plantDropdownSeeding">
-      <option>Loading...</option>
+      <option data-i18n="loading">Loading...</option>
     </select>
     <br /><br />
-    <button id="executeBtnSeedingDemo">Execute</button>
+    <button data-i18n="execute" id="executeBtnSeedingDemo">Execute</button>
   </div>
 </div>
 
@@ -139,8 +139,8 @@
         <span class="arrow" id="arrow">&#9654;</span>
       </div>
       <div class="subtask" id="subtaskContainer">
-        <button id="seedingJobBtn" data-i18n="seeding">🌱 Seeding Job</button>
-        <button id="wateringJobBtn" data-i18n="watering">💧 Watering Job</button>
+        <button id="seedingJobBtn" data-i18n="seedingTitle">🌱 Seeding Job</button>
+        <button id="wateringJobBtn" data-i18n="wateringTitle">💧 Watering Job</button>
       </div>
     </li>
     <li>
@@ -155,11 +155,11 @@
     </li>
     <!----help option----->
     <div class="help-translucent" id="helpTranslucent"></div>
-    <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo">Seeding Demo
-    <div class="help-text" style="display: outside; color: gray;">Click to simulate a demo of planting seeds.</div>
+    <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo"><span>Seeding Demo</span>
+    <div class="help-text" style="display: none; color: gray;">Click to simulate a demo of planting seeds.</div>
     </li>
-    <li class="menu-item" id="wateringDemoBtn" data-i18n="wateringDemo">Watering Demo
-    <div class="help-text" style="display: outside; color: gray;">Click to simulate a demo of watering seeds.</div>
+    <li class="menu-item" id="wateringDemoBtn" data-i18n="wateringDemo"><span>Watering Demo</span>
+    <div class="help-text" style="display: none; color: gray;">Click to simulate a demo of watering seeds.</div>
     </li>
     <li class="menu-item" data-i18n="feedback">Feedback
       <div class="help-text" style="display: none; color: gray;">In case you wish to give a feedback, please click here.</div>
@@ -218,7 +218,7 @@
   <div id="viewJobsModalWatering" class="modal">
     <div class="modal-content">
       <span class="close" id="closeViewJobsModalWatering">&times;</span>
-      <h2 data-i18n="wateringoverview">📋 Watering Jobs Overview</h2>
+      <h2 data-i18n="wateringOverview">📋 Watering Jobs Overview</h2>
       <p id="jobCountDisplayWatering"></p> <!-- 👈 Add this -->
       <div id="jobsListWatering"></div>
     </div>
@@ -232,7 +232,7 @@
 
 <!-- Hidden Ask a Question Form -->
 <div id="questionSection" style="display: none;">
-  <h3 data-i18n="questionTitle">Ask a Question</h3>
+  <h3 data-i18n="question">Ask a Question</h3>
   <form id="questionForm">
     <label data-i18n="mail" for="email">Your Email:</label>
     <input type="email" data-i18n-placeholder="mailExample" id="email" name="email" required placeholder="you@example.com">
