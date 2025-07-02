@@ -114,7 +114,7 @@ class Backend {
           return
       }
       this.statusManager.startJob(jobObject);
-      this.appendNotification("started.", jobObject.name);
+      this.appendNotification("started", jobObject.name);
       return true
     }
     return false
