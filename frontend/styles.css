@@ -61,7 +61,7 @@ canvas {
       padding: 4px;
       font-size: 12px;
       border-radius: 4px;
-      background-color: #643a2a;
+      background-color: var(--button-color);
       color: white;
       border: none;
       border-radius: 6px;
@@ -476,7 +476,7 @@ margin-top: 4px;
 
 #loginModal h2 {
   text-align: center;
-  color: #643a2a;
+  color: var(--buttons-color);
   margin-bottom: 5px;
 }
 
@@ -529,7 +529,7 @@ margin-top: 4px;
 
     .login-container h2 {
       text-align: center;
-      color: #643a2a;
+      color: var(--buttons-color);
       display: flex;
       align-items: center;
       justify-content: center;
