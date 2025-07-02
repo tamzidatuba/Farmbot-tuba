@@ -25,8 +25,8 @@ const FAKE_FARMBOT_3 = {
 }
 
 const FARMBOT_42 = {
-  email: "df-labor2+3@cs.uni-kl.de",
-  password: "84Ostertag!",
+  email: "farmbotKL42@gmail.com",
+  password: " 36Humberg!",
   vacuum_pin: {
       pin_type: "Peripheral",
       pin_id: 77683
