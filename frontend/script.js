@@ -98,6 +98,15 @@ form.addEventListener('submit', async function(e) {
   }
 });
 
+// Optional: Close on background click
+window.addEventListener('click', (e) => {
+  if (e.target === loginModal) {
+    loginModal.style.display = 'none';
+  }
+});
+//end of login and logout feature
+
 export {
   Plant
 }
+

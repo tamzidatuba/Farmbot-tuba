@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
-import { initalizeBackend, Backend } from './backend/backend.js';
+import { Backend } from './backend/backend.js';
 import createJobsRouter from './routes/jobs.js';
 import TokenManager from "./backend/tokenManager.js";
 
@@ -15,20 +15,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const backend = new Backend();
-let backend_init_promise = initalizeBackend(backend);
 
 // Serve static files (CSS, JS) from root
 app.use(express.static(path.join(__dirname, 'frontend//')));
 app.use(express.json());
-
-
-//testing the method return single job for execution
-//let a = await DatabaseService.ReturnSingleJob('682d82fd6037708c0a882e2b');
-//let a1 = await DatabaseService.ReturnSingleJob('683f08e030a1434241a9f615');
-//console.log(a1);
-//const sample = await DatabaseService.ReturnSingleJob('6847ee82456f873240345d03');
-//console.log(sample);
-
 
 
 app.listen(PORT, () => {
@@ -199,6 +189,3 @@ app.post('/api/demo/seeding', async (req, res) => {
     res.status(500).json({ error: 'Seeding-Demo is already queued.' });
   }
 });
-
-// Handle await backend init
-await backend_init_promise;
