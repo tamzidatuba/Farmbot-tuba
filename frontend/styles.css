@@ -62,7 +62,7 @@ canvas {
       padding: 4px;
       font-size: 12px;
       border-radius: 4px;
-      background-color: var(--button-color);
+      background-color: var(--buttons-color);
       color: white;
       border: none;
       border-radius: 6px;
