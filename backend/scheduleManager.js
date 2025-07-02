@@ -87,7 +87,7 @@ class ScheduleManager {
         });
 
         this.jobsToExecute.push(newJob);
-        console.log("Scheduled to be executed:", newJob.job.jobname);
+        this.backend.appendNotification("queued", newJob.job.jobname);
         return true;
     }
     

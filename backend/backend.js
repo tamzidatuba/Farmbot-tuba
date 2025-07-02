@@ -2,7 +2,7 @@ import { StatusManager } from "./statusManager.js";
 import {getFarmbot} from './farmbotInitializer.js';
 import { ScheduleManager } from "./scheduleManager.js";
 import DatabaseService from '../databaseservice.js';
-import { GoHomeJob } from './jobs/GoHomeJob.js';
+import { HomeJob } from './jobs/HomeJob.js';
 import { SeedingJob} from './jobs/SeedingJob.js';
 import { WateringJob} from './jobs/WateringJob.js';
 
@@ -45,16 +45,18 @@ class Backend {
     }
   }
 
-  appendNotification(notification) {
+  appendNotification(key="started", jobname="") {
     let date = new Date();
     // append date to the front of the string
     let dateString = '[' + date.getDate().toString().padStart(2, "0") +'-'+ (date.getMonth() + 1).toString().padStart(2, "0") +'-'+ date.getFullYear() +'|'+ date.getHours().toString().padStart(2, "0") +':'+ date.getMinutes().toString().padStart(2, "0") +':'+ date.getSeconds().toString().padStart(2, "0") + "] ";
-    notification = dateString + notification
-    
+    let message = jobname + ": " + key + ".";
+
+    const notification = dateString + message
+
     // put notification in DB
     DatabaseService.InsertNotificationToDB(notification)
-
-    this.notification_history.push(notification);
+    let notification_object = {"date": dateString, "key": key, "jobname": jobname}
+    this.notification_history.push(notification_object);
     while (this.notification_history.length > MAX_NOTIFICATIONS) {
       this.notification_history.shift();
     }
@@ -62,7 +64,7 @@ class Backend {
 
   async finishJob() {
     console.log("Finished a Job");
-    this.appendNotification("Job '" + this.statusManager.currentJob.name + "' finished.");
+    this.appendNotification("finished", this.statusManager.currentJob.name);
     if (this.currentJobData.jobType !== DatabaseService.JobType.HOME) {
 
       // Allow for a new Demo-Job to be queued
@@ -78,8 +80,8 @@ class Backend {
 
       if (!this.checkForNextJob()) {
         this.currentJobData = {jobType: DatabaseService.JobType.HOME}
-        this.statusManager.startJob(new GoHomeJob());
-        this.appendNotification("Job 'Home' started.");
+        this.statusManager.startJob(new HomeJob());
+        this.appendNotification("started", "Home");
       }
     } else this.checkForNextJob();
   }
@@ -108,11 +110,11 @@ class Backend {
           jobObject = new WateringJob(this.currentJobData.job);
           break;
         default:
-          console.log("Job has no valid Job-Type. Cancelling...");
+          console.log("Job has no valid Job-Type. Canceling...");
           return
       }
       this.statusManager.startJob(jobObject);
-      this.appendNotification("Job '" + jobObject.name + "' started.");
+      this.appendNotification("started.", jobObject.name);
       return true
     }
     return false
@@ -122,7 +124,7 @@ class Backend {
     if (this.statusManager.runningJob && !this.statusManager.isPaused) {
       if (this.currentJobData.jobType == DatabaseService.JobType.SEEDING) {
         this.cancelJob();
-        res.status(200).json({ message: 'Cancelled a seeding job' });
+        res.status(200).json({ message: 'Canceled a seeding job' });
       } else {
         this.statusManager.pauseJob()
         res.status(200).json({ message: 'Paused a running job' });
@@ -142,7 +144,7 @@ class Backend {
   }
 
   cancelJob() {
-    this.appendNotification("Job '" + this.currentJobData.job.name + "' got cancelled.");
+    this.appendNotification("cancelled", this.currentJobData.job.name);
     this.statusManager.cancelJob();
   }
 }

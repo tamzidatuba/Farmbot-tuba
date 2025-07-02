@@ -35,7 +35,7 @@ function validateToken(token) {
 }
 
 function getUser(token) {
-    return validateToken(token) ? "Admin": "Visitor";
+    return validateToken(token) ? "admin" : "visitor";
 } 
 
 function removeToken(token) {
