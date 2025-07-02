@@ -1323,7 +1323,8 @@ form.addEventListener('submit', async function(e) {
 
 document.getElementById("help-button").addEventListener("click", function () {
     const helpTexts = document.querySelectorAll(".help-text");
-    const overlay = document.getElementById("helpTranslucent");
+    const translucent = document.getElementById("helpTranslucent");
+  
 
     const isVisible = helpTexts[0].style.display === "block";
 
@@ -1331,7 +1332,7 @@ document.getElementById("help-button").addEventListener("click", function () {
       text.style.display = isVisible ? "none" : "block";
     });
 
-    overlay.style.display = isVisible ? "none" : "block";
+    translucent.style.display = isVisible ? "none" : "block";
   });
 
   // to close help

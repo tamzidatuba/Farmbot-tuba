@@ -152,16 +152,24 @@
     <!-- grid container using canvas-->
     <div>
       <canvas id="gridCanvas" width="450" height="500"></canvas>
+     <!---<div class="help-text" style="display:outside; color: gray;">This is a visual representation of the Farmbot.<br> 
+      You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile.</div>--->
     </div>
     <div id="hover-coordinates"></div>
      <div id="farmbot-status-container">
-      <div id="farmbot-status">Status: Offline</div> <!-- Robot status -->
+      <div id="farmbot-status">Status: Offline
+      </div> <!-- Robot status -->
+      <!---<div class="help-text" style="display:outside; color: gray;"> You can see the status of the Farmbot here.<br> 
+        It shows whether the farmbot is currently offline or Ready to work or moving.</div>-->
       <button id="pauseJobBtn" class="pause-btn">⏸</button>
       <div id="errorMessage" class="error-box hidden"></div>
     </div>
     <div id="status-history">
       <div class="history-header">
         <h3 class="history-title">Notification History</h3>
+       <!----<div class="help-text" style="display: none; color: gray;">
+        You can see the notifications here.You can also change the number of notifications you want to see.
+      </div>--->
         <select id="entry-limit" name="10 entries">
           <option value="10" selected>10 entries</option>
           <option value="25">25 entries</option>
