@@ -58,7 +58,7 @@ app.get('/api/plants', async (req, res) => {
 app.post('/api/questions', async ( req, res) => {
   const { question, answer } = req.body
 try {
-    let questions = await DatabaseService.InsertQuestionsIntoDB(question, answer);
+    await DatabaseService.InsertQuestionsIntoDB(question, answer);
     res.status(200).json({message:"Thank you! Your question has been submitted."});
   }
   catch (err) {
@@ -92,6 +92,7 @@ catch(err)
 }
 });
 
+/* TODO: delete
 // insert plant
 app.post('/api/plants', async (req, res) => {
   const plants = req.body;
@@ -106,7 +107,7 @@ app.post('/api/plants', async (req, res) => {
     res.status(500).json({ error: 'Failed to save plant' });
   }
 });
-
+*/
 // insert plant
 app.delete('/api/plant', async (req, res) => {
   const { token, xcoordinate, ycoordinate} = req.body;
@@ -178,9 +179,9 @@ app.post('/api/demo/watering', async (req, res) => {
   console.log(payload.plantstobewatered[0].plant);
   // append demo to schedule_manager
   if(!backend.demo_job_queued && backend.scheduleManager.appendDemoJob(job_data)) {
+    backend.appendNotification(TokenManager.getUser(token) + " queued a Watering-Demo");
     backend.checkForNextJob();
     res.status(200).json({ message: "Queued watering demo" });
-    backend.appendNotification(TokenManager.getUser(token) + " queued a Watering-Demo");
   } else {
     res.status(500).json({ error: 'Watering-Demo is already queued' });
   }
@@ -191,8 +192,8 @@ app.post('/api/demo/seeding', async (req, res) => {
   const job_data = {jobType: DatabaseService.JobType.SEEDING, job: payload, demo: true}
   // append demo to schedule_manager
   if(!backend.demo_job_queued && backend.scheduleManager.appendDemoJob(job_data)) {
-    backend.checkForNextJob();
     backend.appendNotification(TokenManager.getUser(token) + " queued a Seeding-Demo");
+    backend.checkForNextJob();
     res.status(200).json({ message: "Queued seeding demo" })
   } else {
     res.status(500).json({ error: 'Seeding-Demo is already queued' });

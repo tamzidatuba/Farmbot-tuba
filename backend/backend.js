@@ -16,7 +16,7 @@ const FieldConstants = Object.freeze({
     SAFETY_HEIGHT: 0,
     FIELD_HEIGHT: -285,
     SEED_CONTAINER_Y: 800,
-    SEED_CONTAINER_HEIGHT: -110
+    SEED_CONTAINER_HEIGHT: -105
 });
 
 class Backend {
@@ -76,9 +76,9 @@ class Backend {
       if (!this.checkForNextJob()) {
         this.currentJobData = {jobType: DatabaseService.JobType.HOME}
         this.statusManager.startJob(new GoHomeJob());
-        this.appendNotification("Job 'GoHome' started.");
+        this.appendNotification("Job 'Home' started.");
       }
-    }
+    } else this.checkForNextJob();
   }
 
   checkForNextJob() {
@@ -91,7 +91,11 @@ class Backend {
       let jobObject;
       switch(this.currentJobData.jobType) {
         case DatabaseService.JobType.SEEDING: 
-          jobObject = new SeedingJob(this.currentJobData.job);
+          if ("demo" in this.currentJobData) {
+            jobObject = new SeedingJob(this.currentJobData.job, true);
+          } else {
+            jobObject = new SeedingJob(this.currentJobData.job)
+          }
           break;
         case DatabaseService.JobType.WATERING:
           if (this.currentJobData.job.is_scheduled) {

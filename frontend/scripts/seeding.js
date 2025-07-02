@@ -96,7 +96,6 @@ function createJobRow() {
 seedingJobBtn.addEventListener('click', () => {
   // Reset to creation mode
   isEditMode = false;
-  jobBeingEdited = null;
 
   document.getElementById('modalTitle').textContent = getTranslation("seedingJob");
   document.getElementById('executeBtn').textContent = getTranslation("createAndSave");

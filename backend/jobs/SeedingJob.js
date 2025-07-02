@@ -19,7 +19,7 @@ Steps:
 */
 
 class SeedingJob extends Job {
-    constructor(seedingArgs) {
+    constructor(seedingArgs, demo = false) {
         super(seedingArgs.jobname);
 
         let goToSafetyHeight = new MoveZTask(FarmbotStatus.FETCHING, FieldConstants.SAFETY_HEIGHT);
@@ -62,18 +62,19 @@ class SeedingJob extends Job {
             this.taskQueue.push(deactivateVacuumPin);
             this.taskQueue.push(ensurePinDeactivation);
 
-
-            let new_plant = {
-                planttype: seedArgs.seedtype,
-                xcoordinate: xCoordinate,
-                ycoordinate: yCoordinate
+            if (!demo){
+                let new_plant = {
+                    planttype: seedArgs.seedtype,
+                    xcoordinate: xCoordinate,
+                    ycoordinate: yCoordinate
+                }
+                let insertPlantToDB = new DatabaseTask(
+                    FarmbotStatus.SEEDING,
+                    DatabaseService.InsertPlantsToDB,
+                    [new_plant]
+                )
+                this.taskQueue.push(insertPlantToDB)
             }
-            let insertPlantToDB = new DatabaseTask(
-                FarmbotStatus.SEEDING,
-                DatabaseService.InsertPlantsToDB,
-                [new_plant]
-            )
-            this.taskQueue.push(insertPlantToDB)
 
             this.taskQueue.push(returnToFieldSafetyHeight);
         }
