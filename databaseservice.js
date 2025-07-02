@@ -126,6 +126,16 @@ async function UpdateJobToDB(jobType, object) {
 
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
+
+        let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
+        if (invalids.length > 0) {
+            return "These seeds already exist in one of the previous jobs.";
+        }
+        invalids = await ValidateNewSeedsAgainstPlants(seeds);
+        if (invalids.length > 0) {
+            return "These seeds have already been planted.";
+        }
+        
         await seedingModule.UpdateSeedingJobToDB(jobname, seeds);
     }
 
