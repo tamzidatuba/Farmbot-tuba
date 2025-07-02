@@ -69,10 +69,10 @@ function createJobRowWatering(jobData = null) {
   window.plants.forEach(plant => {
     const option = document.createElement('option');
     option.value = { plant: plant }; // value is the plant
-    option.textContent = `${plant.type} at X: ${plant.x}, Y: ${plant.y}`;
-    option.dataset.x = plant.x;
-    option.dataset.y = plant.y;
-    option.dataset.type = plant.type;
+    option.textContent = `${plant.planttype} at X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+    option.dataset.x = plant.xcoordinate;
+    option.dataset.y = plant.ycoordinate;
+    option.dataset.type = plant.planttype;
 
     // Preselect if matching
     if (jobData && jobData.plant.xcoordinate == plant.x && jobData.plant.ycoordinate == plant.y) {
