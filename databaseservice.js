@@ -35,16 +35,16 @@ async function InsertJobToDB(jobType, object) {
         const { jobname, seeds } = object;
         let existingjob =  await seedingModule.findOne({ "jobname": jobname });
         if (existingjob) {
-            return "job name already exists";
+            return "The Job name already exists in the database.";
         }
 
         let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
         if (invalids.length > 0) {
-            return "existing seeds found in previous jobs";
+            return "Coordinates given have overlap with one of the seeds inside one of previous jobs.";
         }
         invalids = await ValidateNewSeedsAgainstPlants(seeds);
         if (invalids.length > 0) {
-            return "existing seeds found in plants";
+            return "Coordinates given have overlap with plants.";
         }
 
         await seedingModule.InsertSeedingJobToDB(jobname, seeds);        
@@ -54,7 +54,7 @@ async function InsertJobToDB(jobType, object) {
         const { jobname, plantstobewatered, is_scheduled, scheduleData } = object;
         let existingjob = await wateringModule.findOne({ "jobname": jobname });
         if (existingjob) {
-            return "job name already exists";
+            return "The Job name already exists in the Database.";
         }
         await wateringModule.InsertWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData);
     }
@@ -73,7 +73,7 @@ async function ReturnSingleJob(jobname) {
     }
     job = await wateringModule.ReturnWateringJob(jobname);
     if (job !== null && typeof (job) !== "undefined") {
-        return { job };
+        return job;
     }    
 }
 
@@ -126,6 +126,16 @@ async function UpdateJobToDB(jobType, object) {
 
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
+
+        let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
+        if (invalids.length > 0) {
+            return "New coordinates have overlap with one of the seeds inside one of previous jobs.";
+        }
+        invalids = await ValidateNewSeedsAgainstPlants(seeds);
+        if (invalids.length > 0) {
+            return "New coordinates have overlap with plants.";
+        }
+
         await seedingModule.UpdateSeedingJobToDB(jobname, seeds);
     }
 
@@ -134,7 +144,8 @@ async function UpdateJobToDB(jobType, object) {
         await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData);
     }
 
-    console.log('Job has been updated.');
+    console.log('The Job has been updated in the Database.');
+    return true;
 }
 
 
@@ -186,6 +197,10 @@ async function FetchUserfromDB(username, password) {
 
 async function UpdateUserToDB(username, password) {
     const users = await userModel.UpdateUser(username, password);
+}
+
+async function DeletePlantFromDB(xcoordinate, ycoordinate) {
+    await plantModel.DeletePlantFromDB(xcoordinate, ycoordinate);
 }
 
 async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
@@ -262,4 +277,5 @@ export default {
     InsertQuestionsIntoDB,
     FetchAlltheQuestionsFromDB,
     FetchQuestionsFromDBbyQuestion,
+    DeletePlantFromDB,
 };

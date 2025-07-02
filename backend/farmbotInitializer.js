@@ -25,19 +25,23 @@ const FAKE_FARMBOT_3 = {
 }
 
 const FARMBOT_42 = {
-  email: "df-labor2+3@cs.uni-kl.de",
-  password: "84Ostertag!",
+  email: "farmbotKL42@gmail.com",
+  password: " 36Humberg!",
   vacuum_pin: {
       pin_type: "Peripheral",
-      pin_id: 78903
+      pin_id: 77683
     },
   water_pin: {
       pin_type: "Peripheral", // "Peripheral"
       pin_id: 78904 
-    }
+    },
+  lighting_pin: {
+      pin_type: "Peripheral",
+      pin_id: 78905
+  }
 }
 
-const FARMBOT_DATA = FAKE_FARMBOT_3
+const FARMBOT_DATA = FAKE_FARMBOT_3;
 
 // Requests a API-Token and returns it
 async function _getApiToken() {
@@ -73,6 +77,11 @@ async function getFarmbot() {
 
         let farmbot = new Farmbot({ token: tokenData["token"]["encoded"] });
         farmbot.connect()
+        try {
+            await farmbot.emergencyUnlock();
+        } catch(error) {
+            console.log(error);
+        }
         return farmbot
 
     } catch (error) {

@@ -10,13 +10,14 @@ const MAX_NOTIFICATIONS = 50;
 
 const FieldConstants = Object.freeze({
     FIELD_START_X: 0,
-    FIELD_START_Y: 0,
+    FIELD_START_Y: 50,
     FIELD_END_X: 490,
-    FIELD_END_Y: 640,
+    FIELD_END_Y: 690,
     SAFETY_HEIGHT: 0,
     FIELD_HEIGHT: -285,
-    SEED_CONTAINER_Y: 800,
-    SEED_CONTAINER_HEIGHT: -110
+    SEED_CONTAINER_Y: 850,
+    SEED_CONTAINER_HEIGHT: -109,
+    MAX_SEEDING_DEPTH: 15,
 });
 
 class Backend {
@@ -26,6 +27,8 @@ class Backend {
     this.statusManager = new StatusManager(this);
     this.currentJobData;
     this.plants = new Array();
+
+    this.demo_job_queued = false;
   }
 
   generateFrontendData() {
@@ -35,7 +38,8 @@ class Backend {
       "notifications": this.notification_history,
       "executionPipeline": this.scheduleManager.jobsToExecute,
       "farmbotPosition": this.statusManager.lastState.location_data.position,
-      "plants": this.plants
+      "plants": this.plants,
+      "demoQueued": this.demo_job_queued
     }
   }
 
@@ -59,7 +63,10 @@ class Backend {
     this.appendNotification("Job '" + this.statusManager.currentJob.name + "' finished.");
     if (this.currentJobData.jobType !== DatabaseService.JobType.HOME) {
 
-      if (this.currentJobData.jobType !== DatabaseService.JobType.WATERING || !this.currentJobData.job.is_scheduled) {
+      // Allow for a new Demo-Job to be queued
+      if ("demo" in this.currentJobData) {
+        this.demo_job_queued = false;
+      } else if (this.currentJobData.jobType !== DatabaseService.JobType.WATERING || !this.currentJobData.job.is_scheduled) {
         try {
           await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.jobname)
         } catch (e) {
@@ -70,9 +77,9 @@ class Backend {
       if (!this.checkForNextJob()) {
         this.currentJobData = {jobType: DatabaseService.JobType.HOME}
         this.statusManager.startJob(new GoHomeJob());
-        this.appendNotification("Job 'GoHome' started.");
+        this.appendNotification("Job 'Home' started.");
       }
-    }
+    } else this.checkForNextJob();
   }
 
   checkForNextJob() {
@@ -85,7 +92,11 @@ class Backend {
       let jobObject;
       switch(this.currentJobData.jobType) {
         case DatabaseService.JobType.SEEDING: 
-          jobObject = new SeedingJob(this.currentJobData.job);
+          if ("demo" in this.currentJobData) {
+            jobObject = new SeedingJob(this.currentJobData.job, true);
+          } else {
+            jobObject = new SeedingJob(this.currentJobData.job)
+          }
           break;
         case DatabaseService.JobType.WATERING:
           if (this.currentJobData.job.is_scheduled) {
