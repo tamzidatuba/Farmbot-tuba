@@ -684,6 +684,7 @@ margin-top: 4px;
 }
 
 .language-select {
+  text-align: center;
   font-size: 14px;
   background-color: #7C9F81;
   color: white;
@@ -694,6 +695,7 @@ margin-top: 4px;
   transition: background 0.3s;
   appearance: none; /* hide native arrow in some browsers */
   outline: none;
+  z-index: 1000;
 }
 
 

@@ -53,12 +53,11 @@ export async function updateRobot() {
     pauseBtn.textContent = data.paused ? '▶' : '⏸';
 
     //Update plants
-    if (arraysEqual(window.plants, removeId(data.plants))) {
+    if (!(arraysEqual(window.plants, removeId(data.plants)))) {
     //if (plants.toString() != data.toString()) {
       window.plants.length = 0; // clear it
-      console.log("Plants fetched from server:", data);
       for (const plant of data.plants) {
-        window.plants.push(new Plant(Number(plant.xcoordinate), Number(plant.ycoordinate), plant.planttype));
+        window.plants.push(new Plant(plant.planttype, Number(plant.xcoordinate), Number(plant.ycoordinate)));
       }
     }
     })
@@ -80,7 +79,9 @@ function arraysEqual(arr1, arr2) {
 
   return arr1.every((obj1, index) => {
     const obj2 = arr2[index];
-    return JSON.stringify(obj1) === JSON.stringify(obj2);
+    console.log("Comparing objects:", obj1, obj2);
+    console.log("Check objects:", JSON.stringify(obj1) === JSON.stringify(removeId(obj2)));
+    return JSON.stringify(obj1) === JSON.stringify(removeId(obj2));
   });
 }
 

@@ -13,7 +13,7 @@ class Task {
 
     async pauseTask(farmbot) {
         await farmbot.emergencyLock()
-        farmbot.emergencyUnlock();
+        await farmbot.emergencyUnlock();
     }
 
     continueTask(farmbot, lastState) {

@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedPlantId = plants[plantDropdown.value];
     try {
       if (selectedPlantId !== "Loading...") {
-        const plantstobewatered = [{plant: selectedPlantId, wateringcapacity: 10, wateringheight: 10}];
+        const plantstobewatered = [{plant: selectedPlantId, wateringcapacity: 10, wateringheight: 70}];
         const payload = {jobname: "Watering Demo", plantstobewatered: plantstobewatered, is_scheduled: false, scheduleData: null};
         const token = "";
         const response = await fetch('/api/demo/watering', {

@@ -22,8 +22,8 @@ let plants = [];
 function drawPlant(plant) {
     //ctx.save();
     const img = new Image();
-    const coord = coordToPixel(plant.x, plant.y);
-    switch (plant.type) {
+    const coord = coordToPixel(plant.xcoordinate, plant.ycoordinate);
+    switch (plant.planttype) {
         case "lettuce":
             img.src = '../icons/lettuce.png';
             drawRadius(coord, 15);

@@ -10,13 +10,13 @@ const MAX_NOTIFICATIONS = 50;
 
 const FieldConstants = Object.freeze({
     FIELD_START_X: 0,
-    FIELD_START_Y: 0,
+    FIELD_START_Y: 50,
     FIELD_END_X: 490,
-    FIELD_END_Y: 640,
+    FIELD_END_Y: 690,
     SAFETY_HEIGHT: 0,
     FIELD_HEIGHT: -285,
-    SEED_CONTAINER_Y: 800,
-    SEED_CONTAINER_HEIGHT: -105
+    SEED_CONTAINER_Y: 850,
+    SEED_CONTAINER_HEIGHT: -109
 });
 
 class Backend {
