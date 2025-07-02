@@ -1,6 +1,7 @@
 import DatabaseService from '../databaseservice.js';
 import TokenManager from '../backend/tokenManager.js';
 import express from 'express';
+import { error } from 'console';
 
 export default function createJobsRouter(backend) {
     const router = express.Router();
@@ -21,7 +22,7 @@ export default function createJobsRouter(backend) {
                 res.status(200).json({ message: 'Job saved' });
             }
             else {
-                res.status(500).json({ message: result });
+                res.status(500).json({ error: result });
             }
         } catch (err) {
             console.error(err);
@@ -79,8 +80,8 @@ export default function createJobsRouter(backend) {
                 if (await backend.scheduleManager.appendScheduledJob(job)) {
                     res.status(200).json({ message: 'Job has been queued' });
                     backend.checkForNextJob();
-                } else res.status(500).json({ message: 'Job has already been queued' });
-            } else res.status(500).json({ message: 'Job is not in the Database' });
+                } else res.status(500).json({ error: 'Job has already been queued' });
+            } else res.status(500).json({ error: 'Job is not in the Database' });
         } catch(err) {
             console.error(err);
             res.status(500).json({ error: 'Failed to queue job' });
@@ -97,7 +98,7 @@ export default function createJobsRouter(backend) {
         }
         if (backend.scheduleManager.removeScheduledJob(jobname)) {
             res.status(200).json({ message: 'Job has been dequeued' });
-        } else res.status(500).json({ message: 'Job is not in the Queue' });
+        } else res.status(500).json({ error: 'Job is not in the Queue' });
     });
 
     //pause job
