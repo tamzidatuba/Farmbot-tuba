@@ -29,6 +29,8 @@ class Backend {
     this.plants = new Array();
 
     this.demo_job_queued = false;
+    
+    initalizeBackend(this);
   }
 
   generateFrontendData() {
@@ -165,7 +167,6 @@ async function initalizeBackend(backend) {
 }
 
 export {
-  initalizeBackend,
   Backend,
   FieldConstants
 };
