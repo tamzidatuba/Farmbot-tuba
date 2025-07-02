@@ -61,7 +61,7 @@ document.getElementById("help-button").addEventListener("click", function () {
 
 
 
-  /*document.getElementById("help-button").addEventListener("click", function () {
+document.getElementById("help-button").addEventListener("click", function () {
     const helpTexts = document.querySelectorAll(".help-text-history");
     const translucent = document.getElementById("helpTranslucent");
   
@@ -79,4 +79,4 @@ document.getElementById("help-button").addEventListener("click", function () {
   document.getElementById("helpTranslucent").addEventListener("click", function () {
     document.querySelectorAll(".help-text-history").forEach(text => text.style.display = "none");
     this.style.display = "none";
-  });*/
+  });
