@@ -27,7 +27,11 @@ class ScheduleManager {
             let loadedJob = await DatabaseService.ReturnSingleJob(job.job_name);
             if (typeof(loadedJob) === "undefined") {
                 console.log("Couldn't find job with jobname '" + job.job_name + "' in DB");
-                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job.job_name);
+                try {
+                    await DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job.job_name);
+                } catch {
+                    console.log("!!! Corrupted Job in Execution DB detected. Please delete manually !!!");
+                }
             } else {
                 this.jobsToExecute.push(loadedJob);
             }
@@ -40,16 +44,29 @@ class ScheduleManager {
 
     getScheduledJob() {
         // remove job from queue DB
-        DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, this.jobsToExecute[0].job.jobname);
+        try {
+            DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, this.jobsToExecute[0].job.jobname);
+        }
+        catch {
+            console.log("Job is not in Execution DB");
+        }
         return this.jobsToExecute.shift();
     }
 
     removeScheduledJob(name) {
-        for (const job in this.jobsToExecute) {
-            if (this.jobsToExecute[job].job.name == name) {
-                this.jobsToExecute.splice(job, 1);
+        for (const job_idx in this.jobsToExecute) {
+            if (this.jobsToExecute[job_idx].job.name == name) {
+
+                // remove job from queue
+                const job_data = this.jobsToExecute.splice(job_idx, 1)[0];
+
+                // handle demo job
+                if("demo" in job_data) {
+                    this.backend.demo_job_queued = false;
+                    return true
+                }
                 // remove job from queue DB
-                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, jobsToExecute[job].job.jobname);
+                DatabaseService.DeleteJobFromDB(DatabaseService.JobType.EXECUTION, job_data.job.jobname);
                 return true;
             }
         }
@@ -57,7 +74,7 @@ class ScheduleManager {
     }
 
    async appendScheduledJob(newJob) {
-    // Check if job is already queued
+        // Check if job is already queued
         for (const job in this.jobsToExecute) {
             if (this.jobsToExecute[job].job.jobname == newJob.job.jobname) {
                 return false;
@@ -72,7 +89,20 @@ class ScheduleManager {
         this.jobsToExecute.push(newJob);
         console.log("Scheduled to be executed:", newJob.job.jobname);
         return true;
-    }     
+    }
+    
+    appendDemoJob(demo_job) {
+        // Check if job is already queued
+        for (const queued_job of this.jobsToExecute) {
+            if ( queued_job.job.jobname == demo_job.job.jobname) {
+                return false;
+            }
+        }
+        this.backend.demo_job_queued = true;
+        this.jobsToExecute.push(demo_job);
+        console.log("Scheduled to be executed:", demo_job.job.jobname);
+        return true
+    }
 
     async checkForScheduledJobs() {
         clearTimeout(this.currentTimeout);

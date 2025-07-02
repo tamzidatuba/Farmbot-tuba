@@ -19,7 +19,7 @@ Steps:
 */
 
 class SeedingJob extends Job {
-    constructor(seedingArgs) {
+    constructor(seedingArgs, demo = false) {
         super(seedingArgs.jobname);
 
         let goToSafetyHeight = new MoveZTask(FarmbotStatus.FETCHING, FieldConstants.SAFETY_HEIGHT);
@@ -36,6 +36,8 @@ class SeedingJob extends Job {
         
         for(const seed in seedingArgs.seeds) {
             let seedArgs = seedingArgs.seeds[seed]
+            let xCoordinate = this.clampXToField(seedArgs.xcoordinate);
+            let yCoordinate = this.clampYToField(seedArgs.ycoordinate);
                 
             this.taskQueue.push(goToSafetyHeight);
 
@@ -49,29 +51,30 @@ class SeedingJob extends Job {
             
             this.taskQueue.push(returnToSafetyHeight);
 
-            let goToPlantingPosition = new MoveTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, seedArgs.xcoordinate, seedArgs.ycoordinate);
+            let goToPlantingPosition = new MoveTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, xCoordinate, yCoordinate);
             this.taskQueue.push(goToPlantingPosition);
 
             this.taskQueue.push(lowerToSeedingHeight);
 
-            let goToSeedingDepth = new MoveZTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, FieldConstants.FIELD_HEIGHT - seedArgs.depth)
+            let goToSeedingDepth = new MoveZTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, FieldConstants.FIELD_HEIGHT - Math.max(seedArgs.depth, FieldConstants.MAX_SEEDING_DEPTH));
             this.taskQueue.push(goToSeedingDepth);
             // plant the seeds
             this.taskQueue.push(deactivateVacuumPin);
             this.taskQueue.push(ensurePinDeactivation);
 
-
-            let new_plant = {
-                planttype: seedArgs.seedtype,
-                xcoordinate: seedArgs.xcoordinate,
-                ycoordinate: seedArgs.ycoordinate
+            if (!demo){
+                let new_plant = {
+                    planttype: seedArgs.seedtype,
+                    xcoordinate: xCoordinate,
+                    ycoordinate: yCoordinate
+                }
+                let insertPlantToDB = new DatabaseTask(
+                    FarmbotStatus.SEEDING,
+                    DatabaseService.InsertPlantsToDB,
+                    [new_plant]
+                )
+                this.taskQueue.push(insertPlantToDB)
             }
-            let insertPlantToDB = new DatabaseTask(
-                FarmbotStatus.SEEDING,
-                DatabaseService.InsertPlantsToDB,
-                [new_plant]
-            )
-            this.taskQueue.push(insertPlantToDB)
 
             this.taskQueue.push(returnToFieldSafetyHeight);
         }
