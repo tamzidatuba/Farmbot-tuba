@@ -152,14 +152,15 @@ function clearCanvas() {
 }
 
 // Map pixel to real-world coordinate
-function pixelToCoord(x, y) {
+export function pixelToCoord(x, y) {
     const coordX = Math.round((x / canvasWidth) * coordWidth);
     const coordY = Math.round((y / canvasHeight) * coordHeight);
     return { x: coordX, y: coordY };
 }
 
+
 // Map real-world coordinate to pixel
-function coordToPixel(x, y) {
+export function coordToPixel(x, y) {
     const px = (x / coordWidth) * canvasWidth;
     const py = (y / coordHeight) * canvasHeight;
     return { x: px, y: py };
