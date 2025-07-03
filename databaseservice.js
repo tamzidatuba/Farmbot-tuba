@@ -127,14 +127,14 @@ async function UpdateJobToDB(jobType, object) {
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
 
-        let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
-        if (invalids.length > 0) {
-            return "New coordinates have overlap with one of the seeds inside one of previous jobs.";
-        }
-        invalids = await ValidateNewSeedsAgainstPlants(seeds);
-        if (invalids.length > 0) {
-            return "New coordinates have overlap with plants.";
-        }
+        // let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
+        // if (invalids.length > 0) {
+        //     return "New coordinates have overlap with one of the seeds inside one of previous jobs.";
+        // }
+        // invalids = await ValidateNewSeedsAgainstPlants(seeds);
+        // if (invalids.length > 0) {
+        //     return "New coordinates have overlap with plants.";
+        // }
 
         await seedingModule.UpdateSeedingJobToDB(jobname, seeds);
     }

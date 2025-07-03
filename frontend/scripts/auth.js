@@ -3,8 +3,6 @@ export let token = '';
 
 //for login and logout
 const settingsBtn = document.querySelector('.settings-btn');
-const logoutBtn = document.getElementById('logoutBtn');
-const loginBtn = document.getElementById('loginBtn');
 const loginModal = document.getElementById('loginModal');
 const closeLoginModal = document.getElementById('closeLoginModal');
 const farmbotMenu = document.getElementById('farmbotMenu');
@@ -17,46 +15,31 @@ const subtaskView = document.getElementById('subtaskView');
 //login features
 let isLoggedIn = false;
 
-window.addEventListener('DOMContentLoaded', () => {
-    loginBtn.style.display = 'none';
-    logoutBtn.style.display = 'none';
-});
-
 
 settingsBtn.addEventListener('click', () => {
     if (isLoggedIn) {
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = logoutBtn.style.display === 'block' ? 'none' : 'block';
+        isLoggedIn = false;
+        alert(getTranslation('logoutSuccess'));
+        farmbotMenu.textContent = getTranslation('menu');
+        toggle.style.display = 'none';
+        subtask.style.display = 'none';
+        viewJobs.style.display = 'none';
+        subtaskView.style.display = 'none';
+        fetch('/api/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "token": token
+            })
+        });
+        token = "";
     } else {
-        logoutBtn.style.display = 'none';
-        loginBtn.style.display = loginBtn.style.display === 'block' ? 'none' : 'block';
+        loginModal.style.display = 'block';
     }
 });
 
-loginBtn.addEventListener('click', () => {
-    loginModal.style.display = 'block';
-});
-logoutBtn.addEventListener('click', () => {
-    isLoggedIn = false;
-    logoutBtn.style.display = 'none';
-    loginBtn.style.display = 'block';
-    alert(getTranslation('logoutSuccess'));
-    farmbotMenu.textContent = getTranslation('menu');
-    toggle.style.display = 'none';
-    subtask.style.display = 'none';
-    viewJobs.style.display = 'none';
-    subtaskView.style.display = 'none';
-    fetch('/api/logout', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "token": token
-        })
-    });
-    token = "";
-});
 
 closeLoginModal.addEventListener('click', () => {
     loginModal.style.display = 'none';
@@ -84,7 +67,7 @@ form.addEventListener('submit', async function (e) {
                 password: password.value.trim()
             })
         });
-
+        password.value="";
         const data = await response.json();
 
         if (response.ok) {
@@ -93,8 +76,6 @@ form.addEventListener('submit', async function (e) {
             isLoggedIn = true;
 
             if (loginModal) loginModal.style.display = 'none';
-            if (loginBtn) loginBtn.style.display = 'none';
-            if (logoutBtn) logoutBtn.style.display = 'inline-block';
             if (farmbotMenu) farmbotMenu.textContent = getTranslation('menuAdmin');
             toggle.style.display = 'flex';
             //subtask.style.display='none';
