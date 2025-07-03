@@ -1,3 +1,5 @@
+import { getTranslation } from './scripts/translation.js';
+
 document.addEventListener("DOMContentLoaded", () => {
   const demoBtn = document.getElementById("wateringDemoBtn");
   const modal = document.getElementById("wateringDemoModal");
@@ -8,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   demoBtn.addEventListener("click", () => {
     modal.style.display = "block";
-    getPlants();
+    populatePlantDropdown();
+    //getPlants();
   });
 
   closeModalBtn.addEventListener("click", () => {
@@ -24,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   executeBtn.addEventListener("click", async () => {
     const selectedPlantId = plants[plantDropdown.value];
     try {
-      if (selectedPlantId !== "Loading...") {
+      if (selectedPlantId !== getTranslation("loading")) {
         const plantstobewatered = [{plant: selectedPlantId, wateringcapacity: 10, wateringheight: 70}];
         const payload = {jobname: "Watering Demo", plantstobewatered: plantstobewatered, is_scheduled: false, scheduleData: null};
         const token = "";
@@ -44,6 +47,29 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.style.display = "none";
   });
 
+  //use predefined plants for demo
+  const predefinedPlants = {
+    "1": {planttype: "lettuce", xcoordinate: 10, ycoordinate: 20},
+    "2": {planttype: "lettuce", xcoordinate: 20, ycoordinate: 30},
+    "3": {planttype: "tomato", xcoordinate: 30, ycoordinate: 40},
+    "4": {planttype: "tomato", xcoordinate: 40, ycoordinate: 50},
+    "5": {planttype: "radish", xcoordinate: 50, ycoordinate: 60},
+    "6": {planttype: "radish", xcoordinate: 60, ycoordinate: 70}
+  };
+
+  // Populate the dropdown with predefined plants
+  function populatePlantDropdown() {
+    plantDropdown.innerHTML = "";
+    for (const plantId in predefinedPlants) {
+      const plant = predefinedPlants[plantId];
+      const option = document.createElement("option");
+      option.value = plantId;
+      option.textContent = `${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+      plantDropdown.appendChild(option);
+    }
+    plants = predefinedPlants; // Store the predefined plants
+  }
+  
   // get plants from server
   async function getPlants() {
     await fetch('/api/plants', {method: 'GET',
@@ -59,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("Plant:", plant);
           const option = document.createElement("option");
           option.value = plant_data;
-          option.textContent = `${capitalizeFirstLetter(plant.planttype)} at X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+          option.textContent = `${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
           plantDropdown.appendChild(option);
         }
       }

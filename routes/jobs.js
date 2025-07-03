@@ -18,15 +18,15 @@ export default function createJobsRouter(backend) {
             let result = await DatabaseService.InsertJobToDB(jobType, payload);
             if (result === true) {
                 backend.scheduleManager.checkForScheduledJobs()
-                backend.appendNotification("Job '" + payload.jobname + "' saved");
-                res.status(200).json({ message: 'Job saved' });
+                backend.appendNotification("created",  payload.jobname);
+                res.status(200).json({ message: 'Job created' });
             }
             else {
                 res.status(500).json({ error: result });
             }
         } catch (err) {
             console.error(err);
-            res.status(500).json({ error: 'Failed to save job' });
+            res.status(500).json({ error: 'Failed to create job' });
         }
 
     });
@@ -57,7 +57,7 @@ export default function createJobsRouter(backend) {
             await DatabaseService.DeleteJobFromDB(jobtype, jobname);
             // remove job from scheduled Jobs
             backend.scheduleManager.removeScheduledJob(jobname)
-            backend.appendNotification("Job '" + jobname + "' deleted");
+            backend.appendNotification("deleted", jobname);
             res.status(200).json({ message: 'Job deleted' });
         } catch (err) {
             res.status(500).json({ error: 'Failed to delete job' });
@@ -135,7 +135,7 @@ export default function createJobsRouter(backend) {
             if (result === true) {
                 await DatabaseService.UpdateJobToDB(jobtype, payload);
                 backend.scheduleManager.checkForScheduledJobs();
-                backend.appendNotification("Job '" + payload.jobname + "' modified");
+                backend.appendNotification("modified", payload.jobname);
                 res.status(200).json({ message: 'Job updated' });
             }
             else

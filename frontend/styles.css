@@ -1,3 +1,19 @@
+:root {
+  --background-color: white;
+  --buttons-color: #ae1757;
+  --buttons-hover-color: #670e33;
+  --elements-color: #195632;
+}
+/* 
+Green: #195632,
+Light Blue: #006ba1,
+Dark Blue: #003b5c,
+Brown: #643a2a, // Dark Brown: #42261c,
+Grey: #333f49,
+Magenta: #ae1757,
+Yellow: #f7be00
+*/
+
 #gridCanvas {
   top: 12%;
   position: fixed;
@@ -5,7 +21,7 @@
 
 canvas {
   display: block;
-  background-color: #A47149;
+  background-color: #643a2a;
   cursor: crosshair;
   background-image: url("noise.png");
   left: 25%;
@@ -46,7 +62,7 @@ canvas {
       padding: 4px;
       font-size: 12px;
       border-radius: 4px;
-      background-color: #7C9F81;
+      background-color: var(--buttons-color);
       color: white;
       border: none;
       border-radius: 6px;
@@ -64,7 +80,7 @@ canvas {
       text-align: center;
       width: 230px;
       height: 48px;
-      background-color: #6B8F71;
+      background-color: var(--elements-color);
       color: white;
       border: none;
       border-radius: 5px;
@@ -80,7 +96,7 @@ canvas {
       max-height: 80%;
       top: 2%;
       right: 10%; 
-      background-color: #6B8F71;
+      background-color: var(--elements-color);
       border: none;
       border-top: none;
       border-radius: 0 0 8px 8px;
@@ -106,14 +122,15 @@ canvas {
 body {
   display: flex;
   min-height: 100vh;
-  background-color: #EAE3DC;
+  background-color: var(--background-color);
 }
 
 .sidebar {
   width: 18%;
+  background-color: var(--elements-color);
+  text-align: left;
   display: flex;
   flex-direction: column;
-  background-color: #6B8F71;
   color: white;
   padding: 20px;
 }
@@ -136,7 +153,7 @@ body {
 
 .menu-item {
   font-size: 14px;
-  background-color: #7C9F81;
+  background-color: var(--buttons-color);
   border-radius: 5px;
   cursor: pointer;
   padding: 12px;
@@ -149,7 +166,7 @@ body {
 }
 
 .menu-item:hover {
-  background-color: #5B7F62;
+  background-color: var(--buttons-hover-color);
 }
 
 .arrow {
@@ -175,18 +192,18 @@ body {
 .subtask button {
   margin-top: 8px;
   padding: 8px 12px;
-  background-color: #5B7F62;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   width: 100%;
   font-size: 14px;
-  text-align: center;
+  text-align: left;
 }
 
 .subtask button:hover {
-  background-color: #7C9F81;
+  background-color: var(--buttons-hover-color);
 }
 
 .main {
@@ -199,7 +216,7 @@ body {
   position: absolute;
   top: 2%;
   right: 2%;
-  background-color: #6B8F71;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   padding: 8px;
@@ -215,7 +232,7 @@ body {
 }
 
 .settings-btn:hover {
-  background-color: #388e3c;
+  background-color: var(--buttons-hover-color);
 }
 
 .gear-emoji {
@@ -239,7 +256,7 @@ background-color: rgba(0,0,0,0.5);
 background-color: #F2ECE6;
 margin: 5% auto;
 padding: 20px;
-border: 1px solid #6B8F71;
+border: 1px solid #ccc;
 border-radius: 10px;
 width: 500px;
 box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -250,7 +267,7 @@ gap: 15px;
 
 .modal-content h2 {
 margin-bottom: 10px;
-color: #6B8F71;
+color: var(--buttons-color);
 text-align: center;
 }
 
@@ -268,7 +285,7 @@ border: 1px solid #ccc;
 }
 
 .modal-content button {
-background-color: #6B8F71;
+background-color: var(--buttons-color);
 color: white;
 padding: 10px;
 border: none;
@@ -278,7 +295,7 @@ margin-top: 10px;
 }
 
 .modal-content button:hover {
-background-color: #5B7F62;
+background-color: var(--buttons-hover-color);
 }
 
 .close {
@@ -332,7 +349,7 @@ flex-direction: column;
 }
 
 .option-label input[type="radio"] {
-  accent-color: #4caf50; /* Green */
+  accent-color: var(--buttons-color); /* Green */
 }
 
 #scheduleFields {
@@ -366,7 +383,7 @@ width: 100%;
 }
 
 .errorMsg {
-color: red;
+color: #ae1757;
 font-size: 0.8rem;
 height: 16px;
 margin-top: 4px;
@@ -389,7 +406,7 @@ margin-top: 4px;
 .delete-job {
   cursor: pointer;
   font-size: 18px;
-  color: #777;
+  color: #333f49;
   margin-left: auto;
 }
 
@@ -404,7 +421,7 @@ margin-top: 4px;
   position: absolute;
   top: 60px;
   right: 20px;
-  background-color: #5B7F62;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   padding: 8px 10px;
@@ -418,13 +435,13 @@ margin-top: 4px;
 }
 
 .logout-btn:hover {
-  background-color: #5B7F62;
+  background-color: var(--buttons-hover-color);
 }
 .login-btn {
   position: absolute;
   top: 60px;
   right: 20px;
-  background-color: #5B7F62;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   padding: 8px 12px;
@@ -438,7 +455,7 @@ margin-top: 4px;
 }
 
 .login-btn:hover {
-  background-color: #6B8F71;
+  background-color: var(--buttons-hover-color);
 }
 
 
@@ -460,7 +477,7 @@ margin-top: 4px;
   background-color: #EAE3DC;
   padding: 30px 25px;
   border-radius: 10px;
-  border: 2px solid #6B8F71;
+  border: 2px solid #ccc;
   width: 350px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   font-family: Arial, sans-serif;
@@ -468,7 +485,7 @@ margin-top: 4px;
 
 #loginModal h2 {
   text-align: center;
-  color: #6B8F71;
+  color: var(--buttons-color);
   margin-bottom: 5px;
 }
 
@@ -484,7 +501,7 @@ margin-top: 4px;
   width: 100%;
   padding: 10px 12px;
   margin-bottom: 15px;
-  border: 1px solid #EAE3DC;
+  border: 1px solid #ccc;
   border-radius: 6px;
   transition: border-color 0.3s ease;
   font-size: 14px;
@@ -492,14 +509,14 @@ margin-top: 4px;
 
 #loginModal input[type="text"]:focus,
 #loginModal input[type="password"]:focus {
-  border-color: #6B8F71;
+  border-color: var(--buttons-color);
   outline: none;
 }
 
 #loginModal button[type="submit"] {
   width: 100%;
   padding: 10px;
-  background-color: #6B8F71;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   border-radius: 6px;
@@ -509,7 +526,7 @@ margin-top: 4px;
 }
 
 #loginModal button[type="submit"]:hover {
-  background-color: #6B8F71;
+  background-color: var(--buttons-hover-color);
 }
  .login-container {
       background-color: #EAE3DC;
@@ -521,7 +538,7 @@ margin-top: 4px;
 
     .login-container h2 {
       text-align: center;
-      color: #6B8F71;
+      color: var(--buttons-color);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -547,7 +564,7 @@ margin-top: 4px;
     input[type="password"] {
       width: 100%;
       padding: 10px;
-      border: 1px solid #EAE3DC;
+      border: 1px solid #ccc;
       border-radius: 5px;
     }
 
@@ -560,7 +577,7 @@ margin-top: 4px;
     button {
       width: 100%;
       padding: 10px;
-      background-color: #6B8F71;
+      background-color: var(--buttons-color);
       color: white;
       border: none;
       border-radius: 5px;
@@ -568,16 +585,14 @@ margin-top: 4px;
     }
 
     button:hover {
-      background-color: #5B7F62;
+      background-color: var(--buttons-hover-color);
     }
-
-    
 
     .pause-btn {
       position: fixed;
       top: 2%;
       right: 43%; /* aligns to the left of status box */
-      background-color: #fbc02d;
+      background-color: #f7be00;
       color: white;
       padding: 10px 20px;
       height: 48px;
@@ -594,7 +609,7 @@ margin-top: 4px;
     }
     
     .pause-btn:hover {
-      background-color: #f9a825;
+      background-color: #f9be00;
     }
     
     .error-box {
@@ -602,7 +617,7 @@ margin-top: 4px;
       top: 80px;
       background-color: #fff5f5;
       color: #c62828;
-      border: 1px solid #f5c6cb;
+      border: 1px solid #ae1757;
       padding: 12px 18px;
       border-radius: 8px;
       z-index: 1000;
@@ -636,7 +651,7 @@ margin-top: 4px;
     
     .icon-btn:hover {
       opacity: 0.8;
-      color: #2e7d32;
+      color: var(--buttons-color);
     }
     
     
@@ -664,7 +679,7 @@ margin-top: 4px;
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #5B7F62;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   font-size: 15px;
@@ -681,13 +696,12 @@ margin-top: 4px;
 .language-menu {
   padding: 12px;
   margin-top: auto;
-  z-index: 1000;
 }
 
 .language-select {
   text-align: center;
   font-size: 14px;
-  background-color: #7C9F81;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   border-radius: 5px;
@@ -696,12 +710,11 @@ margin-top: 4px;
   transition: background 0.3s;
   appearance: none; /* hide native arrow in some browsers */
   outline: none;
-  z-index: 1000;
 }
 
 
 #openQuestionFormBtn:hover {
-  background-color: #5B7F62;
+  background-color: var(--buttons-hover-color);
 }
 
 /* Bottom Panel Form */
@@ -744,7 +757,7 @@ margin-top: 4px;
 }
 
 #questionForm button[type="submit"] {
-  background-color: #28a745;
+  background-color: var(--buttons-color);
   color: white;
   border: none;
   padding: 8px;
@@ -754,13 +767,13 @@ margin-top: 4px;
 }
 
 #questionForm button[type="submit"]:hover {
-  background-color: hsl(133, 21%, 69%);
+  background-color: var(--buttons-hover-color);
 }
 
 #questionStatus {
   margin-top: 8px;
   font-size: 13px;
-  color: green;
+  color: var(--elements-color);/*green;*/
 }
 
     

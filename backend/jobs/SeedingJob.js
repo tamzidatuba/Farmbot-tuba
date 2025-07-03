@@ -23,7 +23,6 @@ class SeedingJob extends Job {
         super(seedingArgs.jobname);
 
         let goToSafetyHeight = new MoveZTask(FarmbotStatus.FETCHING, FieldConstants.SAFETY_HEIGHT);
-        let goToSeedBowl = new MoveTask(FarmbotStatus.FETCHING, 0, FieldConstants.SEED_CONTAINER_Y);
         let lowerToSeedBowl = new MoveZTask(FarmbotStatus.FETCHING, FieldConstants.SEED_CONTAINER_HEIGHT);
         let activateVacuumPin = new SetPinTask(FarmbotStatus.FETCHING, FARMBOT_DATA.vacuum_pin, 1);
         let ensurePinActivation = new TimedTask(FarmbotStatus.FETCHING, 1);
@@ -40,7 +39,7 @@ class SeedingJob extends Job {
             let yCoordinate = this.clampYToField(seedArgs.ycoordinate);
                 
             this.taskQueue.push(goToSafetyHeight);
-
+            let goToSeedBowl = new MoveTask(FarmbotStatus.FETCHING, xCoordinate, FieldConstants.SEED_CONTAINER_Y);
             this.taskQueue.push(goToSeedBowl);
 
             this.taskQueue.push(lowerToSeedBowl);

@@ -4,9 +4,9 @@ import { MoveZTask } from "./tasks/MoveZTask.js";
 import { FarmbotStatus } from "../statusManager.js";
 import { FieldConstants } from "../backend.js";
 
-class GoHomeJob extends Job {
+class HomeJob extends Job {
     constructor() {
-        super("GoHome");
+        super("Home");
 
         let moveToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING, FieldConstants.SAFETY_HEIGHT);
         this.taskQueue.push(moveToSafetyHeight);
@@ -16,4 +16,4 @@ class GoHomeJob extends Job {
     }
 }
 
-export {GoHomeJob};
+export {HomeJob};

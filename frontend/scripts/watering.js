@@ -32,18 +32,18 @@ function createJobRowWatering(jobData = null) {
   row.innerHTML = `
   <div class="plant-row">
     <div class="plant-row-header">
-      <label for="plant-${jobCountWatering}" data-i18n="plantRowHeader">Plant</label>
-      <span class="delete-job" data-i18n-title="removePlant" title="Remove this plant job">&#128465;</span>
+      <label for="plant-${jobCountWatering}" data-i18n="plantRowHeader">${getTranslation("plantRowHeader")}</label>
+      <span class="delete-job" data-i18n-title="removePlant" title=${getTranslation("removePlant")}>&#128465;</span>
     </div>
     <select id="plant-${jobCountWatering}" class="plant-select"></select>
     </div>
     <div class="coord-row">
       <div>
-        <label data-i18n="water">Water (mm)</label>
+        <label data-i18n="water">${getTranslation("water")}</label>
         <input type="number" class="watering amount" placeholder="2-200 ml">
       </div>
       <div>
-        <label data-i18n="height">Watering height</label>
+        <label data-i18n="height">${getTranslation("height")}</label>
         <input type="number" class="coord-input zCoord" placeholder="5 - 100">
       </div>
     </div>
@@ -61,7 +61,7 @@ function createJobRowWatering(jobData = null) {
   const defaultOption = document.createElement('option');
   defaultOption.value = "";
   defaultOption.dataset.i18n = "selectDefault";
-  defaultOption.textContent = "--Choose Plant--";
+  defaultOption.textContent = getTranslation("selectDefault");
   select.appendChild(defaultOption);
 
 
@@ -69,7 +69,7 @@ function createJobRowWatering(jobData = null) {
   window.plants.forEach(plant => {
     const option = document.createElement('option');
     option.value = { plant: plant }; // value is the plant
-    option.textContent = `${plant.planttype} at X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+    option.textContent = `${translatePlantType(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
     option.dataset.x = plant.xcoordinate;
     option.dataset.y = plant.ycoordinate;
     option.dataset.type = plant.planttype;
@@ -89,7 +89,20 @@ function createJobRowWatering(jobData = null) {
     row.querySelector('.coord-input.zCoord').value = jobData.yCoordinate || '';
   }
   jobContainerWatering.appendChild(row);
-  setLanguage(document.documentElement.lang);
+  //setLanguage(document.documentElement.lang);
+}
+
+function translatePlantType(plantType) {
+  switch (plantType) {
+    case 'tomato':
+      return getTranslation('tomato');
+    case 'radish':
+      return getTranslation('radish');
+    case 'lettuce':
+      return getTranslation('lettuce');
+    default:
+      return plantType; // Fallback to original if no translation found
+  }
 }
 
 
@@ -327,7 +340,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
     const response = await fetch('/api/jobs/Watering');
     const jobs = await response.json();
 
-    jobCountDisplayWatering.textContent = `✅ You have created ${jobs.length} watering job${jobs.length !== 1 ? 's' : ''}.`;
+    jobCountDisplayWatering.textContent = getTranslation("wateringSoFar") + `${jobs.length}`;
 
     if (jobs.length === 0) {
       jobsListWatering.innerHTML = getTranslation('notFound');
@@ -340,12 +353,12 @@ viewJobsBtnWatering.addEventListener('click', async () => {
   <div class="job-header-row">
     <strong>${job.jobname}</strong>
     <div class="icon-actions">
-      <span class="icon-btn edit-job-btn" title="Edit" data-index="${index}">✏️</span>
-      <span class="icon-btn delete-job-btn" title="Delete" data-index="${index}">🗑️</span>
+      <span class="icon-btn edit-job-btn" title=${getTranslation("edit")} data-index="${index}">✏️</span>
+      <span class="icon-btn delete-job-btn" title=${getTranslation("delete")} data-index="${index}">🗑️</span>
     </div>
   </div>
-  <div>Plants: ${job.plantstobewatered?.length || 0}</div>
-  <button class="execute-job-btn">🚜 Execute</button>
+  <div>${getTranslation("plants")}: ${job.plantstobewatered?.length || 0}</div>
+  <button class="execute-job-btn">${getTranslation("execute")}</button>
 `;
 
 
@@ -358,7 +371,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
 
         // new delete logic
         jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-          if (confirm(getTranslation("deleteConfirm") +  `${job.jobname}`)) {
+          if (confirm(getTranslation("deleteConfirm") +job.jobname)) {
             try {
               const res = await fetch(`/api/jobs/Watering/${job.jobname}`, {
                 method: 'DELETE',

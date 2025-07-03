@@ -1,5 +1,6 @@
 import { token } from "./auth.js";
 import { Plant } from "../script.js";
+import { getTranslation } from "./translation.js";
 
 let maxHistoryEntries = 10;
 // button for max history entries
@@ -27,7 +28,7 @@ export async function updateRobot() {
   .then(response => response.json())
   .then(data => {
     // Update robot Status
-    statusBox.textContent = 'Status: ' + data.status;
+    statusBox.textContent = getTranslation("status") + getTranslation(data.status.replace(/\s/g, '').toLowerCase());
     // Update Status History
     var temp = historyList.slice().reverse();
     if (temp.toString() != data.notifications.toString()) {
@@ -39,7 +40,8 @@ export async function updateRobot() {
       for (const status in data.notifications.reverse()) {  
         if (statusHistory.children.length < maxHistoryEntries + 1) {
           const entry = document.createElement('div');
-          entry.textContent = data.notifications[status];
+          var textInput = getTranslation(data.notifications[status].key.replace(/\s/g, '')) + getTranslation("time") + data.notifications[status].date + ", " + getTranslation("jobname") + data.notifications[status].jobname;
+          entry.textContent = textInput;
           statusHistory.appendChild(entry);
         }
       }

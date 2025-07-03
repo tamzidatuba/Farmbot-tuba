@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import DatabaseService from './databaseservice.js';
-import { initalizeBackend, Backend } from './backend/backend.js';
+import { Backend } from './backend/backend.js';
 import createJobsRouter from './routes/jobs.js';
 import TokenManager from "./backend/tokenManager.js";
 
@@ -15,20 +15,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const backend = new Backend();
-let backend_init_promise = initalizeBackend(backend);
 
 // Serve static files (CSS, JS) from root
 app.use(express.static(path.join(__dirname, 'frontend//')));
 app.use(express.json());
-
-
-//testing the method return single job for execution
-//let a = await DatabaseService.ReturnSingleJob('682d82fd6037708c0a882e2b');
-//let a1 = await DatabaseService.ReturnSingleJob('683f08e030a1434241a9f615');
-//console.log(a1);
-//const sample = await DatabaseService.ReturnSingleJob('6847ee82456f873240345d03');
-//console.log(sample);
-
 
 
 app.listen(PORT, () => {
@@ -179,7 +169,7 @@ app.post('/api/demo/watering', async (req, res) => {
   console.log(payload.plantstobewatered[0].plant);
   // append demo to schedule_manager
   if(!backend.demo_job_queued && backend.scheduleManager.appendDemoJob(job_data)) {
-    backend.appendNotification(TokenManager.getUser(token) + " queued a Watering-Demo");
+    backend.appendNotification(TokenManager.getUser(token) + " queued", "Watering-Demo");
     backend.checkForNextJob();
     res.status(200).json({ message: "A watering Demo has been queued." });
   } else {
@@ -193,12 +183,9 @@ app.post('/api/demo/seeding', async (req, res) => {
   // append demo to schedule_manager
   if(!backend.demo_job_queued && backend.scheduleManager.appendDemoJob(job_data)) {
     backend.checkForNextJob();
-    backend.appendNotification(TokenManager.getUser(token) + " queued a Seeding-Demo.");
+    backend.appendNotification(TokenManager.getUser(token) + " queued", "Seeding-Demo");
     res.status(200).json({ message: "A seeding demo has been queued." })
   } else {
     res.status(500).json({ error: 'Seeding-Demo is already queued.' });
   }
 });
-
-// Handle await backend init
-await backend_init_promise;
