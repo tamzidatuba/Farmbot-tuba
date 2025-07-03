@@ -1,115 +1,93 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const demoBtn    = document.getElementById("seedingDemoBtn");
-  const modal      = document.getElementById("seedingDemoModal");
-  const closeModal = document.getElementById("closeModalSeedingDemo");
-  const executeBtn = document.getElementById("executeBtnSeedingDemo");
-  const depthMap   = { Tomato: 6, Radish: 10, Lettuce: 3, default: 5 };
-  let plants       = [];
+// seedingDemo.js
+// This script handles the "Seeding Demo" modal and demo job submission
+import { getTranslation } from "./scripts/translation.js";
+import { token } from "./scripts/auth.js"; // your auth token binding
 
-  // 1) Open & populate
+document.addEventListener("DOMContentLoaded", () => {
+  // DOM elements
+  const demoBtn     = document.getElementById("seedingDemoBtn");
+  const modal       = document.getElementById("seedingDemoModal");
+  const closeModal  = document.getElementById("closeModalSeedingDemo");
+  const plantSelect = document.getElementById("plantDropdownSeeding");
+  const execBtn     = document.getElementById("executeBtnSeedingDemo");
+
+  // Local store for predefined plants
+  let plants = {};
+
+  // Predefined plants matching your Seeding schema
+  const predefinedPlants = {
+    "1": { planttype: "lettuce", xcoordinate: 10, ycoordinate: 20 },
+    "2": { planttype: "lettuce", xcoordinate: 20, ycoordinate: 30 },
+    "3": { planttype: "tomato",  xcoordinate: 30, ycoordinate: 40 },
+    "4": { planttype: "tomato",  xcoordinate: 40, ycoordinate: 50 },
+    "5": { planttype: "radish",  xcoordinate: 50, ycoordinate: 60 },
+    "6": { planttype: "radish",  xcoordinate: 60, ycoordinate: 70 }
+  };
+
+  // Open modal and populate dropdown
   demoBtn.addEventListener("click", () => {
+    populateDropdown();
     modal.style.display = "block";
-    getPlants();
   });
 
-  // 2) Close modal
+  // Close modal on × or outside click
   closeModal.addEventListener("click", () => (modal.style.display = "none"));
-  window.addEventListener("click", e => {
+  window.addEventListener("click", (e) => {
     if (e.target === modal) modal.style.display = "none";
   });
 
-  // 3) Execute the Seeding Demo POST
-  executeBtn.addEventListener("click", async () => {
-    const select = document.getElementById("plantDropdownSeeding");
-    const idx    = parseInt(select.value, 10);
-    const sel    = plants[idx];
+  // Fill the <select> with predefined plant entries
+  function populateDropdown() {
+    plantSelect.innerHTML = "";
+    for (const id in predefinedPlants) {
+      const p = predefinedPlants[id];
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = `${capitalize(getTranslation(p.planttype))} at X: ${p.xcoordinate}, Y: ${p.ycoordinate}`;
+      plantSelect.appendChild(opt);
+    }
+    plants = predefinedPlants;
+  }
 
-    if (!sel) {
-      console.error("Nothing selected or still loading.");
+  // Handle demo submission
+  execBtn.addEventListener("click", async () => {
+    const selected = plants[plantSelect.value];
+    if (!selected) {
+      console.error("No plant selected");
       modal.style.display = "none";
       return;
     }
 
-    // pick a random spot (1–100)
-    const x = Math.floor(Math.random() * 100) + 1;
-    const y = Math.floor(Math.random() * 100) + 1;
-
-    // derive depth
-    const depth = depthMap[ capitalize(sel.planttype) ] 
-                ?? depthMap.default;
-
-    // build payload
+    // Build payload matching your Seeding model: jobname + seeds array
     const payload = {
       jobname: "Seeding Demo",
       seeds: [{
-        xcoordinate: x,
-        ycoordinate: y,
-        depth:       depth,
-        seedtype:    sel.planttype
+        xcoordinate: selected.xcoordinate,
+        ycoordinate: selected.ycoordinate,
+        depth:       5,                 // adjust as needed
+        seedtype:    selected.planttype
       }]
     };
 
-    // TODO: swap in your real auth token here
-    const token = ""; 
-
     try {
-      const res = await fetch("/api/demo/seeding", {
+      const response = await fetch("/api/demo/seeding", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify({ payload, token })
       });
-      if (!res.ok) {
-        console.error("Seeding demo failed:", res.status, res.statusText);
-      } else {
-        console.log("Seeding demo queued successfully!");
-      }
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Seeding demo failed");
+      alert(data.message || "Seeding demo queued");
     } catch (err) {
-      console.error("Error executing seeding demo:", err);
+      console.error("Seeding demo error:", err);
+      alert(err.message);
+    } finally {
+      modal.style.display = "none";
     }
-
-    modal.style.display = "none";
   });
 
-  // 4) Fetch + fill dropdown
-  async function getPlants() {
-    const select = document.getElementById("plantDropdownSeeding");
-    if (!select) return console.error("No #plantDropdownSeeding in DOM");
-    select.innerHTML = "";
-
-    try {
-      const res   = await fetch("/api/plants");
-      const data  = await res.json();
-      plants      = Array.isArray(data) ? data : [];
-
-      // build a unique list of plant types
-      const seen  = new Set();
-      const types = [];
-      for (let p of plants) {
-        if (!seen.has(p.planttype)) {
-          seen.add(p.planttype);
-          types.push(p.planttype);
-        }
-      }
-
-      if (types.length === 0) {
-        select.innerHTML = "<option>(no plants found)</option>";
-        return;
-      }
-
-      // now populate with each type exactly once
-      types.forEach(type => {
-        select.add(new Option(capitalize(type), plants.findIndex(p => p.planttype === type)));
-      });
-    }
-    catch (err) {
-      console.error("Error fetching plants:", err);
-      select.innerHTML = "<option>Error loading plants</option>";
-    }
+  // Utility: capitalize first letter
+  function capitalize(str) {
+    return String(str).charAt(0).toUpperCase() + str.slice(1);
   }
-
-  // ← HERE: add the missing helper
-  function capitalize(s) {
-    return String(s).charAt(0).toUpperCase() + s.slice(1).toLowerCase();
-  }
-
-}); // ← and close the DOMContentLoaded listener
+});
