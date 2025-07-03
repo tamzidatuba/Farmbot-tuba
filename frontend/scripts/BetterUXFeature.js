@@ -98,7 +98,7 @@ function deletePlant(plant) {
   fetch('/api/plant', {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, plant.xcoordinate, plant.ycoordinate })
+    body: JSON.stringify({  })
   })
     .then(response => response.json())
     .then(data => {
