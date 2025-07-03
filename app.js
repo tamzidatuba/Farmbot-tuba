@@ -106,7 +106,7 @@ app.delete('/api/plant', async (req, res) => {
     return
   }
   try {
-    await DatabaseService.DeleteJobFromDB(xcoordinate, ycoordinate);
+    await DatabaseService.DeletePlantFromDB(xcoordinate, ycoordinate);
     for (const plant in backend.plants) {
       if (backend.plants[plant].xcoordinate == xcoordinate && backend.plants[plant].ycoordinate == ycoordinate) {
 

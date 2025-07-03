@@ -10,6 +10,8 @@ const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
 const subtask = document.getElementById('subtaskContainer');
 const subtaskView = document.getElementById('subtaskView');
+const managePlants=document.getElementById('managePlants');
+const subtaskManage=document.getElementById('subtaskManage');
 
 
 //login features
@@ -25,6 +27,8 @@ settingsBtn.addEventListener('click', () => {
         subtask.style.display = 'none';
         viewJobs.style.display = 'none';
         subtaskView.style.display = 'none';
+        managePlants.style.display='none';
+        subtaskManage.style.display='none';
         fetch('/api/logout', {
             method: 'POST',
             headers: {
@@ -81,6 +85,7 @@ form.addEventListener('submit', async function (e) {
             //subtask.style.display='none';
             viewJobs.style.display = 'flex';
             //viewJobsBtn.style.display='block';
+            managePlants.style.display='flex';
 
             token = data.token;
 
