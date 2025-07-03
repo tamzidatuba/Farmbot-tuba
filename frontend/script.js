@@ -64,12 +64,26 @@ setInterval(async () => await updateRobot(), 2500); // Update every 1 second
 drawGrid(); // draw plants
 //drawRobot();
 
+// Close #questionSection when clicking outside of it
+  document.addEventListener('click', function(event) {
+    const questionSection = document.getElementById('questionSection');
+
+    // Only proceed if it's currently visible
+    if (questionSection.style.display !== 'none' && event.target.id !== 'openQuestionFormBtn') {
+      const isClickInside = questionSection.contains(event.target);
+      // If the click was outside the questionSection, hide it
+      if (!isClickInside) {
+        questionSection.style.display = 'none';
+      }
+    }
+  });
 
 //ask questions
 document.getElementById('openQuestionFormBtn').addEventListener('click', () => {
   const section = document.getElementById('questionSection');
   section.style.display = section.style.display === 'none' ? 'block' : 'none';
 });
+
 
 // Handle form submission 
 
