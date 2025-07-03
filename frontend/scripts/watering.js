@@ -75,7 +75,7 @@ function createJobRowWatering(jobData = null) {
     option.dataset.type = plant.planttype;
 
     // Preselect if matching
-    if (jobData && jobData.plant.xcoordinate == plant.x && jobData.plant.ycoordinate == plant.y) {
+    if (jobData && jobData.plant.xcoordinate == plant.xcoordinate && jobData.plant.ycoordinate == plant.ycoordinate) {
       option.selected = true;
     }
 
