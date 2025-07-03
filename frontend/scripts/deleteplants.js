@@ -68,7 +68,7 @@ confirmDelete.addEventListener('click', async () => {
     const res = await fetch('/api/plant', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, xcoordinate, ycoordinate })
+      body: JSON.stringify({ token })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Delete failed');
