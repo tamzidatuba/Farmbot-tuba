@@ -67,7 +67,7 @@ form.addEventListener('submit', async function (e) {
                 password: password.value.trim()
             })
         });
-
+        password.value="";
         const data = await response.json();
 
         if (response.ok) {
