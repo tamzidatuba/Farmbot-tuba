@@ -40,7 +40,8 @@ export async function updateRobot() {
       for (const status in data.notifications.reverse()) {  
         if (statusHistory.children.length < maxHistoryEntries + 1) {
           const entry = document.createElement('div');
-          var textInput = getTranslation(data.notifications[status].key.replace(/\s/g, '')) + getTranslation("time") + data.notifications[status].date + ", " + getTranslation("jobname") + data.notifications[status].jobname;
+          console.log("Status:", data.notifications[status].key.replace(/\s/g, ''))
+          var textInput = data.notifications[status].date +" " + getTranslation(data.notifications[status].key.replace(/\s/g, ''))  + " , " + getTranslation("jobname") + data.notifications[status].jobname;
           entry.textContent = textInput;
           statusHistory.appendChild(entry);
         }

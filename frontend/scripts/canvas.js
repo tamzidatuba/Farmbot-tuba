@@ -173,7 +173,7 @@ canvas.addEventListener('mousemove', (e) => {
 
     //position of the display box for the coordinates
     const coords = pixelToCoord(hoverX, hoverY);
-    coordDisplay.style.left = `${e.clientX - 200}px`;
+    coordDisplay.style.left = `${e.clientX - 300}px`;
     coordDisplay.style.top = `${e.clientY + 15}px`;
     coordDisplay.textContent = `(${coords.x}, ${coords.y})`;
     coordDisplay.style.display = 'block';

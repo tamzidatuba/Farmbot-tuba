@@ -75,7 +75,7 @@ function createJobRowWatering(jobData = null) {
     option.dataset.type = plant.planttype;
 
     // Preselect if matching
-    if (jobData && jobData.plant.xcoordinate == plant.x && jobData.plant.ycoordinate == plant.y) {
+    if (jobData && jobData.plant.xcoordinate == plant.xcoordinate && jobData.plant.ycoordinate == plant.ycoordinate) {
       option.selected = true;
     }
 
@@ -298,15 +298,16 @@ function editWateringJob(job) {
   document.getElementById("jobContainerWatering").innerHTML = '';
   modalWatering.style.display = 'block';
 
+  document.getElementById('modalTitleWatering').textContent = getTranslation('modifyWatering');
   document.getElementById('executeBtnWatering').textContent = getTranslation('updateJob');
 
   // Fill in plant rows
   job.plantstobewatered.forEach(seed => {
     const jobData = {
       plant: {
+        type: seed.plant.planttype,
         xcoordinate: seed.plant.xcoordinate,
-        ycoordinate: seed.plant.ycoordinate,
-        type: seed.plant.planttype
+        ycoordinate: seed.plant.ycoordinate
       },
       amount: seed.wateringcapacity,
       yCoordinate: seed.wateringheight

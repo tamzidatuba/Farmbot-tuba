@@ -149,20 +149,20 @@
         <span class="arrow" id="arrowView">&#9654;</span>
       </div>
       <div class="subtask" id="subtaskView">
-        <button id="viewSeedingJobsBtn" data-i18n="seeding">🌱 Seeding Job</button>
-        <button id="viewWateringJobsBtn" data-i18n="watering">💧 Watering Job</button>
+        <button id="viewSeedingJobsBtn" data-i18n="seedingTitle">🌱 Seeding Job</button>
+        <button id="viewWateringJobsBtn" data-i18n="wateringTitle">💧 Watering Job</button>
       </div>
     </li>
     <!----help option----->
     <div class="help-translucent" id="helpTranslucent"></div>
     <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo"><span>Seeding Demo</span>
-    <div class="help-text" style="display: none; color: gray;">Click to simulate a demo of planting seeds.</div>
+    <div class="help-text" data-i18n="helpDemoSeeding" style="display: none; color: gray;">Click to simulate a demo of planting seeds.</div>
     </li>
     <li class="menu-item" id="wateringDemoBtn" data-i18n="wateringDemo"><span>Watering Demo</span>
-    <div class="help-text" style="display: none; color: gray;">Click to simulate a demo of watering seeds.</div>
+    <div class="help-text" data-i18n="helpDemoWatering" style="display: none; color: gray;">Click to simulate a demo of watering seeds.</div>
     </li>
     <li class="menu-item" data-i18n="feedback">Feedback
-      <div class="help-text" style="display: none; color: gray;">In case you wish to give a feedback, please click here.</div>
+      <div class="help-text" data-i18n="helpFeedback" style="display: none; color: gray;">In case you wish to give a feedback, please click here.</div>
     </li>
     <li class="menu-item" id="help-button" data-i18n="help">Help</li>
   </ul>
@@ -182,9 +182,9 @@
     <!-- grid container using canvas-->
     <div>
       <canvas id="gridCanvas" width="550" height="650"></canvas>
-     <div class="help-text-grid" style="display:outside; color: gray;">This is a visual representation of the Farmbot.<br> 
+     <div class="help-text-grid" data-i18n="helpField" style="display:outside; color: gray;">This is a visual representation of the Farmbot.<br> 
       You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile.</div>
-   <div class="help-text-status" style="display:outside; color: gray;"> You can see the status of the Farmbot here.<br> 
+   <div class="help-text-status" data-i18n="helpStatus" style="display:outside; color: gray;"> You can see the status of the Farmbot here.<br> 
         It shows whether the farmbot is currently offline or Ready to work or moving.</div>
     </div>
     <div id="hover-coordinates"></div>
@@ -201,7 +201,7 @@
           <option value="25">25</option>
           <option value="50">50</option>
         </select>
-        <div class="help-text-history" style="display:outside; color: gray;">You can see the notifications here. You can also change the number of notifications you want to see.</div>
+        <div class="help-text-history" data-i18n="helpNotification" style="display:outside; color: gray;">You can see the notifications here. You can also change the number of notifications you want to see.</div>
       </div>
   </div>
   <!-- VIEW SEEDING JOBS MODAL -->

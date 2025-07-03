@@ -238,7 +238,6 @@ function editSeedingJob(job) {
   isEditMode = true;
 
   // Update modal heading and button
-  document.getElementById('modalTitle').textContent = getTranslation("modifyJob");
   document.getElementById('executeBtn').textContent = getTranslation("updateJob");
 
   // Disable editing job name
@@ -266,6 +265,7 @@ function editSeedingJob(job) {
 
 
   modal.style.display = 'block';
+  document.getElementById('modalTitle').textContent = getTranslation("modifySeeding");
 }
 
 //VIEW JOBS BUTTON LOGIC

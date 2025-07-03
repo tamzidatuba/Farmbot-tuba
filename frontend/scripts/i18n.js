@@ -50,7 +50,8 @@ export const translations = {
     enterName: 'Enter job name',
     wateringJob: 'Create Watering Job',
     updateJob: 'Update Job',
-    modifyJob: 'Modify Seeding Job',
+    modifySeeding: 'Modify Seeding Job',
+    modifyWatering: 'Modify Watering Job',
     loadingJobs: '<p>Loading jobs...<\p>',
     notFound: '<p>No jobs found.</p>',
     executeConfirm: 'Are you sure you want to execute this job: "',
@@ -127,6 +128,14 @@ export const translations = {
     adminqueued: 'Job added to queue by Admin ',
     time: ' at: ',
     jobname: 'Job Name: ',
+    // Translations for the help text
+    help: 'Help',
+    helpField: 'This is a visual representation of the Farmbot.<br>You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile.',
+    helpStatus: 'You can see the status of the Farmbot here.<br> It shows whether the farmbot is currently offline or Ready to work or moving.',
+    helpNotification: 'You can see the notifications here. You can also change the number of notifications you want to see.',
+    helpDemoSeeding: 'Click to simulate a demo of planting seeds.',
+    helpDemoWatering: 'Click to simulate a demo of watering seeds.',
+    helpFeedback: 'In case you wish to give a feedback, please click here.',
   },
   de: {
     // German translations
@@ -179,7 +188,8 @@ export const translations = {
     enterName: 'Auftragsname eingeben',
     wateringJob: 'Bewässerungs Auftrag erstellen',
     updateJob: 'Auftrag aktualisieren',
-    modifyJob: 'Aussaat Auftrag ändern',
+    modifySeeding: 'Aussaats Auftrag ändern',
+    modifyWatering: 'Bewässerungs Auftrag ändern',
     loadingJobs: '<p>Lade Aufträge...<\p>',
     notFound: '<p>Keine Aufträge gefunden.</p>',
     executeConfirm: 'Sind Sie sicher, dass Sie den diesen Auftrag ausführen möchten: ',
@@ -238,7 +248,7 @@ export const translations = {
     seeding: 'Am Aussähen',
     watering: 'Am Bewässern',
     //Q&A
-    question: 'Tellen Sie eine Frage',
+    question: 'Stellen Sie eine Frage',
     mail: 'Ihre E-Mail:',
     mailExample: 'muster@mail.de',
     questionBox: 'Ihre Frage:',
@@ -256,5 +266,13 @@ export const translations = {
     adminqueued: 'Auftrag in die Warteschlange gestellt von Admin ',
     time: ' um: ',
     jobname: 'Auftragsname: ',
+    //Translations for the help text
+    help: 'Hilfe',
+    helpField: 'Dies ist eine visuelle Darstellung des Farmbots.<br> Sie können das Feld berühren, um die Koordinaten zu sehen. Die aktuell im Farmbot gepflanzten Pflanzen sind ebenfalls sichtbar.',
+    helpStatus: 'Hier können Sie den Status des Farmbots sehen.<br> Er zeigt an, ob der Farmbot derzeit offline, bereit zur Arbeit oder in Bewegung ist.',
+    helpNotification: 'Hier können Sie die Benachrichtigungen sehen. Sie können auch die Anzahl der Benachrichtigungen ändern, die Sie sehen möchten.',
+    helpDemoSeeding: 'Klicken Sie, um eine Demo des Aussäens von Samen zu simulieren.',
+    helpDemoWatering: 'Klicken Sie, um eine Demo des Bewässerns von Samen zu simulieren.',
+    helpFeedback: 'Falls Sie Feedback geben möchten, klicken Sie bitte hier.',
   }
 }
