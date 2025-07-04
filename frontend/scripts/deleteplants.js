@@ -20,12 +20,12 @@ const modalHtml = `
 document.body.insertAdjacentHTML('beforeend', modalHtml);
 
 // 2) Grab all the elements we need
-const deleteBtn       = document.getElementById('deleteplants');
-const deleteModal     = document.getElementById('deletePlantModal');
-const closeDelete     = document.getElementById('closeDeleteModal');
-const plantSelect     = document.getElementById('plantSelect');
-const confirmDelete   = document.getElementById('confirmDeleteBtn');
-const deleteError     = document.getElementById('deleteError');
+const deleteBtn     = document.getElementById('deleteplants');
+const deleteModal   = document.getElementById('deletePlantModal');
+const closeDelete   = document.getElementById('closeDeleteModal');
+const plantSelect   = document.getElementById('plantSelect');
+const confirmDelete = document.getElementById('confirmDeleteBtn');
+const deleteError   = document.getElementById('deleteError');
 
 // 3) Open the modal and load plants
 deleteBtn.addEventListener('click', async () => {
@@ -38,13 +38,11 @@ deleteBtn.addEventListener('click', async () => {
     if (!res.ok) throw new Error('Failed to fetch plants');
     const plants = await res.json();
 
-    console.log(plants); 
-
-    // Populate dropdown: value="x,y", label e.g. "Plant (x,y)"
     plantSelect.innerHTML = plants.map(p => {
-        const label = `${p.planttype}  X:${p.xcoordinate}  Y:${p.ycoordinate}`;
-        const value = `${p.xcoordinate},${p.ycoordinate}`;
-        return `<option value="${value}">${label}</option>`;
+      // label for user, value as "x,y"
+      const label = `${p.planttype}  X:${p.xcoordinate}  Y:${p.ycoordinate}`;
+      const value = `${p.xcoordinate},${p.ycoordinate}`;
+      return `<option value="${value}">${label}</option>`;
     }).join('');
 
   } catch (err) {
@@ -62,26 +60,35 @@ window.addEventListener('click', e => {
 // 5) Confirm delete
 confirmDelete.addEventListener('click', async () => {
   deleteError.textContent = '';
-  const [xcoordinate, ycoordinate] = plantSelect.value.split(',').map(Number);
+
+  // split the "x,y" into two numbers
+  const [xcoordinate, ycoordinate] = plantSelect.value
+    .split(',')
+    .map(val => Number(val.trim()));
+
+  console.log('Deleting plant at:', { xcoordinate, ycoordinate, token });
 
   try {
     const res = await fetch('/api/plant', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token })
+      body: JSON.stringify({ token, xcoordinate, ycoordinate })
     });
+
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Delete failed');
 
     alert(data.message || 'Plant deleted');
     deleteModal.style.display = 'none';
 
-    // Optionally: remove the deleted option
-    const opt = plantSelect.querySelector(`option[value="${xcoordinate},${ycoordinate}"]`);
+    // Remove the option from the select
+    const opt = plantSelect.querySelector(
+      `option[value="${xcoordinate},${ycoordinate}"]`
+    );
     if (opt) opt.remove();
 
   } catch (err) {
     deleteError.textContent = err.message;
-    console.error(err);
+    console.error('deletePlant error:', err);
   }
 });

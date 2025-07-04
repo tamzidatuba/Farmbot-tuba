@@ -12,6 +12,7 @@ const arrow = document.getElementById('arrow');
 const arrowView = document.getElementById('arrowView');
 const managePlants=document.getElementById('managePlants');
 const subtaskManage=document.getElementById('subtaskManage');
+const arrowmanageView=document.getElementById('arrowmanageView');
 // List to compare plants with data base
 window.plants = [];
 
@@ -47,7 +48,7 @@ toggle.addEventListener('click', () => {
 managePlants.addEventListener('click', () => {
   const isVisible = subtaskManage.style.display === 'block';
   subtaskManage.style.display = isVisible ? 'none' : 'block';
-  arrow.classList.toggle('open', !isVisible);
+  arrowmanageView.classList.toggle('open', !isVisible);
 });
 
 
