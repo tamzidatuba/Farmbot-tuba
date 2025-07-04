@@ -10,7 +10,9 @@ const subtask = document.getElementById('subtaskContainer');
 const subtaskView = document.getElementById('subtaskView');
 const arrow = document.getElementById('arrow');
 const arrowView = document.getElementById('arrowView');
-
+const managePlants=document.getElementById('managePlants');
+const subtaskManage=document.getElementById('subtaskManage');
+const arrowmanageView=document.getElementById('arrowmanageView');
 // List to compare plants with data base
 window.plants = [];
 
@@ -28,6 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
   toggle.style.display = 'none';
   //subtask.style.display='none';
   viewJobs.style.display = 'none';
+  managePlants.style.display='none';
 });
 
 viewJobs.addEventListener('click', () => {
@@ -41,6 +44,13 @@ toggle.addEventListener('click', () => {
   subtask.style.display = isVisible ? 'none' : 'block';
   arrow.classList.toggle('open', !isVisible);
 });
+
+managePlants.addEventListener('click', () => {
+  const isVisible = subtaskManage.style.display === 'block';
+  subtaskManage.style.display = isVisible ? 'none' : 'block';
+  arrowmanageView.classList.toggle('open', !isVisible);
+});
+
 
 // get plants from server
 async function getPlants() {
