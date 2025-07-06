@@ -588,6 +588,10 @@ margin-top: 4px;
       background-color: var(--buttons-hover-color);
     }
 
+
+    #pauseJobBtn {
+      display: none;
+    }
     .pause-btn {
       position: fixed;
       top: 2%;
