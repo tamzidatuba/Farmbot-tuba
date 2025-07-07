@@ -147,7 +147,10 @@ function drawAxesAndLabels() {
 }
 
 
-function clearCanvas() {
+export function clearCanvas() {
+    plants = [];
+    canvas.width = canvas.width;
+    canvas.height = canvas.height;
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 }
 
