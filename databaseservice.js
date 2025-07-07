@@ -38,7 +38,11 @@ async function InsertJobToDB(jobType, object) {
             return "The Job name already exists in the database.";
         }
 
-        let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
+        let invalids = await  ValidateNewSeedsAgainstThemselves(seeds);
+        if (invalids.length > 0) {
+            return "Coordinates given have overlap with one of the seeds inside the job.";
+        }
+        invalids = await ValidateCurrentSeedsAgainstOtherJobs(jobname, seeds);
         if (invalids.length > 0) {
             return "Coordinates given have overlap with one of the seeds inside one of previous jobs.";
         }
@@ -127,14 +131,18 @@ async function UpdateJobToDB(jobType, object) {
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
 
-        // let invalids = await ValidateNewSeedsAgainstPreviousJobs(seeds);
-        // if (invalids.length > 0) {
-        //     return "New coordinates have overlap with one of the seeds inside one of previous jobs.";
-        // }
-        // invalids = await ValidateNewSeedsAgainstPlants(seeds);
-        // if (invalids.length > 0) {
-        //     return "New coordinates have overlap with plants.";
-        // }
+        let invalids = ValidateNewSeedsAgainstThemselves(seeds);
+        if (invalids.length > 0) {
+            return "New coordinates have overlap with one of the seeds inside the job.";
+        }
+        invalids = await ValidateCurrentSeedsAgainstOtherJobs(jobname, seeds);
+        if (invalids.length > 0) {
+            return "New coordinates have overlap with one of the seeds inside one of previous jobs.";
+        }
+        invalids = await ValidateNewSeedsAgainstPlants(seeds);
+        if (invalids.length > 0) {
+            return "New coordinates have overlap with plants.";
+        }
 
         await seedingModule.UpdateSeedingJobToDB(jobname, seeds);
     }
@@ -203,19 +211,51 @@ async function DeletePlantFromDB(xcoordinate, ycoordinate) {
     await plantModel.DeletePlantFromDB(xcoordinate, ycoordinate);
 }
 
-async function ValidateNewSeedsAgainstPreviousJobs(newSeedsToPutInNewJob) {
-    let existingJobs = await FetchJobsFromDB(JobType.SEEDING);
+function ValidateNewSeedsAgainstThemselves(newSeeds) {
     let invalidSeeds = [];
 
-    for (let newseed of newSeedsToPutInNewJob) {
-        for (let existingJob of existingJobs) {
+    for (let i = 0; i < newSeeds.length; i++) {
+        for (let j = i + 1; j < newSeeds.length; j++) {
+            let seedA = newSeeds[i];
+            let seedB = newSeeds[j];
+            let distance = GetDistance(seedA.xcoordinate, seedA.ycoordinate, seedB.xcoordinate, seedB.ycoordinate);
+            let typeA = seedA.seedtype.toLowerCase();
+            let typeB = seedB.seedtype.toLowerCase();
+
+            if (distance <= PlantRadii[typeA] + PlantRadii[typeB]) {
+                if (!invalidSeeds.includes(seedA)) invalidSeeds.push(seedA);
+                if (!invalidSeeds.includes(seedB)) invalidSeeds.push(seedB);
+            }
+        }
+    }
+
+    return invalidSeeds;
+}
+
+async function ValidateCurrentSeedsAgainstOtherJobs(jobname, seeds) {
+    let allJobs = await FetchJobsFromDB(JobType.SEEDING);
+    let currentJob = allJobs.find(job => job.jobname === jobname);
+    let otherJobs;
+    if(currentJob === undefined)  // this happens when the we are creating a new job
+    {
+        otherJobs = allJobs; 
+    }
+    else // this happens when the we are modifying a previous job
+    {
+        otherJobs = allJobs.filter(job => job.jobname !== currentJob.jobname);
+    }       
+     
+    let invalidSeeds = [];
+
+    for (let seed of seeds) {
+        for (let otherJob of otherJobs) {
             let isValid = true;
-            for (let existingseed of existingJob.seeds) {
-                let distance = GetDistance(newseed.xcoordinate, newseed.ycoordinate, existingseed.xcoordinate, existingseed.ycoordinate);
+            for (let existingseed of otherJob.seeds) {
+                let distance = GetDistance(seed.xcoordinate, seed.ycoordinate, existingseed.xcoordinate, existingseed.ycoordinate);
                 let existingseedtype = existingseed.seedtype.toLowerCase();
-                let newseedtype = newseed.seedtype.toLowerCase();
-                if (distance <= PlantRadii[existingseedtype] + PlantRadii[newseedtype]) {
-                    invalidSeeds.push(newseed);
+                let seedtype = seed.seedtype.toLowerCase();
+                if (distance <= PlantRadii[existingseedtype] + PlantRadii[seedtype]) {
+                    invalidSeeds.push(seed);
                     isValid = false;
                 }
                 if (!isValid) {
@@ -269,7 +309,6 @@ export default {
     FetchNotificationsFromDB,
     InsertPlantsToDB,
     UpdateUserToDB,
-    ValidateNewSeedsAgainstPreviousJobs,
     ValidateNewSeedsAgainstPlants,
     FetchPlantsfromDB,
     FetchUserfromDB,
