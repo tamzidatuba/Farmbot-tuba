@@ -30,7 +30,7 @@ async function FetchPlantsFromDB() {
 
 async function DeletePlantFromDB(xcoordinate, ycoordinate)
 {
-    await ExecutionModel.deleteOne({"xcoordinate": xcoordinate, "ycoordinate": ycoordinate});
+    await plantModel.deleteOne({"xcoordinate": xcoordinate, "ycoordinate": ycoordinate});
 }
 
 export default 

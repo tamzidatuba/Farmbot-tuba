@@ -148,8 +148,8 @@ async function UpdateJobToDB(jobType, object) {
     }
 
     else if (jobType === JobType.WATERING) {
-        const { jobname, plantstobewatered, is_scheduled, scheduleData } = object;
-        await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData);
+        const { jobname, plantstobewatered, is_scheduled, ScheduleData } = object;
+        await wateringModule.UpdateWateringJobToDB(jobname, plantstobewatered, is_scheduled, ScheduleData);
     }
 
     console.log('The Job has been updated in the Database.');

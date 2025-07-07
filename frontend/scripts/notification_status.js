@@ -1,4 +1,4 @@
-import { token } from "./auth.js";
+import { token,isLoggedIn } from "./auth.js";
 import { Plant } from "../script.js";
 import { getTranslation } from "./translation.js";
 
@@ -50,8 +50,16 @@ export async function updateRobot() {
     }
     // Update Pause Button visibility
     const pauseBtn = document.getElementById('pauseJobBtn');
-    pauseBtn.style.display = data.status === 'Ready' || data.status === 'Offline' ? 'none' : 'inline-block';
-
+    if (!isLoggedIn) {
+      // always hidden if  not logged in
+      pauseBtn.style.display = 'none';
+    } else {
+      // otherwise show/hide per the robot status
+      pauseBtn.style.display =
+        data.status === 'Ready' || data.status === 'Offline'
+          ? 'none'
+          : 'inline-block';
+    }
     // Update button text depending on paused state
     pauseBtn.textContent = data.paused ? '▶' : '⏸';
 

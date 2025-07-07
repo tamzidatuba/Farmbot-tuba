@@ -588,6 +588,10 @@ margin-top: 4px;
       background-color: var(--buttons-hover-color);
     }
 
+
+    #pauseJobBtn {
+      display: none;
+    }
     .pause-btn {
       position: fixed;
       top: 2%;
@@ -682,7 +686,7 @@ margin-top: 4px;
   background-color: var(--buttons-color);
   color: white;
   border: none;
-  font-size: 15px;
+  font-size: 20px;
   border-radius: 30%;
   width: 100px;
   height: 60px;
@@ -775,6 +779,114 @@ margin-top: 4px;
   font-size: 13px;
   color: var(--elements-color);/*green;*/
 }
+
+.stars {
+  display: inline-flex;         
+  flex-direction: row-reverse;   
+  font-size: 2rem;               
+}
+
+.stars input {
+  display: none;                 
+}
+
+.stars label {
+  cursor: pointer;
+  color: #ccc;                   
+  padding: 0 0.1em;             
+  transition: color 0.2s;        
+}
+
+
+.stars label:hover,
+.stars label:hover ~ label {
+  color: gold;
+}
+
+.stars input:checked ~ label {
+  color: gold;
+}
+
+/* Feedback form field labels */
+.field label {
+  display: block;               
+  margin-bottom: 0.3em;         
+  font-weight: 600;             
+  color: #333;                  
+  font-size: 1rem;              
+}
+
+/* Inputs and textarea */
+.field input,
+.field textarea {
+  width: 100%;                  
+  padding: 0.5em;               
+  font-size: 1rem;              
+  border: 1px solid #ccc;       
+  border-radius: 4px;           
+  box-sizing: border-box;       
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Focus state */
+.field input:focus,
+.field textarea:focus {
+  border-color: #66afe9;        
+  box-shadow: 0 0 0 3px rgba(102,175,233,0.3);
+  outline: none;
+}
+
+/* Submit button styling */
+#submitFeedbackBtn {
+  background-color: #28a745;    
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#submitFeedbackBtn:hover {
+  background-color: #218838;   
+}
+
+/* Error / Success messages */
+.error {
+  color: #dc3545;               
+  margin-top: 0.5em;
+  font-size: 0.9rem;
+}
+
+.success {
+  color: #28a745;               
+  margin-top: 0.5em;
+  font-size: 0.9rem;
+}
+
+/* Center the stars row */
+.stars {
+  display: inline-flex;
+  justify-content: center;   
+  margin: 0.5em auto;        
+}
+
+/* Make the parent container of the stars center its contents */
+.field {
+  text-align: center;
+}
+
+/* Center error/success texts */
+.error,
+.success {
+  text-align: center;
+  display: block;
+  width: 100%;
+  margin: 0.5em auto;
+}
+
+
 
     
     
