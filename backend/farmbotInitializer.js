@@ -1,6 +1,8 @@
 import { Farmbot } from "farmbot";
 
+// API-Endpoint for the Token-Request
 const farmbotApiEndpoint = "https://my.farm.bot/api/tokens"
+
 const FAKE_WATER_PIN = {
     pin_type: "BoxLed3", // "Peripheral"
     pin_id: -1 //this.pinNumber
@@ -24,6 +26,7 @@ const FAKE_FARMBOT_3 = {
   water_pin: FAKE_WATER_PIN
 }
 
+// Data of the 42-Farmbot
 const FARMBOT_42 = {
   email: "farmbotKL42@gmail.com",
   password: " 36Humberg!",
@@ -43,7 +46,7 @@ const FARMBOT_42 = {
 
 const FARMBOT_DATA = FAKE_FARMBOT_3;
 
-// Requests a API-Token and returns it
+// Requests a API-Token for the FARMBOT_DATA-Farmbot and returns it
 async function _getApiToken() {
     const data = {
         'user': {'email': FARMBOT_DATA.email, 'password': FARMBOT_DATA.password}
@@ -72,16 +75,20 @@ async function _getApiToken() {
 // Requests the API-Token and returns a new Farmbot-Object
 async function getFarmbot() {
     try {
+        // get Token
         const tokenData = await _getApiToken();
         console.log("Recieved Token.");
 
+        // initalize Farmbot and connect to it
         let farmbot = new Farmbot({ token: tokenData["token"]["encoded"] });
         farmbot.connect()
+        // Unlock the farmbot, just to be sure
         try {
             await farmbot.emergencyUnlock();
         } catch(error) {
             console.log(error);
         }
+        // return the farmbot-object
         return farmbot
 
     } catch (error) {
