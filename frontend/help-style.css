@@ -262,9 +262,3 @@
   border-bottom: 10px solid transparent;
   border-left: 10px solid #195632;
 }
-
-.qa-button.greyed {
-  opacity: 0.5;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
