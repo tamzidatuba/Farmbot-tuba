@@ -35,11 +35,10 @@ class SeedingJob extends Job {
         
         for(const seed in seedingArgs.seeds) {
             let seedArgs = seedingArgs.seeds[seed]
-            let xCoordinate = this.clampXToField(seedArgs.xcoordinate);
-            let yCoordinate = this.clampYToField(seedArgs.ycoordinate);
+            let coords = this.adjustCoordinatesToFieldDimension(seedArgs.xcoordinate, seedArgs.ycoordinate);
                 
             this.taskQueue.push(goToSafetyHeight);
-            let goToSeedBowl = new MoveTask(FarmbotStatus.FETCHING, xCoordinate, FieldConstants.SEED_CONTAINER_Y);
+            let goToSeedBowl = new MoveTask(FarmbotStatus.FETCHING, coords.x, FieldConstants.SEED_CONTAINER_Y);
             this.taskQueue.push(goToSeedBowl);
 
             this.taskQueue.push(lowerToSeedBowl);
@@ -50,7 +49,7 @@ class SeedingJob extends Job {
             
             this.taskQueue.push(returnToSafetyHeight);
 
-            let goToPlantingPosition = new MoveTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, xCoordinate, yCoordinate);
+            let goToPlantingPosition = new MoveTask(FarmbotStatus.MOVING_TO_SEEDING_POSITION, coords.x, coords.y);
             this.taskQueue.push(goToPlantingPosition);
 
             this.taskQueue.push(lowerToSeedingHeight);
@@ -64,8 +63,8 @@ class SeedingJob extends Job {
             if (!demo){
                 let new_plant = {
                     planttype: seedArgs.seedtype,
-                    xcoordinate: xCoordinate,
-                    ycoordinate: yCoordinate
+                    xcoordinate: seedArgs.xcoordinate,
+                    ycoordinate: seedArgs.ycoordinate
                 }
                 let insertPlantToDB = new DatabaseTask(
                     FarmbotStatus.SEEDING,
