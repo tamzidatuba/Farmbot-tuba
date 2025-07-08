@@ -8,6 +8,7 @@ import { DatabaseTask } from "./tasks/DatabaseTask.js";
 import { TimedTask } from "./tasks/TimedTask.js";
 import DatabaseService from "../../databaseservice.js";
 import { FARMBOT_DATA } from "../farmbotInitializer.js";
+import { TimedPinTask } from "./tasks/TimedPinTask.js";
 
 /*
 Steps:
@@ -30,6 +31,9 @@ class SeedingJob extends Job {
         let lowerToSeedingHeight = new MoveZTask(FarmbotStatus.SEEDING, FieldConstants.FIELD_HEIGHT);
         let deactivateVacuumPin = new SetPinTask(FarmbotStatus.SEEDING, FARMBOT_DATA.vacuum_pin, 0);
         let ensurePinDeactivation = new TimedTask(FarmbotStatus.SEEDING, 1);
+        let goToWateringHeight = new MoveZTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, FieldConstants.FIELD_HEIGHT + 20);
+        let waterPlant = new TimedPinTask(FarmbotStatus.WATERING, FARMBOT_DATA.water_pin, 1);
+
 
         let returnToFieldSafetyHeight = new MoveZTask(FarmbotStatus.MOVING, FieldConstants.SAFETY_HEIGHT);
         
@@ -72,8 +76,10 @@ class SeedingJob extends Job {
                     DatabaseService.InsertPlantsToDB,
                     [new_plant]
                 )
-                this.taskQueue.push(insertPlantToDB)
+                this.taskQueue.push(insertPlantToDB);
             }
+            this.taskQueue.push(goToWateringHeight);
+            this.taskQueue.push(waterPlant);
 
             this.taskQueue.push(returnToFieldSafetyHeight);
         }
