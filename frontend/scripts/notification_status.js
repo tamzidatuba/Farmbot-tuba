@@ -2,6 +2,7 @@ import { token,isLoggedIn } from "./auth.js";
 import { Plant } from "../script.js";
 import { getTranslation } from "./translation.js";
 import { languageSelector } from "./translation.js";
+import { updateGrid } from "./canvas.js";
 
 let maxHistoryEntries = 10;
 // button for max history entries
@@ -95,7 +96,7 @@ export async function updateRobot() {
       pauseBtn.style.display = 'none'; // hide on error
     });
     //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    //drawGrid();
+    updateGrid(); // Update the grid on the canvas
   }
 
   function removeId(obj) {
