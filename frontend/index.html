@@ -222,12 +222,10 @@
     </li>
     <!----help option----->
     <div class="help-translucent" id="helpTranslucent"></div>
-    <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo"><span>Seeding Demo</span>
-    <div class="help-text" data-i18n="helpDemoSeeding" style="display: none; color: gray;">Click to simulate a demo of planting seeds.</div>
-    </li>
-    <li class="menu-item" id="wateringDemoBtn" data-i18n="wateringDemo"><span>Watering Demo</span>
-    <div class="help-text" data-i18n="helpDemoWatering" style="display: none; color: gray;">Click to simulate a demo of watering seeds.</div>
-    </li>
+    <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo"><span>Seeding Demo</span></li>
+    <div class="help-text-seeding" data-i18n="helpDemoSeeding" style="display: none; color: gray;">Click to simulate a demo of planting seeds.</div>
+    <li class="menu-item" id="wateringDemoBtn" data-i18n="wateringDemo"><span>Watering Demo</span></li>
+    <div class="help-text-watering" data-i18n="helpDemoWatering" style="display: none; color: gray;">Click to simulate a demo of watering seeds.</div>
     <li class="menu-item" id="feedbackBtn" data-i18n="feedback">Feedback
       <div class="help-text" data-i18n="helpFeedback" style="display: none; color: gray;">In case you wish to give a feedback, please click here.</div>
     </li>
@@ -235,6 +233,7 @@
   </ul>
   <div class="language-menu">
     <select id="languageSelector" class="menu-item language-select"></select>
+     <div class="help-text-language" style="display:outside; color: gray;">You can change your preferred language here. At present you can either choose German or English.</div>
   </div>
 </div>
 
@@ -248,9 +247,9 @@
     <!-- grid container using canvas-->
     <div>
       <canvas id="gridCanvas" width="550" height="650"></canvas>
-     <div class="help-text-grid" data-i18n="helpField" style="display:outside; color: gray;">This is a visual representation of the Farmbot.<br> 
+     <div class="help-text-grid" data-i18n="helpField" style="display:outside; color: gray;">This is a visual representation of the Farmbot. 
       You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile.</div>
-   <div class="help-text-status" data-i18n="helpStatus" style="display:outside; color: gray;"> You can see the status of the Farmbot here.<br> 
+   <div class="help-text-status" data-i18n="helpStatus" style="display:outside; color: gray;"> You can see the status of the Farmbot here. 
         It shows whether the farmbot is currently offline or Ready to work or moving.</div>
     </div>
     <div id="hover-coordinates"></div>
@@ -294,6 +293,7 @@
   <!-- Question Icon Button -->
 <button id="openQuestionFormBtn" title="Ask a Question">
   Q&A
+<div class="help-text-questions" style="display:outside; color: gray;">If you have any questions regarding the Farmbot, you can ask them here.</div>
 </button>
 
 <!-- Hidden Ask a Question Form -->
