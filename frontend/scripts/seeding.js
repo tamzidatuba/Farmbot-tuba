@@ -155,18 +155,10 @@ function createModifyJobRow() {
   setLanguage(document.documentElement.lang);
 }
 
+
 // ——— Create‐Modal Event Listeners ———
 seedingJobBtn.addEventListener('click', () => {
-  // Reset
-  createJobCount = 0;
-  jobContainer.innerHTML = '';
-  createNameError.textContent = '';
-  createNameInput.value = '';
-  createNameInput.disabled = false;
-
-  // initial row
-  createJobRow();
-  createModal.style.display = 'block';
+  DisplayCreateSeedingJob();
 });
 
 addPlantBtn.addEventListener('click', createJobRow);
@@ -196,7 +188,7 @@ executeBtn.addEventListener('click', async () => {
       valid = false;
     } else {
       seen.add(key);
-      seeds.push({ seedtype: plant, seedname: plantName, xcoordinate: x, ycoordinate: y, depth });
+      seeds.push({ seedname: plantName, seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
     }
   });
 
@@ -265,7 +257,7 @@ modifyExecuteBtn.addEventListener('click', async () => {
       valid = false;
     } else {
       seen.add(key);
-      seeds.push({ seedtype: plant, seedname: plantName, xcoordinate: x, ycoordinate: y, depth });
+      seeds.push({ seedname: plantName, seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
     }
   });
 
@@ -410,10 +402,9 @@ window.addEventListener('click', e => {
   if (e.target === viewJobsModal) viewJobsModal.style.display = 'none';
 });
 
-
-
 function DisplayCreateSeedingJob()
 {
+  // Reset
   createJobCount = 0;
   jobContainer.innerHTML = '';
   createNameError.textContent = '';

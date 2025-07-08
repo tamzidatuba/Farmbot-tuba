@@ -9,6 +9,8 @@ import { WateringJob} from './jobs/WateringJob.js';
 const MAX_NOTIFICATIONS = 50;
 
 const FieldConstants = Object.freeze({
+    ACTUAL_FIELD_WIDTH: 490,
+    ACTUAL_FIELD_HEIGHT: 640,
     FIELD_START_X: 0,
     FIELD_START_Y: 50,
     FIELD_END_X: 490,
@@ -85,8 +87,8 @@ class Backend {
       // Check if the finished job is a scheduled watering job, if not -> Remove it from the DB
       else if (this.currentJobData.jobType !== DatabaseService.JobType.WATERING || !this.currentJobData.job.is_scheduled) {
         try {
-          await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.jobname);
           this.plants = await DatabaseService.FetchPlantsfromDB();
+          await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.jobname);
         } catch (e) {
           console.log("Failed to delete executed Job from DB!")
         }
