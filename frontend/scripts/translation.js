@@ -1,8 +1,10 @@
 import { translations } from "./i18n.js";
+//import { translateHistory } from "./notification_status.js";
 
 const languageSelector = document.getElementById("languageSelector");
 
-export function setLanguage(lang=localStorage.getItem("preferredLanguage") || "en") {
+
+function setLanguage(lang=localStorage.getItem("preferredLanguage") || "en") {
   const elements = document.querySelectorAll("[data-i18n], [data-i18n-title], [data-i18n-placeholder]");
   elements.forEach(el => {
     if (el.dataset.i18n) {
@@ -25,6 +27,7 @@ export function setLanguage(lang=localStorage.getItem("preferredLanguage") || "e
       }
     }
   });
+  //translateHistory(); // Update history translations
   document.documentElement.lang = lang;
   localStorage.setItem("preferredLanguage", lang);
 }
@@ -33,7 +36,7 @@ languageSelector.addEventListener("change", (event) => {
   setLanguage(event.target.value);
 });
 
-export function getTranslation(key) {
+function getTranslation(key) {
   const lang = localStorage.getItem("preferredLanguage") || "en";
   return translations[lang][key] || key;
 }
@@ -44,7 +47,6 @@ function createLanguageButtons() {
   const currentLang = localStorage.getItem("preferredLanguage") || "en";
 
   for (const langCode in translations) {
-    console.log(`Creating button for language: ${langCode}`);
     const langName = translations[langCode]._name;
     const option = document.createElement("option");
 
@@ -66,3 +68,9 @@ window.addEventListener("DOMContentLoaded", () => {
   setLanguage(savedLang);
   createLanguageButtons();
 });
+
+export {
+  getTranslation,
+  setLanguage,
+  languageSelector
+};

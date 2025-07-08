@@ -244,7 +244,7 @@ export const translations = {
     moving: 'In Bewegung',
     movingtoseedingposition: 'In Bewegung zur Aussaatposition',
     movingtowateringposition: 'In Bewegung zur Bewässerungsposition',
-    fetching: 'Am Abrufen',
+    fetching: 'Samen holen',
     seeding: 'Am Aussähen',
     watering: 'Am Bewässern',
     //Q&A
