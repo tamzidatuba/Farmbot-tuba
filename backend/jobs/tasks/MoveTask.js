@@ -7,7 +7,6 @@ class MoveTask extends Task {
         this.x = x;
         this.y = y;
         this.speed = speed;
-        // TODO maybe add speed parameter?
     }
 
     checkCondition(state) {
