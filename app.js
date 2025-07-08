@@ -157,7 +157,7 @@ app.post('/api/demo/watering', async (req, res) => {
     backend.checkForNextJob();
     res.status(200).json({ message: "A watering Demo has been queued." });
   } else {
-    res.status(500).json({ error: 'Watering-Demo is already queued.' });
+    res.status(500).json({ error: 'A Demo is already queued.' });
   }
 });
 
@@ -170,6 +170,6 @@ app.post('/api/demo/seeding', async (req, res) => {
     backend.appendNotification(TokenManager.getUser(token) + " queued", "Seeding-Demo");
     res.status(200).json({ message: "A seeding demo has been queued." })
   } else {
-    res.status(500).json({ error: 'Seeding-Demo is already queued.' });
+    res.status(500).json({ error: 'A Demo is already queued.' });
   }
 });
