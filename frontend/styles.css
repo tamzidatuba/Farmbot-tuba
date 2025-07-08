@@ -865,7 +865,7 @@ margin-top: 4px;
 
 /* Submit button styling */
 #submitFeedbackBtn {
-  background-color: #28a745;    
+  background-color: var(--buttons-color);    
   color: white;
   border: none;
   padding: 0.5em 1em;
@@ -876,7 +876,7 @@ margin-top: 4px;
 }
 
 #submitFeedbackBtn:hover {
-  background-color: #218838;   
+  background-color: var(--buttons-hover-color);   
 }
 
 /* Error / Success messages */

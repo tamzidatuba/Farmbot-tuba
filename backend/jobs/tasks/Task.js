@@ -3,6 +3,7 @@ A Task is a single Instruction for the Farmbot with a condition to check if its 
 */
 
 class Task {
+    // Recieve the status corresponding to the Task
     constructor(status) {
         this.status = status;
     }
