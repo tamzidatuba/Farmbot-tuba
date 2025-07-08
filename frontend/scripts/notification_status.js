@@ -1,6 +1,7 @@
 import { token,isLoggedIn } from "./auth.js";
 import { Plant } from "../script.js";
 import { getTranslation } from "./translation.js";
+import { languageSelector } from "./translation.js";
 
 let maxHistoryEntries = 10;
 // button for max history entries
@@ -125,7 +126,8 @@ function arraysEqual(arr1, arr2) {
     for (const status in historyList) {  
       if (statusHistory.children.length < maxHistoryEntries + 1) {
         const entry = document.createElement('div');
-        entry.textContent = historyList[status];
+        var textInput = historyList[status].date +" " + getTranslation(historyList[status].key.replace(/\s/g, ''))  + " , " + getTranslation("jobname") + historyList[status].jobname;
+        entry.textContent = textInput;
         statusHistory.appendChild(entry);
       }
     }
@@ -138,13 +140,32 @@ function arraysEqual(arr1, arr2) {
     for (const status in historyList) {  
       if (statusHistory.children.length < maxHistoryEntries + 1) {
         const entry = document.createElement('div');
-        entry.textContent = historyList[status];
+        var textInput = historyList[status].date +" " + getTranslation(historyList[status].key.replace(/\s/g, ''))  + " , " + getTranslation("jobname") + historyList[status].jobname;
+        entry.textContent = textInput;
         statusHistory.appendChild(entry);
       }
     }
   }  
 });
 
+function translateHistory() {
+  while (statusHistory.children.length > 1) {
+      statusHistory.removeChild(statusHistory.lastChild);
+    }
+    // Add new entries to the status history
+    for (const status in historyList) {  
+      if (statusHistory.children.length < maxHistoryEntries + 1) {
+        const entry = document.createElement('div');
+        var textInput = historyList[status].date +" " + getTranslation(historyList[status].key.replace(/\s/g, ''))  + " , " + getTranslation("jobname") + historyList[status].jobname;
+        entry.textContent = textInput;
+        statusHistory.appendChild(entry);
+      }
+    }
+}
+
+languageSelector.addEventListener('change', () => {
+  translateHistory(); // Update history translations
+});
 
 pauseBtn.addEventListener('click', async () => {
   const isCurrentlyPaused = pauseBtn.textContent.includes('▶');
