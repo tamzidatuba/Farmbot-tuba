@@ -136,6 +136,8 @@ export const translations = {
     helpDemoSeeding: 'Click to simulate a demo of planting seeds.',
     helpDemoWatering: 'Click to simulate a demo of watering seeds.',
     helpFeedback: 'In case you wish to give a feedback, please click here.',
+    helpQandA:'If you have any questions regarding the Farmbot, you can ask them here.',
+    helpLanguage: 'You can change your preferred language here. At present you can either choose German or English.',
   },
   de: {
     // German translations
@@ -274,5 +276,7 @@ export const translations = {
     helpDemoSeeding: 'Klicken Sie, um eine Demo des Aussäens von Samen zu simulieren.',
     helpDemoWatering: 'Klicken Sie, um eine Demo des Bewässerns von Samen zu simulieren.',
     helpFeedback: 'Falls Sie Feedback geben möchten, klicken Sie bitte hier.',
+    helpQandA:'abc',
+    helpLanguage: 'abc',
   }
 }
