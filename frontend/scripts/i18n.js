@@ -276,7 +276,7 @@ export const translations = {
     helpDemoSeeding: 'Klicken Sie, um eine Demo des Aussäens von Samen zu simulieren.',
     helpDemoWatering: 'Klicken Sie, um eine Demo des Bewässerns von Samen zu simulieren.',
     helpFeedback: 'Falls Sie Feedback geben möchten, klicken Sie bitte hier.',
-    helpQandA:'abc',
-    helpLanguage: 'abc',
+    helpQandA:'Wenn Sie Fragen zum Farmbot haben, können Sie diese hier stellen.',
+    helpLanguage: 'Sie können hier ihre bevorzugte Sprache ändern. Aktuell können Sie zwischen Deutsch und Englisch auswählen.',
   }
 }
