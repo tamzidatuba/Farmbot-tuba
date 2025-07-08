@@ -96,10 +96,11 @@ function createJobRowWatering(jobData = null) {
   window.plants.forEach(plant => {
     const option = document.createElement('option');
     option.value = { plant: plant }; // value is the plant
-    option.textContent = `${translatePlantType(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+    option.textContent = `${plant.plantname}: ${translatePlantType(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
     option.dataset.x = plant.xcoordinate;
     option.dataset.y = plant.ycoordinate;
     option.dataset.type = plant.planttype;
+    option.dataset.name = plant.plantname || ''; // Add plant name for reference
 
     // Preselect if matching
     if (jobData && jobData.plant.xcoordinate == plant.xcoordinate && jobData.plant.ycoordinate == plant.ycoordinate) {
@@ -203,6 +204,7 @@ executeBtnWatering.addEventListener('click', async () => {
       const x = selectedOption.dataset.x;
       const y = selectedOption.dataset.y;
       const type = selectedOption.dataset.type;
+      const name = selectedOption.dataset.name;
       errorMsg.textContent = '';
 
       const coordKey = `${x},${y}`;
@@ -218,7 +220,7 @@ executeBtnWatering.addEventListener('click', async () => {
         isValid = false;
       } else {
         seenCoordinates.add(coordKey);
-        plantstobewatered.push({ plant: { planttype: type, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
+        plantstobewatered.push({ plant: { planttype: type, plantname: name, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
         const newPlant = new Plant(Number(x), Number(y), type);
         results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
       }

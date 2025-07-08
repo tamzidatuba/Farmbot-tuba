@@ -1,17 +1,18 @@
 import { token } from './auth.js';    
+import { getTranslation } from './translation.js';
 
 // 1) Create the modal HTML and append to body
 const modalHtml = `
   <div id="deletePlantModal" class="modal" style="display:none;">
     <div class="modal-content">
       <span class="close" id="closeDeleteModal">&times;</span>
-      <h2>Delete a Plant</h2>
+      <h2 data-i18n="plantDelete">${getTranslation("plantDelete")}</h2>
       <div>
-        <label for="plantSelect">Choose a plant:</label>
+        <label data-i18n="plantChoose" for="plantSelect">${getTranslation("plantChoose")}</label>
         <select id="plantSelect" style="width:100%; box-sizing:border-box; padding:0.5em;"></select>
       </div>
       <div style="margin-top:1em;">
-        <button id="confirmDeleteBtn">Delete</button>
+        <button data-i18n="delete" id="confirmDeleteBtn">${getTranslation("delete")}</button>
       </div>
       <div id="deleteError" class="errorMsg" style="color:red; margin-top:0.5em;"></div>
     </div>
@@ -33,7 +34,14 @@ deleteBtn.addEventListener('click', async () => {
   plantSelect.innerHTML  = `<option>Loading…</option>`;
   deleteModal.style.display = 'block';
 
-  try {
+  plantSelect.innerHTML = ''; // clear previous options
+  plantSelect.innerHTML = window.plants.map(p => {
+    // label for user, value as "x,y"
+      const label = `${p.plantname}: ${getTranslation(p.planttype)} ${getTranslation("at")}  X:${p.xcoordinate}  Y:${p.ycoordinate}`;
+      const value = `${p.xcoordinate},${p.ycoordinate}`;
+      return `<option value="${value}">${label}</option>`;
+    }).join('');
+  /*try {
     const res = await fetch('/api/plants');
     if (!res.ok) throw new Error('Failed to fetch plants');
     const plants = await res.json();
@@ -48,7 +56,7 @@ deleteBtn.addEventListener('click', async () => {
   } catch (err) {
     plantSelect.innerHTML = `<option disabled>Error loading plants</option>`;
     console.error(err);
-  }
+  }*/
 });
 
 // 4) Close handlers

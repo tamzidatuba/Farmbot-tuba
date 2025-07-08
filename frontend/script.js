@@ -19,8 +19,9 @@ window.plants = [];
 
 //plant class
 class Plant {
-  constructor(type, x, y) {
+  constructor(type, name, x, y) {
     this.planttype = type;
+    this.plantname = name;
     this.xcoordinate = x;
     this.ycoordinate = y;
   }
@@ -63,7 +64,7 @@ async function getPlants() {
         //if (plants.toString() != data.toString()) {
         window.plants.length = 0; // Clear the existing plants array
         for (const plant of data) {
-          window.plants.push(new Plant(plant.planttype, Number(plant.xcoordinate), Number(plant.ycoordinate)));
+          window.plants.push(new Plant(plant.planttype, plant.plantname, Number(plant.xcoordinate), Number(plant.ycoordinate)));
         }
     })
     .catch(error => console.error('Error fetching plants:', error));
