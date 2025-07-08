@@ -10,7 +10,7 @@ function GetDistance(x1, y1, x2, y2) {
 }
 
 canvas.addEventListener('click', async (e) => {
-  if (isLoggedIn || !isLoggedIn) {
+  if (isLoggedIn) {
     let coordDisplay = pixelToCoord(e.offsetX, e.offsetY);
     let x = coordDisplay.x;
     let y = coordDisplay.y;
@@ -81,42 +81,42 @@ canvas.addEventListener('click', async (e) => {
     }
     else // show watering emoji
     {
-      const wateringBtn = document.createElement('button');
-      wateringBtn.id = 'tempWateringBtn';
-      wateringBtn.textContent = '🚿';
-      wateringBtn.style.position = 'absolute';
-      wateringBtn.style.left = `${positiononscreen.x}px`;
-      wateringBtn.style.top = `${positiononscreen.y}px`;
-      wateringBtn.style.zIndex = 1000;
-      wateringBtn.style.backgroundColor = 'white';
-      wateringBtn.style.color = 'white';
-      wateringBtn.style.fontSize = '24px';
-      wateringBtn.style.width = '25px';
-      wateringBtn.style.height = '25px';
-      wateringBtn.style.borderRadius = '50%'; // Circle
-      wateringBtn.style.display = 'flex';
-      wateringBtn.style.justifyContent = 'center';
-      wateringBtn.style.alignItems = 'center';
-      wateringBtn.style.cursor = 'pointer';
+      // const wateringBtn = document.createElement('button');
+      // wateringBtn.id = 'tempWateringBtn';
+      // wateringBtn.textContent = '🚿';
+      // wateringBtn.style.position = 'absolute';
+      // wateringBtn.style.left = `${positiononscreen.x}px`;
+      // wateringBtn.style.top = `${positiononscreen.y}px`;
+      // wateringBtn.style.zIndex = 1000;
+      // wateringBtn.style.backgroundColor = 'white';
+      // wateringBtn.style.color = 'white';
+      // wateringBtn.style.fontSize = '24px';
+      // wateringBtn.style.width = '25px';
+      // wateringBtn.style.height = '25px';
+      // wateringBtn.style.borderRadius = '50%'; // Circle
+      // wateringBtn.style.display = 'flex';
+      // wateringBtn.style.justifyContent = 'center';
+      // wateringBtn.style.alignItems = 'center';
+      // wateringBtn.style.cursor = 'pointer';
 
-      wateringBtn.addEventListener('click', async () => {
-        await deletePlant(selectedPlant);
-        wateringBtn.remove();
-      });
+      // wateringBtn.addEventListener('click', async () => {
+      //   await deletePlant(selectedPlant);
+      //   wateringBtn.remove();
+      // });
 
-      document.body.appendChild(wateringBtn);
+      // document.body.appendChild(wateringBtn);
 
-      // Hide the button when clicking outside of it
-      const outsideClickListener = (event) => {
-        if (!wateringBtn.contains(event.target)) {
-          wateringBtn.remove();
-          document.removeEventListener('click', outsideClickListener);
-        }
-      };
+      // // Hide the button when clicking outside of it
+      // const outsideClickListener = (event) => {
+      //   if (!wateringBtn.contains(event.target)) {
+      //     wateringBtn.remove();
+      //     document.removeEventListener('click', outsideClickListener);
+      //   }
+      // };
 
-      setTimeout(() => {
-        document.addEventListener('click', outsideClickListener);
-      }, 0);
+      // setTimeout(() => {
+      //   document.addEventListener('click', outsideClickListener);
+      // }, 0);
     }
   }
 });
