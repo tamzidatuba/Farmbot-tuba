@@ -1,6 +1,7 @@
 import { pixelToCoord, coordToPixel, drawGrid, clearCanvas } from "./canvas.js";
 import { token, isLoggedIn } from "./auth.js";
 import { getTranslation } from "./translation.js";
+import { DisplayCreateSeedingJobForTouchedBased } from "./seeding.js";
 
 let selectedPlant = null;
 const canvas = document.getElementById('gridCanvas');
@@ -10,7 +11,7 @@ function GetDistance(x1, y1, x2, y2) {
 }
 
 canvas.addEventListener('click', async (e) => {
-  if (isLoggedIn) {
+  if (isLoggedIn || !isLoggedIn) {
     let coordDisplay = pixelToCoord(e.offsetX, e.offsetY);
     let x = coordDisplay.x;
     let y = coordDisplay.y;
@@ -81,6 +82,8 @@ canvas.addEventListener('click', async (e) => {
     }
     else // show watering emoji
     {
+      // DisplayCreateSeedingJobForTouchedBased(x,y);
+
       // const wateringBtn = document.createElement('button');
       // wateringBtn.id = 'tempWateringBtn';
       // wateringBtn.textContent = '🚿';

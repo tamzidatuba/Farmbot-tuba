@@ -409,4 +409,24 @@ window.addEventListener('click', e => {
 
 
 
+function DisplayCreateSeedingJob()
+{
+  createJobCount = 0;
+  jobContainer.innerHTML = '';
+  createNameError.textContent = '';
+  createNameInput.value = '';
+  createNameInput.disabled = false;
 
+  // initial row
+  createJobRow();
+  createModal.style.display = 'block';
+}
+
+
+export function DisplayCreateSeedingJobForTouchedBased(x,y)
+{
+  DisplayCreateSeedingJob();
+  const rows = jobContainer.querySelectorAll('.job-row');
+  rows[0].querySelector('.xCoord').value = x;
+  rows[0].querySelector('.yCoord').value = y;
+}
