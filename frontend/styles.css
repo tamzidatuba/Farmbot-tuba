@@ -382,6 +382,13 @@ border: 1px solid #ccc;
 width: 100%;
 }
 
+input.plantName {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
 .errorMsg {
 color: #ae1757;
 font-size: 0.8rem;
