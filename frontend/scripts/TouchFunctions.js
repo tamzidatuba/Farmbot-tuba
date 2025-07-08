@@ -136,7 +136,7 @@ async function deletePlant(plant) {
     if (!res.ok) throw new Error(data.error || 'Delete failed');
   alert(data.message || 'Plant deleted');
   clearCanvas();
-  await getPlants();
+  await getPlants(); //TODO:  remove it from variable instead of fetching again
   drawGrid();
 }
 

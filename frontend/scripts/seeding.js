@@ -185,7 +185,7 @@ executeBtn.addEventListener('click', async () => {
       valid = false;
     } else {
       seen.add(key);
-      seeds.push({ seedtype: plant, seedname: plantName, xcoordinate: x, ycoordinate: y, depth });
+      seeds.push({ seedname: plantName, seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
     }
   });
 
@@ -254,7 +254,7 @@ modifyExecuteBtn.addEventListener('click', async () => {
       valid = false;
     } else {
       seen.add(key);
-      seeds.push({ seedtype: plant, seedname: plantName, xcoordinate: x, ycoordinate: y, depth });
+      seeds.push({ seedname: plantName, seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
     }
   });
 

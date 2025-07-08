@@ -14,6 +14,7 @@ mongoose.connect(connectionString)
 const seedingJobSchema = new mongoose.Schema({
   jobname: String,
   seeds: [{
+    seedname: String,
     xcoordinate: Number,
     ycoordinate: Number,
     depth: Number,
