@@ -12,7 +12,7 @@
 }
 
 
-.help-text {
+.help-text-feedback {
   background-color: #f0f0f0;
   color: #333;
   border-left: 5px solid #195632;
@@ -30,7 +30,7 @@
   white-space: normal;      
 }
 
-.help-text::before {
+.help-text-feedback::before {
   content: "";
   position:absolute;
   top: 50%;
@@ -238,7 +238,7 @@
   border-right: 5px solid #195632;
   padding: 5px 10px;          
   right: 105px;
-  bottom: 5px;
+  bottom: 25px;
   border-radius: 15px;
   font-size: 14px;
   position: absolute;
@@ -254,11 +254,17 @@
   content: "";
   position:absolute;
   top: 50%;
-  transform: translateY(100%);
-  left: 10px;
+  transform: translateY(-50%);
+  right: -10px;
   width: 0;
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid #195632;
+  border-left: 10px solid #195632;
+}
+
+.qa-button.greyed {
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
