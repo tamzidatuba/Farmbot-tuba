@@ -62,6 +62,7 @@ function createJobRow() {
         <option data-i18n="radish" value="Radish">Radish</option>
         <option data-i18n="lettuce" value="Lettuce">Lettuce</option>
       </select>
+      <input type="text" data-i18n-placeholder="plantName" class="plantName" placeholder="Plant Name">
     </div>
     <div class="coord-row">
       <div>
@@ -116,6 +117,9 @@ function createModifyJobRow() {
         <option data-i18n="radish" value="Radish">Radish</option>
         <option data-i18n="lettuce" value="Lettuce">Lettuce</option>
       </select>
+      <div>
+        <input type="text" data-i18n-placeholder="plantName" class="plantName" placeholder="Plant Name">
+      </div>
     </div>
     <div class="coord-row">
       <div>
@@ -176,6 +180,7 @@ executeBtn.addEventListener('click', async () => {
 
   rows.forEach(row => {
     const plant = row.querySelector('.plantType').value.toLowerCase();
+    const plantName = row.querySelector('.plantName').value.trim();
     const x     = Number(row.querySelector('.xCoord').value);
     const y     = Number(row.querySelector('.yCoord').value);
     const depth = Number(row.querySelector('.depth').value);
@@ -188,7 +193,7 @@ executeBtn.addEventListener('click', async () => {
       valid = false;
     } else {
       seen.add(key);
-      seeds.push({ seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
+      seeds.push({ seedtype: plant, seedname: plantName, xcoordinate: x, ycoordinate: y, depth });
     }
   });
 
@@ -244,6 +249,7 @@ modifyExecuteBtn.addEventListener('click', async () => {
 
   rows.forEach(row => {
     const plant = row.querySelector('.plantType').value.toLowerCase();
+    const plantName = row.querySelector('.plantName').value.trim();
     const x     = Number(row.querySelector('.xCoord').value);
     const y     = Number(row.querySelector('.yCoord').value);
     const depth = Number(row.querySelector('.depth').value);
@@ -256,7 +262,7 @@ modifyExecuteBtn.addEventListener('click', async () => {
       valid = false;
     } else {
       seen.add(key);
-      seeds.push({ seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
+      seeds.push({ seedtype: plant, seedname: plantName, xcoordinate: x, ycoordinate: y, depth });
     }
   });
 
@@ -333,6 +339,7 @@ viewJobsBtn.addEventListener('click', async () => {
           createModifyJobRow();
           const row = modifyJobContainer.lastChild;
           row.querySelector('.plantType').value = capitalizeFirstLetter(seed.seedtype);
+          row.querySelector('.plantName').value = seed.seedname || '';
           row.querySelector('.xCoord').value    = seed.xcoordinate;
           row.querySelector('.yCoord').value    = seed.ycoordinate;
           row.querySelector('.depth').value     = seed.depth;

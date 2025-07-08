@@ -298,8 +298,11 @@
 
 <!-- Hidden Ask a Question Form -->
 <div id="questionSection" style="display: none;">
+  <button id="closeQuestionSection" class="close-btn" title="Close">&times;</button>
   <h3 data-i18n="question">Ask a Question</h3>
+  
   <form id="questionForm">
+
     <label data-i18n="mail" for="email">Your Email:</label>
     <input type="email" data-i18n-placeholder="mailExample" id="email" name="email" required placeholder="you@example.com">
 
@@ -310,6 +313,7 @@
     <div id="questionStatus"></div>
   </form>
 </div>
+
 
   <script type="module" src="./scripts/help_button.js"></script>
   <script type="module" src="./scripts/i18n.js"></script>

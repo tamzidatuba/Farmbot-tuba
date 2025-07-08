@@ -1,7 +1,7 @@
 import { Task } from "./Task.js"
 
 class MoveZTask extends Task {
-    constructor(status, z, speed = 50) {
+    constructor(status, z, speed = 100) {
         super(status);
         this.z = z;
         this.speed = speed;
