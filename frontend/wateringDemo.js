@@ -29,8 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       if (selectedPlantId !== getTranslation("loading")) {
         const plantstobewatered = [{plant: selectedPlantId, wateringcapacity: 10, wateringheight: 70}];
-        const payload = {jobname: "Watering Demo", plantstobewatered: plantstobewatered, is_scheduled: false, scheduleData: null};
+        
+        const payload = {
+          jobname: "Watering Demo", 
+          plantstobewatered: plantstobewatered, 
+          is_scheduled: false, 
+          scheduleData: null};
         const token = "";
+
         const response = await fetch('/api/demo/watering', {
           method: 'POST',
           headers: {
@@ -38,11 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           body: JSON.stringify({payload, token})
         });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Watering demo failed");
+      alert(data.message || "Watering demo queued");
       } else {
         console.error("No plant selected or plants are still loading.");
       }
-    } catch (error) {
-      console.error("Error executing watering demo:", error);
+    } catch (err) {
+      console.error("Error executing watering demo:", err);
+      alert(err.message);
     }
     modal.style.display = "none";
   });
