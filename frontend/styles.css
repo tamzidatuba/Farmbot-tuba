@@ -780,6 +780,25 @@ margin-top: 4px;
   color: var(--elements-color);/*green;*/
 }
 
+ /* Close Button for Question Form */
+#closeQuestionSection {
+  position: absolute;
+  top: 8px;
+  left: 100px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#closeQuestionSection:hover {
+  color: #000;
+}
+
+
 .stars {
   display: inline-flex;         
   flex-direction: row-reverse;   

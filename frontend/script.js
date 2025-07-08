@@ -89,11 +89,17 @@ drawGrid(); // draw plants
     }
   });
 
+
 //ask questions
 document.getElementById('openQuestionFormBtn').addEventListener('click', () => {
   const section = document.getElementById('questionSection');
   section.style.display = section.style.display === 'none' ? 'block' : 'none';
 });
+// Close the question form when close button is clicked
+document.getElementById('closeQuestionSection').addEventListener('click', () => {
+  document.getElementById('questionSection').style.display = 'none';
+});
+
 
 
 // Handle form submission 
