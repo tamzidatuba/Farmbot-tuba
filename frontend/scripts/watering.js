@@ -22,6 +22,9 @@ const jobCountDisplayWatering = document.getElementById('jobCountDisplayWatering
 const executeBtnWatering = document.getElementById('executeBtnWatering');
 const closeViewJobsModalWatering = document.getElementById('closeViewJobsModalWatering');
 
+const TOMATO_WATERING_HEIGHT = 40; // Default height for tomatoes
+const RADISH_WATERING_HEIGHT = 5; // Default height for radishes
+const LETTUCE_WATERING_HEIGHT = 30; // Default height for lettuce
 
 
 function createJobRowWatering(jobData = null) {
@@ -44,7 +47,7 @@ function createJobRowWatering(jobData = null) {
       </div>
       <div>
         <label data-i18n="height">${getTranslation("height")}</label>
-        <input type="number" class="coord-input zCoord" placeholder="5 - 100">
+        <input id="watering-height" type="number" class="coord-input zCoord" placeholder="5 - 100">
       </div>
     </div>
     <div class="errorMsg"></div>
@@ -55,6 +58,8 @@ function createJobRowWatering(jobData = null) {
     row.remove();
   });
 
+  
+
   // integrate plant selection
   // default text
   const select = row.querySelector('.plant-select');
@@ -63,6 +68,28 @@ function createJobRowWatering(jobData = null) {
   defaultOption.dataset.i18n = "selectDefault";
   defaultOption.textContent = getTranslation("selectDefault");
   select.appendChild(defaultOption);
+
+  const wateringHeightInput = row.querySelector('#watering-height');
+
+  select.addEventListener('change', (event) => {
+    const selectedOption = select.options[select.selectedIndex];
+    const plantType = selectedOption.dataset.type;
+  
+    switch (plantType) {
+      case 'tomato':
+        wateringHeightInput.value = TOMATO_WATERING_HEIGHT;
+        break;
+      case 'radish':
+        wateringHeightInput.value = RADISH_WATERING_HEIGHT;
+        break;
+      case 'lettuce':
+        wateringHeightInput.value = LETTUCE_WATERING_HEIGHT;
+        break;
+      default:
+        wateringHeightInput.value = '';
+        break;
+    }
+  });
 
 
   // actual plants
@@ -180,8 +207,6 @@ executeBtnWatering.addEventListener('click', async () => {
 
       const coordKey = `${x},${y}`;
 
-      console.log("Selected Plant:", selectedOption.value);
-      console.log("Selected Plant 2:", selectedOption.dataset);
       if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 2 || watering > 200) {
         errorMsg.textContent = getTranslation("fillValues");
         isValid = false;
