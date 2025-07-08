@@ -72,7 +72,8 @@ class Backend {
         this.demo_job_queued = false;
       } else if (this.currentJobData.jobType !== DatabaseService.JobType.WATERING || !this.currentJobData.job.is_scheduled) {
         try {
-          await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.jobname)
+          await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.jobname);
+          this.plants = await DatabaseService.FetchPlantsfromDB();
         } catch (e) {
           console.log("Failed to delete executed Job from DB!")
         }

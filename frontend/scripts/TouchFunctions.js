@@ -12,7 +12,6 @@ function GetDistance(x1, y1, x2, y2) {
 canvas.addEventListener('click', async (e) => {
   if (isLoggedIn || !isLoggedIn) {
     let coordDisplay = pixelToCoord(e.offsetX, e.offsetY);
-    //alert("x is: " + coordDisplay.x + " and y is:" + coordDisplay.y);
     let x = coordDisplay.x;
     let y = coordDisplay.y;
 
@@ -29,16 +28,7 @@ canvas.addEventListener('click', async (e) => {
       }
     }
 
-    if (selectedPlant) {
-      //alert(`Selected plant: ${selectedPlant.planttype} at (${selectedPlant.xcoordinate}, ${selectedPlant.ycoordinate})`);
-    } else {
-      //alert("No plant selected.");
-    }
-
     let innerCanvasCoordinateInPixel = coordToPixel(x, y);
-    //alert("real coordinates x:" + innerCanvasCoordinateInPixel.x + " real coordinate y:" + innerCanvasCoordinateInPixel.y);
-    //alert("real position on screen x:" + (innerCanvasCoordinateInPixel.x + canvas.width) + " real position on screen y:" + (innerCanvasCoordinateInPixel.y + canvas.height));
-
     const canvasRect = canvas.getBoundingClientRect();
     let positiononscreen = {
       x: canvasRect.left + innerCanvasCoordinateInPixel.x,
@@ -132,13 +122,8 @@ canvas.addEventListener('click', async (e) => {
 });
 
 async function deletePlant(plant) {
-
-  console.log("Deleting plant:", plant);
   let xcoordinate = plant.xcoordinate;
   let ycoordinate = plant.ycoordinate;
-  console.log("Coordinates to delete:", xcoordinate, ycoordinate);
-  console.log("Token:", token);
-
   const res = await fetch('/api/plant', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
@@ -147,7 +132,6 @@ async function deletePlant(plant) {
   const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Delete failed');
   alert(data.message || 'Plant deleted');
-
   clearCanvas();
   await getPlants();
   drawGrid();
@@ -160,7 +144,6 @@ async function getPlants() {
   })
     .then(response => response.json())
     .then(data => {
-        //if (plants.toString() != data.toString()) {
         window.plants.length = 0; // Clear the existing plants array
         for (const plant of data) {
           window.plants.push(new Plant(plant.planttype, Number(plant.xcoordinate), Number(plant.ycoordinate)));

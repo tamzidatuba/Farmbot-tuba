@@ -132,12 +132,13 @@ class ScheduleManager {
         if (this.isJobScheduled()) this.backend.checkForNextJob();
     }
 
-    calculateNextSchedule(jobData) {
+    async calculateNextSchedule(jobData) {
         // calculate next execution-time
         jobData.job.ScheduleData.next_execution_time = jobData.job.ScheduleData.interval + (Date.now());
 
         // modify entry in DB
-        DatabaseService.UpdateJobToDB(jobData.jobType, jobData.job);
+        await DatabaseService.UpdateJobToDB(jobData.jobType, jobData.job);
+        this.checkForScheduledJobs();
     }
 }
 

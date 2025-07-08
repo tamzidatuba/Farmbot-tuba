@@ -25,6 +25,12 @@ class Job {
         this.taskQueue.shift();
     }
 
+    adjustCoordinatesToFieldDimension(x, y) {
+        return {
+            "x": this.clampXToField(x + FieldConstants.FIELD_START_X),
+            "y": this.clampYToField(y + FieldConstants.FIELD_START_Y)
+        }
+    }
     clampXToField(x) {
         return Math.min(Math.max(x, FieldConstants.FIELD_START_X), FieldConstants.FIELD_END_X);
     }
