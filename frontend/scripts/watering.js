@@ -139,20 +139,7 @@ addPlantBtnWatering.addEventListener('click', () => {
 });
 
 wateringJobBtn.addEventListener('click', async () => {
-  // Reset to creation mode
-  isEditMode = false;
-  scheduleRadios.item(1).checked = true;
-  scheduleFields.style.display = "none";
-
-  document.getElementById('modalTitleWatering').textContent = getTranslation('wateringJob');
-  document.getElementById('executeBtnWatering').textContent = getTranslation('createAndSave');
-  document.getElementById('WateringJobName').value = '';
-  document.getElementById('WateringJobName').disabled = false;
-
-  jobContainerWatering.innerHTML = '';
-  modalWatering.style.display = 'block';
-  jobCountWatering = 0;
-  createJobRowWatering(); // Add first row by default
+  DisplayCreateWatering();
 });
 
 
@@ -475,6 +462,37 @@ closeViewJobsModalWatering.addEventListener('click', () => {
   viewJobsModalWatering.style.display = 'none';
 });
 
+
+function DisplayCreateWatering()
+{
+  // Reset to creation mode
+  isEditMode = false;
+  scheduleRadios.item(1).checked = true;
+  scheduleFields.style.display = "none";
+
+  document.getElementById('modalTitleWatering').textContent = getTranslation('wateringJob');
+  document.getElementById('executeBtnWatering').textContent = getTranslation('createAndSave');
+  document.getElementById('WateringJobName').value = '';
+  document.getElementById('WateringJobName').disabled = false;
+
+  jobContainerWatering.innerHTML = '';
+  modalWatering.style.display = 'block';
+  jobCountWatering = 0;
+  createJobRowWatering(); // Add first row by default
+}
+
+export function DisplayCreateWateringJobForTouchBased(plant)
+{
+  DisplayCreateWatering();
+  const jobRows = document.querySelectorAll('.job-row-watering');
+  const selectcomponent = jobRows[0].querySelector('.plant-select');
+  const selectedOption = selectcomponent.querySelector('option:checked');
+  selectedOption.value = { plant: plant }; // Set the value to the plant
+  selectedOption.textContent = `${translatePlantType(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+  selectedOption.dataset.x = plant.xcoordinate;
+  selectedOption.dataset.y = plant.ycoordinate;
+  selectedOption.dataset.type = plant.planttype;
+}
 
 window.addEventListener('click', (e) => {
   if (e.target === viewJobsModalWatering) {

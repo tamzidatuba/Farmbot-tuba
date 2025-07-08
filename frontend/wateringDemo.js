@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
   demoBtn.addEventListener("click", () => {
     modal.style.display = "block";
     populatePlantDropdown();
-    //getPlants();
   });
 
   closeModalBtn.addEventListener("click", () => {
@@ -29,8 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       if (selectedPlantId !== getTranslation("loading")) {
         const plantstobewatered = [{plant: selectedPlantId, wateringcapacity: 10, wateringheight: 70}];
-        const payload = {jobname: "Watering Demo", plantstobewatered: plantstobewatered, is_scheduled: false, scheduleData: null};
+        
+        const payload = {
+          jobname: "Watering Demo", 
+          plantstobewatered: plantstobewatered, 
+          is_scheduled: false, 
+          scheduleData: null};
         const token = "";
+
         const response = await fetch('/api/demo/watering', {
           method: 'POST',
           headers: {
@@ -38,11 +43,15 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           body: JSON.stringify({payload, token})
         });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Watering demo failed");
+      alert(data.message || "Watering demo queued");
       } else {
         console.error("No plant selected or plants are still loading.");
       }
-    } catch (error) {
-      console.error("Error executing watering demo:", error);
+    } catch (err) {
+      console.error("Error executing watering demo:", err);
+      alert(err.message);
     }
     modal.style.display = "none";
   });
@@ -68,32 +77,5 @@ document.addEventListener("DOMContentLoaded", () => {
       plantDropdown.appendChild(option);
     }
     plants = predefinedPlants; // Store the predefined plants
-  }
-  
-  // get plants from server
-  async function getPlants() {
-    await fetch('/api/plants', {method: 'GET',
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (plants.toString() != data.toString()) {
-        plants = data;
-        console.log("Plants fetched from server:", data);
-        plantDropdown.innerHTML = "";
-        for (const plant_data in data) {
-          const plant = data[plant_data];
-          console.log("Plant:", plant);
-          const option = document.createElement("option");
-          option.value = plant_data;
-          option.textContent = `${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
-          plantDropdown.appendChild(option);
-        }
-      }
-    })
-    .catch(error => console.error('Error fetching plants:', error));
-  }
-
-  function capitalizeFirstLetter(str) {
-  return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
-  }
+  }  
 });
