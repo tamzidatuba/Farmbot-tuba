@@ -82,23 +82,7 @@ catch(err)
 }
 });
 
-/* TODO: delete
-// insert plant
-app.post('/api/plants', async (req, res) => {
-  const plants = req.body;
-  try {
-    await DatabaseService.InsertPlantsToDB(plants);
-    for (let plant of plants) {
-      backend.plants.push(plant)
-    }
-    res.status(200).json({ message: 'The Plant has been saved to the database.' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to save plant to the database.' });
-  }
-});
-*/
-// insert plant
+// delete plant
 app.delete('/api/plant', async (req, res) => {
   const { token, xcoordinate, ycoordinate} = req.body;
   if (!TokenManager.validateToken(token)) {

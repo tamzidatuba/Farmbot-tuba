@@ -62,7 +62,7 @@ class SeedingJob extends Job {
 
             if (!demo){
                 let new_plant = {
-                    plantname: seedArgs.plantname,
+                    plantname: seedArgs.seedname,
                     planttype: seedArgs.seedtype,
                     xcoordinate: seedArgs.xcoordinate,
                     ycoordinate: seedArgs.ycoordinate
