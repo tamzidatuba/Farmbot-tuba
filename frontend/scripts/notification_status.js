@@ -180,7 +180,7 @@ pauseBtn.addEventListener('click', async () => {
     });
     const data = await res.json();
 
-    if (res.status === 200) {
+    if(res.ok) {
       if (data.message && data.message.includes('No job')) {
         showError(data.message); // 👈 Show user-friendly error
       } else {
