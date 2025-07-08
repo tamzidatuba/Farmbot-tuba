@@ -153,7 +153,7 @@ class Backend {
       if (this.currentJobData.jobType == DatabaseService.JobType.SEEDING) {
 
         // Cancel the seeding job
-        this.appendNotification("cancelled", this.currentJobData.job.name);
+        this.appendNotification("cancelled", this.currentJobData.job.jobname);
         this.statusManager.cancelJob();
 
         res.status(201).json({ message: 'Canceled a seeding job' });
