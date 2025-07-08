@@ -131,12 +131,14 @@ export const translations = {
     jobname: 'Job Name: ',
     // Translations for the help text
     help: 'Help',
-    helpField: 'This is a visual representation of the Farmbot.<br>You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile.',
-    helpStatus: 'You can see the status of the Farmbot here.<br> It shows whether the farmbot is currently offline or Ready to work or moving.',
+    helpField: 'This is a visual representation of the Farmbot.You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile.',
+    helpStatus: 'You can see the status of the Farmbot here. It shows whether the farmbot is currently offline or Ready to work or moving.',
     helpNotification: 'You can see the notifications here. You can also change the number of notifications you want to see.',
     helpDemoSeeding: 'Click to simulate a demo of planting seeds.',
     helpDemoWatering: 'Click to simulate a demo of watering seeds.',
     helpFeedback: 'In case you wish to give a feedback, please click here.',
+    helpQandA:'If you have any questions regarding the Farmbot, you can ask them here.',
+    helpLanguage: 'You can change your preferred language here. At present you can either choose German or English.',
   },
   de: {
     // German translations
@@ -270,11 +272,13 @@ export const translations = {
     jobname: 'Auftragsname: ',
     //Translations for the help text
     help: 'Hilfe',
-    helpField: 'Dies ist eine visuelle Darstellung des Farmbots.<br> Sie können das Feld berühren, um die Koordinaten zu sehen. Die aktuell im Farmbot gepflanzten Pflanzen sind ebenfalls sichtbar.',
-    helpStatus: 'Hier können Sie den Status des Farmbots sehen.<br> Er zeigt an, ob der Farmbot derzeit offline, bereit zur Arbeit oder in Bewegung ist.',
+    helpField: 'Dies ist eine visuelle Darstellung des Farmbots. Sie können das Feld berühren, um die Koordinaten zu sehen. Die aktuell im Farmbot gepflanzten Pflanzen sind ebenfalls sichtbar.',
+    helpStatus: 'Hier können Sie den Status des Farmbots sehen. Er zeigt an, ob der Farmbot derzeit offline, bereit zur Arbeit oder in Bewegung ist.',
     helpNotification: 'Hier können Sie die Benachrichtigungen sehen. Sie können auch die Anzahl der Benachrichtigungen ändern, die Sie sehen möchten.',
     helpDemoSeeding: 'Klicken Sie, um eine Demo des Aussäens von Samen zu simulieren.',
     helpDemoWatering: 'Klicken Sie, um eine Demo des Bewässerns von Samen zu simulieren.',
     helpFeedback: 'Falls Sie Feedback geben möchten, klicken Sie bitte hier.',
+    helpQandA:'Wenn Sie Fragen zum Farmbot haben, können Sie diese hier stellen.',
+    helpLanguage: 'Sie können hier ihre bevorzugte Sprache ändern. Aktuell können Sie zwischen Deutsch und Englisch auswählen.',
   }
 }
