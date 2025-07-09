@@ -4,6 +4,7 @@ import "./scripts/watering.js";
 import "./scripts/seeding.js";
 import { getTranslation } from "./scripts/translation.js";
 import "./scripts/TouchFunctions.js";
+import { customAlert} from "./scripts/popups.js";
 
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
@@ -19,9 +20,9 @@ window.plants = [];
 
 //plant class
 class Plant {
-  constructor(name, type, x, y) {
-    this.plantname = name;
+  constructor(type, name, x, y) {
     this.planttype = type;
+    this.plantname = name;
     this.xcoordinate = x;
     this.ycoordinate = y;
   }
@@ -64,7 +65,7 @@ async function getPlants() {
         //if (plants.toString() != data.toString()) {
         window.plants.length = 0; // Clear the existing plants array
         for (const plant of data) {
-          window.plants.push(new Plant(plant.planttype, Number(plant.xcoordinate), Number(plant.ycoordinate)));
+          window.plants.push(new Plant(plant.planttype, plant.plantname, Number(plant.xcoordinate), Number(plant.ycoordinate)));
         }
     })
     .catch(error => console.error('Error fetching plants:', error));
@@ -123,10 +124,10 @@ form.addEventListener('submit', async function(e) {
   const data = await response.json();
 
   if (response.ok) {
-    alert(data.message);
+    customAlert(data.message);
     form.reset(); // clears fields after successful submission
   } else {
-    alert(data.message || getTranslation("somethingWrong"));
+    customAlert(data.message || getTranslation("somethingWrong"));
   }
 });
 

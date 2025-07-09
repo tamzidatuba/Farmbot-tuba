@@ -2,6 +2,8 @@
 
 import { token } from "./auth.js";
 import { setLanguage, getTranslation } from "./translation.js";
+import { customAlert } from "./popups.js";
+import { customConfirm } from "./popups.js";
 
 
 // ——— DOM References ———
@@ -204,7 +206,7 @@ executeBtn.addEventListener('click', async () => {
   }
   if (!valid) return;
   if (seeds.length === 0) {
-    alert(getTranslation('noPlant'));
+    customAlert(getTranslation('noPlant'));
     return;
   }
 
@@ -217,10 +219,10 @@ executeBtn.addEventListener('click', async () => {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || getTranslation('createFail'));
-    alert(getTranslation('seedingcreated'));
+    customAlert(getTranslation('seedingcreated'));
     createModal.style.display = 'none';
   } catch (e) {
-    alert(getTranslation('error') + e.message);
+    customAlert(getTranslation('error') + e.message);
   }
 });
 
@@ -273,10 +275,10 @@ modifyExecuteBtn.addEventListener('click', async () => {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    alert(getTranslation('seedingUpdated'));
+    customAlert(getTranslation('seedingUpdated'));
     modifyModal.style.display = 'none';
   } catch (e) {
-    alert(getTranslation('error') + e.message);
+    customAlert(getTranslation('error') + e.message);
   }
 });
 
@@ -345,7 +347,9 @@ viewJobsBtn.addEventListener('click', async () => {
 
       // Delete
       div.querySelector('.delete-job-btn').addEventListener('click', async () => {
-        if (!confirm(getTranslation('deleteConfirm') + job.jobname)) return;
+        //if (!confirm(getTranslation('deleteConfirm') + job.jobname)) return;
+        const confirmed = await customConfirm(getTranslation('deleteConfirm') + job.jobname + '?');
+        if (!confirmed) return;
         try {
           const res2 = await fetch(`/api/jobs/Seeding/${encodeURIComponent(job.jobname)}`, {
             method: 'DELETE',
@@ -356,17 +360,19 @@ viewJobsBtn.addEventListener('click', async () => {
                                 ? res2.json()
                                 : Promise.reject(await res2.text()));
           if (!res2.ok) throw new Error(json2.error || json2.message);
-          alert(getTranslation('jobDeleted'));
+          customAlert(getTranslation('jobDeleted'));
           viewJobsBtn.click();
         } catch (e) {
-          alert(getTranslation('error') + e.message);
+          customAlert(getTranslation('error') + e.message);
         }
       });
 
       // Execute
    
       div.querySelector('.execute-job-btnseed').addEventListener('click', async () => {
-        if (!confirm(getTranslation('executeConfirm') + job.jobname + '?')) return;
+        //if (!confirm(getTranslation('executeConfirm') + job.jobname + '?')) return;
+        const confirmed = await customConfirm(getTranslation('executeConfirm') + job.jobname + '?');
+        if (!confirmed) return;
         try {
           const res3 = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
             method: 'PUT',
@@ -378,14 +384,14 @@ viewJobsBtn.addEventListener('click', async () => {
           if (contentType.includes('application/json')) {
             const json3 = await res3.json();
             msg = res3.ok
-              ? `✅ ${json3.message || getTranslation('queueSuccess')}`
+              ? `✅ ${getTranslation('queueSuccess')}`
               : `❌ ${json3.error || getTranslation('queueFail')}`;
           } else {
             msg = getTranslation('unexpectedResponse') + await res3.text();
           }
-          alert(msg);
+          customAlert(msg);
         } catch (e) {
-          alert(getTranslation('networkError'));
+          customAlert(getTranslation('networkError'));
         }
       });
     });

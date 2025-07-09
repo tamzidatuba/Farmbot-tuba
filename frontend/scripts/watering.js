@@ -2,6 +2,7 @@ import { token } from "./auth.js";
 import { getTranslation } from "./translation.js";
 import { setLanguage } from "./translation.js";
 import { Plant } from "../script.js";
+import { customAlert, customConfirm } from "./popups.js";
 
 const modalWatering = document.getElementById('wateringModal');
 const closeModalWatering = document.getElementById('closeModalWatering');
@@ -95,10 +96,11 @@ function createJobRowWatering(jobData = null) {
   window.plants.forEach(plant => {
     const option = document.createElement('option');
     option.value = { plant: plant }; // value is the plant
-    option.textContent = `${translatePlantType(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+    option.textContent = `${plant.plantname}: ${translatePlantType(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
     option.dataset.x = plant.xcoordinate;
     option.dataset.y = plant.ycoordinate;
     option.dataset.type = plant.planttype;
+    option.dataset.name = plant.plantname || ''; // Add plant name for reference
 
     // Preselect if matching
     if (jobData && jobData.plant.xcoordinate == plant.xcoordinate && jobData.plant.ycoordinate == plant.ycoordinate) {
@@ -189,6 +191,7 @@ executeBtnWatering.addEventListener('click', async () => {
       const y = selectedOption.dataset.y;
       const type = selectedOption.dataset.type;
       console.log("heeeey: " + selectedOption.dataset);
+      const name = selectedOption.dataset.name;
       errorMsg.textContent = '';
 
       const coordKey = `${x},${y}`;
@@ -204,7 +207,7 @@ executeBtnWatering.addEventListener('click', async () => {
         isValid = false;
       } else {
         seenCoordinates.add(coordKey);
-        plantstobewatered.push({ plant: { planttype: type, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
+        plantstobewatered.push({ plant: { planttype: type, plantname: name, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
         const newPlant = new Plant(Number(x), Number(y), type);
         // const newPlant = { plantname: plant.plantname , planttype: plant.planttype, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate};
         results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
@@ -253,7 +256,7 @@ executeBtnWatering.addEventListener('click', async () => {
   }
 
   if (plantstobewatered.length === 0) {
-    alert(getTranslation("noPlant"));
+    customAlert(getTranslation("noPlant"));
     return;
   }
 
@@ -270,7 +273,7 @@ executeBtnWatering.addEventListener('click', async () => {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || getTranslation("updateFail"));
-      alert(getTranslation("wateringUpdated"));
+      customAlert(getTranslation("wateringUpdated"));
     } else {
       // ➕ CREATE mode
       const response = await fetch('/api/jobs/Watering', {
@@ -280,7 +283,7 @@ executeBtnWatering.addEventListener('click', async () => {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || getTranslation("createFail"));
-      alert(getTranslation("wateringcreated"));
+      customAlert(getTranslation("wateringcreated"));
     }
 
     modalWatering.style.display = 'none';
@@ -290,7 +293,7 @@ executeBtnWatering.addEventListener('click', async () => {
 
   } catch (err) {
     console.error(err);
-    alert("❌ Error: " + err.message);
+    customAlert("❌ Error: " + err.message);
   }
 });
 
@@ -384,7 +387,8 @@ viewJobsBtnWatering.addEventListener('click', async () => {
 
         // new delete logic
         jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-          if (confirm(getTranslation("deleteConfirm") +job.jobname)) {
+          const confirm = await customConfirm(getTranslation("deleteConfirm") + `${job.jobname}?`);
+          if (confirm) {
             try {
               const res = await fetch(`/api/jobs/Watering/${job.jobname}`, {
                 method: 'DELETE',
@@ -396,7 +400,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
               if (contentType && contentType.includes("application/json")) {
                 const result = await res.json();
                 if (!res.ok) throw new Error(result.error);
-                alert(getTranslation("jobDeleted"));
+                customAlert(getTranslation("jobDeleted"));
                 viewJobsBtnWatering.click();
               } else {
                 const errorText = await res.text();
@@ -404,7 +408,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
               }
             } catch (err) {
               console.error(err);
-              alert(getTranslation("deleteError") + err.message);
+              customAlert(getTranslation("deleteError") + err.message);
             }
 
           }
@@ -412,7 +416,8 @@ viewJobsBtnWatering.addEventListener('click', async () => {
 
         // optional placeholder for future Execute
         jobDiv.querySelector('.execute-job-btn').addEventListener('click', async () => {
-          if (confirm(getTranslation("executeConfirm") + `${job.jobname}`)) {
+          const confirm = await customConfirm(getTranslation("executeConfirm") + `${job.jobname}?`);
+          if (confirm) {
             try {
 
               const res = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
@@ -440,10 +445,10 @@ viewJobsBtnWatering.addEventListener('click', async () => {
                 message = getTranslation("unexpectedResponse") + "${text}";
               }
 
-              alert(message);
+              customAlert(message);
             } catch (err) {
               console.error(getTranslation("executeFail"), err);
-              alert(getTranslation("networkError"));
+              customAlert(getTranslation("networkError"));
             }
           }
         });
