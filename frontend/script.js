@@ -49,7 +49,7 @@ managePlants.addEventListener('click', () => {
 
 await getPlants(); // get data of plants
 await updateRobot();
-setInterval(async () => await updateRobot(), 2500); // Update every 1 second
+setInterval(async () => await updateRobot(), 1000); // Update every 1 second
 drawGrid(); // draw plants
 //drawRobot();
 

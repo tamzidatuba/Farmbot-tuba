@@ -2,6 +2,9 @@
 const canvas = document.getElementById('gridCanvas');
 const ctx = canvas.getContext('2d');
 const coordDisplay = document.getElementById('hover-coordinates');
+let botposition;
+const botImage = new Image();
+botImage.src = './assets/icons/bot.png'; // Path to the robot image
 
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
@@ -36,8 +39,6 @@ const size = 50; // Size of the plant image
 
 //draw plants
 function drawPlant(ctx, plant) {
-    //ctx.save();
-    const img = new Image();
     const coord = coordToPixel(plant.xcoordinate, plant.ycoordinate);
     switch (plant.planttype) {
         case "lettuce":
@@ -63,21 +64,14 @@ function drawRadius(ctx, coord, radius) {
     ctx.stroke()
 }
 
-// Draw robot
-let robot = { x: 0, y: 0 };
 
 function drawRobot() {
-    const pos = coordToPixel(robot.x, robot.y);
-    ctx.beginPath();
-    ctx.arc(pos.x, pos.y, 8, 0, Math.PI * 2);
-    ctx.fillStyle = '#4caf50';
-    ctx.fill();
-    ctx.strokeStyle = '#333';
-    ctx.stroke();
+    const pos = coordToPixel(botposition.x, botposition.y);
+    ctx.drawImage(botImage, pos.x - size / 2, pos.y - size / 2, size, size);
 }
 
 // Draw grid lines for visual reference
-export function drawGrid() {
+export function drawGrid() {    
     plants = window.plants;
     ctx.strokeStyle = 'rgb(102, 68, 40)'//'#ddd';
     ctx.linewidth = 1;
@@ -165,7 +159,7 @@ export function clearCanvas() {
 
 export function updateGrid() {
     plants = window.plants;
-
+    
     // Clear the buffer
     bufferCtx.clearRect(0, 0, canvasWidth, canvasHeight);
     bufferCtx.strokeStyle = 'rgb(102, 68, 40)';
@@ -198,6 +192,7 @@ export function updateGrid() {
     // Copy buffer to main canvas
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     ctx.drawImage(bufferCanvas, 0, 0);
+    drawRobot();
 }
 
 // Map pixel to real-world coordinate
@@ -233,3 +228,8 @@ canvas.addEventListener('mousemove', (e) => {
 canvas.addEventListener('mouseleave', () => {
     coordDisplay.style.display = 'none';
 });
+
+export function setbotposition(position)
+{
+    botposition = position;
+}
