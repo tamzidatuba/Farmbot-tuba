@@ -1,7 +1,7 @@
-// seedingDemo.js
 // This script handles the "Seeding Demo" modal and demo job submission
 import { getTranslation } from "./scripts/translation.js";
 import { token } from "./scripts/auth.js"; // your auth token binding
+import { predefinedPlants } from "./scripts/plantsmanager.js"; // predefined plants for demo
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
@@ -14,15 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Local store for predefined plants
   let plants = {};
 
-  // Predefined plants matching your Seeding schema
-  const predefinedPlants = {
-    "1": { planttype: "lettuce", xcoordinate: 10, ycoordinate: 20 },
-    "2": { planttype: "lettuce", xcoordinate: 20, ycoordinate: 30 },
-    "3": { planttype: "tomato",  xcoordinate: 30, ycoordinate: 40 },
-    "4": { planttype: "tomato",  xcoordinate: 40, ycoordinate: 50 },
-    "5": { planttype: "radish",  xcoordinate: 50, ycoordinate: 60 },
-    "6": { planttype: "radish",  xcoordinate: 60, ycoordinate: 70 }
-  };
+
 
   // Open modal and populate dropdown
   demoBtn.addEventListener("click", () => {
@@ -43,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const p = predefinedPlants[id];
       const opt = document.createElement("option");
       opt.value = id;
-      opt.textContent = `${capitalize(getTranslation(p.planttype))} at X: ${p.xcoordinate}, Y: ${p.ycoordinate}`;
+      opt.textContent = `${p.plantname}: ${capitalize(getTranslation(p.planttype))} at X: ${p.xcoordinate}, Y: ${p.ycoordinate}`;
       plantSelect.appendChild(opt);
     }
     plants = predefinedPlants;
@@ -65,7 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
         xcoordinate: selected.xcoordinate,
         ycoordinate: selected.ycoordinate,
         depth:       5,                 // adjust as needed
-        seedtype:    selected.planttype
+        seedtype:    selected.planttype,
+        seedname:    selected.plantname
       }]
     };
 

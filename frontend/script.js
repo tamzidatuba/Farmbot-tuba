@@ -5,6 +5,7 @@ import "./scripts/seeding.js";
 import { getTranslation } from "./scripts/translation.js";
 import "./scripts/TouchFunctions.js";
 import { customAlert} from "./scripts/popups.js";
+import { getPlants  } from "./scripts/plantsmanager.js";
 
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
@@ -17,17 +18,6 @@ const subtaskManage=document.getElementById('subtaskManage');
 const arrowmanageView=document.getElementById('arrowmanageView');
 // List to compare plants with data base
 window.plants = [];
-
-//plant class
-class Plant {
-  constructor(type, name, x, y) {
-    this.planttype = type;
-    this.plantname = name;
-    this.xcoordinate = x;
-    this.ycoordinate = y;
-  }
-}
-
 
 window.addEventListener('DOMContentLoaded', () => {
   toggle.style.display = 'none';
@@ -55,21 +45,7 @@ managePlants.addEventListener('click', () => {
 });
 
 
-// get plants from server
-async function getPlants() {
-  await fetch('/api/plants', {
-    method: 'GET',
-  })
-    .then(response => response.json())
-    .then(data => {
-        //if (plants.toString() != data.toString()) {
-        window.plants.length = 0; // Clear the existing plants array
-        for (const plant of data) {
-          window.plants.push(new Plant(plant.planttype, plant.plantname, Number(plant.xcoordinate), Number(plant.ycoordinate)));
-        }
-    })
-    .catch(error => console.error('Error fetching plants:', error));
-}
+
 
 await getPlants(); // get data of plants
 await updateRobot();
@@ -137,9 +113,3 @@ window.addEventListener('click', (e) => {
     loginModal.style.display = 'none';
   }
 });
-//end of login and logout feature
-
-export {
-  Plant
-}
-

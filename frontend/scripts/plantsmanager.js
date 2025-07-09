@@ -1,6 +1,8 @@
-import { token } from './auth.js';    
+import { token } from './auth.js'; // your auth token binding
 import { getTranslation } from './translation.js';
 import { customAlert} from './popups.js';
+import { drawGrid, clearCanvas } from "./canvas.js";
+
 
 // 1) Create the modal HTML and append to body
 const modalHtml = `
@@ -76,28 +78,48 @@ confirmDelete.addEventListener('click', async () => {
     .map(val => Number(val.trim()));
 
   console.log('Deleting plant at:', { xcoordinate, ycoordinate, token });
-
-  try {
-    const res = await fetch('/api/plant', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, xcoordinate, ycoordinate })
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Delete failed');
-
-    customAlert(data.message || 'Plant deleted');
-    deleteModal.style.display = 'none';
-
-    // Remove the option from the select
-    const opt = plantSelect.querySelector(
-      `option[value="${xcoordinate},${ycoordinate}"]`
-    );
-    if (opt) opt.remove();
-
-  } catch (err) {
-    deleteError.textContent = err.message;
-    console.error('deletePlant error:', err);
-  }
+  deletePlant(xcoordinate, ycoordinate);
 });
+
+
+
+// Predefined plants matching your Seeding schema
+export const predefinedPlants = {
+    "1": { planttype: "lettuce", plantname: "Luna", xcoordinate: 10, ycoordinate: 20 },
+    "2": { planttype: "lettuce", plantname: "Leafy", xcoordinate: 20, ycoordinate: 30 },
+    "3": { planttype: "tomato", plantname: "Ruby", xcoordinate: 30, ycoordinate: 40 },
+    "4": { planttype: "tomato", plantname: "Sunny", xcoordinate: 40, ycoordinate: 50 },
+    "5": { planttype: "radish", plantname: "Spicy", xcoordinate: 50, ycoordinate: 60 },
+    "6": { planttype: "radish", plantname: "Crunch", xcoordinate: 60, ycoordinate: 70 }
+};
+
+export async function deletePlant(x,y) {
+  let xcoordinate = x;
+  let ycoordinate = y;
+  const res = await fetch('/api/plant', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, xcoordinate, ycoordinate })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Delete failed');
+  clearCanvas();
+  await getPlants(); //TODO:  remove it from variable instead of fetching again
+  drawGrid();
+}
+
+// get plants from server
+export async function getPlants() {
+    await fetch('/api/plants', {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(data => {
+            //if (plants.toString() != data.toString()) {
+            window.plants.length = 0; // Clear the existing plants array
+            for (const plant of data) {
+                window.plants.push({ planttype: plant.planttype, plantname: plant.plantname, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate });
+            }
+        })
+        .catch(error => console.error('Error fetching plants:', error));
+}
