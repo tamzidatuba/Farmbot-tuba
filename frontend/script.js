@@ -19,7 +19,8 @@ window.plants = [];
 
 //plant class
 class Plant {
-  constructor(type, x, y) {
+  constructor(name, type, x, y) {
+    this.plantname = name;
     this.planttype = type;
     this.xcoordinate = x;
     this.ycoordinate = y;

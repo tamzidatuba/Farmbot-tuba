@@ -49,15 +49,22 @@ canvas.addEventListener('click', async (e) => {
 
 
     dialogContent.innerHTML = ""; // Clear previous content
-    dialogHeader.textContent = `${translatePlantType(selectedPlant.planttype)} ${getTranslation("at")} X: ${selectedPlant.xcoordinate}, Y: ${selectedPlant.ycoordinate}`;
+    
 
     if (selectedPlant) {
+      console.log(window.plants);
+
+      console.log(selectedPlant);
+
+
+      dialogHeader.textContent = ` ${selectedPlant.planttype} - ${selectedPlant.plantname === undefined ? "" : selectedPlant.plantname} - X: ${selectedPlant.xcoordinate} - Y: ${selectedPlant.ycoordinate}`;
+
       AddDeleteButtonToDialogContent();
       // AddWateringButtonToDialogContent();
       // DisplayCreateWateringJobForTouchBased(selectedPlant);
       showDialogOnCanvas(positiononscreen.x, positiononscreen.y);      
     }
-    else // show watering emoji
+    else 
     {
       // DisplayCreateSeedingJobForTouchedBased(x,y);
     }

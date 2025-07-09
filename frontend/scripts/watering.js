@@ -10,7 +10,6 @@ const wateringJobBtn = document.getElementById('wateringJobBtn');
 let isEditMode = false;
 const jobContainerWatering = document.getElementById('jobContainerWatering');
 let jobCountWatering = 0;
-let plants = window.plants || []; // Ensure plants is initialized
 const scheduleFields = document.getElementById("scheduleFields");
 const scheduleRadios = document.querySelectorAll('input[name="scheduleOption"]');
 scheduleRadios.item(1).checked = true; // Default to "Not Scheduled""
@@ -177,7 +176,6 @@ executeBtnWatering.addEventListener('click', async () => {
   const plantstobewatered = [];
   const seenCoordinates = new Set();
 
-  console.log(jobRows.length);
   for (const row of jobRows) {
     const inputs = row.querySelectorAll('input, select, textarea');
     const hasValue = Array.from(inputs).some(input => input.value.trim() !== '');
@@ -190,6 +188,7 @@ executeBtnWatering.addEventListener('click', async () => {
       const x = selectedOption.dataset.x;
       const y = selectedOption.dataset.y;
       const type = selectedOption.dataset.type;
+      console.log("heeeey: " + selectedOption.dataset);
       errorMsg.textContent = '';
 
       const coordKey = `${x},${y}`;
@@ -207,6 +206,7 @@ executeBtnWatering.addEventListener('click', async () => {
         seenCoordinates.add(coordKey);
         plantstobewatered.push({ plant: { planttype: type, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
         const newPlant = new Plant(Number(x), Number(y), type);
+        // const newPlant = { plantname: plant.plantname , planttype: plant.planttype, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate};
         results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
       }
     }
