@@ -12,21 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
     questionsList.innerHTML = getTranslation('loading');
 
     try {
-      const response = await fetch('/api/yourquestions');
+      const response = await fetch('/api/getquestions');
       if (!response.ok) throw new Error('Network response was not ok');
 
       const questions = await response.json();
-
+      console.log(questions); // Debugging line to check the fetched data
       if (questions.length === 0) {
         questionsList.innerHTML = '<p>' + getTranslation("noQuestions") + '</p>';
       } else {
         questionsList.innerHTML = questions.map(q =>
           `<div class="question-item">
-            <p><strong>` + getTranslation("user)" + `</strong> ${q.user}</p>
+            <p><strong>` + getTranslation("user") + `</strong> ${q.user}</p>
             <p><strong>` + getTranslation("question") + `:</strong> ${q.question}</p>
             <p><strong>` + getTranslation("answer") + `:</strong> ${q.answer}</p>
           </div>`
-        ).join(''));
+        ).join('');
       }
     } catch (error) {
       questionsList.innerHTML = `<p>Error loading questions: ${error.message}</p>`;

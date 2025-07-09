@@ -1,8 +1,11 @@
 import { pixelToCoord, coordToPixel, drawGrid, clearCanvas } from "./canvas.js";
-import { token, isLoggedIn } from "./auth.js";
+import { isLoggedIn } from "./auth.js";
 import { getTranslation } from "./translation.js";
 import { DisplayCreateSeedingJobForTouchedBased } from "./seeding.js";
 import { DisplayCreateWateringJobForTouchBased } from "./watering.js";
+import { GetDistance } from "./tools.js"; // Function to fetch plants
+import { getPlants  } from "./plantsmanager.js";
+import {deletePlant} from "./plantsmanager.js";
 
 
 const dialogContent = document.getElementById("dialogContent");
@@ -12,9 +15,7 @@ const canvas = document.getElementById('gridCanvas');
 
 let selectedPlant = null;
 
-function GetDistance(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-}
+
 
 canvas.addEventListener('click', async (e) => {
   if (isLoggedIn) {
@@ -57,7 +58,7 @@ canvas.addEventListener('click', async (e) => {
       console.log(selectedPlant);
 
 
-      dialogHeader.textContent = ` ${selectedPlant.planttype} - ${selectedPlant.plantname === undefined ? "" : selectedPlant.plantname} - X: ${selectedPlant.xcoordinate} - Y: ${selectedPlant.ycoordinate}`;
+      dialogHeader.textContent = `${selectedPlant.plantname === undefined ? "" : selectedPlant.plantname}: ${getTranslation(selectedPlant.planttype)} ${getTranslation("at")}  X: ${selectedPlant.xcoordinate}  Y: ${selectedPlant.ycoordinate}`;
 
       AddDeleteButtonToDialogContent();
       // AddWateringButtonToDialogContent();
@@ -68,47 +69,8 @@ canvas.addEventListener('click', async (e) => {
     {
       // DisplayCreateSeedingJobForTouchedBased(x,y);
     }
-
   }
 });
-
-async function deletePlant(plant) {
-  let xcoordinate = plant.xcoordinate;
-  let ycoordinate = plant.ycoordinate;
-  const res = await fetch('/api/plant', {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, xcoordinate, ycoordinate })
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Delete failed');
-  clearCanvas();
-  await getPlants(); //TODO:  remove it from variable instead of fetching again
-  drawGrid();
-}
-
-
-async function getPlants() {
-  await fetch('/api/plants', {
-    method: 'GET',
-  })
-    .then(response => response.json())
-    .then(data => {
-      window.plants.length = 0; // Clear the existing plants array
-      for (const plant of data) {
-        window.plants.push(new Plant(plant.planttype, Number(plant.xcoordinate), Number(plant.ycoordinate)));
-      }
-    })
-    .catch(error => console.error('Error fetching plants:', error));
-}
-
-class Plant {
-  constructor(type, x, y) {
-    this.planttype = type;
-    this.xcoordinate = x;
-    this.ycoordinate = y;
-  }
-}
 
 function showDialogOnCanvas(x, y) {
   console.log(`Showing dialog at (${x}, ${y})`);
@@ -156,7 +118,7 @@ function AddDeleteButtonToDialogContent() {
 
   deleteButton.addEventListener("click", () => {
     if (selectedPlant) {
-      deletePlant(selectedPlant);
+      deletePlant(selectedPlant.xcoordinate, selectedPlant.ycoordinate);
     }
     dialogBox.style.display = "none"; // Hide the dialog after deletion
   });
@@ -175,17 +137,4 @@ function AddWateringButtonToDialogContent() {
     dialogBox.style.display = "none"; // Hide the dialog after watering
   });
   dialogContent.appendChild(wateringButton);
-}
-
-function translatePlantType(plantType) {
-  switch (plantType) {
-    case 'tomato':
-      return getTranslation('tomato');
-    case 'radish':
-      return getTranslation('radish');
-    case 'lettuce':
-      return getTranslation('lettuce');
-    default:
-      return plantType; // Fallback to original if no translation found
-  }
 }

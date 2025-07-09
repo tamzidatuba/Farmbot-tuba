@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
-import seedingModule from './models/seedingjob.model.js';
-import wateringModule from './models/wateringjob.model.js';
-import notificationModel from './models/notification.model.js';
-import plantModel from './models/plant.model.js';
-import userModel from './models/user.model.js';
-import ExecutionModel from './models/execution.model.js';
-import questionModel from './models/question.model.js';
+import seedingModule from '../models/seedingjob.model.js';
+import wateringModule from '../models/wateringjob.model.js';
+import notificationModel from '../models/notification.model.js';
+import plantModel from '../models/plant.model.js';
+import userModel from '../models/user.model.js';
+import ExecutionModel from '../models/execution.model.js';
+import questionModel from '../models/question.model.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';

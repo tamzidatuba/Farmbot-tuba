@@ -1,7 +1,5 @@
 import { token } from "./auth.js";
 import { getTranslation } from "./translation.js";
-import { setLanguage } from "./translation.js";
-import { Plant } from "../script.js";
 import { customAlert, customConfirm } from "./popups.js";
 
 const modalWatering = document.getElementById('wateringModal');
@@ -96,7 +94,7 @@ function createJobRowWatering(jobData = null) {
   window.plants.forEach(plant => {
     const option = document.createElement('option');
     option.value = { plant: plant }; // value is the plant
-    option.textContent = `${plant.plantname}: ${translatePlantType(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+    option.textContent = `${plant.plantname}: ${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
     option.dataset.x = plant.xcoordinate;
     option.dataset.y = plant.ycoordinate;
     option.dataset.type = plant.planttype;
@@ -119,20 +117,6 @@ function createJobRowWatering(jobData = null) {
   jobContainerWatering.appendChild(row);
   //setLanguage(document.documentElement.lang);
 }
-
-function translatePlantType(plantType) {
-  switch (plantType) {
-    case 'tomato':
-      return getTranslation('tomato');
-    case 'radish':
-      return getTranslation('radish');
-    case 'lettuce':
-      return getTranslation('lettuce');
-    default:
-      return plantType; // Fallback to original if no translation found
-  }
-}
-
 
 addPlantBtnWatering.addEventListener('click', () => {
   createJobRowWatering();
@@ -190,7 +174,6 @@ executeBtnWatering.addEventListener('click', async () => {
       const x = selectedOption.dataset.x;
       const y = selectedOption.dataset.y;
       const type = selectedOption.dataset.type;
-      console.log("heeeey: " + selectedOption.dataset);
       const name = selectedOption.dataset.name;
       errorMsg.textContent = '';
 
@@ -208,8 +191,7 @@ executeBtnWatering.addEventListener('click', async () => {
       } else {
         seenCoordinates.add(coordKey);
         plantstobewatered.push({ plant: { planttype: type, plantname: name, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
-        const newPlant = new Plant(Number(x), Number(y), type);
-        // const newPlant = { plantname: plant.plantname , planttype: plant.planttype, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate};
+        const newPlant = { planttype: type, plantname: name, xcoordinate: x, ycoordinate: y};
         results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
       }
     }
@@ -491,7 +473,7 @@ export function DisplayCreateWateringJobForTouchBased(plant)
   const selectcomponent = jobRows[0].querySelector('.plant-select');
   const selectedOption = selectcomponent.querySelector('option:checked');
   selectedOption.value = { plant: plant }; // Set the value to the plant
-  selectedOption.textContent = `${translatePlantType(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+  selectedOption.textContent = `${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
   selectedOption.dataset.x = plant.xcoordinate;
   selectedOption.dataset.y = plant.ycoordinate;
   selectedOption.dataset.type = plant.planttype;
