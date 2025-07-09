@@ -23,7 +23,7 @@ canvas {
   display: block;
   background-color: #643a2a;
   cursor: crosshair;
-  background-image: url("noise.png");
+  background-image: url("../assets/images/noise.png");
   left: 25%;
 }
 
@@ -70,7 +70,7 @@ canvas {
     }
 
     #farmbot-status {
-      font-size: 14px;
+      font-size: 16px;
       position: absolute;
       display: flex;
       top: 2%;
@@ -711,7 +711,7 @@ margin-top: 4px;
 
 .language-select {
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   background-color: var(--buttons-color);
   color: white;
   border: none;
@@ -973,6 +973,57 @@ margin-top: 4px;
 .popup-modal-content button {
   margin: 10px;
 }
+
+/* Modal container - covers whole screen */
+.big-modal {
+  display: none; /* hidden by default */
+  position: fixed;
+  z-index: 1000; /* on top of everything else */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0,0,0,0.6); /* dark background */
+}
+
+/* Modal content box */
+.big-modal-content {
+  background-color: #fff;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  padding: 15px;
+  text-align: center;
+  width: 50px;
+  height: 50px;;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Question item styling */
+.question-item {
+  background: #f9f9f9;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-left: 4px solid #4CAF50;
+  border-radius: 5px;
+}
+
+
   
     
 

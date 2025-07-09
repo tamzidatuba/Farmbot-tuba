@@ -74,6 +74,7 @@ export const translations = {
     help: 'Help',
     manage: '🪴 Manage Plants',
     deletePlants: '🗑️ Delete Plants',
+    yourQuestions: 'Your Questions',
     //watering job template
     at:'at',
     // Translation for alerts and errors:
@@ -147,6 +148,13 @@ export const translations = {
     helpFeedback: 'In case you wish to give a feedback, please click here.',
     helpQandA:'If you have any questions regarding the Farmbot, you can ask them here.',
     helpLanguage: 'You can change your preferred language here. At present you can either choose German or English.',
+    // Translations for the yourQuestions section
+    yourQuestionsTitle: 'Your Submitted Questions',
+    noQuestions: 'No questions found.',
+    errorQuestions: 'Error loading questions: ',
+    user: 'Asked by user: ',
+    question: 'Question',
+    answer: 'Answer',
   },
   de: {
     // German translations
@@ -223,6 +231,7 @@ export const translations = {
     help: 'Hilfe',
     manage: '🪴 Pflanzen verwalten',
     deletePlants: '🗑️ Pflanzen löschen',
+    yourQuestions: 'Eure Fragen',
     //watering job template
     at:'bei',
     // Translation for alerts and errors:
@@ -296,5 +305,12 @@ export const translations = {
     helpFeedback: 'Falls Sie Feedback geben möchten, klicken Sie bitte hier.',
     helpQandA:'Wenn Sie Fragen zum Farmbot haben, können Sie diese hier stellen.',
     helpLanguage: 'Sie können hier ihre bevorzugte Sprache ändern. Aktuell können Sie zwischen Deutsch und Englisch auswählen.',
+    // Translations for the yourQuestions section
+    yourQuestionsTitle: 'Eure eingereichten Fragen',
+    noQuestions: 'Keine Fragen gefunden.',
+    errorQuestions: 'Fehler beim Laden der Fragen: ',
+    user: 'Gefragt von Nutzer: ',
+    question: 'Frage',
+    answer: 'Antwort',
   }
 }
