@@ -79,7 +79,7 @@ class Backend {
     
     // check if job is a "Home"-Job
     if (this.currentJobData.jobType !== DatabaseService.JobType.HOME) {
-
+      this.scheduleManager.jobFinished();
       // Allow for a new Demo-Job to be queued
       if ("demo" in this.currentJobData) {
         this.demo_job_queued = false;
@@ -146,7 +146,7 @@ class Backend {
     return false
   }
 
-  // pauses a job is possible
+  // pauses a job if possible
   pauseJob(res) {
     if (this.statusManager.runningJob && !this.statusManager.isPaused) {
       // check if job is a seeding job and therefore has to be canceled

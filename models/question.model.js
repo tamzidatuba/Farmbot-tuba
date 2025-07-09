@@ -13,6 +13,7 @@ mongoose.connect(connectionString)
 
 export const  askQuestionSchema = new mongoose.Schema(
     {
+        user: String,
         question : String,
         answer: String,
     }
@@ -21,9 +22,9 @@ export const  askQuestionSchema = new mongoose.Schema(
 
 const questionModel = mongoose.model('questions', askQuestionSchema);
 
-async function InsertQuestionsToDB(question, answer)
+async function InsertQuestionsToDB(user, question, answer)
 {
-    let question1  = await questionModel.create({question: question, answer: answer});
+    let question1  = await questionModel.create({user:user,question: question, answer: answer});
     return question1;
 }
 
@@ -39,10 +40,19 @@ async function FetchAllQuestionsFromDB()
     return questions;
 }
 
+async function InsertAnswersIntoDB(question,answer)
+{
+    let recieved_answer = await questionModel.findOneAndUpdate(
+        {"question":question},
+        {$set:{"answer":answer}},
+        {new:true}
+    );
+    return recieved_answer;
+}
+
 export default{
     InsertQuestionsToDB,
     FetchAllQuestionsFromDB,
     FetchSpecificQuestionsFromDB,
+    InsertAnswersIntoDB,
 }
-
-//await InsertQuestionsToDB("alagammai0007@gmail.com","How often can the plants be watered through the farmbot?");

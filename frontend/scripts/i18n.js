@@ -65,7 +65,7 @@ export const translations = {
     jobExecuted: 'Job will be executed 🚜',
     //sidebar
     menu: 'FarmBot Menu',
-    task: 'Create Task',
+    task: '➕ Create Task',
     seedingTitle: '🌱 Seeding Job',
     wateringTitle: '💧 Watering Job',
     view: '📋 View Jobs',
@@ -155,6 +155,10 @@ export const translations = {
     user: 'Asked by user: ',
     question: 'Question',
     answer: 'Answer',
+    newQuestion: 'Add New Question',
+    username: 'Enter the user',
+    questionText: 'Enter the question',
+    answerText: 'Enter the answer',
   },
   de: {
     // German translations
@@ -221,7 +225,7 @@ export const translations = {
     jobExecuted: 'Auftrag wird ausgeführt 🚜',
     //sidebar
      menu: 'FarmBot Menü',
-    task: 'Aufgabe erstellen',
+    task: '➕ Aufgabe erstellen',
     seedingTitle: '🌱 Aussaat Auftrag',
     wateringTitle: '💧 Bewässerungs Auftrag',
     plants: 'Pflanzen',
@@ -312,5 +316,9 @@ export const translations = {
     user: 'Gefragt von Nutzer: ',
     question: 'Frage',
     answer: 'Antwort',
+    newQuestion: 'Neue Frage hinzufügen',
+    username: 'Geben Sie den Nutzer ein',
+    questionText: 'Geben Sie die Frage ein',
+    answerText: 'Geben Sie die Antwort ein',
   }
 }

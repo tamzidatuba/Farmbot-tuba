@@ -3,8 +3,10 @@
   --buttons-color: #ae1757;
   --buttons-hover-color: #670e33;
   --elements-color: #195632;
+  --sidebar-font-size: 15px;
 }
 /* 
+## 42 Color Palette:
 Green: #195632,
 Light Blue: #006ba1,
 Dark Blue: #003b5c,
@@ -152,7 +154,7 @@ body {
 }
 
 .menu-item {
-  font-size: 14px;
+  font-size: var(--sidebar-font-size);/*14px;*/
   background-color: var(--buttons-color);
   border-radius: 5px;
   cursor: pointer;
@@ -198,7 +200,7 @@ body {
   border-radius: 5px;
   cursor: pointer;
   width: 100%;
-  font-size: 14px;
+  font-size: var(--sidebar-font-size);/*14px;*/
   text-align: left;
 }
 
@@ -590,6 +592,16 @@ margin-top: 4px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+    }
+
+    .button-small {
+      width: 25%;
+    }
+
+    .button-small-question {
+      width: 25%;
+      display: block;
+      margin: auto;
     }
 
     button:hover {
@@ -1010,7 +1022,6 @@ margin-top: 4px;
   right: 15px;
   font-size: 20px;
   border: none;
-  background: transparent;
   cursor: pointer;
 }
 
