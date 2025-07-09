@@ -7,13 +7,14 @@ app.use(express.json());
 
 // test connection to local database
 mongoose.connect(connectionString)
-.then(() => console.log('MongoDB connected to the Seeding Job Database.'))
-.catch((err) => console.error('MongoDB connection error: to the Seeding Job Database.', err));
+  .then(() => console.log('MongoDB connected to the Seeding Job Database.'))
+  .catch((err) => console.error('MongoDB connection error: to the Seeding Job Database.', err));
 
 
 const seedingJobSchema = new mongoose.Schema({
   jobname: String,
   seeds: [{
+    seedname: String,
     xcoordinate: Number,
     ycoordinate: Number,
     depth: Number,
@@ -28,16 +29,14 @@ async function InsertSeedingJobToDB(jobname, seeds) {
   return true;
 }
 
-async function ReturnSeedingJob(jobname)
-{
-    const job = await seedingJobModel.findOne({"jobname": jobname});
-    if( job !== null && typeof(job) !== "undefined")
-    {
-      return{jobType:"Seeding",job};
-    }
-    else{
-      return null;
-    }
+async function ReturnSeedingJob(jobname) {
+  const job = await seedingJobModel.findOne({ "jobname": jobname });
+  if (job !== null && typeof (job) !== "undefined") {
+    return { jobType: "Seeding", job };
+  }
+  else {
+    return null;
+  }
 }
 
 async function FetchSeedingJobsFromDB() {

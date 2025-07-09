@@ -1,16 +1,24 @@
 import { pixelToCoord, coordToPixel, drawGrid, clearCanvas } from "./canvas.js";
-import { token, isLoggedIn } from "./auth.js";
+import { isLoggedIn } from "./auth.js";
 import { getTranslation } from "./translation.js";
+import { DisplayCreateSeedingJobForTouchedBased } from "./seeding.js";
+import { DisplayCreateWateringJobForTouchBased } from "./watering.js";
+import { GetDistance } from "./tools.js"; // Function to fetch plants
+import { getPlants } from "./plantsmanager.js";
+import { deletePlant } from "./plantsmanager.js";
 
-let selectedPlant = null;
+
+const dialogContent = document.getElementById("dialogContent");
+const dialogBox = document.getElementById("dialogBox");
+const dialogHeader = document.getElementById("dialog-header");
 const canvas = document.getElementById('gridCanvas');
 
-function GetDistance(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-}
+let selectedPlant = null;
+
+
 
 canvas.addEventListener('click', async (e) => {
-  if (isLoggedIn || !isLoggedIn) {
+  if (isLoggedIn) {
     let coordDisplay = pixelToCoord(e.offsetX, e.offsetY);
     let x = coordDisplay.x;
     let y = coordDisplay.y;
@@ -35,127 +43,97 @@ canvas.addEventListener('click', async (e) => {
       y: canvasRect.top + innerCanvasCoordinateInPixel.y
     };
 
+    console.log(`Clicked at (${x}, ${y}) which is at screen position (${positiononscreen.x}, ${positiononscreen.y})`);
+
+    // remove any existing dialogbox
+    dialogBox.style.display = "none"; // Hide the dialog box if it exists
 
 
-    // Remove any existing delete button
-    let oldButton = document.getElementById('tempDeleteBtn');
-    if (oldButton) oldButton.remove();
+    dialogContent.innerHTML = ""; // Clear previous content
+
 
     if (selectedPlant) {
-      const deleteBtn = document.createElement('button');
-      deleteBtn.id = 'tempDeleteBtn';
-      deleteBtn.textContent = 'X';
-      deleteBtn.style.position = 'absolute';
-      deleteBtn.style.left = `${positiononscreen.x}px`;
-      deleteBtn.style.top = `${positiononscreen.y}px`;
-      deleteBtn.style.zIndex = 1000;
-      deleteBtn.style.backgroundColor = 'red';
-      deleteBtn.style.color = 'white';
-      deleteBtn.style.fontSize = '24px';
-      deleteBtn.style.width = '25px';
-      deleteBtn.style.height = '25px';
-      deleteBtn.style.borderRadius = '50%'; // Circle
-      deleteBtn.style.display = 'flex';
-      deleteBtn.style.justifyContent = 'center';
-      deleteBtn.style.alignItems = 'center';
-      deleteBtn.style.cursor = 'pointer';
+      console.log(window.plants);
 
-      deleteBtn.addEventListener('click', async () => {
-        await deletePlant(selectedPlant);
-        deleteBtn.remove();
-      });
+      console.log(selectedPlant);
 
-      document.body.appendChild(deleteBtn);
 
-      // Hide the button when clicking outside of it
-      const outsideClickListener = (event) => {
-        if (!deleteBtn.contains(event.target)) {
-          deleteBtn.remove();
-          document.removeEventListener('click', outsideClickListener);
-        }
-      };
+      dialogHeader.textContent = `${selectedPlant.plantname === undefined ? "" : selectedPlant.plantname}: ${getTranslation(selectedPlant.planttype)} ${getTranslation("at")}  X: ${selectedPlant.xcoordinate}  Y: ${selectedPlant.ycoordinate}`;
 
-      setTimeout(() => {
-        document.addEventListener('click', outsideClickListener);
-      }, 0);
+      AddDeleteButtonToDialogContent();
+      // AddWateringButtonToDialogContent();
+      // DisplayCreateWateringJobForTouchBased(selectedPlant);
+      showDialogOnCanvas(positiononscreen.x, positiononscreen.y);
     }
-    else // show watering emoji
-    {
-      const wateringBtn = document.createElement('button');
-      wateringBtn.id = 'tempWateringBtn';
-      wateringBtn.textContent = '🚿';
-      wateringBtn.style.position = 'absolute';
-      wateringBtn.style.left = `${positiononscreen.x}px`;
-      wateringBtn.style.top = `${positiononscreen.y}px`;
-      wateringBtn.style.zIndex = 1000;
-      wateringBtn.style.backgroundColor = 'white';
-      wateringBtn.style.color = 'white';
-      wateringBtn.style.fontSize = '24px';
-      wateringBtn.style.width = '25px';
-      wateringBtn.style.height = '25px';
-      wateringBtn.style.borderRadius = '50%'; // Circle
-      wateringBtn.style.display = 'flex';
-      wateringBtn.style.justifyContent = 'center';
-      wateringBtn.style.alignItems = 'center';
-      wateringBtn.style.cursor = 'pointer';
-
-      wateringBtn.addEventListener('click', async () => {
-        await deletePlant(selectedPlant);
-        wateringBtn.remove();
-      });
-
-      document.body.appendChild(wateringBtn);
-
-      // Hide the button when clicking outside of it
-      const outsideClickListener = (event) => {
-        if (!wateringBtn.contains(event.target)) {
-          wateringBtn.remove();
-          document.removeEventListener('click', outsideClickListener);
-        }
-      };
-
-      setTimeout(() => {
-        document.addEventListener('click', outsideClickListener);
-      }, 0);
+    else {
+      // DisplayCreateSeedingJobForTouchedBased(x,y);
     }
   }
 });
 
-async function deletePlant(plant) {
-  let xcoordinate = plant.xcoordinate;
-  let ycoordinate = plant.ycoordinate;
-  const res = await fetch('/api/plant', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, xcoordinate, ycoordinate })
-    });
-  const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Delete failed');
-  alert(data.message || 'Plant deleted');
-  clearCanvas();
-  await getPlants();
-  drawGrid();
+function showDialogOnCanvas(x, y) {
+  console.log(`Showing dialog at (${x}, ${y})`);
+
+  // STEP 1: Temporarily make it visible but hidden for measurement
+  dialogBox.style.visibility = "hidden";
+  dialogBox.style.display = "block";
+
+  // STEP 2: Measure size
+  const dialogWidth = dialogBox.offsetWidth;
+  const dialogHeight = dialogBox.offsetHeight;
+  const arrowHeight = 10;
+
+  const offsetX = -dialogWidth / 2;
+  const offsetY = -dialogHeight - arrowHeight;
+
+  // STEP 3: Set position
+  dialogBox.style.left = `${x + offsetX}px`;
+  dialogBox.style.top = `${y + offsetY}px`;
+
+  // STEP 4: Make it fully visible
+  dialogBox.style.visibility = "visible";
+
+
+  // --- OUTSIDE CLICK HANDLER ---
+  const outsideClickListener = (event) => {
+    if (
+      !dialogBox.contains(event.target) &&
+      !canvas.contains(event.target)
+    ) {
+      dialogBox.style.display = "none";
+      document.removeEventListener("click", outsideClickListener);
+    }
+  };
+
+  // Delay listener setup to avoid immediately closing the dialog
+  setTimeout(() => {
+    document.addEventListener("click", outsideClickListener);
+  }, 0);
 }
 
+function AddDeleteButtonToDialogContent() {
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "❌";
 
-async function getPlants() {
-  await fetch('/api/plants', {
-    method: 'GET',
-  })
-    .then(response => response.json())
-    .then(data => {
-        window.plants.length = 0; // Clear the existing plants array
-        for (const plant of data) {
-          window.plants.push(new Plant(plant.planttype, Number(plant.xcoordinate), Number(plant.ycoordinate)));
-        }
-    })
-    .catch(error => console.error('Error fetching plants:', error));
+  deleteButton.addEventListener("click", () => {
+    if (selectedPlant) {
+      deletePlant(selectedPlant.xcoordinate, selectedPlant.ycoordinate);
+    }
+    dialogBox.style.display = "none"; // Hide the dialog after deletion
+  });
+  dialogContent.appendChild(deleteButton);
 }
 
-class Plant {
-  constructor(type, x, y) {
-    this.planttype = type;
-    this.xcoordinate = x;
-    this.ycoordinate = y;
-  }
+function AddWateringButtonToDialogContent() {
+  const wateringButton = document.createElement("button");
+  wateringButton.textContent = "💧";
+
+  wateringButton.addEventListener("click", () => {
+    if (selectedPlant) {
+      DisplayCreateWateringJobForTouchBased(selectedPlant);
+    }
+
+    dialogBox.style.display = "none"; // Hide the dialog after watering
+  });
+  dialogContent.appendChild(wateringButton);
 }

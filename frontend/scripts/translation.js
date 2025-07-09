@@ -4,7 +4,7 @@ import { translations } from "./i18n.js";
 const languageSelector = document.getElementById("languageSelector");
 
 
-function setLanguage(lang=localStorage.getItem("preferredLanguage") || "en") {
+function setLanguage(lang = localStorage.getItem("preferredLanguage") || "en") {
   const elements = document.querySelectorAll("[data-i18n], [data-i18n-title], [data-i18n-placeholder]");
   elements.forEach(el => {
     if (el.dataset.i18n) {
@@ -13,7 +13,7 @@ function setLanguage(lang=localStorage.getItem("preferredLanguage") || "en") {
         el.textContent = translations[lang][key];
       }
     }
-    
+
     if (el.dataset.i18nTitle) {
       const key = el.dataset.i18nTitle;
       if (translations[lang] && translations[lang][key]) {

@@ -7,8 +7,8 @@ app.use(express.json());
 
 // test connection to local database
 mongoose.connect(connectionString)
-.then(() => console.log('MongoDB connected to the Notifications Database.'))
-.catch((err) => console.error('MongoDB connection error: to the Notifications Database.', err));
+  .then(() => console.log('MongoDB connected to the Notifications Database.'))
+  .catch((err) => console.error('MongoDB connection error: to the Notifications Database.', err));
 
 const notificationSchema = new mongoose.Schema({
   notificationtext: String,

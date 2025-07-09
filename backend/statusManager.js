@@ -1,17 +1,4 @@
-/*
-import {getTranslation} from "../frontend/scripts/translation.js";
-const FarmbotStatus = Object.freeze({
-    OFFLINE: getTranslation("offline"),
-    READY: getTranslation("ready"),
-    MOVING: getTranslation("moving"),
-    MOVING_TO_SEEDING_POSITION: getTranslation("movingToSeedingPosition"),
-    MOVING_TO_WATERING_POSITION: getTranslation("movingToWateringPosition"),
-    FETCHING: getTranslation("statusFetching"),
-    SEEDING: getTranslation("statusSeeding"),
-    WATERING: getTranslation("statusWatering"),
-    //PAUSED: 8
-});
-*/
+
 const FarmbotStatus = Object.freeze({
     OFFLINE: "Offline",
     READY: "Ready",
@@ -21,7 +8,6 @@ const FarmbotStatus = Object.freeze({
     FETCHING: "Fetching",
     SEEDING: "Seeding",
     WATERING: "Watering",
-    //PAUSED: 8
 });
 
 
@@ -62,6 +48,8 @@ class StatusManager {
             }
         )
         */
+
+        // OPTIONAL
         farmbot.on("logs",
             function(data, eventName) {
                 console.log("Log:", data);
@@ -81,6 +69,7 @@ class StatusManager {
         )
     }
 
+    // starts a new job
     startJob(newJob) {
         console.log("Starting Job");
         this.currentJob = newJob;
@@ -88,16 +77,18 @@ class StatusManager {
         this._checkNextTask()
     }
 
+    // checks if there is another task to be executed and finishes job if there is no task left
     _checkNextTask() {
-        if (this.currentJob.isJobCompleted()) { // Check if Job is completed
+        // check if job is completed
+        if (this.currentJob.isJobCompleted()) {
             this.status = FarmbotStatus.READY;
             this.runningJob = false
             this.backend.finishJob();
         } else {
-            // Starting the next Task
             this.currentTask = this.currentJob.getNextTask();
+            // set the status to the task-status
             this.status = this.currentTask.status;
-            //console.log("Starting a new Task, Status:", this.status);
+            // Starting the next Task
             this.currentTask.execute(this.farmbot, this.lastState);
         }
 
@@ -107,18 +98,23 @@ class StatusManager {
         return this.status != FarmbotStatus.OFFLINE;
     }
 
+    // Recieves the status of the farmbot and checks if the current task is completed
     _newStatusRecieved(data, eventName) {
         this.lastState = data;
         //console.log("Busy:", data.informational_settings.busy);
         //console.log("Pins:", data.pins);
         if (this.runningJob){
+            // check the condition of the currently running task
             if (this.currentTask.checkCondition(data)) {
+
+                // mark task as finished and check for the next task
                 this.currentJob.taskFinished();
                 this._checkNextTask();
             }
         }
     }
 
+    // pauses the currently running job
     async pauseJob() {
         if(this.is_pausing) return
         
@@ -130,6 +126,7 @@ class StatusManager {
         if(this.wants_to_resume) this.continueJob();
     }
 
+    // continues the paused job
     continueJob() {
         if(this.is_pausing) {
             this.wants_to_resume = true;
@@ -141,6 +138,7 @@ class StatusManager {
         this.currentTask.continueTask(this.farmbot, this.lastState);
     }
 
+    // Cancels the currently running job
     cancelJob() {
         this.pauseJob();
         this.isPaused = false;

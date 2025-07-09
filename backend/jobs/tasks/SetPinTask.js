@@ -20,10 +20,12 @@ class SetPinTask extends Task {
     checkCondition(state) {
         return this.executionFinished;
         // TODO check if actual farmbot pin_id in state data
-        if (this.pinArgs.pin_number.args.pin_id in state.pins) {
+        // pin_id doesnt work for fake-farmobt. Too lazy to check for actual farmbot
+        /*if (this.pinArgs.pin_number.args.pin_id in state.pins) {
             return state.pins[this.pinNumber].value == this.value;
         }
         return false;
+        */
     }
 
     async execute(farmbot, lastState) {

@@ -1,7 +1,7 @@
-import { token,isLoggedIn } from "./auth.js";
-import { Plant } from "../script.js";
+import { token, isLoggedIn } from "./auth.js";
 import { getTranslation } from "./translation.js";
 import { languageSelector } from "./translation.js";
+import { updateGrid, setbotposition } from "./canvas.js";
 
 let maxHistoryEntries = 10;
 // button for max history entries
@@ -24,84 +24,86 @@ const historyBox = document.getElementById('notification-history');
 // Update robot status, notifications and execution
 export async function updateRobot() {
   //updateStatus();//change this to actually get status
-  await fetch('/api/frontendData', {method: 'GET',
+  await fetch('/api/frontendData', {
+    method: 'GET',
   })
-  .then(response => response.json())
-  .then(data => {
-    // Update robot Status
-    statusBox.textContent = getTranslation("status") + getTranslation(data.status.replace(/\s/g, '').toLowerCase());
-    // Update Status History
-    var temp = historyList.slice().reverse();
-    if (temp.toString() != data.notifications.toString()) {
-      // Clear the current status history
-      while (statusHistory.children.length > 1) {
-        statusHistory.removeChild(statusHistory.lastChild);
-      }
-      // Add new entries to the status history
-      for (const status in data.notifications.reverse()) {  
-        if (statusHistory.children.length < maxHistoryEntries + 1) {
-          const entry = document.createElement('div');
-          console.log("Status:", data.notifications[status].key.replace(/\s/g, ''))
-          var textInput = data.notifications[status].date +" " + getTranslation(data.notifications[status].key.replace(/\s/g, ''))  + " , " + getTranslation("jobname") + data.notifications[status].jobname;
-          entry.textContent = textInput;
-          statusHistory.appendChild(entry);
+    .then(response => response.json())
+    .then(data => {
+      setbotposition(data.farmbotPosition);
+      // Update robot Status
+      statusBox.textContent = getTranslation("status") + getTranslation(data.status.replace(/\s/g, '').toLowerCase());
+      // Update Status History
+      var temp = historyList.slice().reverse();
+      if (temp.toString() != data.notifications.toString()) {
+        // Clear the current status history
+        while (statusHistory.children.length > 1) {
+          statusHistory.removeChild(statusHistory.lastChild);
         }
-      }
-      historyList = data.notifications;
-      for (let note of data.notifications) {
-        if (note.key.toLowerCase() === 'queued') {
-          const row = document.querySelector(
-            `#jobsList .job-row[data-jobname="${note.jobname}"]`
-          );
-          if (row) {
-            row.remove();
-            const remaining = document
-              .querySelectorAll('#jobsList .job-row')
-              .length;
-            document.getElementById('jobCountDisplay').textContent =
-              `${getTranslation('seedingSoFar')}${remaining}`;
+        // Add new entries to the status history
+        for (const status in data.notifications.reverse()) {
+          if (statusHistory.children.length < maxHistoryEntries + 1) {
+            const entry = document.createElement('div');
+            console.log("Status:", data.notifications[status].key.replace(/\s/g, ''))
+            var textInput = data.notifications[status].date + " " + getTranslation(data.notifications[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + data.notifications[status].jobname;
+            entry.textContent = textInput;
+            statusHistory.appendChild(entry);
           }
         }
-      }
-      
-    }
-    
-    // Update Pause Button visibility
-    const pauseBtn = document.getElementById('pauseJobBtn');
-    if (!isLoggedIn) {
-      // always hidden if  not logged in
-      pauseBtn.style.display = 'none';
-    } else {
-      // otherwise show/hide per the robot status
-      pauseBtn.style.display =
-        data.status === 'Ready' || data.status === 'Offline'
-          ? 'none'
-          : 'inline-block';
-    }
-    // Update button text depending on paused state
-    pauseBtn.textContent = data.paused ? '▶' : '⏸';
+        historyList = data.notifications;
+        for (let note of data.notifications) {
+          if (note.key.toLowerCase() === 'queued') {
+            const row = document.querySelector(
+              `#jobsList .job-row[data-jobname="${note.jobname}"]`
+            );
+            if (row) {
+              row.remove();
+              const remaining = document
+                .querySelectorAll('#jobsList .job-row')
+                .length;
+              document.getElementById('jobCountDisplay').textContent =
+                `${getTranslation('seedingSoFar')}${remaining}`;
+            }
+          }
+        }
 
-    //Update plants
-    if (!(arraysEqual(window.plants, removeId(data.plants)))) {
-    //if (plants.toString() != data.toString()) {
-      window.plants.length = 0; // clear it
-      for (const plant of data.plants) {
-        window.plants.push(new Plant(plant.planttype, Number(plant.xcoordinate), Number(plant.ycoordinate)));
       }
-    }
+
+      // Update Pause Button visibility
+      const pauseBtn = document.getElementById('pauseJobBtn');
+      if (!isLoggedIn) {
+        // always hidden if  not logged in
+        pauseBtn.style.display = 'none';
+      } else {
+        // otherwise show/hide per the robot status
+        pauseBtn.style.display =
+          data.status === 'Ready' || data.status === 'Offline'
+            ? 'none'
+            : 'inline-block';
+      }
+      // Update button text depending on paused state
+      pauseBtn.textContent = data.paused ? '▶' : '⏸';
+
+      //Update plants
+      if (!(arraysEqual(window.plants, removeId(data.plants)))) {
+        //if (plants.toString() != data.toString()) {
+        window.plants.length = 0; // clear it
+        for (const plant of data.plants) {
+          window.plants.push({ plantname: plant.plantname, planttype: plant.planttype, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate });
+        }
+      }
     })
     .catch(err => {
       console.error("Failed to fetch frontend data:", err);
       pauseBtn.style.display = 'none'; // hide on error
     });
-    //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    //drawGrid();
-  }
+  //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  updateGrid(); // Update the grid on the canvas
+}
 
-  function removeId(obj) {
-    const { _id, ...rest } = obj;
-    return rest;
-  }
+function removeId(obj) {
+  const { _id, ...rest } = obj;
+  return rest;
+}
 
 function arraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) return false;
@@ -115,7 +117,7 @@ function arraysEqual(arr1, arr2) {
 }
 
 
-  entryLimitSelect.addEventListener('change', () => {
+entryLimitSelect.addEventListener('change', () => {
   if (maxHistoryEntries < parseInt(entryLimitSelect.value)) {
     maxHistoryEntries = parseInt(entryLimitSelect.value);
     // Clear the current status history
@@ -123,10 +125,10 @@ function arraysEqual(arr1, arr2) {
       statusHistory.removeChild(statusHistory.lastChild);
     }
     // Add new entries to the status history
-    for (const status in historyList) {  
+    for (const status in historyList) {
       if (statusHistory.children.length < maxHistoryEntries + 1) {
         const entry = document.createElement('div');
-        var textInput = historyList[status].date +" " + getTranslation(historyList[status].key.replace(/\s/g, ''))  + " , " + getTranslation("jobname") + historyList[status].jobname;
+        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
         entry.textContent = textInput;
         statusHistory.appendChild(entry);
       }
@@ -137,30 +139,30 @@ function arraysEqual(arr1, arr2) {
       statusHistory.removeChild(statusHistory.lastChild);
     }
     // Add new entries to the status history
-    for (const status in historyList) {  
+    for (const status in historyList) {
       if (statusHistory.children.length < maxHistoryEntries + 1) {
         const entry = document.createElement('div');
-        var textInput = historyList[status].date +" " + getTranslation(historyList[status].key.replace(/\s/g, ''))  + " , " + getTranslation("jobname") + historyList[status].jobname;
+        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
         entry.textContent = textInput;
         statusHistory.appendChild(entry);
       }
     }
-  }  
+  }
 });
 
 function translateHistory() {
   while (statusHistory.children.length > 1) {
-      statusHistory.removeChild(statusHistory.lastChild);
+    statusHistory.removeChild(statusHistory.lastChild);
+  }
+  // Add new entries to the status history
+  for (const status in historyList) {
+    if (statusHistory.children.length < maxHistoryEntries + 1) {
+      const entry = document.createElement('div');
+      var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
+      entry.textContent = textInput;
+      statusHistory.appendChild(entry);
     }
-    // Add new entries to the status history
-    for (const status in historyList) {  
-      if (statusHistory.children.length < maxHistoryEntries + 1) {
-        const entry = document.createElement('div');
-        var textInput = historyList[status].date +" " + getTranslation(historyList[status].key.replace(/\s/g, ''))  + " , " + getTranslation("jobname") + historyList[status].jobname;
-        entry.textContent = textInput;
-        statusHistory.appendChild(entry);
-      }
-    }
+  }
 }
 
 languageSelector.addEventListener('change', () => {
@@ -179,7 +181,7 @@ pauseBtn.addEventListener('click', async () => {
     });
     const data = await res.json();
 
-    if (res.status === 200) {
+    if (res.ok) {
       if (data.message && data.message.includes('No job')) {
         showError(data.message); // 👈 Show user-friendly error
       } else {

@@ -2,34 +2,36 @@
 
 import { token } from "./auth.js";
 import { setLanguage, getTranslation } from "./translation.js";
+import { customAlert } from "./popups.js";
+import { customConfirm } from "./popups.js";
 
 
 // ——— DOM References ———
 // Create modal
-const seedingJobBtn   = document.getElementById('seedingJobBtn');
-const createModal     = document.getElementById('seedingModal');
+const seedingJobBtn = document.getElementById('seedingJobBtn');
+const createModal = document.getElementById('seedingModal');
 const createNameInput = document.getElementById('SeedingJobName');
 const createNameError = document.getElementById('jobNameError');
-const jobContainer    = document.getElementById('jobContainer');
-const addPlantBtn     = document.getElementById('addPlantBtn');
-const executeBtn      = document.getElementById('executeBtn');
-const closeCreateBtn  = document.getElementById('closeModal');
+const jobContainer = document.getElementById('jobContainer');
+const addPlantBtn = document.getElementById('addPlantBtn');
+const executeBtn = document.getElementById('executeBtn');
+const closeCreateBtn = document.getElementById('closeModal');
 
 // Modify modal
-const modifyModal         = document.getElementById('modifySeedingModal');
-const closeModifyBtn      = document.getElementById('closeModifyModal');
-const modifyNameInput     = document.getElementById('modifySeedingJobName');
-const modifyNameError     = document.getElementById('modifyJobNameError');
-const modifyJobContainer  = document.getElementById('modifyJobContainer');
-const modifyAddPlantBtn   = document.getElementById('modifyAddPlantBtn');
-const modifyExecuteBtn    = document.getElementById('modifyExecuteBtn');
+const modifyModal = document.getElementById('modifySeedingModal');
+const closeModifyBtn = document.getElementById('closeModifyModal');
+const modifyNameInput = document.getElementById('modifySeedingJobName');
+const modifyNameError = document.getElementById('modifyJobNameError');
+const modifyJobContainer = document.getElementById('modifyJobContainer');
+const modifyAddPlantBtn = document.getElementById('modifyAddPlantBtn');
+const modifyExecuteBtn = document.getElementById('modifyExecuteBtn');
 
 // View‐jobs modal
-const viewJobsBtn         = document.getElementById('viewSeedingJobsBtn');
-const viewJobsModal       = document.getElementById('viewJobsModal');
-const jobsList            = document.getElementById('jobsList');
-const jobCountDisplay     = document.getElementById('jobCountDisplay');
-const closeViewJobsBtn    = document.getElementById('closeViewJobsModal');
+const viewJobsBtn = document.getElementById('viewSeedingJobsBtn');
+const viewJobsModal = document.getElementById('viewJobsModal');
+const jobsList = document.getElementById('jobsList');
+const jobCountDisplay = document.getElementById('jobCountDisplay');
+const closeViewJobsBtn = document.getElementById('closeViewJobsModal');
 
 
 // ——— State Counters ———
@@ -62,6 +64,7 @@ function createJobRow() {
         <option data-i18n="radish" value="Radish">Radish</option>
         <option data-i18n="lettuce" value="Lettuce">Lettuce</option>
       </select>
+      <input type="text" data-i18n-placeholder="plantName" class="plantName" placeholder="Plant Name">
     </div>
     <div class="coord-row">
       <div>
@@ -82,15 +85,15 @@ function createJobRow() {
 
   // depth logic
   const plantSelect = row.querySelector('.plantType');
-  const depthInput  = row.querySelector('.depth');
-  const deleteBtn   = row.querySelector('.delete-job');
+  const depthInput = row.querySelector('.depth');
+  const deleteBtn = row.querySelector('.delete-job');
 
   plantSelect.addEventListener('change', () => {
     const t = plantSelect.value.toLowerCase();
     depthInput.value =
-      t === 'tomato'  ? 6 :
-      t === 'lettuce' ? 3 :
-      t === 'radish'  ? 10 : '';
+      t === 'tomato' ? 6 :
+        t === 'lettuce' ? 3 :
+          t === 'radish' ? 10 : '';
   });
 
   deleteBtn.addEventListener('click', () => row.remove());
@@ -116,6 +119,9 @@ function createModifyJobRow() {
         <option data-i18n="radish" value="Radish">Radish</option>
         <option data-i18n="lettuce" value="Lettuce">Lettuce</option>
       </select>
+      <div>
+        <input type="text" data-i18n-placeholder="plantName" class="plantName" placeholder="Plant Name">
+      </div>
     </div>
     <div class="coord-row">
       <div>
@@ -135,15 +141,15 @@ function createModifyJobRow() {
   `;
 
   const plantSelect = row.querySelector('.plantType');
-  const depthInput  = row.querySelector('.depth');
-  const deleteBtn   = row.querySelector('.delete-job');
+  const depthInput = row.querySelector('.depth');
+  const deleteBtn = row.querySelector('.delete-job');
 
   plantSelect.addEventListener('change', () => {
     const t = plantSelect.value.toLowerCase();
     depthInput.value =
-      t === 'tomato'  ? 6 :
-      t === 'lettuce' ? 3 :
-      t === 'radish'  ? 10 : '';
+      t === 'tomato' ? 6 :
+        t === 'lettuce' ? 3 :
+          t === 'radish' ? 10 : '';
   });
 
   deleteBtn.addEventListener('click', () => row.remove());
@@ -151,18 +157,10 @@ function createModifyJobRow() {
   setLanguage(document.documentElement.lang);
 }
 
+
 // ——— Create‐Modal Event Listeners ———
 seedingJobBtn.addEventListener('click', () => {
-  // Reset
-  createJobCount = 0;
-  jobContainer.innerHTML = '';
-  createNameError.textContent = '';
-  createNameInput.value = '';
-  createNameInput.disabled = false;
-
-  // initial row
-  createJobRow();
-  createModal.style.display = 'block';
+  DisplayCreateSeedingJob();
 });
 
 addPlantBtn.addEventListener('click', createJobRow);
@@ -176,19 +174,23 @@ executeBtn.addEventListener('click', async () => {
 
   rows.forEach(row => {
     const plant = row.querySelector('.plantType').value.toLowerCase();
-    const x     = Number(row.querySelector('.xCoord').value);
-    const y     = Number(row.querySelector('.yCoord').value);
+    const plantName = row.querySelector('.plantName').value.trim();
+    const x = Number(row.querySelector('.xCoord').value);
+    const y = Number(row.querySelector('.yCoord').value);
     const depth = Number(row.querySelector('.depth').value);
-    const key   = `${x},${y}`;
-    const err   = row.querySelector('.errorMsg');
+    const key = `${x},${y}`;
+    const err = row.querySelector('.errorMsg');
     err.textContent = '';
 
-    if (!plant || isNaN(x) || isNaN(y) || seen.has(key)) {
+    if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650) {
       err.textContent = getTranslation('correctValues');
+      valid = false;
+    } else if (seen.has(key)) {
+      err.textContent = getTranslation("duplicates");
       valid = false;
     } else {
       seen.add(key);
-      seeds.push({ seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
+      seeds.push({ seedname: plantName, seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
     }
   });
 
@@ -204,7 +206,7 @@ executeBtn.addEventListener('click', async () => {
   }
   if (!valid) return;
   if (seeds.length === 0) {
-    alert(getTranslation('noPlant'));
+    customAlert(getTranslation('noPlant'));
     return;
   }
 
@@ -217,10 +219,10 @@ executeBtn.addEventListener('click', async () => {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || getTranslation('createFail'));
-    alert(getTranslation('seedingcreated'));
+    customAlert(getTranslation('seedingcreated'));
     createModal.style.display = 'none';
   } catch (e) {
-    alert(getTranslation('error') + e.message);
+    customAlert(getTranslation('error') + e.message);
   }
 });
 
@@ -244,11 +246,12 @@ modifyExecuteBtn.addEventListener('click', async () => {
 
   rows.forEach(row => {
     const plant = row.querySelector('.plantType').value.toLowerCase();
-    const x     = Number(row.querySelector('.xCoord').value);
-    const y     = Number(row.querySelector('.yCoord').value);
+    const plantName = row.querySelector('.plantName').value.trim();
+    const x = Number(row.querySelector('.xCoord').value);
+    const y = Number(row.querySelector('.yCoord').value);
     const depth = Number(row.querySelector('.depth').value);
-    const key   = `${x},${y}`;
-    const err   = row.querySelector('.errorMsg');
+    const key = `${x},${y}`;
+    const err = row.querySelector('.errorMsg');
     err.textContent = '';
 
     if (!plant || isNaN(x) || isNaN(y) || seen.has(key)) {
@@ -256,7 +259,7 @@ modifyExecuteBtn.addEventListener('click', async () => {
       valid = false;
     } else {
       seen.add(key);
-      seeds.push({ seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
+      seeds.push({ seedname: plantName, seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
     }
   });
 
@@ -272,16 +275,16 @@ modifyExecuteBtn.addEventListener('click', async () => {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    alert(getTranslation('seedingUpdated'));
+    customAlert(getTranslation('seedingUpdated'));
     modifyModal.style.display = 'none';
   } catch (e) {
-    alert(getTranslation('error') + e.message);
+    customAlert(getTranslation('error') + e.message);
   }
 });
 
 closeModifyBtn.addEventListener('click', () => {
   modifyModal.style.display = 'none';
-  viewJobsModal.style.display='block';
+  viewJobsModal.style.display = 'block';
 });
 
 window.addEventListener('click', e => {
@@ -290,12 +293,12 @@ window.addEventListener('click', e => {
 
 // ——— View‐Jobs Logic ———
 viewJobsBtn.addEventListener('click', async () => {
-  jobsList.innerHTML       = getTranslation('loadingJobs');
+  jobsList.innerHTML = getTranslation('loadingJobs');
   jobCountDisplay.textContent = '';
   viewJobsModal.style.display = 'block';
 
   try {
-    const res  = await fetch('/api/jobs/Seeding');
+    const res = await fetch('/api/jobs/Seeding');
     const jobs = await res.json();
     jobCountDisplay.textContent = `${getTranslation('seedingSoFar')}${jobs.length}`;
 
@@ -325,7 +328,7 @@ viewJobsBtn.addEventListener('click', async () => {
       // Edit
       div.querySelector('.edit-job-btn').addEventListener('click', () => {
         // prepare and show modify modal
-        modifyNameInput.value       = job.jobname;
+        modifyNameInput.value = job.jobname;
         modifyNameError.textContent = '';
         modifyJobContainer.innerHTML = '';
         modifyJobCount = 0;
@@ -333,17 +336,20 @@ viewJobsBtn.addEventListener('click', async () => {
           createModifyJobRow();
           const row = modifyJobContainer.lastChild;
           row.querySelector('.plantType').value = capitalizeFirstLetter(seed.seedtype);
-          row.querySelector('.xCoord').value    = seed.xcoordinate;
-          row.querySelector('.yCoord').value    = seed.ycoordinate;
-          row.querySelector('.depth').value     = seed.depth;
+          row.querySelector('.plantName').value = seed.seedname || '';
+          row.querySelector('.xCoord').value = seed.xcoordinate;
+          row.querySelector('.yCoord').value = seed.ycoordinate;
+          row.querySelector('.depth').value = seed.depth;
         });
         viewJobsModal.style.display = 'none';
-        modifyModal.style.display   = 'block';
+        modifyModal.style.display = 'block';
       });
 
       // Delete
       div.querySelector('.delete-job-btn').addEventListener('click', async () => {
-        if (!confirm(getTranslation('deleteConfirm') + job.jobname)) return;
+        //if (!confirm(getTranslation('deleteConfirm') + job.jobname)) return;
+        const confirmed = await customConfirm(getTranslation('deleteConfirm') + job.jobname + '?');
+        if (!confirmed) return;
         try {
           const res2 = await fetch(`/api/jobs/Seeding/${encodeURIComponent(job.jobname)}`, {
             method: 'DELETE',
@@ -351,20 +357,22 @@ viewJobsBtn.addEventListener('click', async () => {
             body: JSON.stringify({ token })
           });
           const json2 = await (res2.headers.get('content-type')?.includes('application/json')
-                                ? res2.json()
-                                : Promise.reject(await res2.text()));
+            ? res2.json()
+            : Promise.reject(await res2.text()));
           if (!res2.ok) throw new Error(json2.error || json2.message);
-          alert(getTranslation('jobDeleted'));
+          customAlert(getTranslation('jobDeleted'));
           viewJobsBtn.click();
         } catch (e) {
-          alert(getTranslation('error') + e.message);
+          customAlert(getTranslation('error') + e.message);
         }
       });
 
       // Execute
-   
+
       div.querySelector('.execute-job-btnseed').addEventListener('click', async () => {
-        if (!confirm(getTranslation('executeConfirm') + job.jobname + '?')) return;
+        //if (!confirm(getTranslation('executeConfirm') + job.jobname + '?')) return;
+        const confirmed = await customConfirm(getTranslation('executeConfirm') + job.jobname + '?');
+        if (!confirmed) return;
         try {
           const res3 = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
             method: 'PUT',
@@ -376,14 +384,14 @@ viewJobsBtn.addEventListener('click', async () => {
           if (contentType.includes('application/json')) {
             const json3 = await res3.json();
             msg = res3.ok
-              ? `✅ ${json3.message || getTranslation('queueSuccess')}`
+              ? `✅ ${getTranslation('queueSuccess')}`
               : `❌ ${json3.error || getTranslation('queueFail')}`;
           } else {
             msg = getTranslation('unexpectedResponse') + await res3.text();
           }
-          alert(msg);
+          customAlert(msg);
         } catch (e) {
-          alert(getTranslation('networkError'));
+          customAlert(getTranslation('networkError'));
         }
       });
     });
@@ -400,6 +408,23 @@ window.addEventListener('click', e => {
   if (e.target === viewJobsModal) viewJobsModal.style.display = 'none';
 });
 
+function DisplayCreateSeedingJob() {
+  // Reset
+  createJobCount = 0;
+  jobContainer.innerHTML = '';
+  createNameError.textContent = '';
+  createNameInput.value = '';
+  createNameInput.disabled = false;
+
+  // initial row
+  createJobRow();
+  createModal.style.display = 'block';
+}
 
 
-
+export function DisplayCreateSeedingJobForTouchedBased(x, y) {
+  DisplayCreateSeedingJob();
+  const rows = jobContainer.querySelectorAll('.job-row');
+  rows[0].querySelector('.xCoord').value = x;
+  rows[0].querySelector('.yCoord').value = y;
+}

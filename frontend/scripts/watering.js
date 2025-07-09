@@ -1,7 +1,6 @@
 import { token } from "./auth.js";
 import { getTranslation } from "./translation.js";
-import { setLanguage } from "./translation.js";
-import { Plant } from "../script.js";
+import { customAlert, customConfirm } from "./popups.js";
 
 const modalWatering = document.getElementById('wateringModal');
 const closeModalWatering = document.getElementById('closeModalWatering');
@@ -10,7 +9,6 @@ const wateringJobBtn = document.getElementById('wateringJobBtn');
 let isEditMode = false;
 const jobContainerWatering = document.getElementById('jobContainerWatering');
 let jobCountWatering = 0;
-let plants = window.plants || []; // Ensure plants is initialized
 const scheduleFields = document.getElementById("scheduleFields");
 const scheduleRadios = document.querySelectorAll('input[name="scheduleOption"]');
 scheduleRadios.item(1).checked = true; // Default to "Not Scheduled""
@@ -22,6 +20,9 @@ const jobCountDisplayWatering = document.getElementById('jobCountDisplayWatering
 const executeBtnWatering = document.getElementById('executeBtnWatering');
 const closeViewJobsModalWatering = document.getElementById('closeViewJobsModalWatering');
 
+const TOMATO_WATERING_HEIGHT = 40; // Default height for tomatoes
+const RADISH_WATERING_HEIGHT = 5; // Default height for radishes
+const LETTUCE_WATERING_HEIGHT = 30; // Default height for lettuce
 
 
 function createJobRowWatering(jobData = null) {
@@ -44,7 +45,7 @@ function createJobRowWatering(jobData = null) {
       </div>
       <div>
         <label data-i18n="height">${getTranslation("height")}</label>
-        <input type="number" class="coord-input zCoord" placeholder="5 - 100">
+        <input id="watering-height" type="number" class="coord-input zCoord" placeholder="5 - 100">
       </div>
     </div>
     <div class="errorMsg"></div>
@@ -55,6 +56,8 @@ function createJobRowWatering(jobData = null) {
     row.remove();
   });
 
+
+
   // integrate plant selection
   // default text
   const select = row.querySelector('.plant-select');
@@ -64,15 +67,38 @@ function createJobRowWatering(jobData = null) {
   defaultOption.textContent = getTranslation("selectDefault");
   select.appendChild(defaultOption);
 
+  const wateringHeightInput = row.querySelector('#watering-height');
+
+  select.addEventListener('change', (event) => {
+    const selectedOption = select.options[select.selectedIndex];
+    const plantType = selectedOption.dataset.type;
+
+    switch (plantType) {
+      case 'tomato':
+        wateringHeightInput.value = TOMATO_WATERING_HEIGHT;
+        break;
+      case 'radish':
+        wateringHeightInput.value = RADISH_WATERING_HEIGHT;
+        break;
+      case 'lettuce':
+        wateringHeightInput.value = LETTUCE_WATERING_HEIGHT;
+        break;
+      default:
+        wateringHeightInput.value = '';
+        break;
+    }
+  });
+
 
   // actual plants
   window.plants.forEach(plant => {
     const option = document.createElement('option');
     option.value = { plant: plant }; // value is the plant
-    option.textContent = `${translatePlantType(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+    option.textContent = `${plant.plantname}: ${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
     option.dataset.x = plant.xcoordinate;
     option.dataset.y = plant.ycoordinate;
     option.dataset.type = plant.planttype;
+    option.dataset.name = plant.plantname || ''; // Add plant name for reference
 
     // Preselect if matching
     if (jobData && jobData.plant.xcoordinate == plant.xcoordinate && jobData.plant.ycoordinate == plant.ycoordinate) {
@@ -92,39 +118,12 @@ function createJobRowWatering(jobData = null) {
   //setLanguage(document.documentElement.lang);
 }
 
-function translatePlantType(plantType) {
-  switch (plantType) {
-    case 'tomato':
-      return getTranslation('tomato');
-    case 'radish':
-      return getTranslation('radish');
-    case 'lettuce':
-      return getTranslation('lettuce');
-    default:
-      return plantType; // Fallback to original if no translation found
-  }
-}
-
-
 addPlantBtnWatering.addEventListener('click', () => {
   createJobRowWatering();
 });
 
 wateringJobBtn.addEventListener('click', async () => {
-  // Reset to creation mode
-  isEditMode = false;
-  scheduleRadios.item(1).checked = true;
-  scheduleFields.style.display = "none";
-
-  document.getElementById('modalTitleWatering').textContent = getTranslation('wateringJob');
-  document.getElementById('executeBtnWatering').textContent = getTranslation('createAndSave');
-  document.getElementById('WateringJobName').value = '';
-  document.getElementById('WateringJobName').disabled = false;
-
-  jobContainerWatering.innerHTML = '';
-  modalWatering.style.display = 'block';
-  jobCountWatering = 0;
-  createJobRowWatering(); // Add first row by default
+  DisplayCreateWatering();
 });
 
 
@@ -163,7 +162,6 @@ executeBtnWatering.addEventListener('click', async () => {
   const plantstobewatered = [];
   const seenCoordinates = new Set();
 
-  console.log(jobRows.length);
   for (const row of jobRows) {
     const inputs = row.querySelectorAll('input, select, textarea');
     const hasValue = Array.from(inputs).some(input => input.value.trim() !== '');
@@ -176,12 +174,11 @@ executeBtnWatering.addEventListener('click', async () => {
       const x = selectedOption.dataset.x;
       const y = selectedOption.dataset.y;
       const type = selectedOption.dataset.type;
+      const name = selectedOption.dataset.name;
       errorMsg.textContent = '';
 
       const coordKey = `${x},${y}`;
 
-      console.log("Selected Plant:", selectedOption.value);
-      console.log("Selected Plant 2:", selectedOption.dataset);
       if (!plant || isNaN(z) || isNaN(watering) || z < 5 || z > 100 || watering < 2 || watering > 200) {
         errorMsg.textContent = getTranslation("fillValues");
         isValid = false;
@@ -193,8 +190,8 @@ executeBtnWatering.addEventListener('click', async () => {
         isValid = false;
       } else {
         seenCoordinates.add(coordKey);
-        plantstobewatered.push({ plant: { planttype: type, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
-        const newPlant = new Plant(Number(x), Number(y), type);
+        plantstobewatered.push({ plant: { planttype: type, plantname: name, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
+        const newPlant = { planttype: type, plantname: name, xcoordinate: x, ycoordinate: y };
         results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
       }
     }
@@ -241,7 +238,7 @@ executeBtnWatering.addEventListener('click', async () => {
   }
 
   if (plantstobewatered.length === 0) {
-    alert(getTranslation("noPlant"));
+    customAlert(getTranslation("noPlant"));
     return;
   }
 
@@ -258,7 +255,7 @@ executeBtnWatering.addEventListener('click', async () => {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || getTranslation("updateFail"));
-      alert(getTranslation("wateringUpdated"));
+      customAlert(getTranslation("wateringUpdated"));
     } else {
       // ➕ CREATE mode
       const response = await fetch('/api/jobs/Watering', {
@@ -268,7 +265,7 @@ executeBtnWatering.addEventListener('click', async () => {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || getTranslation("createFail"));
-      alert(getTranslation("wateringcreated"));
+      customAlert(getTranslation("wateringcreated"));
     }
 
     modalWatering.style.display = 'none';
@@ -278,7 +275,7 @@ executeBtnWatering.addEventListener('click', async () => {
 
   } catch (err) {
     console.error(err);
-    alert("❌ Error: " + err.message);
+    customAlert("❌ Error: " + err.message);
   }
 });
 
@@ -333,7 +330,7 @@ function editWateringJob(job) {
 
 //VIEW WATERING JOBS BUTTON LOGIC
 viewJobsBtnWatering.addEventListener('click', async () => {
-  jobsListWatering.innerHTML =getTranslation('loadingJobs');
+  jobsListWatering.innerHTML = getTranslation('loadingJobs');
   jobCountDisplayWatering.textContent = '';
   viewJobsModalWatering.style.display = 'block';
 
@@ -372,7 +369,8 @@ viewJobsBtnWatering.addEventListener('click', async () => {
 
         // new delete logic
         jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
-          if (confirm(getTranslation("deleteConfirm") +job.jobname)) {
+          const confirm = await customConfirm(getTranslation("deleteConfirm") + `${job.jobname}?`);
+          if (confirm) {
             try {
               const res = await fetch(`/api/jobs/Watering/${job.jobname}`, {
                 method: 'DELETE',
@@ -384,7 +382,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
               if (contentType && contentType.includes("application/json")) {
                 const result = await res.json();
                 if (!res.ok) throw new Error(result.error);
-                alert(getTranslation("jobDeleted"));
+                customAlert(getTranslation("jobDeleted"));
                 viewJobsBtnWatering.click();
               } else {
                 const errorText = await res.text();
@@ -392,7 +390,7 @@ viewJobsBtnWatering.addEventListener('click', async () => {
               }
             } catch (err) {
               console.error(err);
-              alert(getTranslation("deleteError") + err.message);
+              customAlert(getTranslation("deleteError") + err.message);
             }
 
           }
@@ -400,7 +398,8 @@ viewJobsBtnWatering.addEventListener('click', async () => {
 
         // optional placeholder for future Execute
         jobDiv.querySelector('.execute-job-btn').addEventListener('click', async () => {
-          if (confirm(getTranslation("executeConfirm") + `${job.jobname}`)) {
+          const confirm = await customConfirm(getTranslation("executeConfirm") + `${job.jobname}?`);
+          if (confirm) {
             try {
 
               const res = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
@@ -428,10 +427,10 @@ viewJobsBtnWatering.addEventListener('click', async () => {
                 message = getTranslation("unexpectedResponse") + "${text}";
               }
 
-              alert(message);
+              customAlert(message);
             } catch (err) {
               console.error(getTranslation("executeFail"), err);
-              alert(getTranslation("networkError"));
+              customAlert(getTranslation("networkError"));
             }
           }
         });
@@ -448,6 +447,35 @@ closeViewJobsModalWatering.addEventListener('click', () => {
   viewJobsModalWatering.style.display = 'none';
 });
 
+
+function DisplayCreateWatering() {
+  // Reset to creation mode
+  isEditMode = false;
+  scheduleRadios.item(1).checked = true;
+  scheduleFields.style.display = "none";
+
+  document.getElementById('modalTitleWatering').textContent = getTranslation('wateringJob');
+  document.getElementById('executeBtnWatering').textContent = getTranslation('createAndSave');
+  document.getElementById('WateringJobName').value = '';
+  document.getElementById('WateringJobName').disabled = false;
+
+  jobContainerWatering.innerHTML = '';
+  modalWatering.style.display = 'block';
+  jobCountWatering = 0;
+  createJobRowWatering(); // Add first row by default
+}
+
+export function DisplayCreateWateringJobForTouchBased(plant) {
+  DisplayCreateWatering();
+  const jobRows = document.querySelectorAll('.job-row-watering');
+  const selectcomponent = jobRows[0].querySelector('.plant-select');
+  const selectedOption = selectcomponent.querySelector('option:checked');
+  selectedOption.value = { plant: plant }; // Set the value to the plant
+  selectedOption.textContent = `${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+  selectedOption.dataset.x = plant.xcoordinate;
+  selectedOption.dataset.y = plant.ycoordinate;
+  selectedOption.dataset.type = plant.planttype;
+}
 
 window.addEventListener('click', (e) => {
   if (e.target === viewJobsModalWatering) {

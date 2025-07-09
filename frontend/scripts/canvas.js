@@ -2,10 +2,19 @@
 const canvas = document.getElementById('gridCanvas');
 const ctx = canvas.getContext('2d');
 const coordDisplay = document.getElementById('hover-coordinates');
+let botposition;
+const botImage = new Image();
+botImage.src = './assets/icons/bot.png'; // Path to the robot image
 
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
+//buffer canvas for drawing to avoid flickering
+let bufferCanvas = document.createElement('canvas');
+let bufferCtx = bufferCanvas.getContext('2d');
+
+bufferCanvas.width = canvas.width;
+bufferCanvas.height = canvas.height;
 
 // Farm-robot coordinate system
 const coordWidth = 395;
@@ -17,34 +26,37 @@ const majorTickY = 100;
 
 let plants = [];
 
+const plantImages = {
+    lettuce: new Image(),
+    radish: new Image(),
+    tomato: new Image()
+};
+
+plantImages.lettuce.src = './assets/icons/lettuce.png';
+plantImages.radish.src = './assets/icons/radish.png';
+plantImages.tomato.src = './assets/icons/tomato.png';
+const size = 50; // Size of the plant image
 
 //draw plants
-function drawPlant(plant) {
-    //ctx.save();
-    const img = new Image();
+function drawPlant(ctx, plant) {
     const coord = coordToPixel(plant.xcoordinate, plant.ycoordinate);
     switch (plant.planttype) {
         case "lettuce":
-            img.src = '../icons/lettuce.png';
-            drawRadius(coord, 15);
+            ctx.drawImage(plantImages.lettuce, coord.x - size / 2, coord.y - size / 2, size, size);
+            drawRadius(ctx, coord, 15);
             break;
         case "radish":
-            img.src = '../icons/radish.png';
-            drawRadius(coord, 2);
+            ctx.drawImage(plantImages.radish, coord.x - size / 2, coord.y - size / 2, size, size);
+            drawRadius(ctx, coord, 2);
             break;
         case "tomato":
-            img.src = '../icons/tomato.png';
-            drawRadius(coord, 30);
+            ctx.drawImage(plantImages.tomato, coord.x - size / 2, coord.y - size / 2, size, size);
+            drawRadius(ctx, coord, 30);
             break;
     }
-    img.onload = () => {
-        const size = 50;
-        ctx.drawImage(img, coord.x - size / 2, coord.y - size / 2, size, size);
-    }
-
 }
 // Draws the radius
-function drawRadius(coord, radius) {
+function drawRadius(ctx, coord, radius) {
     ctx.beginPath();
     ctx.arc(coord.x, coord.y, radius, 0, 2 * Math.PI);
     ctx.strokeStyle = 'rgb(10, 120, 210)'//'rgba(255, 0, 0, 0.5)';
@@ -52,20 +64,11 @@ function drawRadius(coord, radius) {
     ctx.stroke()
 }
 
-// Draw robot
-let robot = { x: 0, y: 0 };
 
 function drawRobot() {
-    const pos = coordToPixel(robot.x, robot.y);
-    ctx.beginPath();
-    ctx.arc(pos.x, pos.y, 8, 0, Math.PI * 2);
-    ctx.fillStyle = '#4caf50';
-    ctx.fill();
-    ctx.strokeStyle = '#333';
-    ctx.stroke();
+    const pos = coordToPixel(botposition.x, botposition.y);
+    ctx.drawImage(botImage, pos.x - size / 2, pos.y - size / 2, size, size);
 }
-
-
 
 // Draw grid lines for visual reference
 export function drawGrid() {
@@ -87,14 +90,14 @@ export function drawGrid() {
         ctx.stroke();
     }
 
-    drawAxesAndLabels();
+    drawAxesAndLabels(ctx);
 
     for (const plant in plants) {
-        drawPlant(plants[plant]);
+        drawPlant(ctx, plants[plant]);
     }
 }
 
-function drawAxesAndLabels() {
+function drawAxesAndLabels(ctx) {
     ctx.strokeStyle = '#000';
     ctx.lineWidth = 2;
 
@@ -154,6 +157,44 @@ export function clearCanvas() {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 }
 
+export function updateGrid() {
+    plants = window.plants;
+
+    // Clear the buffer
+    bufferCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+    bufferCtx.strokeStyle = 'rgb(102, 68, 40)';
+    bufferCtx.lineWidth = 1;
+
+    // Draw vertical lines
+    for (let x = 0; x <= coordWidth; x += majorTickX) {
+        bufferCtx.beginPath();
+        bufferCtx.moveTo(coordToPixel(x, 0).x, 0);
+        bufferCtx.lineTo(coordToPixel(x, 0).x, canvasHeight);
+        bufferCtx.stroke();
+    }
+
+    // Draw horizontal lines
+    for (let y = 0; y <= coordHeight; y += majorTickY) {
+        bufferCtx.beginPath();
+        bufferCtx.moveTo(0, coordToPixel(0, y).y);
+        bufferCtx.lineTo(canvasWidth, coordToPixel(0, y).y);
+        bufferCtx.stroke();
+    }
+
+    // Draw labels and axes
+    drawAxesAndLabels(bufferCtx);
+
+    // Draw plants
+    for (const plant in plants) {
+        drawPlant(bufferCtx, plants[plant]);
+    }
+
+    // Copy buffer to main canvas
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.drawImage(bufferCanvas, 0, 0);
+    drawRobot();
+}
+
 // Map pixel to real-world coordinate
 export function pixelToCoord(x, y) {
     const coordX = Math.round((x / canvasWidth) * coordWidth);
@@ -187,3 +228,7 @@ canvas.addEventListener('mousemove', (e) => {
 canvas.addEventListener('mouseleave', () => {
     coordDisplay.style.display = 'none';
 });
+
+export function setbotposition(position) {
+    botposition = position;
+}

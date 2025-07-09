@@ -1,4 +1,5 @@
 import { getTranslation } from "./translation.js";
+import { customAlert } from "./popups.js";
 export let token = '';
 
 //for login and logout
@@ -10,8 +11,8 @@ const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
 const subtask = document.getElementById('subtaskContainer');
 const subtaskView = document.getElementById('subtaskView');
-const managePlants=document.getElementById('managePlants');
-const subtaskManage=document.getElementById('subtaskManage');
+const managePlants = document.getElementById('managePlants');
+const subtaskManage = document.getElementById('subtaskManage');
 const pauseBtn = document.getElementById('pauseJobBtn');
 
 
@@ -21,15 +22,15 @@ export let isLoggedIn = false;
 settingsBtn.addEventListener('click', () => {
     if (isLoggedIn) {
         isLoggedIn = false;
-        alert(getTranslation('logoutSuccess'));
+        customAlert(getTranslation('logoutSuccess'));
         farmbotMenu.textContent = getTranslation('menu');
         toggle.style.display = 'none';
         subtask.style.display = 'none';
         viewJobs.style.display = 'none';
         subtaskView.style.display = 'none';
-        managePlants.style.display='none';
-        subtaskManage.style.display='none';
-        pauseBtn.style.display     = 'none';
+        managePlants.style.display = 'none';
+        subtaskManage.style.display = 'none';
+        pauseBtn.style.display = 'none';
         fetch('/api/logout', {
             method: 'POST',
             headers: {
@@ -72,12 +73,12 @@ form.addEventListener('submit', async function (e) {
                 password: password.value.trim()
             })
         });
-        password.value="";
+        password.value = "";
         const data = await response.json();
 
         if (response.ok) {
             // Success - Login passed
-            alert(getTranslation('successLogin'));
+            customAlert(getTranslation('successLogin'));
             isLoggedIn = true;
 
             if (loginModal) loginModal.style.display = 'none';
@@ -86,8 +87,8 @@ form.addEventListener('submit', async function (e) {
             //subtask.style.display='none';
             viewJobs.style.display = 'flex';
             //viewJobsBtn.style.display='block';
-            managePlants.style.display='flex';
-            pauseBtn.style.display     = 'inline-block';
+            managePlants.style.display = 'flex';
+            pauseBtn.style.display = 'inline-block';
 
             token = data.token;
 
@@ -98,12 +99,12 @@ form.addEventListener('submit', async function (e) {
             } else if (data.message?.toLowerCase().includes('password')) {
                 passwordError.textContent = data.message;
             } else {
-                alert(data.message || getTranslation('invalidLogin'));
+                customAlert(data.message || getTranslation('invalidLogin'));
             }
         }
     } catch (error) {
         console.error(getTranslation("errorLogin"), error);
-        alert(getTranslation("errorServer"));
+        customAlert(getTranslation("errorServer"));
     }
 });
 

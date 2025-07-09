@@ -1,7 +1,6 @@
-import DatabaseService from '../databaseservice.js';
+import DatabaseService from '../backend/databaseservice.js';
 import TokenManager from '../backend/tokenManager.js';
 import express from 'express';
-import { error } from 'console';
 
 export default function createJobsRouter(backend) {
     const router = express.Router();
@@ -18,7 +17,7 @@ export default function createJobsRouter(backend) {
             let result = await DatabaseService.InsertJobToDB(jobType, payload);
             if (result === true) {
                 backend.scheduleManager.checkForScheduledJobs()
-                backend.appendNotification("created",  payload.jobname);
+                backend.appendNotification("created", payload.jobname);
                 res.status(200).json({ message: 'Job created' });
             }
             else {
@@ -138,8 +137,7 @@ export default function createJobsRouter(backend) {
                 backend.appendNotification("modified", payload.jobname);
                 res.status(200).json({ message: 'Job updated' });
             }
-            else
-            {
+            else {
                 res.status(500).json({ error: result });
             }
         } catch (err) {

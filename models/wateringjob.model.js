@@ -9,8 +9,8 @@ app.use(express.json());
 
 // test connection to local database
 mongoose.connect(connectionString)
-.then(() => console.log('MongoDB connected to the Watering Job Database.'))
-.catch((err) => console.error('MongoDB connection error: to the Watering Job Database.', err));
+  .then(() => console.log('MongoDB connected to the Watering Job Database.'))
+  .catch((err) => console.error('MongoDB connection error: to the Watering Job Database.', err));
 
 // create schema for data
 const wateringSchema = mongoose.Schema({
@@ -19,14 +19,14 @@ const wateringSchema = mongoose.Schema({
     {
       plant: plantSchema,
       wateringcapacity: Number,
-      wateringheight: Number,   
+      wateringheight: Number,
     }
   ],
-  is_scheduled : Boolean,
-  ScheduleData:{
+  is_scheduled: Boolean,
+  ScheduleData: {
     next_execution_time: Number,
     interval: Number,
-    enabled:Boolean,
+    enabled: Boolean,
   }
 }
 );
@@ -36,7 +36,7 @@ export const WaterJobModel = mongoose.model('wateringjob', wateringSchema);
 
 //for the name/type of the plant example :  radish1 or lettuce 2, the coordinates and the millilitres to be watered.
 async function InsertWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData) {
-  await WaterJobModel.create({ jobname: jobname, plantstobewatered: plantstobewatered, is_scheduled:is_scheduled,ScheduleData: scheduleData });
+  await WaterJobModel.create({ jobname: jobname, plantstobewatered: plantstobewatered, is_scheduled: is_scheduled, ScheduleData: scheduleData });
 }
 
 async function DeleteWateringJobFromDB(jobname) {
@@ -54,7 +54,7 @@ async function FetchAllWateringJobsFromDB() {
 }
 
 async function ReturnWateringJob(jobname) {
-  const job = await WaterJobModel.findOne({"jobname":jobname});
+  const job = await WaterJobModel.findOne({ "jobname": jobname });
   if (job !== null && typeof (job) !== "undefined") {
     return { jobType: "Watering", job };
   }
@@ -65,7 +65,7 @@ async function ReturnWateringJob(jobname) {
 }
 
 async function UpdateWateringJobToDB(jobname, plantstobewatered, is_scheduled, scheduleData) {
-  await WaterJobModel.findOneAndUpdate({ "jobname": jobname }, {jobname: jobname, plantstobewatered: plantstobewatered, is_scheduled: is_scheduled,ScheduleData: scheduleData });
+  await WaterJobModel.findOneAndUpdate({ "jobname": jobname }, { jobname: jobname, plantstobewatered: plantstobewatered, is_scheduled: is_scheduled, ScheduleData: scheduleData });
   console.log("Job has been updated.");
 }
 

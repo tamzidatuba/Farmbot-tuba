@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
-import seedingModule from './models/seedingjob.model.js';
-import wateringModule from './models/wateringjob.model.js';
-import notificationModel from './models/notification.model.js';
-import plantModel from './models/plant.model.js';
-import userModel from './models/user.model.js';
-import ExecutionModel from './models/execution.model.js';
-import questionModel from './models/question.model.js';
+import seedingModule from '../models/seedingjob.model.js';
+import wateringModule from '../models/wateringjob.model.js';
+import notificationModel from '../models/notification.model.js';
+import plantModel from '../models/plant.model.js';
+import userModel from '../models/user.model.js';
+import ExecutionModel from '../models/execution.model.js';
+import questionModel from '../models/question.model.js';
+import { GetDistance } from '../frontend/scripts/tools.js';
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -175,7 +176,11 @@ async function FetchQuestionsFromDBbyQuestion(question)
    return question3;
 }
 
-
+async function InsertAnswerIntoDB(question, answer)
+{
+    let answer_recieved = await questionModel.InsertAnswersIntoDB(question,answer);
+    return answer_recieved;
+}
 
 async function InsertNotificationToDB(text) {
     await notificationModel.InsertNotificationToDB(text);
@@ -293,12 +298,6 @@ async function ValidateNewSeedsAgainstPlants(seeds) {
     return invalidSeeds;
 }
 
-
-function GetDistance(x1, y1, x2, y2) {
-    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-}
-
-
 export default {
     InsertJobToDB,
     FetchJobsFromDB,
@@ -317,4 +316,5 @@ export default {
     FetchAlltheQuestionsFromDB,
     FetchQuestionsFromDBbyQuestion,
     DeletePlantFromDB,
+    InsertAnswerIntoDB,
 };

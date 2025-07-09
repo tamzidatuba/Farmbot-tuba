@@ -3,8 +3,10 @@
   --buttons-color: #ae1757;
   --buttons-hover-color: #670e33;
   --elements-color: #195632;
+  --sidebar-font-size: 15px;
 }
 /* 
+## 42 Color Palette:
 Green: #195632,
 Light Blue: #006ba1,
 Dark Blue: #003b5c,
@@ -23,7 +25,7 @@ canvas {
   display: block;
   background-color: #643a2a;
   cursor: crosshair;
-  background-image: url("noise.png");
+  background-image: url("../assets/images/noise.png");
   left: 25%;
 }
 
@@ -70,7 +72,7 @@ canvas {
     }
 
     #farmbot-status {
-      font-size: 14px;
+      font-size: 16px;
       position: absolute;
       display: flex;
       top: 2%;
@@ -152,7 +154,7 @@ body {
 }
 
 .menu-item {
-  font-size: 14px;
+  font-size: var(--sidebar-font-size);/*14px;*/
   background-color: var(--buttons-color);
   border-radius: 5px;
   cursor: pointer;
@@ -198,7 +200,7 @@ body {
   border-radius: 5px;
   cursor: pointer;
   width: 100%;
-  font-size: 14px;
+  font-size: var(--sidebar-font-size);/*14px;*/
   text-align: left;
 }
 
@@ -380,6 +382,14 @@ padding: 8px;
 border-radius: 5px;
 border: 1px solid #ccc;
 width: 100%;
+}
+
+input.plantName {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  margin-top: 8px;
 }
 
 .errorMsg {
@@ -584,6 +594,16 @@ margin-top: 4px;
       cursor: pointer;
     }
 
+    .button-small {
+      width: 25%;
+    }
+
+    .button-small-question {
+      width: 25%;
+      display: block;
+      margin: auto;
+    }
+
     button:hover {
       background-color: var(--buttons-hover-color);
     }
@@ -692,7 +712,6 @@ margin-top: 4px;
   height: 60px;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
   transition: background-color 0.3s ease;
 }
 
@@ -704,7 +723,7 @@ margin-top: 4px;
 
 .language-select {
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   background-color: var(--buttons-color);
   color: white;
   border: none;
@@ -832,7 +851,8 @@ margin-top: 4px;
   margin-bottom: 0.3em;         
   font-weight: 600;             
   color: #333;                  
-  font-size: 1rem;              
+  font-size: 1rem; 
+  z-index: 1000;             
 }
 
 /* Inputs and textarea */
@@ -857,7 +877,7 @@ margin-top: 4px;
 
 /* Submit button styling */
 #submitFeedbackBtn {
-  background-color: #28a745;    
+  background-color: var(--buttons-color);    
   color: white;
   border: none;
   padding: 0.5em 1em;
@@ -868,7 +888,7 @@ margin-top: 4px;
 }
 
 #submitFeedbackBtn:hover {
-  background-color: #218838;   
+  background-color: var(--buttons-hover-color);   
 }
 
 /* Error / Success messages */
@@ -906,10 +926,116 @@ margin-top: 4px;
 }
 
 
+.dialog-box {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: auto;
+}
 
+.headerandcontainer{
+  background: white;
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.2);  
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: row;  
+  gap: 5px;              
+  align-items: center;
+}
+
+.dialog-arrow {
+  width: 0;
+  height: 0;
+  margin: auto;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid white;
+  filter: drop-shadow(0 -1px 0 #333);
+}
     
-    
-    
+.popup-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 300px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.popup-modal-content button {
+  margin: 10px;
+}
+
+/* Modal container - covers whole screen */
+.big-modal {
+  display: none; /* hidden by default */
+  position: fixed;
+  z-index: 1000; /* on top of everything else */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0,0,0,0.6); /* dark background */
+}
+
+/* Modal content box */
+.big-modal-content {
+  background-color: #fff;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  padding: 15px;
+  text-align: center;
+  width: 50px;
+  height: 50px;;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Question item styling */
+.question-item {
+  background: #f9f9f9;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-left: 4px solid #4CAF50;
+  border-radius: 5px;
+}
+
+
+  
     
 
 
