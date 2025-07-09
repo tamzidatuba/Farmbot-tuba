@@ -230,6 +230,7 @@
       <div class="help-text-feedback" data-i18n="helpFeedback" style="display: none; color: gray;">In case you wish to give a feedback, please click here.</div>
     </li>
     <li class="menu-item" id="help-button" data-i18n="help">Help</li>
+    <li class="menu-item" id="yourQuestions" data-i18n="yourQuestions">Your Questions</li>
   </ul>
   <div class="language-menu">
     <select id="languageSelector" class="menu-item language-select"></select>
@@ -315,6 +316,15 @@
   </form>
 </div>
 
+<!-- Your Questions Section -->
+<div id="yourQuestionsSection" class="modal">
+  <div class="modal-content">
+    <button id="closeYourQuestions" class="close-btn" title="Close">&times;</button>
+    <h3 data-i18n="yourQuestionsTitle">Your Submitted Questions</h3>
+    <div id="questionsList"></div>
+  </div>
+</div>
+
 <div id="dialogBox" class="dialog-box" style="display: none;">
   <div class="headerandcontainer">
     <span id="dialog-header"></span>  
@@ -353,6 +363,7 @@
   <script type="module" src="./seedingDemo.js"></script>
   <script type="module" src="./scripts/deleteplants.js"></script>
   <script type="module" src="./scripts/feedback.js"></script>
+  <script type="module" src="./scripts/your_questions.js"></script>
 
 
 
