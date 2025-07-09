@@ -77,30 +77,38 @@ document.getElementById('closeQuestionSection').addEventListener('click', () => 
 
 // Handle form submission 
 
-const form = document.getElementById('questionForm');
-
-form.addEventListener('submit', async function (e) {
+document.getElementById('questionForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
+  const emailInput = document.getElementById('email');
+  const questionInput = document.getElementById('question');
+  const statusDiv = document.getElementById('questionStatus');
 
-  const email = document.getElementById('email').value.trim();
-  const question = document.getElementById('question').value.trim();
+  const email = emailInput.value.trim();
+  const question = questionInput.value.trim();
 
-  const response = await fetch('/api/questions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, question })
-  });
+  try {
+    const res = await fetch('/api/ask-question', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, question })
+    });
 
-  const data = await response.json();
+    const result = await res.json();
 
-  if (response.ok) {
-    customAlert(data.message);
-    form.reset(); // clears fields after successful submission
-  } else {
-    customAlert(data.message || getTranslation("somethingWrong"));
+    if (res.ok) {
+      statusDiv.textContent = result.message;
+      emailInput.value = '';
+      questionInput.value = '';
+    } else {
+      statusDiv.textContent = result.error || 'Something went wrong.';
+    }
+  } catch (error) {
+    console.error('Submission error:', error);
+    statusDiv.textContent = 'Server error. Please try again later.';
   }
 });
+
 
 // Optional: Close on background click
 window.addEventListener('click', (e) => {

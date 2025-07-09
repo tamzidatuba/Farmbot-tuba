@@ -5,10 +5,12 @@ import DatabaseService from './backend/databaseservice.js';
 import { Backend } from './backend/backend.js';
 import createJobsRouter from './routes/jobs.js';
 import TokenManager from "./backend/tokenManager.js";
+import nodemailer from 'nodemailer';
 
 
 const app = express();
 const PORT = 3000;
+
 
 // Setup __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -184,3 +186,45 @@ app.post('/api/demo/seeding', async (req, res) => {
     res.status(500).json({ error: 'A Demo is already queued.' });
   }
 });
+
+//for ask questions
+
+
+app.post('/api/ask-question', async (req, res) => {
+  const { email, question } = req.body;
+
+  if (!email || !question) {
+    return res.status(400).json({ error: 'Email and question are required.' });
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'farmbot285@gmail.com',
+        pass: 'jphfvfkdtbvcgyxf'  // app password 
+      }
+    });
+
+    const supportMailOptions = {
+      
+      from:email,
+      to: 'farmbot285@gmail.com',
+      subject: `New question from ${email}`,
+      text: `You have received a new question from ${email}:\n\n${question}`
+    };
+
+   
+
+    await Promise.all([
+      transporter.sendMail(supportMailOptions)
+      
+    ]);
+
+    res.status(200).json({ message: 'Your question was received and sent to team.' });
+  } catch (err) {
+    console.error('Email sending error:', err);
+    res.status(500).json({ error: 'Failed to send email. Try again later.' });
+  }
+});
+
