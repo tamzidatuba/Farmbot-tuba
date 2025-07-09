@@ -71,10 +71,10 @@ export const translations = {
     view: '📋 View Jobs',
     seedingDemo: '🌱 Seeding Demo',
     wateringDemo: '💧 Watering Demo',
-    help: 'Help',
+    help: '💡 Help',
     manage: '🪴 Manage Plants',
     deletePlants: '🗑️ Delete Plants',
-    yourQuestions: 'Your Questions',
+    yourQuestions: '❓ Your Questions',
     //watering job template
     at:'at',
     // Translation for alerts and errors:
@@ -228,10 +228,10 @@ export const translations = {
     view: '📋 Aufträge anzeigen',
     seedingDemo: '🌱 Aussaat Demo',
     wateringDemo: '💧 Bewässerungs Demo',
-    help: 'Hilfe',
+    help: '💡 Hilfe',
     manage: '🪴 Pflanzen verwalten',
     deletePlants: '🗑️ Pflanzen löschen',
-    yourQuestions: 'Eure Fragen',
+    yourQuestions: '❓ Eure Fragen',
     //watering job template
     at:'bei',
     // Translation for alerts and errors:
