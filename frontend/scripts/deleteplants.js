@@ -1,5 +1,6 @@
 import { token } from './auth.js';    
 import { getTranslation } from './translation.js';
+import { customAlert} from './popups.js';
 
 // 1) Create the modal HTML and append to body
 const modalHtml = `
@@ -86,7 +87,7 @@ confirmDelete.addEventListener('click', async () => {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Delete failed');
 
-    alert(data.message || 'Plant deleted');
+    customAlert(data.message || 'Plant deleted');
     deleteModal.style.display = 'none';
 
     // Remove the option from the select
