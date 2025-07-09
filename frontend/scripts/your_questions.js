@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   yourQuestionsBtn.addEventListener('click', async () => {
     // Show the section
-    console.log('Your Questions button clicked');
     yourQuestionsSection.style.display = 'block';
     questionsList.innerHTML = getTranslation('loading');
 
@@ -36,5 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   closeYourQuestions.addEventListener('click', () => {
     yourQuestionsSection.style.display = 'none';
+  });
+
+  //Close modal on background click
+  yourQuestionsSection.addEventListener('click', (e) => {
+    if (e.target === yourQuestionsSection) {
+      yourQuestionsSection.style.display = 'none';
+    }
   });
 });
