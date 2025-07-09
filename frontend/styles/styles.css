@@ -975,7 +975,7 @@ margin-top: 4px;
 }
 
 /* Modal container - covers whole screen */
-.modal {
+.big-modal {
   display: none; /* hidden by default */
   position: fixed;
   z-index: 1000; /* on top of everything else */
@@ -988,7 +988,7 @@ margin-top: 4px;
 }
 
 /* Modal content box */
-.modal-content {
+.big-modal-content {
   background-color: #fff;
   margin: 5% auto;
   padding: 20px;
