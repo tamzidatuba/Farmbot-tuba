@@ -54,6 +54,15 @@ export const translations = {
     queueFail: 'Failed to queue job.',
     plantDelete: 'Delete a Plant',
     plantChoose: 'Choose a plant:',
+    //alert/confirmation messages
+    yes: 'Yes',
+    no: 'No',
+    jobDeleted: 'Job deleted ✅',
+    wateringcreated: 'Watering job created ✅',
+    wateringUpdated: 'Watering job updated ✅',
+    seedingcreated: 'Seeding job created ✅',
+    seedingUpdated: 'Seeding job updated ✅',
+    jobExecuted: 'Job will be executed 🚜',
     //sidebar
     menu: 'FarmBot Menu',
     task: 'Create Task',
@@ -68,14 +77,8 @@ export const translations = {
     //watering job template
     at:'at',
     // Translation for alerts and errors:
-    jobDeleted: 'Job deleted ✅',
     noPlant: '❌ Please add at least one plant before creating a job.',
-    wateringcreated: 'Watering job created ✅',
-    wateringUpdated: 'Watering job updated ✅',
     error: '❌ Error: ',
-    seedingcreated: 'Seeding job created ✅',
-    seedingUpdated: 'Seeding job updated ✅',
-    jobExecuted: 'Job will be executed 🚜',
     unexpectedResponse: '❌ Unexpected response from server: ',
     networkError: '❌ Could not execute job due to a network or system error.',
     formValidation: '🚫 Form validation failed. Not sending job.',
@@ -199,6 +202,15 @@ export const translations = {
     queueFail: 'Fehler beim Einreihen des Auftrags.',
     plantDelete: 'Pflanze löschen',
     plantChoose: 'Wählen Sie eine Pflanze:',
+    //alert/confirmation messages
+    yes: 'Ja',
+    no: 'Nein',
+    jobDeleted: 'Auftrag gelöscht ✅',
+    wateringcreated: 'Bewässerungsauftrag erstellt ✅',
+    wateringUpdated: 'Bewässerungsauftrag aktualisiert ✅',
+    seedingcreated: 'Aussaatauftrag erstellt ✅',
+    seedingUpdated: 'Aussaatauftrag aktualisiert ✅',
+    jobExecuted: 'Auftrag wird ausgeführt 🚜',
     //sidebar
      menu: 'FarmBot Menü',
     task: 'Aufgabe erstellen',
@@ -214,14 +226,8 @@ export const translations = {
     //watering job template
     at:'bei',
     // Translation for alerts and errors:
-    jobDeleted: 'Auftrag gelöscht ✅',
     noPlant: '❌ Bitte mindestens eine Pflanze hinzufügen, bevor Sie einen Auftrag erstellen.',
-    wateringcreated: 'Bewässerungsauftrag erstellt ✅',
-    wateringUpdated: 'Bewässerungsauftrag aktualisiert ✅',
     error: '❌ Fehler: ',
-    seedingcreated: 'Aussaatauftrag erstellt ✅',
-    seedingUpdated: 'Aussaatauftrag aktualisiert ✅',
-    jobExecuted: 'Auftrag wird ausgeführt 🚜',
     unexpectedResponse: '❌ Unerwartete Antwort vom Server: ',
     networkError: '❌ Auftrag konnte aufgrund eines Netzwerk- oder Systemfehlers nicht ausgeführt werden.',
     formValidation: '🚫 Formularvalidierung fehlgeschlagen. Auftrag wird nicht gesendet.',

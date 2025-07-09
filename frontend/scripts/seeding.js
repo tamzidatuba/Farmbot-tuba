@@ -2,6 +2,8 @@
 
 import { token } from "./auth.js";
 import { setLanguage, getTranslation } from "./translation.js";
+import { customAlert } from "./popups.js";
+import { customConfirm } from "./popups.js";
 
 
 // ——— DOM References ———
@@ -366,7 +368,9 @@ viewJobsBtn.addEventListener('click', async () => {
       // Execute
    
       div.querySelector('.execute-job-btnseed').addEventListener('click', async () => {
-        if (!confirm(getTranslation('executeConfirm') + job.jobname + '?')) return;
+        //if (!confirm(getTranslation('executeConfirm') + job.jobname + '?')) return;
+        const confirmed = await customConfirm(getTranslation('executeConfirm') + job.jobname + '?');
+        if (!confirmed) return;
         try {
           const res3 = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
             method: 'PUT',
@@ -378,14 +382,14 @@ viewJobsBtn.addEventListener('click', async () => {
           if (contentType.includes('application/json')) {
             const json3 = await res3.json();
             msg = res3.ok
-              ? `✅ ${json3.message || getTranslation('queueSuccess')}`
+              ? `✅ ${getTranslation('queueSuccess')}`
               : `❌ ${json3.error || getTranslation('queueFail')}`;
           } else {
             msg = getTranslation('unexpectedResponse') + await res3.text();
           }
-          alert(msg);
+          customAlert(msg);
         } catch (e) {
-          alert(getTranslation('networkError'));
+          customAlert(getTranslation('networkError'));
         }
       });
     });
