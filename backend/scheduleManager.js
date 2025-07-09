@@ -46,6 +46,10 @@ class ScheduleManager {
         return this.jobsToExecute.length > 0;
     }
 
+    jobFinished() {
+        this.jobsToExecute.shift()
+    }
+
     // returns the next job to be executed from the execution-queue
     getScheduledJob() {
         try {
@@ -55,7 +59,7 @@ class ScheduleManager {
         catch {
             console.log("Job is not in Execution DB");
         }
-        return this.jobsToExecute.shift();
+        return this.jobsToExecute[0];
     }
 
     // removes a scheduled job from execution-queue (Not in use currently)
