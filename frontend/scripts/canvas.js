@@ -29,9 +29,9 @@ const plantImages = {
     tomato: new Image()
 };
 
-plantImages.lettuce.src = '../icons/lettuce.png';
-plantImages.radish.src = '../icons/radish.png';
-plantImages.tomato.src = '../icons/tomato.png';
+plantImages.lettuce.src = './assets/icons/lettuce.png';
+plantImages.radish.src = './assets/icons/radish.png';
+plantImages.tomato.src = './assets/icons/tomato.png';
 const size = 50; // Size of the plant image
 
 //draw plants

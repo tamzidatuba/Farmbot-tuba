@@ -1,4 +1,5 @@
 import { getTranslation } from "./translation.js";
+import { customAlert } from "./popups.js";
 export let token = '';
 
 //for login and logout
@@ -21,7 +22,7 @@ export let isLoggedIn = false;
 settingsBtn.addEventListener('click', () => {
     if (isLoggedIn) {
         isLoggedIn = false;
-        alert(getTranslation('logoutSuccess'));
+        customAlert(getTranslation('logoutSuccess'));
         farmbotMenu.textContent = getTranslation('menu');
         toggle.style.display = 'none';
         subtask.style.display = 'none';
@@ -77,7 +78,7 @@ form.addEventListener('submit', async function (e) {
 
         if (response.ok) {
             // Success - Login passed
-            alert(getTranslation('successLogin'));
+            customAlert(getTranslation('successLogin'));
             isLoggedIn = true;
 
             if (loginModal) loginModal.style.display = 'none';
@@ -98,12 +99,12 @@ form.addEventListener('submit', async function (e) {
             } else if (data.message?.toLowerCase().includes('password')) {
                 passwordError.textContent = data.message;
             } else {
-                alert(data.message || getTranslation('invalidLogin'));
+                customAlert(data.message || getTranslation('invalidLogin'));
             }
         }
     } catch (error) {
         console.error(getTranslation("errorLogin"), error);
-        alert(getTranslation("errorServer"));
+        customAlert(getTranslation("errorServer"));
     }
 });
 

@@ -1,5 +1,5 @@
-import { getTranslation } from './scripts/translation.js';
-import { predefinedPlants } from './scripts/plantsmanager.js'; // predefined plants for demo
+import { predefinedPlants } from './plantsmanager.js'; // predefined plants for demo
+import { getTranslation } from './translation.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const demoBtn = document.getElementById("wateringDemoBtn");
