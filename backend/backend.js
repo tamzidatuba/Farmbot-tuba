@@ -79,7 +79,7 @@ class Backend {
     
     // check if job is a "Home"-Job
     if (this.currentJobData.jobType !== DatabaseService.JobType.HOME) {
-      this.scheduleManager.finishJob();
+      this.scheduleManager.jobFinished();
       // Allow for a new Demo-Job to be queued
       if ("demo" in this.currentJobData) {
         this.demo_job_queued = false;
