@@ -1,7 +1,7 @@
 export const translations = {
   en: {
     // English translations
-    _name : 'English',
+    _name: 'English',
     // Main dashboard translations
     title: 'Digital Farming Dashboard',
     seedingJob: 'Create Seeding Job',
@@ -76,7 +76,7 @@ export const translations = {
     deletePlants: '🗑️ Delete Plants',
     yourQuestions: '❓ Your Questions',
     //watering job template
-    at:'at',
+    at: 'at',
     // Translation for alerts and errors:
     noPlant: '❌ Please add at least one plant before creating a job.',
     error: '❌ Error: ',
@@ -94,7 +94,7 @@ export const translations = {
     createFail: 'Failed to create job.',
     nonJSON: '❌ Non-JSON response from server: ',
     loadingError: 'Error loading jobs.',
-    executeSuccess: 'Job executed successfully 🚜' ,
+    executeSuccess: 'Job executed successfully 🚜',
     executeFail: 'Failed to execute job.',
     networkError: '❌ Network error: ',
     fetchError: '❌ Error fetching plants: ',
@@ -134,7 +134,7 @@ export const translations = {
     modified: 'Job modified',
     deleted: 'Job deleted',
     finished: 'Job finished',
-    canceled : 'Job canceled',
+    canceled: 'Job canceled',
     visitorqueued: 'Job added to queue by visitor',
     adminqueued: 'Job added to queue by Admin ',
     time: ' at: ',
@@ -146,7 +146,7 @@ export const translations = {
     helpDemoSeeding: 'Click to simulate a demo of planting seeds.',
     helpDemoWatering: 'Click to simulate a demo of watering seeds.',
     helpFeedback: 'In case you wish to give a feedback, please click here.',
-    helpQandA:'If you have any questions regarding the Farmbot, you can ask them here.',
+    helpQandA: 'If you have any questions regarding the Farmbot, you can ask them here.',
     helpLanguage: 'You can change your preferred language here. At present you can either choose German or English.',
     // Translations for the yourQuestions section
     yourQuestionsTitle: 'Your Submitted Questions',
@@ -162,7 +162,7 @@ export const translations = {
   },
   de: {
     // German translations
-    _name : 'Deutsch',
+    _name: 'Deutsch',
     // Main dashboard translations
     title: 'Digital Farming Dashboard',
     seedingJob: 'Aussaats Auftrag erstellen',
@@ -224,7 +224,7 @@ export const translations = {
     seedingUpdated: 'Aussaatauftrag aktualisiert ✅',
     jobExecuted: 'Auftrag wird ausgeführt 🚜',
     //sidebar
-     menu: 'FarmBot Menü',
+    menu: 'FarmBot Menü',
     task: '➕ Aufgabe erstellen',
     seedingTitle: '🌱 Aussaat Auftrag',
     wateringTitle: '💧 Bewässerungs Auftrag',
@@ -237,7 +237,7 @@ export const translations = {
     deletePlants: '🗑️ Pflanzen löschen',
     yourQuestions: '❓ Eure Fragen',
     //watering job template
-    at:'bei',
+    at: 'bei',
     // Translation for alerts and errors:
     noPlant: '❌ Bitte mindestens eine Pflanze hinzufügen, bevor Sie einen Auftrag erstellen.',
     error: '❌ Fehler: ',
@@ -256,7 +256,7 @@ export const translations = {
     nonJSON: '❌ Nicht-JSON-Antwort vom Server: ',
     loadingError: 'Fehler beim Laden der Aufträge.',
     executeSuccess: 'Auftrag erfolgreich ausgeführt 🚜',
-    executeFail: 'Ausführung des Auftrags fehlgeschlagen.' ,
+    executeFail: 'Ausführung des Auftrags fehlgeschlagen.',
     networkError: '❌ Netzwerkfehler: ',
     fetchError: '❌ Fehler beim Abrufen der Pflanzen: ',
     frontendError: '❌ Fehler beim Abrufen der Frontend-Daten: ',
@@ -295,7 +295,7 @@ export const translations = {
     modified: 'Auftrag geändert',
     deleted: 'Auftrag gelöscht',
     finished: 'Auftrag abgeschlossen',
-    canceled : 'Auftrag abgebrochen',
+    canceled: 'Auftrag abgebrochen',
     visitorqueued: 'Auftrag in die Warteschlange gestellt von Besucher',
     adminqueued: 'Auftrag in die Warteschlange gestellt von Admin ',
     time: ' um: ',
@@ -307,7 +307,7 @@ export const translations = {
     helpDemoSeeding: 'Klicken Sie, um eine Demo des Aussäens von Samen zu simulieren.',
     helpDemoWatering: 'Klicken Sie, um eine Demo des Bewässerns von Samen zu simulieren.',
     helpFeedback: 'Falls Sie Feedback geben möchten, klicken Sie bitte hier.',
-    helpQandA:'Wenn Sie Fragen zum Farmbot haben, können Sie diese hier stellen.',
+    helpQandA: 'Wenn Sie Fragen zum Farmbot haben, können Sie diese hier stellen.',
     helpLanguage: 'Sie können hier ihre bevorzugte Sprache ändern. Aktuell können Sie zwischen Deutsch und Englisch auswählen.',
     // Translations for the yourQuestions section
     yourQuestionsTitle: 'Eure eingereichten Fragen',

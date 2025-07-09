@@ -4,8 +4,8 @@ import "./scripts/watering.js";
 import "./scripts/seeding.js";
 import { getTranslation } from "./scripts/translation.js";
 import "./scripts/TouchFunctions.js";
-import { customAlert} from "./scripts/popups.js";
-import { getPlants  } from "./scripts/plantsmanager.js";
+import { customAlert } from "./scripts/popups.js";
+import { getPlants } from "./scripts/plantsmanager.js";
 
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
@@ -13,17 +13,16 @@ const subtask = document.getElementById('subtaskContainer');
 const subtaskView = document.getElementById('subtaskView');
 const arrow = document.getElementById('arrow');
 const arrowView = document.getElementById('arrowView');
-const managePlants=document.getElementById('managePlants');
-const subtaskManage=document.getElementById('subtaskManage');
-const arrowmanageView=document.getElementById('arrowmanageView');
+const managePlants = document.getElementById('managePlants');
+const subtaskManage = document.getElementById('subtaskManage');
+const arrowmanageView = document.getElementById('arrowmanageView');
 // List to compare plants with data base
 window.plants = [];
 
 window.addEventListener('DOMContentLoaded', () => {
   toggle.style.display = 'none';
-  //subtask.style.display='none';
   viewJobs.style.display = 'none';
-  managePlants.style.display='none';
+  managePlants.style.display = 'none';
 });
 
 viewJobs.addEventListener('click', () => {
@@ -44,28 +43,24 @@ managePlants.addEventListener('click', () => {
   arrowmanageView.classList.toggle('open', !isVisible);
 });
 
-
-
-
 await getPlants(); // get data of plants
 await updateRobot();
 setInterval(async () => await updateRobot(), 1000); // Update every 1 second
 drawGrid(); // draw plants
-//drawRobot();
 
 // Close #questionSection when clicking outside of it
-  document.addEventListener('click', function(event) {
-    const questionSection = document.getElementById('questionSection');
+document.addEventListener('click', function (event) {
+  const questionSection = document.getElementById('questionSection');
 
-    // Only proceed if it's currently visible
-    if (questionSection.style.display !== 'none' && event.target.id !== 'openQuestionFormBtn') {
-      const isClickInside = questionSection.contains(event.target);
-      // If the click was outside the questionSection, hide it
-      if (!isClickInside) {
-        questionSection.style.display = 'none';
-      }
+  // Only proceed if it's currently visible
+  if (questionSection.style.display !== 'none' && event.target.id !== 'openQuestionFormBtn') {
+    const isClickInside = questionSection.contains(event.target);
+    // If the click was outside the questionSection, hide it
+    if (!isClickInside) {
+      questionSection.style.display = 'none';
     }
-  });
+  }
+});
 
 
 //ask questions
@@ -84,7 +79,7 @@ document.getElementById('closeQuestionSection').addEventListener('click', () => 
 
 const form = document.getElementById('questionForm');
 
-form.addEventListener('submit', async function(e) {
+form.addEventListener('submit', async function (e) {
   e.preventDefault();
 
 

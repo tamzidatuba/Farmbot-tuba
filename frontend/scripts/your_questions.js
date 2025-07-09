@@ -42,10 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     yourQuestionsSection.style.display = 'block';
     questionsList.innerHTML = getTranslation('loading');
     if (!isLoggedIn) {
-    addSection.style.display = 'none';
-  } else {
-    addSection.style.display = 'block';
-  }
+      addSection.style.display = 'none';
+    } else {
+      addSection.style.display = 'block';
+    }
 
     // Fetch and display questions
     await fetchQuestions();

@@ -8,13 +8,13 @@ app.use(express.json());
 
 // test connection to local database
 mongoose.connect(connectionString)
-.then(() => console.log('MongoDB connected to Questions Database.'))
-.catch((err) => console.error('MongoDB connection error: to the Questions Database.', err));
+    .then(() => console.log('MongoDB connected to Questions Database.'))
+    .catch((err) => console.error('MongoDB connection error: to the Questions Database.', err));
 
-export const  askQuestionSchema = new mongoose.Schema(
+export const askQuestionSchema = new mongoose.Schema(
     {
         user: String,
-        question : String,
+        question: String,
         answer: String,
     }
 
@@ -22,35 +22,31 @@ export const  askQuestionSchema = new mongoose.Schema(
 
 const questionModel = mongoose.model('questions', askQuestionSchema);
 
-async function InsertQuestionsToDB(user, question, answer)
-{
-    let question1  = await questionModel.create({user:user,question: question, answer: answer});
+async function InsertQuestionsToDB(user, question, answer) {
+    let question1 = await questionModel.create({ user: user, question: question, answer: answer });
     return question1;
 }
 
-async function FetchSpecificQuestionsFromDB(question)
-{
-    let questions = await questionModel.findOne({"question":question});
+async function FetchSpecificQuestionsFromDB(question) {
+    let questions = await questionModel.findOne({ "question": question });
     return questions;
 }
 
-async function FetchAllQuestionsFromDB()
-{
+async function FetchAllQuestionsFromDB() {
     let questions = await questionModel.find();
     return questions;
 }
 
-async function InsertAnswersIntoDB(question,answer)
-{
+async function InsertAnswersIntoDB(question, answer) {
     let recieved_answer = await questionModel.findOneAndUpdate(
-        {"question":question},
-        {$set:{"answer":answer}},
-        {new:true}
+        { "question": question },
+        { $set: { "answer": answer } },
+        { new: true }
     );
     return recieved_answer;
 }
 
-export default{
+export default {
     InsertQuestionsToDB,
     FetchAllQuestionsFromDB,
     FetchSpecificQuestionsFromDB,

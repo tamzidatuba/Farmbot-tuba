@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title data-i18n="title">Digital Farming Dashboard</title>
   <link rel="stylesheet" href="./styles/styles.css">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/favicon/apple-touch-icon.png">
@@ -11,250 +12,259 @@
   <link rel="manifest" href="./assets/site.webmanifest">
   <link rel="stylesheet" href="./styles/help-style.css">
 </head>
+
 <body>
 
-<!-- SEEDING-MODAL -->
-<div id="seedingModal" class="modal">
- 
-
-  <div class="modal-content">
-    <span class="close" id="closeModal">&times;</span>
-    <h2 id="modalTitle" data-i18n="seedingJob">Create Seeding Job</h2>
-    <input type="text" id="SeedingJobName" data-i18n-placeholder="enterName" placeholder="Enter job name"  autocomplete="off"/>
-    <div id="jobNameError" class="errorMsg"></div>
-    <div id="jobContainer"></div>
-
-    <button id="addPlantBtn" data-i18n="addPlant">+ Add Plant</button>
-    <button id="executeBtn" data-i18n="createAndSave">Create & Save</button>
-  </div>
-</div>
-
-<!-- MODIFY SEEDING JOB MODAL -->
-<div id="modifySeedingModal" class="modal">
-  <div class="modal-content">
-    <span class="close" id="closeModifyModal">&times;</span>
-    <h2 id="modifyModalTitle" data-i18n="modifySeeding">Modify Seeding Job</h2>
-
-    <input type="text" id="modifySeedingJobName" disabled
-           style="width:100%; padding:0.5em; margin-bottom:0.5em;"
-           placeholder="Job name" />
-    <div id="modifyJobNameError" class="errorMsg"></div>
-
-    <div id="modifyJobContainer"></div>
-
-    <button id="modifyAddPlantBtn" data-i18n="addPlant"
-            style="margin-top:1em;">+ Add Plant</button>
-    <button id="modifyExecuteBtn" data-i18n="saveChanges"
-            style="margin-top:1em; float:right;">Save Changes</button>
-  </div>
-</div>
+  <!-- SEEDING-MODAL -->
+  <div id="seedingModal" class="modal">
 
 
-<!-- WATERING-MODAL -->
-<div id="wateringModal" class="modal">
- 
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h2 id="modalTitle" data-i18n="seedingJob">Create Seeding Job</h2>
+      <input type="text" id="SeedingJobName" data-i18n-placeholder="enterName" placeholder="Enter job name"
+        autocomplete="off" />
+      <div id="jobNameError" class="errorMsg"></div>
+      <div id="jobContainer"></div>
 
-  <div class="modal-content">
-    <span class="close" id="closeModalWatering">&times;</span>
-    <h2 id="modalTitleWatering" data-i18n="wateringJob">Create Watering Job</h2>
-    <input type="text" id="WateringJobName" data-i18n-placeholder="enterName" placeholder="Enter job name" />
-    <div id="jobNameErrorWatering" class="errorMsg"></div>
-
-    <!-- Schedule Option -->
-    <div class="schedule-options">
-      <label class="option-label">
-        <input type="radio" name="scheduleOption" value="scheduled" />
-        <span data-i18n="scheduled">Repetitive Watering</span>
-      </label>
-      <label class="option-label">
-        <input type="radio" name="scheduleOption" value="not-scheduled" checked />
-        <span data-i18n="notScheduled">Single Watering</span>
-      </label>
+      <button id="addPlantBtn" data-i18n="addPlant">+ Add Plant</button>
+      <button id="executeBtn" data-i18n="createAndSave">Create & Save</button>
     </div>
-
-    <!-- Hidden schedule details -->
-    <div id="scheduleFields" style="display: none;">
-      <label for="executionTime" data-i18n="executionTime">Execution Time:</label>
-      <input type="datetime-local" id="executionTime" />
-
-      <label for="repeatInterval" data-i18n="repeatInterval">Repeat Interval (in hours):</label>
-      <input type="number" id="repeatInterval" min="1" placeholder="e.g., 7 for every 7 hours" />
-    </div>
-    <div id="jobScheduleError" class="errorMsg"></div>
-
-    <div id="jobContainerWatering"></div>
-
-    <button id="addPlantBtnWatering" data-i18n="addPlant">+ Add Plant</button>
-    <button id="executeBtnWatering" data-i18n="createAndSave">Create & Save</button>
   </div>
-</div>
 
-<!-- WATERING DEMO MODAL -->
-<div id="wateringDemoModal" class="modal">
-   <div class="modal-content">
-     <span class="close" id="closeModalWateringDemo">&times;</span>
-     <h2 data-i18n="wateringDemoText">Select a plant for watering</h2>
-     <select id="plantDropdown">
-       <option data-i18n="loading">Loading...</option>
-     </select>
-     <br /><br />
-     <button id="executeBtnWateringDemo" data-i18n="execute">Execute</button>
-   </div>
- </div>
+  <!-- MODIFY SEEDING JOB MODAL -->
+  <div id="modifySeedingModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModifyModal">&times;</span>
+      <h2 id="modifyModalTitle" data-i18n="modifySeeding">Modify Seeding Job</h2>
 
- <!-- SEEDING DEMO MODAL -->
-<div id="seedingDemoModal" class="modal">
-  <div class="modal-content">
-    <span class="close" id="closeModalSeedingDemo">&times;</span>
-    <h2 data-i18n="seedingDemoText">Select a plant for seeding</h2>
-    <select id="plantDropdownSeeding">
-      <option data-i18n="loading">Loading...</option>
-    </select>
-    <br /><br />
-    <button data-i18n="execute" id="executeBtnSeedingDemo">Execute</button>
+      <input type="text" id="modifySeedingJobName" disabled style="width:100%; padding:0.5em; margin-bottom:0.5em;"
+        placeholder="Job name" />
+      <div id="modifyJobNameError" class="errorMsg"></div>
+
+      <div id="modifyJobContainer"></div>
+
+      <button id="modifyAddPlantBtn" data-i18n="addPlant" style="margin-top:1em;">+ Add Plant</button>
+      <button id="modifyExecuteBtn" data-i18n="saveChanges" style="margin-top:1em; float:right;">Save Changes</button>
+    </div>
   </div>
-</div>
 
-<!-- Feedback Modal -->
-<div id="feedbackModal" class="modal">
-  <div class="modal-content">
-    <span id="closeFeedbackModal" class="close">&times;</span>
-    <h2>Visitor Feedback</h2>
 
-    <div class="field">
-      <label for="feedbackName">Your Name</label>
-      <input type="text" id="feedbackName" placeholder="Jane Doe" style="width:100%; padding:0.5em;" />
-    </div>
+  <!-- WATERING-MODAL -->
+  <div id="wateringModal" class="modal">
 
-    <div class="field">
-      <label for="feedbackText">Your Feedback</label>
-      <textarea id="feedbackText" rows="4" placeholder="What did you think?" style="width:100%; padding:0.5em;"></textarea>
-    </div>
 
-    <div class="field">
-      <label>Your Rating</label>
-      <div class="stars" id="ratingStars">
-        <!-- 5-star rating -->
-        <input type="radio" id="star5" name="rating" value="5" /><label for="star5">★</label>
-        <input type="radio" id="star4" name="rating" value="4" /><label for="star4">★</label>
-        <input type="radio" id="star3" name="rating" value="3" /><label for="star3">★</label>
-        <input type="radio" id="star2" name="rating" value="2" /><label for="star2">★</label>
-        <input type="radio" id="star1" name="rating" value="1" /><label for="star1">★</label>
+    <div class="modal-content">
+      <span class="close" id="closeModalWatering">&times;</span>
+      <h2 id="modalTitleWatering" data-i18n="wateringJob">Create Watering Job</h2>
+      <input type="text" id="WateringJobName" data-i18n-placeholder="enterName" placeholder="Enter job name" />
+      <div id="jobNameErrorWatering" class="errorMsg"></div>
+
+      <!-- Schedule Option -->
+      <div class="schedule-options">
+        <label class="option-label">
+          <input type="radio" name="scheduleOption" value="scheduled" />
+          <span data-i18n="scheduled">Repetitive Watering</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="scheduleOption" value="not-scheduled" checked />
+          <span data-i18n="notScheduled">Single Watering</span>
+        </label>
       </div>
-    </div>
 
-    <div class="field" style="text-align:right;">
-      <button id="submitFeedbackBtn" style="padding:0.5em 1em;">Submit</button>
-    </div>
+      <!-- Hidden schedule details -->
+      <div id="scheduleFields" style="display: none;">
+        <label for="executionTime" data-i18n="executionTime">Execution Time:</label>
+        <input type="datetime-local" id="executionTime" />
 
-    <div id="feedbackError" class="error"></div>
-    <div id="feedbackSuccess" class="success"></div>
+        <label for="repeatInterval" data-i18n="repeatInterval">Repeat Interval (in hours):</label>
+        <input type="number" id="repeatInterval" min="1" placeholder="e.g., 7 for every 7 hours" />
+      </div>
+      <div id="jobScheduleError" class="errorMsg"></div>
+
+      <div id="jobContainerWatering"></div>
+
+      <button id="addPlantBtnWatering" data-i18n="addPlant">+ Add Plant</button>
+      <button id="executeBtnWatering" data-i18n="createAndSave">Create & Save</button>
+    </div>
   </div>
-</div>
+
+  <!-- WATERING DEMO MODAL -->
+  <div id="wateringDemoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModalWateringDemo">&times;</span>
+      <h2 data-i18n="wateringDemoText">Select a plant for watering</h2>
+      <select id="plantDropdown">
+        <option data-i18n="loading">Loading...</option>
+      </select>
+      <br /><br />
+      <button id="executeBtnWateringDemo" data-i18n="execute">Execute</button>
+    </div>
+  </div>
+
+  <!-- SEEDING DEMO MODAL -->
+  <div id="seedingDemoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModalSeedingDemo">&times;</span>
+      <h2 data-i18n="seedingDemoText">Select a plant for seeding</h2>
+      <select id="plantDropdownSeeding">
+        <option data-i18n="loading">Loading...</option>
+      </select>
+      <br /><br />
+      <button data-i18n="execute" id="executeBtnSeedingDemo">Execute</button>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal" class="modal">
+    <div class="modal-content">
+      <span id="closeFeedbackModal" class="close">&times;</span>
+      <h2>Visitor Feedback</h2>
+
+      <div class="field">
+        <label for="feedbackName">Your Name</label>
+        <input type="text" id="feedbackName" placeholder="Jane Doe" style="width:100%; padding:0.5em;" />
+      </div>
+
+      <div class="field">
+        <label for="feedbackText">Your Feedback</label>
+        <textarea id="feedbackText" rows="4" placeholder="What did you think?"
+          style="width:100%; padding:0.5em;"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Your Rating</label>
+        <div class="stars" id="ratingStars">
+          <!-- 5-star rating -->
+          <input type="radio" id="star5" name="rating" value="5" /><label for="star5">★</label>
+          <input type="radio" id="star4" name="rating" value="4" /><label for="star4">★</label>
+          <input type="radio" id="star3" name="rating" value="3" /><label for="star3">★</label>
+          <input type="radio" id="star2" name="rating" value="2" /><label for="star2">★</label>
+          <input type="radio" id="star1" name="rating" value="1" /><label for="star1">★</label>
+        </div>
+      </div>
+
+      <div class="field" style="text-align:right;">
+        <button id="submitFeedbackBtn" style="padding:0.5em 1em;">Submit</button>
+      </div>
+
+      <div id="feedbackError" class="error"></div>
+      <div id="feedbackSuccess" class="success"></div>
+    </div>
+  </div>
 
 
-<!-- LOGIN MODAL -->
-<div id="loginModal" class="modal">
-   
-    
-     <div class="login-container">
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="modal">
+
+
+    <div class="login-container">
       <span class="close" id="closeLoginModal">&times;</span>
-    
-    <h2 data-i18n="login">
-      <img src="https://static.vecteezy.com/system/resources/previews/036/004/484/non_2x/green-leaf-icon-on-white-background-for-graphic-and-web-design-simple-sign-internet-concept-symbol-for-website-button-or-mobile-app-vector.jpg" alt="Leaf Icon" />
-       Login
-    </h2>
-  
-    <form id="loginForm">
-      <div class="form-group">
-        <label for="username" data-i18n="username">Username:</label>
-        <input type="text" id="username" name="username" />
-        <div id="usernameError" class="error"></div>
-      </div>
 
-      <div class="form-group">
-        <label for="password" data-i18n="password">Password:</label>
-        <input type="password" id="password" name="password" />
-        <div id="passwordError" class="error"></div>
-      </div>
+      <h2 data-i18n="login">
+        <img
+          src="https://static.vecteezy.com/system/resources/previews/036/004/484/non_2x/green-leaf-icon-on-white-background-for-graphic-and-web-design-simple-sign-internet-concept-symbol-for-website-button-or-mobile-app-vector.jpg"
+          alt="Leaf Icon" />
+        Login
+      </h2>
 
-      <button type="submit" data-i18n="login">Login</button>
-    </form>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username" data-i18n="username">Username:</label>
+          <input type="text" id="username" name="username" />
+          <div id="usernameError" class="error"></div>
+        </div>
 
-    
+        <div class="form-group">
+          <label for="password" data-i18n="password">Password:</label>
+          <input type="password" id="password" name="password" />
+          <div id="passwordError" class="error"></div>
+        </div>
+
+        <button type="submit" data-i18n="login">Login</button>
+      </form>
+
+
+    </div>
   </div>
   </div>
-</div>
 
 
 
-<div class="sidebar">
-  <h2 id="farmbotMenu" data-i18n="menu">FarmBot Menu</h2>
-  <ul>
-    <li>
-      <div class="menu-item" id="createTaskToggle">
-        <span data-i18n="task">Create Task</span>
-        <span class="arrow" id="arrow">&#9654;</span>
-      </div>
-      <div class="subtask" id="subtaskContainer">
-        <button id="seedingJobBtn" data-i18n="seedingTitle">🌱 Seeding Job</button>
-        <button id="wateringJobBtn" data-i18n="wateringTitle">💧 Watering Job</button>
-      </div>
-    </li>
-    <li>
-      <div class="menu-item" id="viewJobs">
-        <span data-i18n="view">📋 View Jobs</span>
-        <span class="arrow" id="arrowView">&#9654;</span>
-      </div>
-      <div class="subtask" id="subtaskView">
-        <button id="viewSeedingJobsBtn" data-i18n="seedingTitle">🌱 Seeding Job</button>
-        <button id="viewWateringJobsBtn" data-i18n="wateringTitle">💧 Watering Job</button>
-      </div>
-    </li>
-    <li>
-      <div class="menu-item" id="managePlants">
-        <span data-i18n="manage">🪴 Manage Plants</span>
-        <span class="arrow" id="arrowmanageView">&#9654;</span>
-      </div>
-      <div class="subtask" id="subtaskManage">
-        <button id="deleteplants" data-i18n="deletePlants">🗑️ Delete Plants</button>
-      </div>
-    </li>
-    <!----help option----->
-    <div class="help-translucent" id="helpTranslucent"></div>
-    <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo"><span>Seeding Demo</span></li>
-    <div class="help-text-seeding" data-i18n="helpDemoSeeding" style="display: none; color: gray;">Click to simulate a demo of planting seeds.</div>
-    <li class="menu-item" id="wateringDemoBtn" data-i18n="wateringDemo"><span>Watering Demo</span></li>
-    <div class="help-text-watering" data-i18n="helpDemoWatering" style="display: none; color: gray;">Click to simulate a demo of watering seeds.</div>
-    <li class="menu-item" id="feedbackBtn" data-i18n="feedback">📝 Feedback
-      <div class="help-text-feedback" data-i18n="helpFeedback" style="display: none; color: gray;">In case you wish to give a feedback, please click here.</div>
-    </li>
-    <li class="menu-item" id="help-button" data-i18n="help">Help</li>
-    <li class="menu-item" id="yourQuestions" data-i18n="yourQuestions">Your Questions</li>
-  </ul>
-  <div class="language-menu">
-    <select id="languageSelector" class="menu-item language-select"></select>
-     <div class="help-text-language" data-i18n="helpLanguage" style="display:outside; color: gray;">You can change your preferred language here. At present you can either choose German or English.</div>
+  <div class="sidebar">
+    <h2 id="farmbotMenu" data-i18n="menu">FarmBot Menu</h2>
+    <ul>
+      <li>
+        <div class="menu-item" id="createTaskToggle">
+          <span data-i18n="task">Create Task</span>
+          <span class="arrow" id="arrow">&#9654;</span>
+        </div>
+        <div class="subtask" id="subtaskContainer">
+          <button id="seedingJobBtn" data-i18n="seedingTitle">🌱 Seeding Job</button>
+          <button id="wateringJobBtn" data-i18n="wateringTitle">💧 Watering Job</button>
+        </div>
+      </li>
+      <li>
+        <div class="menu-item" id="viewJobs">
+          <span data-i18n="view">📋 View Jobs</span>
+          <span class="arrow" id="arrowView">&#9654;</span>
+        </div>
+        <div class="subtask" id="subtaskView">
+          <button id="viewSeedingJobsBtn" data-i18n="seedingTitle">🌱 Seeding Job</button>
+          <button id="viewWateringJobsBtn" data-i18n="wateringTitle">💧 Watering Job</button>
+        </div>
+      </li>
+      <li>
+        <div class="menu-item" id="managePlants">
+          <span data-i18n="manage">🪴 Manage Plants</span>
+          <span class="arrow" id="arrowmanageView">&#9654;</span>
+        </div>
+        <div class="subtask" id="subtaskManage">
+          <button id="deleteplants" data-i18n="deletePlants">🗑️ Delete Plants</button>
+        </div>
+      </li>
+      <!----help option----->
+      <div class="help-translucent" id="helpTranslucent"></div>
+      <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo"><span>Seeding Demo</span></li>
+      <div class="help-text-seeding" data-i18n="helpDemoSeeding" style="display: none; color: gray;">Click to simulate a
+        demo of planting seeds.</div>
+      <li class="menu-item" id="wateringDemoBtn" data-i18n="wateringDemo"><span>Watering Demo</span></li>
+      <div class="help-text-watering" data-i18n="helpDemoWatering" style="display: none; color: gray;">Click to simulate
+        a demo of watering seeds.</div>
+      <li class="menu-item" id="feedbackBtn" data-i18n="feedback">📝 Feedback
+        <div class="help-text-feedback" data-i18n="helpFeedback" style="display: none; color: gray;">In case you wish to
+          give a feedback, please click here.</div>
+      </li>
+      <li class="menu-item" id="help-button" data-i18n="help">Help</li>
+      <li class="menu-item" id="yourQuestions" data-i18n="yourQuestions">Your Questions</li>
+    </ul>
+    <div class="language-menu">
+      <select id="languageSelector" class="menu-item language-select"></select>
+      <div class="help-text-language" data-i18n="helpLanguage" style="display:outside; color: gray;">You can change your
+        preferred language here. At present you can either choose German or English.</div>
+    </div>
   </div>
-</div>
 
 
   <div class="main">
     <button class="settings-btn" id="settings-btn"><span class="wrench-emoji">🔧</span></button>
- 
 
-    
-    
+
+
+
     <!-- grid container using canvas-->
     <div>
       <canvas id="gridCanvas" width="550" height="650"></canvas>
-     <div class="help-text-grid" data-i18n="helpField" style="display:outside; color: gray;">This is a visual representation of the Farmbot. 
-      You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile.</div>
-   <div class="help-text-status" data-i18n="helpStatus" style="display:outside; color: gray;"> You can see the status of the Farmbot here. 
+      <div class="help-text-grid" data-i18n="helpField" style="display:outside; color: gray;">This is a visual
+        representation of the Farmbot.
+        You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also
+        visbile.</div>
+      <div class="help-text-status" data-i18n="helpStatus" style="display:outside; color: gray;"> You can see the status
+        of the Farmbot here.
         It shows whether the farmbot is currently offline or Ready to work or moving.</div>
     </div>
     <div id="hover-coordinates"></div>
-     <div id="farmbot-status-container">
+    <div id="farmbot-status-container">
       <div id="farmbot-status" data-i18n="initialStatus">Status: Offline</div> <!-- Robot status -->
       <button id="pauseJobBtn" class="pause-btn">⏸</button>
       <div id="errorMessage" class="error-box hidden"></div>
@@ -267,116 +277,125 @@
           <option value="25">25</option>
           <option value="50">50</option>
         </select>
-        <div class="help-text-history" data-i18n="helpNotification" style="display:outside; color: gray;">You can see the notifications here. You can also change the number of notifications you want to see.</div>
+        <div class="help-text-history" data-i18n="helpNotification" style="display:outside; color: gray;">You can see
+          the notifications here. You can also change the number of notifications you want to see.</div>
       </div>
-  </div>
-  <!-- VIEW SEEDING JOBS MODAL -->
-  <div id="viewJobsModal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="closeViewJobsModal">&times;</span>
-      <h2 data-i18n="seedingOverview">📋 Seeding Jobs Overview</h2>
-      <p id="jobCountDisplay"></p> <!-- 👈 Add this -->
-      <div id="jobsList"></div>
     </div>
-  </div>
-
-  <!-- VIEW WATERING JOBS MODAL -->
-  <div id="viewJobsModalWatering" class="modal">
-    <div class="modal-content">
-      <span class="close" id="closeViewJobsModalWatering">&times;</span>
-      <h2 data-i18n="wateringOverview">📋 Watering Jobs Overview</h2>
-      <p id="jobCountDisplayWatering"></p> <!-- 👈 Add this -->
-      <div id="jobsListWatering"></div>
+    <!-- VIEW SEEDING JOBS MODAL -->
+    <div id="viewJobsModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeViewJobsModal">&times;</span>
+        <h2 data-i18n="seedingOverview">📋 Seeding Jobs Overview</h2>
+        <p id="jobCountDisplay"></p> <!-- 👈 Add this -->
+        <div id="jobsList"></div>
+      </div>
     </div>
-  </div>
-<!-- Ask Questions -->
- 
-  <!-- Question Icon Button -->
-   <div>
-    <button id="openQuestionFormBtn" title="Ask a Question">Q&A</button>
-<div class="help-text-questions" data-i18n="helpQandA" style="display:outside; color: gray;">If you have any questions regarding the Farmbot, you can ask them here.</div>
 
-   </div>
+    <!-- VIEW WATERING JOBS MODAL -->
+    <div id="viewJobsModalWatering" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeViewJobsModalWatering">&times;</span>
+        <h2 data-i18n="wateringOverview">📋 Watering Jobs Overview</h2>
+        <p id="jobCountDisplayWatering"></p> <!-- 👈 Add this -->
+        <div id="jobsListWatering"></div>
+      </div>
+    </div>
+    <!-- Ask Questions -->
 
-<!-- Hidden Ask a Question Form -->
-<div id="questionSection" style="display: none;">
-  <button id="closeQuestionSection" class="close-btn" title="Close">&times;</button>
-  <h3 data-i18n="question">Ask a Question</h3>
-  
-  <form id="questionForm">
+    <!-- Question Icon Button -->
+    <div>
+      <button id="openQuestionFormBtn" title="Ask a Question">Q&A</button>
+      <div class="help-text-questions" data-i18n="helpQandA" style="display:outside; color: gray;">If you have any
+        questions regarding the Farmbot, you can ask them here.</div>
 
-    <label data-i18n="mail" for="email">Your Email:</label>
-    <input type="email" data-i18n-placeholder="mailExample" id="email" name="email" required placeholder="you@example.com">
+    </div>
 
-    <label data-i18n="questionBox" for="question">Your Question:</label>
-    <textarea id="question" data-i18n-placeholder="writeQuestion" name="question" rows="4" required placeholder="Write your question here..."></textarea>
+    <!-- Hidden Ask a Question Form -->
+    <div id="questionSection" style="display: none;">
+      <button id="closeQuestionSection" class="close-btn" title="Close">&times;</button>
+      <h3 data-i18n="question">Ask a Question</h3>
 
-    <button data-i18n="submit" type="submit">Submit</button>
-    <div id="questionStatus"></div>
-  </form>
-</div>
+      <form id="questionForm">
 
-<!-- Your Questions Section -->
-<div id="yourQuestionsSection" class="big-modal">
-  <div class="big-modal-content">
-    <button id="closeYourQuestions" class="close-btn" title="Close">&times;</button>
-    <h3 data-i18n="yourQuestionsTitle">Your Submitted Questions</h3>
-    <div id="questionsList"></div>
-    <div id="add-question-section" style="display: none;">
-      <button data-i18n="newQuestion" class="button-small-question" id="add-question-btn">Add New Question</button>
-  
-      <form id="question-form" style="display: none; margin-top: 10px;">
-        <input type="text" style = "margin-top: 5px;" id="user" data-i18n-placeholder="username" placeholder="Enter the user..." required />
-        <input type="text" style = "margin-top: 5px;" id="user-question" data-i18n-placeholder="questionText" placeholder="Enter the question..." required />
-        <textarea style = "width: 100%; resize: vertical; margin-top: 5px;" id="user-answer" rows="3" data-i18n-placeholder="answerText" placeholder="Enter the answer..." required></textarea>
-        <button type="submit" style = "margin-top: 5px;" class="button-small-question" data-i18n="submit">Submit</button>
+        <label data-i18n="mail" for="email">Your Email:</label>
+        <input type="email" data-i18n-placeholder="mailExample" id="email" name="email" required
+          placeholder="you@example.com">
+
+        <label data-i18n="questionBox" for="question">Your Question:</label>
+        <textarea id="question" data-i18n-placeholder="writeQuestion" name="question" rows="4" required
+          placeholder="Write your question here..."></textarea>
+
+        <button data-i18n="submit" type="submit">Submit</button>
+        <div id="questionStatus"></div>
       </form>
     </div>
-  </div>
-</div>
+
+    <!-- Your Questions Section -->
+    <div id="yourQuestionsSection" class="big-modal">
+      <div class="big-modal-content">
+        <button id="closeYourQuestions" class="close-btn" title="Close">&times;</button>
+        <h3 data-i18n="yourQuestionsTitle">Your Submitted Questions</h3>
+        <div id="questionsList"></div>
+        <div id="add-question-section" style="display: none;">
+          <button data-i18n="newQuestion" class="button-small-question" id="add-question-btn">Add New Question</button>
+
+          <form id="question-form" style="display: none; margin-top: 10px;">
+            <input type="text" style="margin-top: 5px;" id="user" data-i18n-placeholder="username"
+              placeholder="Enter the user..." required />
+            <input type="text" style="margin-top: 5px;" id="user-question" data-i18n-placeholder="questionText"
+              placeholder="Enter the question..." required />
+            <textarea style="width: 100%; resize: vertical; margin-top: 5px;" id="user-answer" rows="3"
+              data-i18n-placeholder="answerText" placeholder="Enter the answer..." required></textarea>
+            <button type="submit" style="margin-top: 5px;" class="button-small-question"
+              data-i18n="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
 
 
 
-<div id="dialogBox" class="dialog-box" style="display: none;">
-  <div class="headerandcontainer">
-    <span id="dialog-header"></span>  
-    <div class="dialog-content" id="dialogContent"></div>
-  </div>
-  
-  <div class="dialog-arrow"></div>
-</div>
+    <div id="dialogBox" class="dialog-box" style="display: none;">
+      <div class="headerandcontainer">
+        <span id="dialog-header"></span>
+        <div class="dialog-content" id="dialogContent"></div>
+      </div>
 
-<!-- Custom Alert -->
-<div id="custom-alert" class="popup-modal hidden">
-  <div class="popup-modal-content">
-    <p id="alert-message"></p>
-    <button class="button-small" id="alert-ok-btn">OK</button>
-  </div>
-</div>
+      <div class="dialog-arrow"></div>
+    </div>
 
-<!-- Custom Confirm -->
-<div id="custom-confirm" class="popup-modal hidden">
-  <div class="popup-modal-content">
-    <p id="confirm-message"></p>
-    <button data-i18n="yes" class="button-small" id="confirm-yes-btn">Yes</button>
-    <button data-i18n="no" class="button-small" id="confirm-no-btn">No</button>
-  </div>
-</div>
+    <!-- Custom Alert -->
+    <div id="custom-alert" class="popup-modal hidden">
+      <div class="popup-modal-content">
+        <p id="alert-message"></p>
+        <button class="button-small" id="alert-ok-btn">OK</button>
+      </div>
+    </div>
+
+    <!-- Custom Confirm -->
+    <div id="custom-confirm" class="popup-modal hidden">
+      <div class="popup-modal-content">
+        <p id="confirm-message"></p>
+        <button data-i18n="yes" class="button-small" id="confirm-yes-btn">Yes</button>
+        <button data-i18n="no" class="button-small" id="confirm-no-btn">No</button>
+      </div>
+    </div>
 
 
 
-  <script type="module" src="./scripts/help_button.js"></script>
-  <script type="module" src="./scripts/i18n.js"></script>
-  <script type="module" src="./scripts/translation.js"></script>
-  <script type="module" src="./scripts/popups.js"></script>
-  <script type="module" src="./scripts/auth.js"></script>
-  <script type="module" src="./script.js"></script>
-  <script type="module" src="./scripts/wateringDemo.js"></script>
-  <script type="module" src="./scripts/seedingDemo.js"></script>
-  <script type="module" src="./scripts/feedback.js"></script>
-  <script type="module" src="./scripts/your_questions.js"></script>
+    <script type="module" src="./scripts/help_button.js"></script>
+    <script type="module" src="./scripts/i18n.js"></script>
+    <script type="module" src="./scripts/translation.js"></script>
+    <script type="module" src="./scripts/popups.js"></script>
+    <script type="module" src="./scripts/auth.js"></script>
+    <script type="module" src="./script.js"></script>
+    <script type="module" src="./scripts/wateringDemo.js"></script>
+    <script type="module" src="./scripts/seedingDemo.js"></script>
+    <script type="module" src="./scripts/feedback.js"></script>
+    <script type="module" src="./scripts/your_questions.js"></script>
 
 
 
 </body>
+
 </html>

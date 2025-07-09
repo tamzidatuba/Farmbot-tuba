@@ -71,7 +71,7 @@ function drawRobot() {
 }
 
 // Draw grid lines for visual reference
-export function drawGrid() {    
+export function drawGrid() {
     plants = window.plants;
     ctx.strokeStyle = 'rgb(102, 68, 40)'//'#ddd';
     ctx.linewidth = 1;
@@ -159,7 +159,7 @@ export function clearCanvas() {
 
 export function updateGrid() {
     plants = window.plants;
-    
+
     // Clear the buffer
     bufferCtx.clearRect(0, 0, canvasWidth, canvasHeight);
     bufferCtx.strokeStyle = 'rgb(102, 68, 40)';
@@ -229,7 +229,6 @@ canvas.addEventListener('mouseleave', () => {
     coordDisplay.style.display = 'none';
 });
 
-export function setbotposition(position)
-{
+export function setbotposition(position) {
     botposition = position;
 }

@@ -56,7 +56,7 @@ function createJobRowWatering(jobData = null) {
     row.remove();
   });
 
-  
+
 
   // integrate plant selection
   // default text
@@ -72,7 +72,7 @@ function createJobRowWatering(jobData = null) {
   select.addEventListener('change', (event) => {
     const selectedOption = select.options[select.selectedIndex];
     const plantType = selectedOption.dataset.type;
-  
+
     switch (plantType) {
       case 'tomato':
         wateringHeightInput.value = TOMATO_WATERING_HEIGHT;
@@ -191,7 +191,7 @@ executeBtnWatering.addEventListener('click', async () => {
       } else {
         seenCoordinates.add(coordKey);
         plantstobewatered.push({ plant: { planttype: type, plantname: name, xcoordinate: Number(x), ycoordinate: Number(y) }, wateringheight: z, wateringcapacity: watering });
-        const newPlant = { planttype: type, plantname: name, xcoordinate: x, ycoordinate: y};
+        const newPlant = { planttype: type, plantname: name, xcoordinate: x, ycoordinate: y };
         results.push(`Plant: ${newPlant}, Z: ${z}, Watering Amount: ${watering}`);
       }
     }
@@ -330,7 +330,7 @@ function editWateringJob(job) {
 
 //VIEW WATERING JOBS BUTTON LOGIC
 viewJobsBtnWatering.addEventListener('click', async () => {
-  jobsListWatering.innerHTML =getTranslation('loadingJobs');
+  jobsListWatering.innerHTML = getTranslation('loadingJobs');
   jobCountDisplayWatering.textContent = '';
   viewJobsModalWatering.style.display = 'block';
 
@@ -448,8 +448,7 @@ closeViewJobsModalWatering.addEventListener('click', () => {
 });
 
 
-function DisplayCreateWatering()
-{
+function DisplayCreateWatering() {
   // Reset to creation mode
   isEditMode = false;
   scheduleRadios.item(1).checked = true;
@@ -466,8 +465,7 @@ function DisplayCreateWatering()
   createJobRowWatering(); // Add first row by default
 }
 
-export function DisplayCreateWateringJobForTouchBased(plant)
-{
+export function DisplayCreateWateringJobForTouchBased(plant) {
   DisplayCreateWatering();
   const jobRows = document.querySelectorAll('.job-row-watering');
   const selectcomponent = jobRows[0].querySelector('.plant-select');

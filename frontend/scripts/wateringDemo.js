@@ -28,13 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedPlantId = plants[plantDropdown.value];
     try {
       if (selectedPlantId !== getTranslation("loading")) {
-        const plantstobewatered = [{plant: selectedPlantId, wateringcapacity: 10, wateringheight: 70}];
-        
+        const plantstobewatered = [{ plant: selectedPlantId, wateringcapacity: 10, wateringheight: 70 }];
+
         const payload = {
-          jobname: "Watering Demo", 
-          plantstobewatered: plantstobewatered, 
-          is_scheduled: false, 
-          scheduleData: null};
+          jobname: "Watering Demo",
+          plantstobewatered: plantstobewatered,
+          is_scheduled: false,
+          scheduleData: null
+        };
         const token = "";
 
         const response = await fetch('/api/demo/watering', {
@@ -42,11 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({payload, token})
+          body: JSON.stringify({ payload, token })
         });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Watering demo failed");
-      alert(data.message || "Watering demo queued");
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Watering demo failed");
+        alert(data.message || "Watering demo queued");
       } else {
         console.error("No plant selected or plants are still loading.");
       }
@@ -68,5 +69,5 @@ document.addEventListener("DOMContentLoaded", () => {
       plantDropdown.appendChild(option);
     }
     plants = predefinedPlants; // Store the predefined plants
-  }  
+  }
 });

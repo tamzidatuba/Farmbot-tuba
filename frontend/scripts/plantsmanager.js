@@ -1,6 +1,6 @@
 import { token } from './auth.js'; // your auth token binding
 import { getTranslation } from './translation.js';
-import { customAlert} from './popups.js';
+import { customAlert } from './popups.js';
 import { drawGrid, clearCanvas } from "./canvas.js";
 
 
@@ -24,26 +24,26 @@ const modalHtml = `
 document.body.insertAdjacentHTML('beforeend', modalHtml);
 
 // 2) Grab all the elements we need
-const deleteBtn     = document.getElementById('deleteplants');
-const deleteModal   = document.getElementById('deletePlantModal');
-const closeDelete   = document.getElementById('closeDeleteModal');
-const plantSelect   = document.getElementById('plantSelect');
+const deleteBtn = document.getElementById('deleteplants');
+const deleteModal = document.getElementById('deletePlantModal');
+const closeDelete = document.getElementById('closeDeleteModal');
+const plantSelect = document.getElementById('plantSelect');
 const confirmDelete = document.getElementById('confirmDeleteBtn');
-const deleteError   = document.getElementById('deleteError');
+const deleteError = document.getElementById('deleteError');
 
 // 3) Open the modal and load plants
 deleteBtn.addEventListener('click', async () => {
   deleteError.textContent = '';
-  plantSelect.innerHTML  = `<option>Loading…</option>`;
+  plantSelect.innerHTML = `<option>Loading…</option>`;
   deleteModal.style.display = 'block';
 
   plantSelect.innerHTML = ''; // clear previous options
   plantSelect.innerHTML = window.plants.map(p => {
     // label for user, value as "x,y"
-      const label = `${p.plantname}: ${getTranslation(p.planttype)} ${getTranslation("at")}  X:${p.xcoordinate}  Y:${p.ycoordinate}`;
-      const value = `${p.xcoordinate},${p.ycoordinate}`;
-      return `<option value="${value}">${label}</option>`;
-    }).join('');
+    const label = `${p.plantname}: ${getTranslation(p.planttype)} ${getTranslation("at")}  X:${p.xcoordinate}  Y:${p.ycoordinate}`;
+    const value = `${p.xcoordinate},${p.ycoordinate}`;
+    return `<option value="${value}">${label}</option>`;
+  }).join('');
   /*try {
     const res = await fetch('/api/plants');
     if (!res.ok) throw new Error('Failed to fetch plants');
@@ -85,15 +85,15 @@ confirmDelete.addEventListener('click', async () => {
 
 // Predefined plants matching your Seeding schema
 export const predefinedPlants = {
-    "1": { planttype: "lettuce", plantname: "Luna", xcoordinate: 10, ycoordinate: 20 },
-    "2": { planttype: "lettuce", plantname: "Leafy", xcoordinate: 20, ycoordinate: 30 },
-    "3": { planttype: "tomato", plantname: "Ruby", xcoordinate: 30, ycoordinate: 40 },
-    "4": { planttype: "tomato", plantname: "Sunny", xcoordinate: 40, ycoordinate: 50 },
-    "5": { planttype: "radish", plantname: "Spicy", xcoordinate: 50, ycoordinate: 60 },
-    "6": { planttype: "radish", plantname: "Crunch", xcoordinate: 60, ycoordinate: 70 }
+  "1": { planttype: "lettuce", plantname: "Luna", xcoordinate: 10, ycoordinate: 20 },
+  "2": { planttype: "lettuce", plantname: "Leafy", xcoordinate: 20, ycoordinate: 30 },
+  "3": { planttype: "tomato", plantname: "Ruby", xcoordinate: 30, ycoordinate: 40 },
+  "4": { planttype: "tomato", plantname: "Sunny", xcoordinate: 40, ycoordinate: 50 },
+  "5": { planttype: "radish", plantname: "Spicy", xcoordinate: 50, ycoordinate: 60 },
+  "6": { planttype: "radish", plantname: "Crunch", xcoordinate: 60, ycoordinate: 70 }
 };
 
-export async function deletePlant(x,y) {
+export async function deletePlant(x, y) {
   let xcoordinate = x;
   let ycoordinate = y;
   const res = await fetch('/api/plant', {
@@ -110,16 +110,16 @@ export async function deletePlant(x,y) {
 
 // get plants from server
 export async function getPlants() {
-    await fetch('/api/plants', {
-        method: 'GET',
+  await fetch('/api/plants', {
+    method: 'GET',
+  })
+    .then(response => response.json())
+    .then(data => {
+      //if (plants.toString() != data.toString()) {
+      window.plants.length = 0; // Clear the existing plants array
+      for (const plant of data) {
+        window.plants.push({ planttype: plant.planttype, plantname: plant.plantname, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate });
+      }
     })
-        .then(response => response.json())
-        .then(data => {
-            //if (plants.toString() != data.toString()) {
-            window.plants.length = 0; // Clear the existing plants array
-            for (const plant of data) {
-                window.plants.push({ planttype: plant.planttype, plantname: plant.plantname, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate });
-            }
-        })
-        .catch(error => console.error('Error fetching plants:', error));
+    .catch(error => console.error('Error fetching plants:', error));
 }

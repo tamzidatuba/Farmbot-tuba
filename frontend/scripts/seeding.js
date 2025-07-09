@@ -8,30 +8,30 @@ import { customConfirm } from "./popups.js";
 
 // ——— DOM References ———
 // Create modal
-const seedingJobBtn   = document.getElementById('seedingJobBtn');
-const createModal     = document.getElementById('seedingModal');
+const seedingJobBtn = document.getElementById('seedingJobBtn');
+const createModal = document.getElementById('seedingModal');
 const createNameInput = document.getElementById('SeedingJobName');
 const createNameError = document.getElementById('jobNameError');
-const jobContainer    = document.getElementById('jobContainer');
-const addPlantBtn     = document.getElementById('addPlantBtn');
-const executeBtn      = document.getElementById('executeBtn');
-const closeCreateBtn  = document.getElementById('closeModal');
+const jobContainer = document.getElementById('jobContainer');
+const addPlantBtn = document.getElementById('addPlantBtn');
+const executeBtn = document.getElementById('executeBtn');
+const closeCreateBtn = document.getElementById('closeModal');
 
 // Modify modal
-const modifyModal         = document.getElementById('modifySeedingModal');
-const closeModifyBtn      = document.getElementById('closeModifyModal');
-const modifyNameInput     = document.getElementById('modifySeedingJobName');
-const modifyNameError     = document.getElementById('modifyJobNameError');
-const modifyJobContainer  = document.getElementById('modifyJobContainer');
-const modifyAddPlantBtn   = document.getElementById('modifyAddPlantBtn');
-const modifyExecuteBtn    = document.getElementById('modifyExecuteBtn');
+const modifyModal = document.getElementById('modifySeedingModal');
+const closeModifyBtn = document.getElementById('closeModifyModal');
+const modifyNameInput = document.getElementById('modifySeedingJobName');
+const modifyNameError = document.getElementById('modifyJobNameError');
+const modifyJobContainer = document.getElementById('modifyJobContainer');
+const modifyAddPlantBtn = document.getElementById('modifyAddPlantBtn');
+const modifyExecuteBtn = document.getElementById('modifyExecuteBtn');
 
 // View‐jobs modal
-const viewJobsBtn         = document.getElementById('viewSeedingJobsBtn');
-const viewJobsModal       = document.getElementById('viewJobsModal');
-const jobsList            = document.getElementById('jobsList');
-const jobCountDisplay     = document.getElementById('jobCountDisplay');
-const closeViewJobsBtn    = document.getElementById('closeViewJobsModal');
+const viewJobsBtn = document.getElementById('viewSeedingJobsBtn');
+const viewJobsModal = document.getElementById('viewJobsModal');
+const jobsList = document.getElementById('jobsList');
+const jobCountDisplay = document.getElementById('jobCountDisplay');
+const closeViewJobsBtn = document.getElementById('closeViewJobsModal');
 
 
 // ——— State Counters ———
@@ -85,15 +85,15 @@ function createJobRow() {
 
   // depth logic
   const plantSelect = row.querySelector('.plantType');
-  const depthInput  = row.querySelector('.depth');
-  const deleteBtn   = row.querySelector('.delete-job');
+  const depthInput = row.querySelector('.depth');
+  const deleteBtn = row.querySelector('.delete-job');
 
   plantSelect.addEventListener('change', () => {
     const t = plantSelect.value.toLowerCase();
     depthInput.value =
-      t === 'tomato'  ? 6 :
-      t === 'lettuce' ? 3 :
-      t === 'radish'  ? 10 : '';
+      t === 'tomato' ? 6 :
+        t === 'lettuce' ? 3 :
+          t === 'radish' ? 10 : '';
   });
 
   deleteBtn.addEventListener('click', () => row.remove());
@@ -141,15 +141,15 @@ function createModifyJobRow() {
   `;
 
   const plantSelect = row.querySelector('.plantType');
-  const depthInput  = row.querySelector('.depth');
-  const deleteBtn   = row.querySelector('.delete-job');
+  const depthInput = row.querySelector('.depth');
+  const deleteBtn = row.querySelector('.delete-job');
 
   plantSelect.addEventListener('change', () => {
     const t = plantSelect.value.toLowerCase();
     depthInput.value =
-      t === 'tomato'  ? 6 :
-      t === 'lettuce' ? 3 :
-      t === 'radish'  ? 10 : '';
+      t === 'tomato' ? 6 :
+        t === 'lettuce' ? 3 :
+          t === 'radish' ? 10 : '';
   });
 
   deleteBtn.addEventListener('click', () => row.remove());
@@ -175,17 +175,17 @@ executeBtn.addEventListener('click', async () => {
   rows.forEach(row => {
     const plant = row.querySelector('.plantType').value.toLowerCase();
     const plantName = row.querySelector('.plantName').value.trim();
-    const x     = Number(row.querySelector('.xCoord').value);
-    const y     = Number(row.querySelector('.yCoord').value);
+    const x = Number(row.querySelector('.xCoord').value);
+    const y = Number(row.querySelector('.yCoord').value);
     const depth = Number(row.querySelector('.depth').value);
-    const key   = `${x},${y}`;
-    const err   = row.querySelector('.errorMsg');
+    const key = `${x},${y}`;
+    const err = row.querySelector('.errorMsg');
     err.textContent = '';
 
     if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650) {
       err.textContent = getTranslation('correctValues');
       valid = false;
-    } else if (seen.has(key)){
+    } else if (seen.has(key)) {
       err.textContent = getTranslation("duplicates");
       valid = false;
     } else {
@@ -247,11 +247,11 @@ modifyExecuteBtn.addEventListener('click', async () => {
   rows.forEach(row => {
     const plant = row.querySelector('.plantType').value.toLowerCase();
     const plantName = row.querySelector('.plantName').value.trim();
-    const x     = Number(row.querySelector('.xCoord').value);
-    const y     = Number(row.querySelector('.yCoord').value);
+    const x = Number(row.querySelector('.xCoord').value);
+    const y = Number(row.querySelector('.yCoord').value);
     const depth = Number(row.querySelector('.depth').value);
-    const key   = `${x},${y}`;
-    const err   = row.querySelector('.errorMsg');
+    const key = `${x},${y}`;
+    const err = row.querySelector('.errorMsg');
     err.textContent = '';
 
     if (!plant || isNaN(x) || isNaN(y) || seen.has(key)) {
@@ -284,7 +284,7 @@ modifyExecuteBtn.addEventListener('click', async () => {
 
 closeModifyBtn.addEventListener('click', () => {
   modifyModal.style.display = 'none';
-  viewJobsModal.style.display='block';
+  viewJobsModal.style.display = 'block';
 });
 
 window.addEventListener('click', e => {
@@ -293,12 +293,12 @@ window.addEventListener('click', e => {
 
 // ——— View‐Jobs Logic ———
 viewJobsBtn.addEventListener('click', async () => {
-  jobsList.innerHTML       = getTranslation('loadingJobs');
+  jobsList.innerHTML = getTranslation('loadingJobs');
   jobCountDisplay.textContent = '';
   viewJobsModal.style.display = 'block';
 
   try {
-    const res  = await fetch('/api/jobs/Seeding');
+    const res = await fetch('/api/jobs/Seeding');
     const jobs = await res.json();
     jobCountDisplay.textContent = `${getTranslation('seedingSoFar')}${jobs.length}`;
 
@@ -328,7 +328,7 @@ viewJobsBtn.addEventListener('click', async () => {
       // Edit
       div.querySelector('.edit-job-btn').addEventListener('click', () => {
         // prepare and show modify modal
-        modifyNameInput.value       = job.jobname;
+        modifyNameInput.value = job.jobname;
         modifyNameError.textContent = '';
         modifyJobContainer.innerHTML = '';
         modifyJobCount = 0;
@@ -337,12 +337,12 @@ viewJobsBtn.addEventListener('click', async () => {
           const row = modifyJobContainer.lastChild;
           row.querySelector('.plantType').value = capitalizeFirstLetter(seed.seedtype);
           row.querySelector('.plantName').value = seed.seedname || '';
-          row.querySelector('.xCoord').value    = seed.xcoordinate;
-          row.querySelector('.yCoord').value    = seed.ycoordinate;
-          row.querySelector('.depth').value     = seed.depth;
+          row.querySelector('.xCoord').value = seed.xcoordinate;
+          row.querySelector('.yCoord').value = seed.ycoordinate;
+          row.querySelector('.depth').value = seed.depth;
         });
         viewJobsModal.style.display = 'none';
-        modifyModal.style.display   = 'block';
+        modifyModal.style.display = 'block';
       });
 
       // Delete
@@ -357,8 +357,8 @@ viewJobsBtn.addEventListener('click', async () => {
             body: JSON.stringify({ token })
           });
           const json2 = await (res2.headers.get('content-type')?.includes('application/json')
-                                ? res2.json()
-                                : Promise.reject(await res2.text()));
+            ? res2.json()
+            : Promise.reject(await res2.text()));
           if (!res2.ok) throw new Error(json2.error || json2.message);
           customAlert(getTranslation('jobDeleted'));
           viewJobsBtn.click();
@@ -368,7 +368,7 @@ viewJobsBtn.addEventListener('click', async () => {
       });
 
       // Execute
-   
+
       div.querySelector('.execute-job-btnseed').addEventListener('click', async () => {
         //if (!confirm(getTranslation('executeConfirm') + job.jobname + '?')) return;
         const confirmed = await customConfirm(getTranslation('executeConfirm') + job.jobname + '?');
@@ -408,8 +408,7 @@ window.addEventListener('click', e => {
   if (e.target === viewJobsModal) viewJobsModal.style.display = 'none';
 });
 
-function DisplayCreateSeedingJob()
-{
+function DisplayCreateSeedingJob() {
   // Reset
   createJobCount = 0;
   jobContainer.innerHTML = '';
@@ -423,8 +422,7 @@ function DisplayCreateSeedingJob()
 }
 
 
-export function DisplayCreateSeedingJobForTouchedBased(x,y)
-{
+export function DisplayCreateSeedingJobForTouchedBased(x, y) {
   DisplayCreateSeedingJob();
   const rows = jobContainer.querySelectorAll('.job-row');
   rows[0].querySelector('.xCoord').value = x;

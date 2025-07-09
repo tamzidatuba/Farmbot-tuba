@@ -5,11 +5,11 @@ import { predefinedPlants } from "./plantsmanager.js"; // predefined plants for 
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
-  const demoBtn     = document.getElementById("seedingDemoBtn");
-  const modal       = document.getElementById("seedingDemoModal");
-  const closeModal  = document.getElementById("closeModalSeedingDemo");
+  const demoBtn = document.getElementById("seedingDemoBtn");
+  const modal = document.getElementById("seedingDemoModal");
+  const closeModal = document.getElementById("closeModalSeedingDemo");
   const plantSelect = document.getElementById("plantDropdownSeeding");
-  const execBtn     = document.getElementById("executeBtnSeedingDemo");
+  const execBtn = document.getElementById("executeBtnSeedingDemo");
 
   // Local store for predefined plants
   let plants = {};
@@ -56,17 +56,17 @@ document.addEventListener("DOMContentLoaded", () => {
       seeds: [{
         xcoordinate: selected.xcoordinate,
         ycoordinate: selected.ycoordinate,
-        depth:       5,                 // adjust as needed
-        seedtype:    selected.planttype,
-        seedname:    selected.plantname
+        depth: 5,                 // adjust as needed
+        seedtype: selected.planttype,
+        seedname: selected.plantname
       }]
     };
 
     try {
       const response = await fetch("/api/demo/seeding", {
-        method:  "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ payload, token })
+        body: JSON.stringify({ payload, token })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Seeding demo failed");

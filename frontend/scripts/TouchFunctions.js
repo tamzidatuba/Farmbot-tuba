@@ -4,8 +4,8 @@ import { getTranslation } from "./translation.js";
 import { DisplayCreateSeedingJobForTouchedBased } from "./seeding.js";
 import { DisplayCreateWateringJobForTouchBased } from "./watering.js";
 import { GetDistance } from "./tools.js"; // Function to fetch plants
-import { getPlants  } from "./plantsmanager.js";
-import {deletePlant} from "./plantsmanager.js";
+import { getPlants } from "./plantsmanager.js";
+import { deletePlant } from "./plantsmanager.js";
 
 
 const dialogContent = document.getElementById("dialogContent");
@@ -50,7 +50,7 @@ canvas.addEventListener('click', async (e) => {
 
 
     dialogContent.innerHTML = ""; // Clear previous content
-    
+
 
     if (selectedPlant) {
       console.log(window.plants);
@@ -63,10 +63,9 @@ canvas.addEventListener('click', async (e) => {
       AddDeleteButtonToDialogContent();
       // AddWateringButtonToDialogContent();
       // DisplayCreateWateringJobForTouchBased(selectedPlant);
-      showDialogOnCanvas(positiononscreen.x, positiononscreen.y);      
+      showDialogOnCanvas(positiononscreen.x, positiononscreen.y);
     }
-    else 
-    {
+    else {
       // DisplayCreateSeedingJobForTouchedBased(x,y);
     }
   }
