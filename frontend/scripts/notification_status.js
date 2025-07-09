@@ -87,7 +87,7 @@ export async function updateRobot() {
     //if (plants.toString() != data.toString()) {
       window.plants.length = 0; // clear it
       for (const plant of data.plants) {
-        window.plants.push(new Plant(plant.planttype, plant.plantname, Number(plant.xcoordinate), Number(plant.ycoordinate)));
+        window.plants.push({ plantname: plant.plantname , planttype: plant.planttype, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate});
       }
     }
     })
