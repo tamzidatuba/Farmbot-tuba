@@ -1,7 +1,7 @@
 // seedingDemo.js
 // This script handles the "Seeding Demo" modal and demo job submission
-import { getTranslation } from "./scripts/translation.js";
-import { token } from "./scripts/auth.js"; // your auth token binding
+import { getTranslation } from "./translation.js";
+import { token } from "./auth.js"; // your auth token binding
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements

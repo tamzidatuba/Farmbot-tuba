@@ -1,4 +1,4 @@
-import { getTranslation } from './scripts/translation.js';
+import { getTranslation } from './translation.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const demoBtn = document.getElementById("wateringDemoBtn");

@@ -23,7 +23,7 @@ canvas {
   display: block;
   background-color: #643a2a;
   cursor: crosshair;
-  background-image: url("noise.png");
+  background-image: url("../assets/images/noise.png");
   left: 25%;
 }
 
