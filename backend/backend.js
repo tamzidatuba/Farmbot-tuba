@@ -1,7 +1,7 @@
 import { StatusManager } from "./statusManager.js";
 import {getFarmbot} from './farmbotInitializer.js';
 import { ScheduleManager } from "./scheduleManager.js";
-import DatabaseService from '../databaseservice.js';
+import DatabaseService from './databaseservice.js';
 import { HomeJob } from './jobs/HomeJob.js';
 import { SeedingJob} from './jobs/SeedingJob.js';
 import { WateringJob} from './jobs/WateringJob.js';

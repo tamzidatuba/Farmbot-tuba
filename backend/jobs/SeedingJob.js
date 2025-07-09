@@ -6,7 +6,7 @@ import { MoveZTask} from "./tasks/MoveZTask.js";
 import { SetPinTask } from "./tasks/SetPinTask.js";
 import { DatabaseTask } from "./tasks/DatabaseTask.js";
 import { TimedTask } from "./tasks/TimedTask.js";
-import DatabaseService from "../../databaseservice.js";
+import DatabaseService from "../databaseservice.js";
 import { FARMBOT_DATA } from "../farmbotInitializer.js";
 import { TimedPinTask } from "./tasks/TimedPinTask.js";
 
