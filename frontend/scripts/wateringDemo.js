@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const plant = predefinedPlants[plantId];
       const option = document.createElement("option");
       option.value = plantId;
-      option.textContent = `${p.plantname}: ${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+      option.textContent = `${plant.plantname}: ${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
       plantDropdown.appendChild(option);
     }
     plants = predefinedPlants; // Store the predefined plants

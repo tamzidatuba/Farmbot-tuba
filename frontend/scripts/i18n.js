@@ -65,7 +65,7 @@ export const translations = {
     jobExecuted: 'Job will be executed 🚜',
     //sidebar
     menu: 'FarmBot Menu',
-    task: 'Create Task',
+    task: '➕ Create Task',
     seedingTitle: '🌱 Seeding Job',
     wateringTitle: '💧 Watering Job',
     view: '📋 View Jobs',
@@ -221,7 +221,7 @@ export const translations = {
     jobExecuted: 'Auftrag wird ausgeführt 🚜',
     //sidebar
      menu: 'FarmBot Menü',
-    task: 'Aufgabe erstellen',
+    task: '➕ Aufgabe erstellen',
     seedingTitle: '🌱 Aussaat Auftrag',
     wateringTitle: '💧 Bewässerungs Auftrag',
     plants: 'Pflanzen',
