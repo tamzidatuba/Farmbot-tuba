@@ -1,7 +1,6 @@
-import DatabaseService from '../databaseservice.js';
+import DatabaseService from '../backend/databaseservice.js';
 import TokenManager from '../backend/tokenManager.js';
 import express from 'express';
-import { error } from 'console';
 
 export default function createJobsRouter(backend) {
     const router = express.Router();

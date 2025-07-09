@@ -1,3 +1,4 @@
+import { predefinedPlants } from './plantsmanager.js'; // predefined plants for demo
 import { getTranslation } from './translation.js';
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -56,16 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.style.display = "none";
   });
 
-  //use predefined plants for demo
-  const predefinedPlants = {
-    "1": {planttype: "lettuce", xcoordinate: 10, ycoordinate: 20},
-    "2": {planttype: "lettuce", xcoordinate: 20, ycoordinate: 30},
-    "3": {planttype: "tomato", xcoordinate: 30, ycoordinate: 40},
-    "4": {planttype: "tomato", xcoordinate: 40, ycoordinate: 50},
-    "5": {planttype: "radish", xcoordinate: 50, ycoordinate: 60},
-    "6": {planttype: "radish", xcoordinate: 60, ycoordinate: 70}
-  };
-
   // Populate the dropdown with predefined plants
   function populatePlantDropdown() {
     plantDropdown.innerHTML = "";
@@ -73,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const plant = predefinedPlants[plantId];
       const option = document.createElement("option");
       option.value = plantId;
-      option.textContent = `${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
+      option.textContent = `${plant.plantname}: ${getTranslation(plant.planttype)} ${getTranslation("at")} X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}`;
       plantDropdown.appendChild(option);
     }
     plants = predefinedPlants; // Store the predefined plants

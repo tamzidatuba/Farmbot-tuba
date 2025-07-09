@@ -65,16 +65,16 @@ export const translations = {
     jobExecuted: 'Job will be executed 🚜',
     //sidebar
     menu: 'FarmBot Menu',
-    task: 'Create Task',
+    task: '➕ Create Task',
     seedingTitle: '🌱 Seeding Job',
     wateringTitle: '💧 Watering Job',
     view: '📋 View Jobs',
     seedingDemo: '🌱 Seeding Demo',
     wateringDemo: '💧 Watering Demo',
-    help: 'Help',
+    help: '💡 Help',
     manage: '🪴 Manage Plants',
     deletePlants: '🗑️ Delete Plants',
-    yourQuestions: 'Your Questions',
+    yourQuestions: '❓ Your Questions',
     //watering job template
     at:'at',
     // Translation for alerts and errors:
@@ -225,17 +225,17 @@ export const translations = {
     jobExecuted: 'Auftrag wird ausgeführt 🚜',
     //sidebar
      menu: 'FarmBot Menü',
-    task: 'Aufgabe erstellen',
+    task: '➕ Aufgabe erstellen',
     seedingTitle: '🌱 Aussaat Auftrag',
     wateringTitle: '💧 Bewässerungs Auftrag',
     plants: 'Pflanzen',
     view: '📋 Aufträge anzeigen',
     seedingDemo: '🌱 Aussaat Demo',
     wateringDemo: '💧 Bewässerungs Demo',
-    help: 'Hilfe',
+    help: '💡 Hilfe',
     manage: '🪴 Pflanzen verwalten',
     deletePlants: '🗑️ Pflanzen löschen',
-    yourQuestions: 'Eure Fragen',
+    yourQuestions: '❓ Eure Fragen',
     //watering job template
     at:'bei',
     // Translation for alerts and errors:

@@ -1,5 +1,4 @@
 import { token,isLoggedIn } from "./auth.js";
-import { Plant } from "../script.js";
 import { getTranslation } from "./translation.js";
 import { languageSelector } from "./translation.js";
 import { updateGrid } from "./canvas.js";

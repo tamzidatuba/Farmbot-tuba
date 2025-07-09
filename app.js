@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import DatabaseService from './databaseservice.js';
+import DatabaseService from './backend/databaseservice.js';
 import { Backend } from './backend/backend.js';
 import createJobsRouter from './routes/jobs.js';
 import TokenManager from "./backend/tokenManager.js";
