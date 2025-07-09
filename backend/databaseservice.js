@@ -176,7 +176,11 @@ async function FetchQuestionsFromDBbyQuestion(question)
    return question3;
 }
 
-
+async function InsertAnswerIntoDB(question, answer)
+{
+    let answer_recieved = await questionModel.InsertAnswersIntoDB(question,answer);
+    return answer_recieved;
+}
 
 async function InsertNotificationToDB(text) {
     await notificationModel.InsertNotificationToDB(text);
@@ -312,4 +316,5 @@ export default {
     FetchAlltheQuestionsFromDB,
     FetchQuestionsFromDBbyQuestion,
     DeletePlantFromDB,
+    InsertAnswerIntoDB,
 };

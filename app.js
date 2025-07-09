@@ -82,6 +82,20 @@ catch(err)
 }
 });
 
+app.put('/api/putquestions', async (req,res) => {
+  const{ answer, question } = req.body;
+try{
+  let insert_answer  = await DatabaseService.InsertAnswerIntoDB(question, answer);
+  res.status(200).json(insert_answer);
+}
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: "Failed to insert answer to database."});
+}
+});
+
+
 // delete plant
 app.delete('/api/plant', async (req, res) => {
   const { token, xcoordinate, ycoordinate} = req.body;
