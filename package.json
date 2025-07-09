@@ -3,6 +3,7 @@
   "dependencies": {
     "express": "^5.1.0",
     "farmbot": "^15.8.11",
-    "mongoose": "^8.14.3"
+    "mongoose": "^8.14.3",
+    "nodemailer": "^7.0.5"
   }
 }
