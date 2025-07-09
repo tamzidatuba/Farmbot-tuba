@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const p = predefinedPlants[id];
       const opt = document.createElement("option");
       opt.value = id;
-      opt.textContent = `${p.plantname}: ${capitalize(getTranslation(p.planttype))} at X: ${p.xcoordinate}, Y: ${p.ycoordinate}`;
+      opt.textContent = `${p.plantname}: ${capitalize(getTranslation(p.planttype))} ${getTranslation("at")} X: ${p.xcoordinate}, Y: ${p.ycoordinate}`;
       plantSelect.appendChild(opt);
     }
     plants = predefinedPlants;
