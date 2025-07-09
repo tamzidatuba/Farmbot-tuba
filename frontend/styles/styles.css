@@ -592,6 +592,16 @@ margin-top: 4px;
       cursor: pointer;
     }
 
+    .button-small {
+      width: 25%;
+    }
+
+    .button-small-question {
+      width: 25%;
+      display: block;
+      margin: auto;
+    }
+
     button:hover {
       background-color: var(--buttons-hover-color);
     }
@@ -1010,7 +1020,6 @@ margin-top: 4px;
   right: 15px;
   font-size: 20px;
   border: none;
-  background: transparent;
   cursor: pointer;
 }
 

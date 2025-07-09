@@ -155,6 +155,10 @@ export const translations = {
     user: 'Asked by user: ',
     question: 'Question',
     answer: 'Answer',
+    newQuestion: 'Add New Question',
+    username: 'Enter the user',
+    questionText: 'Enter the question',
+    answerText: 'Enter the answer',
   },
   de: {
     // German translations
@@ -312,5 +316,9 @@ export const translations = {
     user: 'Gefragt von Nutzer: ',
     question: 'Frage',
     answer: 'Antwort',
+    newQuestion: 'Neue Frage hinzufügen',
+    username: 'Geben Sie den Nutzer ein',
+    questionText: 'Geben Sie die Frage ein',
+    answerText: 'Geben Sie die Antwort ein',
   }
 }

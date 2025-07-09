@@ -322,8 +322,20 @@
     <button id="closeYourQuestions" class="close-btn" title="Close">&times;</button>
     <h3 data-i18n="yourQuestionsTitle">Your Submitted Questions</h3>
     <div id="questionsList"></div>
+    <div id="add-question-section" style="display: none;">
+      <button data-i18n="newQuestion" class="button-small-question" id="add-question-btn">Add New Question</button>
+  
+      <form id="question-form" style="display: none; margin-top: 10px;">
+        <input type="text" style = "margin-top: 5px;" id="user" data-i18n-placeholder="username" placeholder="Enter the user..." required />
+        <input type="text" style = "margin-top: 5px;" id="user-question" data-i18n-placeholder="questionText" placeholder="Enter the question..." required />
+        <textarea style = "width: 100%; resize: vertical; margin-top: 5px;" id="user-answer" rows="3" data-i18n-placeholder="answerText" placeholder="Enter the answer..." required></textarea>
+        <button type="submit" style = "margin-top: 5px;" class="button-small-question" data-i18n="submit">Submit</button>
+      </form>
+    </div>
   </div>
 </div>
+
+
 
 <div id="dialogBox" class="dialog-box" style="display: none;">
   <div class="headerandcontainer">
@@ -338,7 +350,7 @@
 <div id="custom-alert" class="popup-modal hidden">
   <div class="popup-modal-content">
     <p id="alert-message"></p>
-    <button id="alert-ok-btn">OK</button>
+    <button class="button-small" id="alert-ok-btn">OK</button>
   </div>
 </div>
 
@@ -346,8 +358,8 @@
 <div id="custom-confirm" class="popup-modal hidden">
   <div class="popup-modal-content">
     <p id="confirm-message"></p>
-    <button data-i18n="yes" id="confirm-yes-btn">Yes</button>
-    <button data-i18n="no" id="confirm-no-btn">No</button>
+    <button data-i18n="yes" class="button-small" id="confirm-yes-btn">Yes</button>
+    <button data-i18n="no" class="button-small" id="confirm-no-btn">No</button>
   </div>
 </div>
 
