@@ -6,6 +6,7 @@ import { DisplayCreateWateringJobForTouchBased } from "./watering.js";
 import { GetDistance } from "./tools.js"; // Function to fetch plants
 import { getPlants } from "./plantsmanager.js";
 import { deletePlant } from "./plantsmanager.js";
+import { customConfirm } from "./popups.js";
 
 
 const dialogContent = document.getElementById("dialogContent");
@@ -115,8 +116,9 @@ function AddDeleteButtonToDialogContent() {
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "❌";
 
-  deleteButton.addEventListener("click", () => {
-    if (selectedPlant) {
+  deleteButton.addEventListener("click", async () => {
+    const confirmed = await customConfirm("Are you sure you want to delete this plant?");
+    if (selectedPlant && confirmed) {
       deletePlant(selectedPlant.xcoordinate, selectedPlant.ycoordinate);
     }
     dialogBox.style.display = "none"; // Hide the dialog after deletion
