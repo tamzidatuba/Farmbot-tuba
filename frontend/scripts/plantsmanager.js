@@ -24,7 +24,8 @@ const modalHtml = `
 document.body.insertAdjacentHTML('beforeend', modalHtml);
 
 // 2) Grab all the elements we need
-const deleteBtn = document.getElementById('deleteplants');
+//const deleteBtn = document.getElementById('deleteplants');
+const managePlantsBtn = document.getElementById('managePlants');
 const deleteModal = document.getElementById('deletePlantModal');
 const closeDelete = document.getElementById('closeDeleteModal');
 const plantSelect = document.getElementById('plantSelect');
@@ -32,7 +33,7 @@ const confirmDelete = document.getElementById('confirmDeleteBtn');
 const deleteError = document.getElementById('deleteError');
 
 // 3) Open the modal and load plants
-deleteBtn.addEventListener('click', async () => {
+managePlantsBtn.addEventListener('click', async () => {
   deleteError.textContent = '';
   plantSelect.innerHTML = `<option>Loading…</option>`;
   deleteModal.style.display = 'block';
