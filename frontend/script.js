@@ -37,12 +37,6 @@ toggle.addEventListener('click', () => {
   arrow.classList.toggle('open', !isVisible);
 });
 
-managePlants.addEventListener('click', () => {
-  const isVisible = subtaskManage.style.display === 'block';
-  subtaskManage.style.display = isVisible ? 'none' : 'block';
-  arrowmanageView.classList.toggle('open', !isVisible);
-});
-
 await getPlants(); // get data of plants
 await updateRobot();
 setInterval(async () => await updateRobot(), 1000); // Update every 1 second
