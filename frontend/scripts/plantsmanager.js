@@ -1,6 +1,6 @@
 import { token } from './auth.js'; // your auth token binding
 import { getTranslation } from './translation.js';
-import { customAlert } from './popups.js';
+import { customAlert, customConfirm } from './popups.js';
 import { drawGrid, clearCanvas } from "./canvas.js";
 
 
@@ -71,7 +71,8 @@ window.addEventListener('click', e => {
 // 5) Confirm delete
 confirmDelete.addEventListener('click', async () => {
   deleteError.textContent = '';
-
+  const confirmed = await customConfirm("Are you sure you want to delete this plant?");
+  if (!confirmed) return;
   // split the "x,y" into two numbers
   const [xcoordinate, ycoordinate] = plantSelect.value
     .split(',')
