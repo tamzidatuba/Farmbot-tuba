@@ -20,7 +20,7 @@ let selectedPlant = null;
 
 
 canvas.addEventListener('click', async (e) => {
-  if (isLoggedIn) {
+  if (isLoggedIn || !isLoggedIn) {
     let coordDisplay = pixelToCoord(e.offsetX, e.offsetY);
     let x = coordDisplay.x;
     let y = coordDisplay.y;
