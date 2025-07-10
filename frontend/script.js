@@ -14,8 +14,6 @@ const subtaskView = document.getElementById('subtaskView');
 const arrow = document.getElementById('arrow');
 const arrowView = document.getElementById('arrowView');
 const managePlants = document.getElementById('managePlants');
-const subtaskManage = document.getElementById('subtaskManage');
-const arrowmanageView = document.getElementById('arrowmanageView');
 // List to compare plants with data base
 window.plants = [];
 

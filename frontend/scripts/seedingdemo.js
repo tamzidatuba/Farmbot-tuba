@@ -1,6 +1,7 @@
 // This script handles the "Seeding Demo" modal and demo job submission
 import { getTranslation } from "./translation.js";
 import { token } from "./auth.js"; // your auth token binding
+<<<<<<< HEAD
 import { customConfirm, customAlert } from "./popups.js";
 
 // Predefined plants matching your Seeding schema
@@ -12,6 +13,10 @@ export const predefinedPlants = [
   { id:5, planttype: "radish", plantname: "Spicy", xcoordinate: 20, ycoordinate: 60 },
   { id:6, planttype: "radish", plantname: "Crunch", xcoordinate: 40, ycoordinate: 60 }
 ];
+=======
+import { predefinedPlants } from "./plantsmanager.js"; // predefined plants for demo
+import { customAlert } from "./popups.js";
+>>>>>>> 92619f25b94c5d1792486328f3327d469b4cc76e
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
@@ -120,10 +125,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Seeding demo failed");
-      alert(data.message || "Seeding demo queued");
+      customAlert(data.message || "Seeding demo queued");
     } catch (err) {
       console.error("Seeding demo error:", err);
-      alert(err.message);
+      customAlert(err.message);
     } finally {
       modal.style.display = "none";
     }

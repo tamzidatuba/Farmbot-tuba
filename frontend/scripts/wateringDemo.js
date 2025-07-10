@@ -47,13 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || "Watering demo failed");
-        alert(data.message || "Watering demo queued");
+        customAlert(data.message || "Watering demo queued");
       } else {
         console.error("No plant selected or plants are still loading.");
       }
     } catch (err) {
       console.error("Error executing watering demo:", err);
-      alert(err.message);
+      customAlert(err.message);
     }
     modal.style.display = "none";
   });
