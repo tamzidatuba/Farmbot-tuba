@@ -7,6 +7,7 @@ import userModel from '../models/user.model.js';
 import ExecutionModel from '../models/execution.model.js';
 import questionModel from '../models/question.model.js';
 import { GetDistance } from '../frontend/scripts/tools.js';
+import { PlantRadii } from '../frontend/scripts/tools.js'; // Import PlantRadii from tools.js
 
 //connect to DB
 const connectionString = 'mongodb://localhost:27017/admin';
@@ -23,12 +24,6 @@ const JobType = Object.freeze({
     HOME: 'Home',
     EXECUTION: 'Execution',
 });
-
-const PlantRadii = {
-    lettuce: 15,
-    tomato: 30,
-    radish: 2,
-}
 
 async function InsertJobToDB(jobType, object) {
     const now = new Date();
@@ -287,7 +282,8 @@ async function ValidateNewSeedsAgainstPlants(seeds) {
         for (let plant of plants) {
             let distance = GetDistance(seed.xcoordinate, seed.ycoordinate, plant.xcoordinate, plant.ycoordinate);
             var planttypeSmallCase = plant.planttype.toLowerCase();
-            if (distance <= PlantRadii[planttypeSmallCase]) {
+            let seedtype = seed.seedtype.toLowerCase();
+            if (distance <= PlantRadii[planttypeSmallCase] + PlantRadii[seedtype]) {
                 existingconflictingplant = plant;
                 isValid = false;
             }

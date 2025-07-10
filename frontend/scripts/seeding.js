@@ -172,7 +172,6 @@ executeBtn.addEventListener('click', async () => {
   const seeds = [];
   const seen = new Set();
   let valid = true;
-
   rows.forEach(row => {
     const plant = row.querySelector('.plantType').value.toLowerCase();
     const plantName = row.querySelector('.plantName').value.trim();
