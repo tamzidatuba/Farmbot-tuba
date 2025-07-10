@@ -79,6 +79,7 @@ confirmDelete.addEventListener('click', async () => {
 
   console.log('Deleting plant at:', { xcoordinate, ycoordinate, token });
   deletePlant(xcoordinate, ycoordinate);
+  deleteModal.style.display = "none";
 });
 
 
