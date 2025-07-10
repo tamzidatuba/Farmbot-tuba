@@ -19,6 +19,7 @@ const jobsListWatering = document.getElementById('jobsListWatering');
 const jobCountDisplayWatering = document.getElementById('jobCountDisplayWatering');
 const executeBtnWatering = document.getElementById('executeBtnWatering');
 const closeViewJobsModalWatering = document.getElementById('closeViewJobsModalWatering');
+const returnToOverviewWatering = document.getElementById('returnToOverviewWatering');
 
 const TOMATO_WATERING_HEIGHT = 40; // Default height for tomatoes
 const RADISH_WATERING_HEIGHT = 5; // Default height for radishes
@@ -129,6 +130,7 @@ wateringJobBtn.addEventListener('click', async () => {
 
 closeModalWatering.addEventListener('click', () => {
   modalWatering.style.display = 'none';
+  returnToOverviewWatering.style.visibility = 'hidden';
   document.getElementById('WateringJobName').value = '';
   document.getElementById('jobNameErrorWatering').textContent = '';
 });
@@ -136,9 +138,16 @@ closeModalWatering.addEventListener('click', () => {
 window.addEventListener('click', (e) => {
   if (e.target === modalWatering) {
     modalWatering.style.display = 'none';
+    returnToOverviewWatering.style.visibility = 'hidden';
     document.getElementById('WateringJobName').value = '';
     document.getElementById('jobNameErrorWatering').textContent = '';
   }
+});
+
+returnToOverviewWatering.addEventListener('click', () => {
+  modalWatering.style.display = 'none';
+  returnToOverviewWatering.style.visibility = 'hidden';
+  viewJobsModalWatering.style.display = 'block';
 });
 
 
@@ -283,6 +292,7 @@ executeBtnWatering.addEventListener('click', async () => {
 
 function editWateringJob(job) {
   viewJobsModalWatering.style.display = 'none';
+  returnToOverviewWatering.style.visibility = 'visible';
   setTimeout(() => {
     modalWatering.style.display = 'block';
   }, 200);
@@ -446,7 +456,6 @@ viewJobsBtnWatering.addEventListener('click', async () => {
 closeViewJobsModalWatering.addEventListener('click', () => {
   viewJobsModalWatering.style.display = 'none';
 });
-
 
 function DisplayCreateWatering() {
   // Reset to creation mode

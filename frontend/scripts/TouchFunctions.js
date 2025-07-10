@@ -7,6 +7,7 @@ import { GetDistance } from "./tools.js"; // Function to fetch plants
 import { getPlants } from "./plantsmanager.js";
 import { deletePlant } from "./plantsmanager.js";
 import { customConfirm } from "./popups.js";
+import { PlantRadii } from "./tools.js"; // Import PlantRadii from tools.js
 
 
 const dialogContent = document.getElementById("dialogContent");
@@ -26,8 +27,14 @@ canvas.addEventListener('click', async (e) => {
 
     // Find the clicked plant
     selectedPlant = null;
+    let isSeedingPossible = true;
+
     for (let plant of window.plants) {
       const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
+
+      if(distance < PlantRadii[plant.planttype]) {
+        isSeedingPossible = false; // If any plant is too close, seeding is not possible
+      }
 
       // const radius = PlantRadii[plant.planttype];
       const radius = 15;
@@ -44,31 +51,29 @@ canvas.addEventListener('click', async (e) => {
       y: canvasRect.top + innerCanvasCoordinateInPixel.y
     };
 
-    console.log(`Clicked at (${x}, ${y}) which is at screen position (${positiononscreen.x}, ${positiononscreen.y})`);
-
     // remove any existing dialogbox
     dialogBox.style.display = "none"; // Hide the dialog box if it exists
 
 
     dialogContent.innerHTML = ""; // Clear previous content
-
+    dialogHeader.textContent = ""; // Clear previous header
 
     if (selectedPlant) {
-      console.log(window.plants);
-
-      console.log(selectedPlant);
-
-
       dialogHeader.textContent = `${selectedPlant.plantname === undefined ? "" : selectedPlant.plantname}: ${getTranslation(selectedPlant.planttype)} ${getTranslation("at")}  X: ${selectedPlant.xcoordinate}  Y: ${selectedPlant.ycoordinate}`;
 
       AddDeleteButtonToDialogContent();
-      // AddWateringButtonToDialogContent();
+      AddWateringButtonToDialogContent();
       // DisplayCreateWateringJobForTouchBased(selectedPlant);
-      showDialogOnCanvas(positiononscreen.x, positiononscreen.y);
+      
     }
     else {
+      if(!isSeedingPossible) return;
+      dialogHeader.textContent = `Position: X:${x} , Y:${y}`;
       // DisplayCreateSeedingJobForTouchedBased(x,y);
+      AddSeedingButtonToDialogContent(x,y);
     }
+
+    showDialogOnCanvas(positiononscreen.x, positiononscreen.y);
   }
 });
 
@@ -82,10 +87,9 @@ function showDialogOnCanvas(x, y) {
   // STEP 2: Measure size
   const dialogWidth = dialogBox.offsetWidth;
   const dialogHeight = dialogBox.offsetHeight;
-  const arrowHeight = 10;
 
   const offsetX = -dialogWidth / 2;
-  const offsetY = -dialogHeight - arrowHeight;
+  const offsetY = -dialogHeight;
 
   // STEP 3: Set position
   dialogBox.style.left = `${x + offsetX}px`;
@@ -138,4 +142,16 @@ function AddWateringButtonToDialogContent() {
     dialogBox.style.display = "none"; // Hide the dialog after watering
   });
   dialogContent.appendChild(wateringButton);
+}
+
+function AddSeedingButtonToDialogContent(x,y) {
+  const seedingButton = document.createElement("button");
+  seedingButton.textContent = "🌱";
+
+  seedingButton.addEventListener("click", () => {
+      DisplayCreateSeedingJobForTouchedBased(x,y);
+
+    dialogBox.style.display = "none"; // Hide the dialog after seeding
+  });
+  dialogContent.appendChild(seedingButton);
 }

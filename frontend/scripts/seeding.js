@@ -25,6 +25,7 @@ const modifyNameError = document.getElementById('modifyJobNameError');
 const modifyJobContainer = document.getElementById('modifyJobContainer');
 const modifyAddPlantBtn = document.getElementById('modifyAddPlantBtn');
 const modifyExecuteBtn = document.getElementById('modifyExecuteBtn');
+const returnToOverviewSeeding = document.getElementById('returnToOverviewSeeding');
 
 // View‐jobs modal
 const viewJobsBtn = document.getElementById('viewSeedingJobsBtn');
@@ -171,7 +172,6 @@ executeBtn.addEventListener('click', async () => {
   const seeds = [];
   const seen = new Set();
   let valid = true;
-
   rows.forEach(row => {
     const plant = row.querySelector('.plantType').value.toLowerCase();
     const plantName = row.querySelector('.plantName').value.trim();
@@ -293,6 +293,7 @@ window.addEventListener('click', e => {
 
 // ——— View‐Jobs Logic ———
 viewJobsBtn.addEventListener('click', async () => {
+  returnToOverviewSeeding.style.visibility = 'hidden';
   jobsList.innerHTML = getTranslation('loadingJobs');
   jobCountDisplay.textContent = '';
   viewJobsModal.style.display = 'block';
@@ -342,6 +343,7 @@ viewJobsBtn.addEventListener('click', async () => {
           row.querySelector('.depth').value = seed.depth;
         });
         viewJobsModal.style.display = 'none';
+        returnToOverviewSeeding.style.visibility = 'visible';
         modifyModal.style.display = 'block';
       });
 
@@ -402,6 +404,12 @@ viewJobsBtn.addEventListener('click', async () => {
 
 closeViewJobsBtn.addEventListener('click', () => {
   viewJobsModal.style.display = 'none';
+});
+
+returnToOverviewSeeding.addEventListener('click', () => {
+  modifyModal.style.display = 'none';
+  returnToOverviewSeeding.style.visibility = 'hidden';
+  viewJobsModal.style.display = 'block';
 });
 
 window.addEventListener('click', e => {
