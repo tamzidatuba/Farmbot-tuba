@@ -1,5 +1,6 @@
 // feedback.js
 import { getTranslation } from "./translation.js";
+
 class Feedback {
   constructor(name, message, rating) {
     this.name = name;
@@ -58,15 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Validation
     if (!name) {
-      errorDiv.textContent = 'Please enter your name.';
+      errorDiv.textContent = getTranslation("noName");
       return;
     }
     if (!message) {
-      errorDiv.textContent = 'Please enter your feedback.';
+      errorDiv.textContent = getTranslation("noFeedback");
       return;
     }
     if (rating < 1 || rating > 5) {
-      errorDiv.textContent = 'Please give a rating.';
+      errorDiv.textContent = getTranslation("noRating");
       return;
     }
 
@@ -77,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('All feedbacks:', feedbackList);
 
     // Show success
-    successDiv.textContent = 'Thanks for your feedback!';
+    successDiv.textContent = getTranslation("feedbackResponse");
 
     // Reset form
     nameInput.value = '';

@@ -119,21 +119,21 @@
   <div id="feedbackModal" class="modal">
     <div class="modal-content">
       <span id="closeFeedbackModal" class="close">&times;</span>
-      <h2>Visitor Feedback</h2>
+      <h2 data-i18n="feedbackTitle">Visitor Feedback</h2>
 
       <div class="field">
-        <label for="feedbackName">Your Name</label>
-        <input type="text" id="feedbackName" placeholder="Jane Doe" style="width:100%; padding:0.5em;" />
+        <label data-i18n="yourName" for="feedbackName">Your Name</label>
+        <input type="text" data-i18n-placeholder="namePlaceholder" id="feedbackName" placeholder="Jane Doe" style="width:100%; padding:0.5em;" />
       </div>
 
       <div class="field">
-        <label for="feedbackText">Your Feedback</label>
-        <textarea id="feedbackText" rows="4" placeholder="What did you think?"
+        <label data-i18n="feedbackText" for="feedbackText">Your Feedback</label>
+        <textarea data-i18n-placeholder="feedbackPlaceholder" id="feedbackText" rows="4" placeholder="What did you think?"
           style="width:100%; padding:0.5em;"></textarea>
       </div>
 
       <div class="field">
-        <label>Your Rating</label>
+        <label data-i18n="rating">Your Rating</label>
         <div class="stars" id="ratingStars">
           <!-- 5-star rating -->
           <input type="radio" id="star5" name="rating" value="5" /><label for="star5">★</label>
@@ -145,7 +145,7 @@
       </div>
 
       <div class="field" style="text-align:right;">
-        <button id="submitFeedbackBtn" style="padding:0.5em 1em;">Submit</button>
+        <button data-i18n="submit" id="submitFeedbackBtn" style="padding:0.5em 1em;">Submit</button>
       </div>
 
       <div id="feedbackError" class="error"></div>

@@ -159,6 +159,18 @@ export const translations = {
     username: 'Enter the user',
     questionText: 'Enter the question',
     answerText: 'Enter the answer',
+    // Feedback Translation
+    feedbackTitle: 'Visitor Feedback',
+    yourName: 'Your Name',
+    feedbackText: 'Your Feedback',
+    rating: 'Your Rating',
+    noName: 'Please enter your name.',
+    noFeedback: 'Please enter your feedback.',
+    noRating: 'Please give a rating.',
+    feedbackResponse: 'Thanks for your feedback!',
+    namePlaceholder: 'Jane Doe',
+    feedbackPlaceholder: 'What did you think?',
+
   },
   de: {
     // German translations
@@ -320,5 +332,16 @@ export const translations = {
     username: 'Geben Sie den Nutzer ein',
     questionText: 'Geben Sie die Frage ein',
     answerText: 'Geben Sie die Antwort ein',
+    // Feedback Translation
+    feedbackTitle: 'Besucher Feedback',
+    yourName: 'Ihr Name',
+    feedbackText: 'Ihr Feedback',
+    rating: 'Ihre Bewertung',
+    noName: 'Bitte geben Sie Ihren Namen ein.',
+    noFeedback: 'Bitte geben Sie uns Feedback.',
+    noRating: 'Bitte geben Sie uns eine Bewertung.',
+    feedbackResponse: 'Danke für ihr Feedback!',
+    namePlaceholder: 'Erika Mustermann',
+    feedbackPlaceholder: 'Was ist Ihre Meinung?',
   }
 }
