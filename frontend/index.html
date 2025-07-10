@@ -89,6 +89,32 @@
     </div>
   </div>
 
+  <!-- MODIFY PLANT MODAL -->
+  <div id="modifyPlantModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModifyPlantModal">&times;</span>
+      <h2 id="modifyModalTitle" data-i18n="modifyPlant">Modify Plant Name</h2>
+      <div class="job-header-row">
+        <img id="plantTypeImage" src="assets/icons/tomato.png" alt="plant-image" style="width:50px;height:50px;">
+        <strong id="originalPlantName"></strong>
+        <p id="plantCoordinates"></p>
+      </div>
+      <input type="text" id="modifyPlantName" style="width:100%; padding:0.5em; margin-bottom:0.5em;"
+        placeholder="Plant name" />
+      <div id="modifyPlantNameError" class="errorMsg"></div>
+      <button id="modifyPlantBtn" data-i18n="saveChanges" style="margin-top:1em; float:right;">Save Changes</button>
+    </div>
+  </div>
+  <!-- MANAGE PLANTS MODAL -->
+  <div id="managePlantsModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeManagePlantsModal">&times;</span>
+        <h2 data-i18n="plantsOverview">📋 Manage Plants</h2>
+        <p id="plantCountDisplay"></p> <!-- 👈 Add this -->
+        <div id="plantsList"></div>
+      </div>
+    </div>
+
   <!-- WATERING DEMO MODAL -->
   <div id="wateringDemoModal" class="modal">
     <div class="modal-content">
@@ -212,10 +238,6 @@
       <li>
         <div class="menu-item" id="managePlants">
           <span data-i18n="manage">🪴 Manage Plants</span>
-          <span class="arrow" id="arrowmanageView">&#9654;</span>
-        </div>
-        <div class="subtask" id="subtaskManage">
-          <button id="deleteplants" data-i18n="deletePlants">🗑️ Delete Plants</button>
         </div>
       </li>
       <!----help option----->

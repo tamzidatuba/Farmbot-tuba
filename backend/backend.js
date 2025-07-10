@@ -35,6 +35,7 @@ class Backend {
     initalizeBackend(this);
   }
 
+  // Generates a Dictionary of data for the frontend to use
   generateFrontendData() {
     return {
       "status": this.statusManager.status,

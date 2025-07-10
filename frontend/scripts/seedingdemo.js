@@ -1,7 +1,6 @@
 // This script handles the "Seeding Demo" modal and demo job submission
 import { getTranslation } from "./translation.js";
 import { token } from "./auth.js"; // your auth token binding
-import { predefinedPlants } from "./plantsmanager.js"; // predefined plants for demo
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements

@@ -14,8 +14,6 @@ const subtaskView = document.getElementById('subtaskView');
 const arrow = document.getElementById('arrow');
 const arrowView = document.getElementById('arrowView');
 const managePlants = document.getElementById('managePlants');
-const subtaskManage = document.getElementById('subtaskManage');
-const arrowmanageView = document.getElementById('arrowmanageView');
 // List to compare plants with data base
 window.plants = [];
 
@@ -35,12 +33,6 @@ toggle.addEventListener('click', () => {
   const isVisible = subtask.style.display === 'block';
   subtask.style.display = isVisible ? 'none' : 'block';
   arrow.classList.toggle('open', !isVisible);
-});
-
-managePlants.addEventListener('click', () => {
-  const isVisible = subtaskManage.style.display === 'block';
-  subtaskManage.style.display = isVisible ? 'none' : 'block';
-  arrowmanageView.classList.toggle('open', !isVisible);
 });
 
 await getPlants(); // get data of plants

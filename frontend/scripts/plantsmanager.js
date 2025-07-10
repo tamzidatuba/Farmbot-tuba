@@ -3,97 +3,113 @@ import { getTranslation } from './translation.js';
 import { customAlert, customConfirm } from './popups.js';
 import { drawGrid, clearCanvas } from "./canvas.js";
 
+const managePlantsBtn = document.getElementById('managePlants');
+const managePlantsModal = document.getElementById('managePlantsModal');
+const plantsList = document.getElementById('plantsList');
+const plantCountDisplay = document.getElementById('plantCountDisplay');
+const closeManagePlantsBtn = document.getElementById('closeManagePlantsModal');
 
-// 1) Create the modal HTML and append to body
-const modalHtml = `
-  <div id="deletePlantModal" class="modal" style="display:none;">
-    <div class="modal-content">
-      <span class="close" id="closeDeleteModal">&times;</span>
-      <h2 data-i18n="plantDelete">${getTranslation("plantDelete")}</h2>
-      <div>
-        <label data-i18n="plantChoose" for="plantSelect">${getTranslation("plantChoose")}</label>
-        <select id="plantSelect" style="width:100%; box-sizing:border-box; padding:0.5em;"></select>
+// Modify modal
+const modifyModal = document.getElementById('modifyPlantModal');
+const modifyPlantBtn = document.getElementById("modifyPlantBtn");
+const closeModifyPlantsBtn = document.getElementById('closeModifyPlantModal');
+const modifyNameInput = document.getElementById('modifyPlantName');
+const modifyNameError = document.getElementById('modifyPlantNameError');
+const originalName = document.getElementById('originalPlantName');
+const plantTypeImage = document.getElementById('plantTypeImage');
+const plantCoordinates = document.getElementById('plantCoordinates');
+
+let xcoordinate;
+let ycoordinate;
+
+// ——— View‐Jobs Logic ———
+managePlantsBtn.addEventListener('click', async () => {
+  plantsList.innerHTML = getTranslation('loadingPlants');
+  plantCountDisplay.textContent = '';
+  managePlantsModal.style.display = 'block';
+
+  const plants = window.plants;
+
+  plantCountDisplay.textContent = `${getTranslation('existingPlants')}${plants.length}`;
+
+  if (plants.length === 0) {
+    plantsList.innerHTML = getTranslation('notFound');
+    return;
+  }
+
+  plantsList.innerHTML = '';
+  plants.forEach(plant => {
+    const div = document.createElement('div');
+    div.className = 'plant-row';
+    div.dataset.plantname = plant.plantname;
+    div.innerHTML = `
+      <div class="job-header-row">
+      <img src="assets/icons/${plant.planttype}.png" alt="${plant.planttype}" style="width:50px;height:50px;">
+      <strong>${plant.plantname}</strong>
+        <div class="icon-actions">
+          <p>X: ${plant.xcoordinate}, Y: ${plant.ycoordinate}</p>
+          <span class="icon-btn edit-plant-btn" title="${getTranslation('edit')}">✏️</span>
+          <span class="icon-btn delete-plant-btn" title="${getTranslation('delete')}">🗑️</span>
+        </div>
       </div>
-      <div style="margin-top:1em;">
-        <button data-i18n="delete" id="confirmDeleteBtn">${getTranslation("delete")}</button>
-      </div>
-      <div id="deleteError" class="errorMsg" style="color:red; margin-top:0.5em;"></div>
-    </div>
-  </div>
-`;
-document.body.insertAdjacentHTML('beforeend', modalHtml);
+    `;
+    plantsList.appendChild(div);
 
-// 2) Grab all the elements we need
-const deleteBtn = document.getElementById('deleteplants');
-const deleteModal = document.getElementById('deletePlantModal');
-const closeDelete = document.getElementById('closeDeleteModal');
-const plantSelect = document.getElementById('plantSelect');
-const confirmDelete = document.getElementById('confirmDeleteBtn');
-const deleteError = document.getElementById('deleteError');
+    // Edit
+    div.querySelector('.edit-plant-btn').addEventListener('click', () => {
+      // prepare and show modify modal
+      modifyNameInput.value = plant.plantname;
+      modifyNameError.textContent = '';
+      originalName.textContent = plant.plantname;
+      plantTypeImage.src = "assets/icons/"+ plant.planttype + ".png";
+      plantCoordinates.textContent = "X: " + plant.xcoordinate + ", Y: " +plant.ycoordinate;
 
-// 3) Open the modal and load plants
-deleteBtn.addEventListener('click', async () => {
-  deleteError.textContent = '';
-  plantSelect.innerHTML = `<option>Loading…</option>`;
-  deleteModal.style.display = 'block';
+      xcoordinate = plant.xcoordinate;
+      ycoordinate = plant.ycoordinate;
+      
+      managePlantsModal.style.display = 'none';
+      modifyModal.style.display = 'block';
+    });
 
-  plantSelect.innerHTML = ''; // clear previous options
-  plantSelect.innerHTML = window.plants.map(p => {
-    // label for user, value as "x,y"
-    const label = `${p.plantname}: ${getTranslation(p.planttype)} ${getTranslation("at")}  X:${p.xcoordinate}  Y:${p.ycoordinate}`;
-    const value = `${p.xcoordinate},${p.ycoordinate}`;
-    return `<option value="${value}">${label}</option>`;
-  }).join('');
-  /*try {
-    const res = await fetch('/api/plants');
-    if (!res.ok) throw new Error('Failed to fetch plants');
-    const plants = await res.json();
+    // Delete
+    div.querySelector('.delete-plant-btn').addEventListener('click', async () => {
+      const confirmed = await customConfirm("Are you sure you want to delete this plant?");
+      if (!confirmed) return;
 
-    plantSelect.innerHTML = plants.map(p => {
-      // label for user, value as "x,y"
-      const label = `${p.planttype}  X:${p.xcoordinate}  Y:${p.ycoordinate}`;
-      const value = `${p.xcoordinate},${p.ycoordinate}`;
-      return `<option value="${value}">${label}</option>`;
-    }).join('');
+      console.log('Deleting plant at:', plant.xcoordinate, plant.ycoordinate);
+      deletePlant(plant.xcoordinate, plant.ycoordinate);
+      modifyModal.style.display = "none";
+    });
 
-  } catch (err) {
-    plantSelect.innerHTML = `<option disabled>Error loading plants</option>`;
-    console.error(err);
-  }*/
+  });
 });
 
-// 4) Close handlers
-closeDelete.addEventListener('click', () => deleteModal.style.display = 'none');
-window.addEventListener('click', e => {
-  if (e.target === deleteModal) deleteModal.style.display = 'none';
+closeManagePlantsBtn.addEventListener('click', () => {
+  managePlantsModal.style.display = 'none';
 });
 
-// 5) Confirm delete
-confirmDelete.addEventListener('click', async () => {
-  deleteError.textContent = '';
-  const confirmed = await customConfirm("Are you sure you want to delete this plant?");
-  if (!confirmed) return;
-  // split the "x,y" into two numbers
-  const [xcoordinate, ycoordinate] = plantSelect.value
-    .split(',')
-    .map(val => Number(val.trim()));
-
-  console.log('Deleting plant at:', { xcoordinate, ycoordinate, token });
-  deletePlant(xcoordinate, ycoordinate);
-  deleteModal.style.display = "none";
+closeModifyPlantsBtn.addEventListener('click', () => {
+  modifyModal.style.display = 'none';
+  managePlantsModal.style.display = 'block';
 });
 
-
-
-// Predefined plants matching your Seeding schema
-export const predefinedPlants = {
-  "1": { planttype: "lettuce", plantname: "Luna", xcoordinate: 10, ycoordinate: 20 },
-  "2": { planttype: "lettuce", plantname: "Leafy", xcoordinate: 20, ycoordinate: 30 },
-  "3": { planttype: "tomato", plantname: "Ruby", xcoordinate: 30, ycoordinate: 40 },
-  "4": { planttype: "tomato", plantname: "Sunny", xcoordinate: 40, ycoordinate: 50 },
-  "5": { planttype: "radish", plantname: "Spicy", xcoordinate: 50, ycoordinate: 60 },
-  "6": { planttype: "radish", plantname: "Crunch", xcoordinate: 60, ycoordinate: 70 }
-};
+modifyPlantBtn.addEventListener('click', async () => {
+  let plantname = modifyNameInput.value;
+  if (plantname === "") {
+    modifyNameError.textContent = 'Plant name cant be empty';
+    return;
+  }
+  const confirmed = await customConfirm("Are you sure you want to change the plantname?");
+  if(!confirmed) return;
+  const res = await fetch('/api/plant/rename', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ plantname, xcoordinate, ycoordinate, token })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Changing failed');
+  modifyModal.style.display = 'none';
+});
 
 export async function deletePlant(x, y) {
   let xcoordinate = x;
@@ -124,4 +140,8 @@ export async function getPlants() {
       }
     })
     .catch(error => console.error('Error fetching plants:', error));
+}
+
+function capitalize(str) {
+  return String(str).charAt(0).toUpperCase() + str.slice(1);
 }

@@ -1,5 +1,6 @@
 /*
-A Task is a single Instruction for the Farmbot with a condition to check if its fulfilled
+A Task is a single Instruction for the Farmbot with a condition to check if its fulfilled.
+It can be reused keeping the same parameters.
 */
 
 class Task {
