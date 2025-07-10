@@ -20,7 +20,7 @@ let selectedPlant = null;
 
 
 canvas.addEventListener('click', async (e) => {
-  if (isLoggedIn) {
+  if (isLoggedIn || !isLoggedIn) {
     let coordDisplay = pixelToCoord(e.offsetX, e.offsetY);
     let x = coordDisplay.x;
     let y = coordDisplay.y;
@@ -90,7 +90,7 @@ function showDialogOnCanvas(x, y) {
   const arrowHeight = 10;
 
   const offsetX = -dialogWidth / 2;
-  const offsetY = -dialogHeight - arrowHeight;
+  const offsetY = -dialogHeight ;//+ arrowHeight;
 
   // STEP 3: Set position
   dialogBox.style.left = `${x + offsetX}px`;
