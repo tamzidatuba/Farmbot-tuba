@@ -85,17 +85,6 @@ confirmDelete.addEventListener('click', async () => {
 });
 
 
-
-// Predefined plants matching your Seeding schema
-export const predefinedPlants = {
-  "1": { planttype: "lettuce", plantname: "Luna", xcoordinate: 10, ycoordinate: 20 },
-  "2": { planttype: "lettuce", plantname: "Leafy", xcoordinate: 20, ycoordinate: 30 },
-  "3": { planttype: "tomato", plantname: "Ruby", xcoordinate: 30, ycoordinate: 40 },
-  "4": { planttype: "tomato", plantname: "Sunny", xcoordinate: 40, ycoordinate: 50 },
-  "5": { planttype: "radish", plantname: "Spicy", xcoordinate: 50, ycoordinate: 60 },
-  "6": { planttype: "radish", plantname: "Crunch", xcoordinate: 60, ycoordinate: 70 }
-};
-
 export async function deletePlant(x, y) {
   let xcoordinate = x;
   let ycoordinate = y;

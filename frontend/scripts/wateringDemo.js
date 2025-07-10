@@ -1,4 +1,4 @@
-import { predefinedPlants } from './plantsmanager.js'; // predefined plants for demo
+import { predefinedPlants } from './seedingdemo.js'; // predefined plants for demo
 import { getTranslation } from './translation.js';
 
 document.addEventListener("DOMContentLoaded", () => {
