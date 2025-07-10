@@ -39,17 +39,17 @@ async function InsertJobToDB(jobType, object) {
             return "The Job name already exists in the database.";
         }
 
-        let invalids = await  ValidateNewSeedsAgainstThemselves(seeds);
-        if (invalids.length > 0) {
+        let invalidsagainstthemselves = await  ValidateNewSeedsAgainstThemselves(seeds);
+        if (invalidsagainstthemselves.length > 0) {
             return "Coordinates given have overlap with one of the seeds inside the job.";
         }
-        invalids = await ValidateCurrentSeedsAgainstOtherJobs(jobname, seeds);
-        if (invalids.length > 0) {
-            return "Coordinates given have overlap with one of the seeds inside one of previous jobs.";
+        let {existingconflictingseed, conflictingjob} = await ValidateCurrentSeedsAgainstOtherJobs(jobname, seeds);
+        if (existingconflictingseed) {
+            return `Overlap with previous job: ${conflictingjob} and the seed at: X=${existingconflictingseed.xcoordinate} , Y=${existingconflictingseed.ycoordinate}`;
         }
-        invalids = await ValidateNewSeedsAgainstPlants(seeds);
-        if (invalids.length > 0) {
-            return "Coordinates given have overlap with plants.";
+        let existingconflictingplant = await ValidateNewSeedsAgainstPlants(seeds);
+        if (existingconflictingplant) {
+            return `Overlap with existing ${existingconflictingplant.planttype} at: X=${existingconflictingplant.xcoordinate} , Y=${existingconflictingplant.ycoordinate}`;
         }
 
         await seedingModule.InsertSeedingJobToDB(jobname, seeds);        
@@ -132,17 +132,17 @@ async function UpdateJobToDB(jobType, object) {
     if (jobType === JobType.SEEDING) {
         const { jobname, seeds } = object;
 
-        let invalids = ValidateNewSeedsAgainstThemselves(seeds);
-        if (invalids.length > 0) {
+        let invalidsagainstthemselves = ValidateNewSeedsAgainstThemselves(seeds);
+        if (invalidsagainstthemselves.length > 0) {
             return "New coordinates have overlap with one of the seeds inside the job.";
         }
-        invalids = await ValidateCurrentSeedsAgainstOtherJobs(jobname, seeds);
-        if (invalids.length > 0) {
-            return "New coordinates have overlap with one of the seeds inside one of previous jobs.";
+        let {existingconflictingseed, conflictingjob} = await ValidateCurrentSeedsAgainstOtherJobs(jobname, seeds);
+        if (existingconflictingseed) {
+            return `Overlap with previous job: ${conflictingjob} and the seed at: X=${existingconflictingseed.xcoordinate} , Y=${existingconflictingseed.ycoordinate}`;;
         }
-        invalids = await ValidateNewSeedsAgainstPlants(seeds);
-        if (invalids.length > 0) {
-            return "New coordinates have overlap with plants.";
+        let existingconflictingplant = await ValidateNewSeedsAgainstPlants(seeds);
+        if (existingconflictingplant) {
+            return `Overlap with existing ${existingconflictingplant.planttype} at: X=${existingconflictingplant.xcoordinate} , Y=${existingconflictingplant.ycoordinate}`;
         }
 
         await seedingModule.UpdateSeedingJobToDB(jobname, seeds);
@@ -250,7 +250,8 @@ async function ValidateCurrentSeedsAgainstOtherJobs(jobname, seeds) {
         otherJobs = allJobs.filter(job => job.jobname !== currentJob.jobname);
     }       
      
-    let invalidSeeds = [];
+    let existingconflictingseed ;
+    let conflictingjob ;
 
     for (let seed of seeds) {
         for (let otherJob of otherJobs) {
@@ -260,7 +261,8 @@ async function ValidateCurrentSeedsAgainstOtherJobs(jobname, seeds) {
                 let existingseedtype = existingseed.seedtype.toLowerCase();
                 let seedtype = seed.seedtype.toLowerCase();
                 if (distance <= PlantRadii[existingseedtype] + PlantRadii[seedtype]) {
-                    invalidSeeds.push(seed);
+                    existingconflictingseed = existingseed;
+                    conflictingjob = otherJob.jobname;
                     isValid = false;
                 }
                 if (!isValid) {
@@ -273,12 +275,12 @@ async function ValidateCurrentSeedsAgainstOtherJobs(jobname, seeds) {
         }        
     }
 
-    return invalidSeeds;
+    return {existingconflictingseed , conflictingjob};
 }
 
 async function ValidateNewSeedsAgainstPlants(seeds) {
     let plants = await FetchPlantsfromDB();
-    let invalidSeeds = [];
+    let existingconflictingplant;
 
     for (let seed of seeds) {
         let isValid = true;
@@ -286,7 +288,7 @@ async function ValidateNewSeedsAgainstPlants(seeds) {
             let distance = GetDistance(seed.xcoordinate, seed.ycoordinate, plant.xcoordinate, plant.ycoordinate);
             var planttypeSmallCase = plant.planttype.toLowerCase();
             if (distance <= PlantRadii[planttypeSmallCase]) {
-                invalidSeeds.push(seed);
+                existingconflictingplant = plant;
                 isValid = false;
             }
             if (!isValid) {
@@ -295,7 +297,7 @@ async function ValidateNewSeedsAgainstPlants(seeds) {
         }
     }
 
-    return invalidSeeds;
+    return existingconflictingplant;
 }
 
 async function clearPlantFromWateringJobs(xcoordinate,  ycoordinate) {
