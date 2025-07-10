@@ -300,8 +300,23 @@ margin-top: 10px;
 background-color: var(--buttons-hover-color);
 }
 
+.header-row {
+  display: flex;
+  justify-content: space-between; /* arrow left, x right */
+  align-items: center; /* vertically center both */
+  width: 100%; /* or set a specific width */
+  padding: 0.5em; /* optional spacing */
+}
+
 .close {
 align-self: flex-end;
+font-size: 24px;
+cursor: pointer;
+color: #888;
+}
+
+.return {
+visibility: hidden;
 font-size: 24px;
 cursor: pointer;
 color: #888;

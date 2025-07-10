@@ -35,7 +35,10 @@
   <!-- MODIFY SEEDING JOB MODAL -->
   <div id="modifySeedingModal" class="modal">
     <div class="modal-content">
-      <span class="close" id="closeModifyModal">&times;</span>
+      <div class="header-row">
+        <span class="return" id="returnToOverviewSeeding">&larr;</span>
+        <span class="close" id="closeModifyModal">&times;</span>
+      </div>
       <h2 id="modifyModalTitle" data-i18n="modifySeeding">Modify Seeding Job</h2>
 
       <input type="text" id="modifySeedingJobName" disabled style="width:100%; padding:0.5em; margin-bottom:0.5em;"
@@ -55,7 +58,10 @@
 
 
     <div class="modal-content">
-      <span class="close" id="closeModalWatering">&times;</span>
+      <div class="header-row">
+        <span class="return" id="returnToOverviewWatering">&larr;</span>
+        <span class="close" id="closeModalWatering">&times;</span>
+      </div>
       <h2 id="modalTitleWatering" data-i18n="wateringJob">Create Watering Job</h2>
       <input type="text" id="WateringJobName" data-i18n-placeholder="enterName" placeholder="Enter job name" />
       <div id="jobNameErrorWatering" class="errorMsg"></div>
@@ -279,7 +285,10 @@
     <!-- VIEW SEEDING JOBS MODAL -->
     <div id="viewJobsModal" class="modal">
       <div class="modal-content">
-        <span class="close" id="closeViewJobsModal">&times;</span>
+        <div class="header-row">
+          <span class="return" id="returnToOverviewSeeding">&larr;</span>
+          <span class="close" id="closeViewJobsModal">&times;</span>
+        </div>
         <h2 data-i18n="seedingOverview">📋 Seeding Jobs Overview</h2>
         <p id="jobCountDisplay"></p> <!-- 👈 Add this -->
         <div id="jobsList"></div>
