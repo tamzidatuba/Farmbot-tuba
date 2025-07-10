@@ -37,9 +37,8 @@ app.use('/api/jobs', createJobsRouter(backend));
 //to get plants
 app.get('/api/plants', async (req, res) => {
   try {
-    let plants = await DatabaseService.FetchPlantsfromDB();
-    backend.plants = plants
-    res.status(200).json(plants);
+    backend.refetchPlants()
+    res.status(200).json(backend.plants);
   }
   catch (err) {
     console.error(err);
@@ -101,14 +100,14 @@ app.put('/api/plant/rename', async (req,res) => {
     return
   }
   try {
-  let change_name  = await DatabaseService.UpdatePlantNameinDB(plantname, xcoordinate, ycoordinate);
-  res.status(200).json("The plant name has been updated.");
-  }catch(err)
-  {
-  console.error(err);
-  res.status(500).json({error:"Failed to change the name of the plant."});
+    await DatabaseService.UpdatePlantNameinDB(plantname, xcoordinate, ycoordinate);
+    backend.refetchPlants()
+    res.status(200).json("The plant name has been updated.");
+  }catch(err) {
+    console.error(err);
+    res.status(500).json({error:"Failed to change the name of the plant."});
   }
-  });
+});
 
 
 // delete plant

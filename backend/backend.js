@@ -88,7 +88,7 @@ class Backend {
       // Check if the finished job is a scheduled watering job, if not -> Remove it from the DB
       else if (this.currentJobData.jobType !== DatabaseService.JobType.WATERING || !this.currentJobData.job.is_scheduled) {
         try {
-          this.plants = await DatabaseService.FetchPlantsfromDB();
+          this.refetchPlants()
           await DatabaseService.DeleteJobFromDB(this.currentJobData.jobType, this.currentJobData.job.jobname);
         } catch (e) {
           console.log("Failed to delete executed Job from DB!")
@@ -178,6 +178,10 @@ class Backend {
     } else {
       res.status(500).json({ error: 'There is no job currently paused' });
     }
+  }
+
+  async refetchPlants() {
+    this.plants = await DatabaseService.FetchPlantsfromDB();
   }
 }
 // Initalizes the backend

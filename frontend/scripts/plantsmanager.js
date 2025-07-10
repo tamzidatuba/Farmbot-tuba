@@ -108,6 +108,7 @@ modifyPlantBtn.addEventListener('click', async () => {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Changing failed');
+  else customAlert("Plant has been renamed");
   modifyModal.style.display = 'none';
 });
 
