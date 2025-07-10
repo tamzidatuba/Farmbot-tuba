@@ -8,6 +8,8 @@ let maxHistoryEntries = 10;
 const entryLimitSelect = document.getElementById('entry-limit');
 entryLimitSelect.value = maxHistoryEntries;
 
+let previousChild = null;
+
 // List to compare history with data base
 var historyList = [];
 
@@ -33,7 +35,7 @@ export async function updateRobot() {
       // Update robot Status
       statusBox.textContent = getTranslation("status") + getTranslation(data.status.replace(/\s/g, '').toLowerCase());
       // Update Status History
-      var temp = historyList.slice().reverse();
+      var temp = historyList.slice();
       if (temp.toString() != data.notifications.toString()) {
         // Clear the current status history
         while (statusHistory.children.length > 1) {
@@ -46,9 +48,11 @@ export async function updateRobot() {
             console.log("Status:", data.notifications[status].key.replace(/\s/g, ''))
             var textInput = data.notifications[status].date + " " + getTranslation(data.notifications[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + data.notifications[status].jobname;
             entry.textContent = textInput;
-            statusHistory.appendChild(entry);
+            statusHistory.insertBefore(entry, previousChild);
+            previousChild = entry;
           }
         }
+        previousChild = null;
         historyList = data.notifications;
         for (let note of data.notifications) {
           if (note.key.toLowerCase() === 'queued') {
@@ -118,7 +122,6 @@ function arraysEqual(arr1, arr2) {
 
 
 entryLimitSelect.addEventListener('change', () => {
-  if (maxHistoryEntries < parseInt(entryLimitSelect.value)) {
     maxHistoryEntries = parseInt(entryLimitSelect.value);
     // Clear the current status history
     while (statusHistory.children.length > 1) {
@@ -130,24 +133,11 @@ entryLimitSelect.addEventListener('change', () => {
         const entry = document.createElement('div');
         var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
         entry.textContent = textInput;
-        statusHistory.appendChild(entry);
+        statusHistory.insertBefore(entry, previousChild);
+        previousChild = entry;
       }
     }
-  } else {
-    maxHistoryEntries = parseInt(entryLimitSelect.value);
-    while (statusHistory.children.length > 1) {
-      statusHistory.removeChild(statusHistory.lastChild);
-    }
-    // Add new entries to the status history
-    for (const status in historyList) {
-      if (statusHistory.children.length < maxHistoryEntries + 1) {
-        const entry = document.createElement('div');
-        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
-        entry.textContent = textInput;
-        statusHistory.appendChild(entry);
-      }
-    }
-  }
+    previousChild = null;
 });
 
 function translateHistory() {
