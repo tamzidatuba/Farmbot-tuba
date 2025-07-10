@@ -87,10 +87,9 @@ function showDialogOnCanvas(x, y) {
   // STEP 2: Measure size
   const dialogWidth = dialogBox.offsetWidth;
   const dialogHeight = dialogBox.offsetHeight;
-  const arrowHeight = 10;
 
   const offsetX = -dialogWidth / 2;
-  const offsetY = -dialogHeight - arrowHeight;
+  const offsetY = -dialogHeight;
 
   // STEP 3: Set position
   dialogBox.style.left = `${x + offsetX}px`;
