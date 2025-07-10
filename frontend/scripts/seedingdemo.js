@@ -2,6 +2,7 @@
 import { getTranslation } from "./translation.js";
 import { token } from "./auth.js"; // your auth token binding
 import { predefinedPlants } from "./plantsmanager.js"; // predefined plants for demo
+import { customAlert } from "./popups.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
@@ -70,10 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Seeding demo failed");
-      alert(data.message || "Seeding demo queued");
+      customAlert(data.message || "Seeding demo queued");
     } catch (err) {
       console.error("Seeding demo error:", err);
-      alert(err.message);
+      customAlert(err.message);
     } finally {
       modal.style.display = "none";
     }
