@@ -2,8 +2,7 @@
 import { getTranslation } from "./translation.js";
 
 class Feedback {
-  constructor(name, message, rating) {
-    this.name = name;
+  constructor( message, rating) {
     this.message = message;
     this.rating = rating;
     this.createdAt = new Date();
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const feedbackBtn = document.getElementById('feedbackBtn');
   const modal = document.getElementById('feedbackModal');
   const closeModal = document.getElementById('closeFeedbackModal');
-  const nameInput = document.getElementById('feedbackName');
   const textInput = document.getElementById('feedbackText');
   const ratingStars = document.getElementsByName('rating');
   const submitBtn = document.getElementById('submitFeedbackBtn');
@@ -36,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
   feedbackBtn.addEventListener('click', () => {
     errorDiv.textContent = '';
     successDiv.textContent = '';
-    nameInput.value = '';
     textInput.value = '';
     ratingStars.forEach(s => s.checked = false);
     modal.style.display = 'flex';
@@ -53,26 +50,18 @@ document.addEventListener('DOMContentLoaded', () => {
     errorDiv.textContent = '';
     successDiv.textContent = '';
 
-    const name = nameInput.value.trim();
     const message = textInput.value.trim();
     const rating = getSelectedRating();
 
     // Validation
-    if (!name) {
-      errorDiv.textContent = getTranslation("noName");
-      return;
-    }
-    if (!message) {
-      errorDiv.textContent = getTranslation("noFeedback");
-      return;
-    }
+
     if (rating < 1 || rating > 5) {
       errorDiv.textContent = getTranslation("noRating");
       return;
     }
 
     // Create and store feedback
-    const fb = new Feedback(name, message, rating);
+    const fb = new Feedback(message, rating);
     feedbackList.push(fb);
     console.log('New feedback:', fb);
     console.log('All feedbacks:', feedbackList);
@@ -81,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
     successDiv.textContent = getTranslation("feedbackResponse");
 
     // Reset form
-    nameInput.value = '';
     textInput.value = '';
     ratingStars.forEach(s => s.checked = false);
   });
