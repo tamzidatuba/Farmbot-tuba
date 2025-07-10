@@ -109,6 +109,7 @@ app.delete('/api/plant', async (req, res) => {
 
         // remove job from queue
         backend.plants.splice(plant, 1);
+        DatabaseService.clearPlantFromWateringJobs(xcoordinate, ycoordinate)
       }
     }
     res.status(200).json({ message: 'The Plant has been deleted from the database.' });

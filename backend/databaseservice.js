@@ -298,6 +298,28 @@ async function ValidateNewSeedsAgainstPlants(seeds) {
     return invalidSeeds;
 }
 
+async function clearPlantFromWateringJobs(xcoordinate,  ycoordinate) {
+    let watering_jobs = await FetchJobsFromDB(JobType.WATERING);
+    for (let watering_job of watering_jobs) {
+        let new_plants_to_be_watered = new Array();
+        let job_modified = false;
+        for (let watering_data of watering_job.plantstobewatered) {
+            if (watering_data.plant.xcoordinate == xcoordinate && watering_data.plant.ycoordinate == ycoordinate) {
+                job_modified = true;
+            } else {
+                new_plants_to_be_watered.push(watering_data);
+            }
+        }
+        if (!job_modified) continue;
+        if (new_plants_to_be_watered.length > 0) {
+            watering_job.plantstobewatered = new_plants_to_be_watered;
+            UpdateJobToDB(JobType.WATERING, watering_job);
+        } else {
+            DeleteJobFromDB(JobType.WATERING, watering_job.jobname);
+        }
+    }
+}
+
 export default {
     InsertJobToDB,
     FetchJobsFromDB,
@@ -317,4 +339,5 @@ export default {
     FetchQuestionsFromDBbyQuestion,
     DeletePlantFromDB,
     InsertAnswerIntoDB,
+    clearPlantFromWateringJobs,
 };
