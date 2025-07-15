@@ -24,8 +24,9 @@ export const translations = {
     history: 'Notification History',
     seedingOverview: '📋 Seeding Jobs Overview',
     wateringOverview: '📋 Watering Jobs Overview',
-    seedingSoFar: 'Seeding Jobs created so far: ',
-    wateringSoFar: 'Watering Jobs created so far: ',
+    seedingSoFar: '✅ Seeding Jobs created so far: ',
+    wateringSoFar: '✅ Watering Jobs created so far: ',
+    plantsSoFar: '✅ Plants created so far: ',
     plantRowHeader: 'Plant',
     removePlant: 'Remove this plant job',
     water: 'Water (ml)',
@@ -173,7 +174,15 @@ export const translations = {
     feedbackResponse: 'Thanks for your feedback!',
     namePlaceholder: 'Jane Doe',
     feedbackPlaceholder: 'What did you think?',
-
+    // Manage Plants
+    plantsOverview: '📋 Manage Plants',
+    noPlantsFound: 'No plants found.',
+    deleteConfirmPlant: 'Are you sure you want to delete this plant?',
+    noPlantName: 'Plant name cannot be empty',
+    changeConfirm: 'Are you sure you want to change the plantname?',
+    plantRenamed: 'Plant has been renamed.',
+    modifyPlant: 'Modify Plant Name',
+    saveChanges: 'Save Changes',
   },
   de: {
     // German translations
@@ -187,8 +196,8 @@ export const translations = {
     notScheduled: 'Einmalige Bewässerung',
     executionTime: 'Ausführungszeitpunkt:',
     repeatInterval: 'Wiederholungsintervall (in Stunden):',
-    seedingDemoText: 'Möchtes du die Aussäh Demonstration starten?',
-    wateringDemoText: 'Möchtest du die Bewässerungs Demonstration starten?',
+    seedingDemoText: 'Möchtes du die Aussäh Demo starten?',
+    wateringDemoText: 'Möchtest du die Bewässerungs Demo starten?',
     loading: 'Lade...',
     execute: '🚜 Ausführen',
     username: 'Benutzername:',
@@ -201,6 +210,7 @@ export const translations = {
     wateringOverview: '📋 Bewässerungs Aufträge Übersicht',
     seedingSoFar: '✅ Bisher erstellte Aussaat Aufträge: ',
     wateringSoFar: '✅ Bisher erstellte Bewässerungs Aufträge: ',
+    plantsSoFar: '✅ Bisher erstellte Pflanzen: ',
     plantRowHeader: 'Pflanze',
     removePlant: 'Diesen Pflanzenauftrag entfernen',
     water: 'Wasser (ml)',
@@ -335,7 +345,7 @@ export const translations = {
     question: 'Frage',
     answer: 'Antwort',
     newQuestion: 'Neue Frage hinzufügen',
-    username: 'Gebt den/die Nutzer*in ein',
+    username: 'Nutzername',
     questionText: 'Gebt die Frage ein',
     answerText: 'Gebt die Antwort ein',
     // Feedback Translation
@@ -349,5 +359,14 @@ export const translations = {
     feedbackResponse: 'Danke für euer Feedback!',
     namePlaceholder: 'Erika Mustermann',
     feedbackPlaceholder: 'Was ist eure Meinung?',
+    // Manage Plants
+    plantsOverview: '📋 Pflanzen Verwalten',
+    noPlantsFound: 'Keine Pflanzen gefunden.',
+    deleteConfirmPlant: 'Bist du sicher, dass du diese Pflanze entfernen möchtest?',
+    noPlantName: 'Der Pflanzenname darf nicht leer sein.',
+    changeConfirm: 'Bist du sicher, dass du den Pflanzennamen ändern möchtest?',
+    plantRenamed: 'Pflanze wurde umbenannt.',
+    modifyPlant: 'Pflanze Umbenennen',
+    saveChanges: 'Änderungen Übernehmen',
   }
 }

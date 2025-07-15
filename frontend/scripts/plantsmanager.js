@@ -24,16 +24,16 @@ let ycoordinate;
 
 // ——— View‐Jobs Logic ———
 managePlantsBtn.addEventListener('click', async () => {
-  plantsList.innerHTML = getTranslation('loadingPlants');
+  plantsList.innerHTML = getTranslation('loading');
   plantCountDisplay.textContent = '';
   managePlantsModal.style.display = 'block';
 
   const plants = window.plants;
 
-  plantCountDisplay.textContent = `${getTranslation('existingPlants')}${plants.length}`;
+  plantCountDisplay.textContent = `${getTranslation('plantsSoFar')}${plants.length}`;
 
   if (plants.length === 0) {
-    plantsList.innerHTML = getTranslation('notFound');
+    plantsList.innerHTML = getTranslation('noPlantsFound');
     return;
   }
 
@@ -73,7 +73,7 @@ managePlantsBtn.addEventListener('click', async () => {
 
     // Delete
     div.querySelector('.delete-plant-btn').addEventListener('click', async () => {
-      const confirmed = await customConfirm("Are you sure you want to delete this plant?");
+      const confirmed = await customConfirm(getTranslation("deleteConfirmPlant"));
       if (!confirmed) return;
 
       console.log('Deleting plant at:', plant.xcoordinate, plant.ycoordinate);
@@ -88,6 +88,12 @@ closeManagePlantsBtn.addEventListener('click', () => {
   managePlantsModal.style.display = 'none';
 });
 
+window.addEventListener('click', (e) => {
+    if (e.target === managePlantsModal) {
+      managePlantsModal.style.display = 'none';
+    }
+  });
+
 closeModifyPlantsBtn.addEventListener('click', () => {
   modifyModal.style.display = 'none';
   managePlantsModal.style.display = 'block';
@@ -96,10 +102,10 @@ closeModifyPlantsBtn.addEventListener('click', () => {
 modifyPlantBtn.addEventListener('click', async () => {
   let plantname = modifyNameInput.value;
   if (plantname === "") {
-    modifyNameError.textContent = 'Plant name cant be empty';
+    modifyNameError.textContent = getTranslation("noPlantName");
     return;
   }
-  const confirmed = await customConfirm("Are you sure you want to change the plantname?");
+  const confirmed = await customConfirm(getTranslation("changeConfirm"));
   if(!confirmed) return;
   const res = await fetch('/api/plant/rename', {
     method: 'PUT',
@@ -108,7 +114,7 @@ modifyPlantBtn.addEventListener('click', async () => {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Changing failed');
-  else customAlert("Plant has been renamed");
+  else customAlert(getTranslation("plantRenamed"));
   modifyModal.style.display = 'none';
 });
 
