@@ -99,11 +99,13 @@ async function dequeueJob(jobname) {
 }
 
 function updateViewButton() {
+    let title = "Queue";
+    if (isLoggedIn) title = "View Queue";
     if (queue.length == 0) {
         viewQueueBtn.style.backgroundColor = "#ae1757";
         viewQueueBtn.innerHTML = `
         <div class="queue-icon">📆</div>
-        <div class="queue-title">View Queue</div>
+        <div class="queue-title">${title}</div>
         <div class="progress-fill" style="width: 0%;"></div>
         `;
     }
@@ -112,7 +114,7 @@ function updateViewButton() {
         viewQueueBtn.style.backgroundColor = JOB_VISUALS[job.jobType].color;
         viewQueueBtn.innerHTML = `
         <div class="queue-icon">${JOB_VISUALS[job.jobType].icon}</div>
-        <div class="queue-title">View Queue</div>
+        <div class="queue-title">${title}</div>
         <div class="progress-fill" style="width: ${job_progress * 100}%;"></div>
         `;
     }
