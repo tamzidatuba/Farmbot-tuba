@@ -1,10 +1,9 @@
 import { translations } from "../customization/i18n.js";
-//import { translateHistory } from "./notification_status.js";
 
-const languageSelector = document.getElementById("languageSelector");
+export const languageSelector = document.getElementById("languageSelector");
 
 
-function setLanguage(lang = localStorage.getItem("preferredLanguage") || "en") {
+export function setLanguage(lang = localStorage.getItem("preferredLanguage") || "en") {
   const elements = document.querySelectorAll("[data-i18n], [data-i18n-title], [data-i18n-placeholder]");
   elements.forEach(el => {
     if (el.dataset.i18n) {
@@ -36,7 +35,7 @@ languageSelector.addEventListener("change", (event) => {
   setLanguage(event.target.value);
 });
 
-function getTranslation(key) {
+export function getTranslation(key) {
   const lang = localStorage.getItem("preferredLanguage") || "en";
   return translations[lang][key] || key;
 }
@@ -68,9 +67,3 @@ window.addEventListener("DOMContentLoaded", () => {
   setLanguage(savedLang);
   createLanguageButtons();
 });
-
-export {
-  getTranslation,
-  setLanguage,
-  languageSelector
-};

@@ -1,5 +1,3 @@
-// scripts/seeding.js
-
 import { token } from "./auth.js";
 import { setLanguage, getTranslation } from "./translation.js";
 import { customAlert } from "./popups.js";

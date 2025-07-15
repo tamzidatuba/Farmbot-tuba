@@ -1,8 +1,7 @@
 
 import { isLoggedIn, token } from "./auth.js";
-import { setLanguage, getTranslation } from "./translation.js";
+import { getTranslation } from "./translation.js";
 import { customAlert } from "./popups.js";
-import { customConfirm } from "./popups.js";
 
 // View‐jobs modal
 const viewQueueBtn = document.getElementById('viewQueueBtn');
@@ -124,7 +123,7 @@ function updateViewButton() {
     }
 }
 
-function updateQueue(new_queue, progress) {
+export function updateQueue(new_queue, progress) {
     queue = new_queue;
     queue.reverse()
     job_progress = progress;
@@ -133,10 +132,4 @@ function updateQueue(new_queue, progress) {
     }
     updateViewButton();
 
-};
-
-
-
-export {
-    updateQueue
 };
