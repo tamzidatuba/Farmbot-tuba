@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Local store for predefined plants
   let plants = {};
 
-
+  console.log("Just a test")
 
   // Open modal and populate dropdown
   demoBtn.addEventListener("click", () => {

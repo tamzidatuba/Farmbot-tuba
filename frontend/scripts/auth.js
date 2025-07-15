@@ -29,7 +29,6 @@ settingsBtn.addEventListener('click', () => {
         viewJobs.style.display = 'none';
         subtaskView.style.display = 'none';
         managePlants.style.display = 'none';
-        subtaskManage.style.display = 'none';
         pauseBtn.style.display = 'none';
         fetch('/api/logout', {
             method: 'POST',
