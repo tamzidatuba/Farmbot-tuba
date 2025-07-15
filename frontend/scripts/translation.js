@@ -1,4 +1,4 @@
-import { translations } from "./i18n.js";
+import { translations } from "../customization/i18n.js";
 //import { translateHistory } from "./notification_status.js";
 
 const languageSelector = document.getElementById("languageSelector");

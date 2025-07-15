@@ -2,16 +2,8 @@
 import { getTranslation } from "./translation.js";
 import { token } from "./auth.js"; // your auth token binding
 import { customConfirm, customAlert } from "./popups.js";
+import { predefinedPlants } from "../customization/demo_plants.js";
 
-// Predefined plants matching your Seeding schema
-export const predefinedPlants = [
-  { id:1, planttype: "lettuce", plantname: "Luna", xcoordinate: 20, ycoordinate: 20 },
-  { id:2, planttype: "lettuce", plantname: "Leafy", xcoordinate: 40, ycoordinate: 20 },
-  { id:3, planttype: "tomato", plantname: "Ruby", xcoordinate: 20, ycoordinate: 40 },
-  { id:4, planttype: "tomato", plantname: "Sunny", xcoordinate: 40, ycoordinate: 40 },
-  { id:5, planttype: "radish", plantname: "Spicy", xcoordinate: 20, ycoordinate: 60 },
-  { id:6, planttype: "radish", plantname: "Crunch", xcoordinate: 40, ycoordinate: 60 }
-];
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
