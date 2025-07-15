@@ -15,12 +15,12 @@ const queueNameError = document.getElementById('jobQueueError');
 let queue = new Array();
 let job_progress = 0.0;
 let open = false;
-updateViewButton();
-
 const JOB_VISUALS = {
     "Seeding": {icon: "🌱", color: "#195632"},
     "Watering": {icon: "💧", color: "#006ba1"}
 }
+updateViewButton();
+
 
 closeViewQueueBtn.addEventListener('click', () => {
     viewQueueModal.style.display = 'none';
