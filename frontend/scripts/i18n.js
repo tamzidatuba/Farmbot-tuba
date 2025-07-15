@@ -63,6 +63,9 @@ export const translations = {
     seedingcreated: 'Seeding job created ✅',
     seedingUpdated: 'Seeding job updated ✅',
     jobExecuted: 'Job will be executed 🚜',
+    seedingDemoQueued: 'A seeding demo has been queued.',
+    wateringDemoQueued: 'A watering demo has been queued.',
+    demoDenied: 'A Demo is already queued.',
     //sidebar
     menu: 'FarmBot Menu',
     task: '➕ Create Task',
@@ -235,6 +238,9 @@ export const translations = {
     seedingcreated: 'Aussaatauftrag erstellt ✅',
     seedingUpdated: 'Aussaatauftrag aktualisiert ✅',
     jobExecuted: 'Auftrag wird ausgeführt 🚜',
+    seedingDemoQueued: 'Eine Aussaats-Demo wurde in die Warteschlange gestellt.',
+    wateringDemoQueued: 'Eine Bewässerungs-Demo wurde in die Warteschlange gestellt.',
+    demoDenied: 'Es befindet sich bereits eine Demo in der Warteschlange.',
     //sidebar
     menu: 'FarmBot Menü',
     task: '➕ Aufgabe erstellen',
