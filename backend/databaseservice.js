@@ -152,72 +152,6 @@ async function UpdateJobToDB(jobType, object) {
     return true;
 }
 
-
-
-async function InsertQuestionsIntoDB(question, answer)
-{
-   let question1 =  await questionModel.InsertQuestionsToDB(question, answer);
-}
-
-async function FetchAlltheQuestionsFromDB()
-{
-   let question2 =  await questionModel.FetchAllQuestionsFromDB();
-   return question2;
-}
-
-async function FetchQuestionsFromDBbyQuestion(question)
-{
-   let question3 =  await questionModel.FetchSpecificQuestionsFromDB(question);
-   return question3;
-}
-
-async function InsertAnswerIntoDB(question, answer)
-{
-    let answer_recieved = await questionModel.InsertAnswersIntoDB(question,answer);
-    return answer_recieved;
-}
-
-async function InsertNotificationToDB(text) {
-    await notificationModel.InsertNotificationToDB(text);
-}
-
-async function FetchNotificationsFromDB() {
-    const notifications = await notificationModel.FetchNotificationsFromDB();
-    return notifications;
-}
-
-async function FetchPlantsfromDB() {
-
-    const plants = await plantModel.FetchPlantsFromDB();
-    return plants;
-}
-
-async function InsertPlantsToDB(plants) {
-    for (let plant of plants) {
-        await plantModel.InsertPlantToDB(plant);
-    }
-}
-
-async function UpdatePlantNameinDB(plantname, xcoordinate,ycoordinate)
-{
-  let new_plant_name = await plantModel.UpdatePlantNameToDB(plantname,xcoordinate,ycoordinate);
-  return new_plant_name;
-
-}
-
-async function FetchUserfromDB(username, password) {
-    const users = await userModel.FetchUser(username, password);
-    return users;
-}
-
-async function UpdateUserToDB(username, password) {
-    const users = await userModel.UpdateUser(username, password);
-}
-
-async function DeletePlantFromDB(xcoordinate, ycoordinate) {
-    await plantModel.DeletePlantFromDB(xcoordinate, ycoordinate);
-}
-
 function ValidateNewSeedsAgainstThemselves(newSeeds) {
     let invalidSeeds = [];
 
@@ -303,7 +237,7 @@ async function ValidateNewSeedsAgainstPlants(seeds) {
     return existingconflictingplant;
 }
 
-async function clearPlantFromWateringJobs(xcoordinate,  ycoordinate) {
+async function ClearPlantFromWateringJobs(xcoordinate,  ycoordinate) {
     let watering_jobs = await FetchJobsFromDB(JobType.WATERING);
     for (let watering_job of watering_jobs) {
         let new_plants_to_be_watered = new Array();
@@ -325,6 +259,81 @@ async function clearPlantFromWateringJobs(xcoordinate,  ycoordinate) {
     }
 }
 
+//Functions related to questions DB CRUD operations
+async function InsertQuestionsIntoDB(question, answer){
+   let question1 =  await questionModel.InsertQuestionsToDB(question, answer);
+}
+
+async function FetchAlltheQuestionsFromDB(){
+   let question2 =  await questionModel.FetchAllQuestionsFromDB();
+   return question2;
+}
+
+async function FetchQuestionsFromDBbyQuestion(question){
+   let question3 =  await questionModel.FetchSpecificQuestionsFromDB(question);
+   return question3;
+}
+
+async function InsertAnswerIntoDB(question, answer){
+    let answer_recieved = await questionModel.InsertAnswersIntoDB(question,answer);
+    return answer_recieved;
+}
+
+async function UpdateQuestionDetailsIntoDB(user, question, answer)
+{
+    let details_to_be_changed = await questionModel.UpdateDetailsinDB(user,question,answer);
+    return details_to_be_changed;
+}
+
+async function DeleteQuestionInDB(question)
+{
+    await questionModel.DeleteQuestionfromDB(question);
+}
+
+//Functions related to Notifications DB CRUD operations
+async function InsertNotificationToDB(text) {
+    await notificationModel.InsertNotificationToDB(text);
+}
+
+async function FetchNotificationsFromDB() {
+    const notifications = await notificationModel.FetchNotificationsFromDB();
+    return notifications;
+}
+
+//Functions related to plants DB CRUD operations
+async function InsertPlantsToDB(plants) {
+    for (let plant of plants) {
+        await plantModel.InsertPlantToDB(plant);
+    }
+}
+
+async function FetchPlantsfromDB() {
+    const plants = await plantModel.FetchPlantsFromDB();
+    return plants;
+}
+
+async function UpdatePlantNameinDB(plantname, xcoordinate,ycoordinate) {
+  let new_plant_name = await plantModel.UpdatePlantNameToDB(plantname,xcoordinate,ycoordinate);
+  return new_plant_name;
+
+}
+
+async function DeletePlantFromDB(xcoordinate, ycoordinate) {
+    await plantModel.DeletePlantFromDB(xcoordinate, ycoordinate);
+}
+
+//Functions related to users DB CRUD operations
+async function FetchUserfromDB(username, password) {
+    const users = await userModel.FetchUser(username, password);
+    return users;
+}
+
+async function UpdateUserToDB(username, password) {
+    const users = await userModel.UpdateUser(username, password);
+}
+
+
+
 export default {
     InsertJobToDB,
     FetchJobsFromDB,
@@ -344,7 +353,8 @@ export default {
     FetchQuestionsFromDBbyQuestion,
     DeletePlantFromDB,
     InsertAnswerIntoDB,
-    clearPlantFromWateringJobs,
+    ClearPlantFromWateringJobs,
+    UpdateQuestionDetailsIntoDB,
+    DeleteQuestionInDB,
     UpdatePlantNameinDB,
-
 };
