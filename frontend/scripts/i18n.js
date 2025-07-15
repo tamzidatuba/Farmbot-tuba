@@ -141,8 +141,10 @@ export const translations = {
     canceled: 'Job canceled',
     visitorqueued: 'Job added to queue by visitor',
     adminqueued: 'Job added to queue by Admin ',
+    plant_deleted: 'Plant deleted, Plant name: ',
+    plant_name_changed: 'Plant name changed, Plant name: ',
     time: ' at: ',
-    jobname: 'Job Name: ',
+    jobname: 'Job name: ',
     // Translations for the help text
     helpField: 'This is a visual representation of the Farmbot.You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile.',
     helpStatus: 'You can see the status of the Farmbot here. It shows whether the farmbot is currently offline or Ready to work or moving.',
@@ -327,6 +329,8 @@ export const translations = {
     canceled: 'Auftrag abgebrochen',
     visitorqueued: 'Auftrag in die Warteschlange gestellt von Besucher*in',
     adminqueued: 'Auftrag in die Warteschlange gestellt von Admin ',
+    plant_deleted: 'Pflanze gelöscht, Pflanzenname: ',
+    plant_name_changed: 'Pflanze umbenannt, Pflanzenname: ',
     time: ' um: ',
     jobname: 'Auftragsname: ',
     //Translations for the help text

@@ -42,18 +42,8 @@ export async function updateRobot() {
           statusHistory.removeChild(statusHistory.lastChild);
         }
         // Add new entries to the status history
-        for (const status in data.notifications.reverse()) {
-          if (statusHistory.children.length < maxHistoryEntries + 1) {
-            const entry = document.createElement('div');
-            console.log("Status:", data.notifications[status].key.replace(/\s/g, ''))
-            var textInput = data.notifications[status].date + " " + getTranslation(data.notifications[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + data.notifications[status].jobname;
-            entry.textContent = textInput;
-            statusHistory.insertBefore(entry, previousChild);
-            previousChild = entry;
-          }
-        }
-        previousChild = null;
         historyList = data.notifications;
+        fillHistory(data.notifications.reverse());
         for (let note of data.notifications) {
           if (note.key.toLowerCase() === 'queued') {
             const row = document.querySelector(
@@ -118,6 +108,24 @@ function arraysEqual(arr1, arr2) {
   });
 }
 
+function fillHistory (entries) {
+  for (const status in entries) {
+    if (statusHistory.children.length < maxHistoryEntries + 1) {
+      const entry = document.createElement('div');
+      console.log("Key: " + historyList[status].key)
+      if (historyList[status].key === "plant_deleted" || historyList[status].key === "plant_name_changed") {
+        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key) + historyList[status].plantname;
+      } else {
+        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
+      }
+      entry.textContent = textInput;
+      statusHistory.insertBefore(entry, previousChild);
+      previousChild = entry;
+    }
+  }
+  previousChild = null;
+}
+
 
 entryLimitSelect.addEventListener('change', () => {
   maxHistoryEntries = parseInt(entryLimitSelect.value);
@@ -126,16 +134,7 @@ entryLimitSelect.addEventListener('change', () => {
     statusHistory.removeChild(statusHistory.lastChild);
   }
   // Add new entries to the status history
-  for (const status in historyList) {
-    if (statusHistory.children.length < maxHistoryEntries + 1) {
-      const entry = document.createElement('div');
-      var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
-      entry.textContent = textInput;
-      statusHistory.insertBefore(entry, previousChild);
-      previousChild = entry;
-    }
-  }
-  previousChild = null;
+  fillHistory(historyList);
 });
 
 function translateHistory() {
@@ -143,14 +142,7 @@ function translateHistory() {
     statusHistory.removeChild(statusHistory.lastChild);
   }
   // Add new entries to the status history
-  for (const status in historyList) {
-    if (statusHistory.children.length < maxHistoryEntries + 1) {
-      const entry = document.createElement('div');
-      var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
-      entry.textContent = textInput;
-      statusHistory.appendChild(entry);
-    }
-  }
+  fillHistory(historyList);
 }
 
 languageSelector.addEventListener('change', () => {
