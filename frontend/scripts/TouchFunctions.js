@@ -19,29 +19,33 @@ let selectedPlant = null;
 canvas.addEventListener('click', async (e) => {
   if (isLoggedIn) {
     let coordDisplay = pixelToCoord(e.offsetX, e.offsetY);
-    let x = coordDisplay.x;
-    let y = coordDisplay.y;
+    let x = coordDisplay.x; // x of the click with respect to grid coordinate system
+    let y = coordDisplay.y; // y of the click with respect to grid coordinate system
 
     // Find the clicked plant
     selectedPlant = null;
     let isSeedingPossible = true;
 
-    for (let plant of window.plants) {
-      const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
+    console.log(`Clicked at X: ${x}, Y: ${y}`);
 
+    for (let plant of window.plants) { // this loop will decide if seeding is possible or not
+      const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
       if (distance < PlantRadii[plant.planttype]) {
         isSeedingPossible = false; // If any plant is too close, seeding is not possible
-      }
+      }      
+    }
 
-      // const radius = PlantRadii[plant.planttype];
-      const radius = 15;
-      if (distance <= radius) { // set the selected plant
-        selectedPlant = plant;
+    console.log(isSeedingPossible);
+
+    for(let plant of window.plants) { // this loop will find the plant that is clicked
+      const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
+      if (distance < 15) {
+        selectedPlant = plant; // Set the selected plant
         break; // Stop at the first match
       }
     }
 
-    for (let job of window.seedingjobs) {
+    for (let job of window.seedingjobs) { // this loop will check if there is a seed at the clicked position
       for (let seed of job.seeds) {
         const distance = GetDistance(x, y, seed.xcoordinate, seed.ycoordinate);
         if (distance <= PlantRadii[seed.seedtype]) { // Assuming a radius of 15 for seeds
@@ -50,13 +54,6 @@ canvas.addEventListener('click', async (e) => {
         }
       }
     }
-
-    let innerCanvasCoordinateInPixel = coordToPixel(x, y);
-    const canvasRect = canvas.getBoundingClientRect();
-    let positiononscreen = {
-      x: canvasRect.left + innerCanvasCoordinateInPixel.x,
-      y: canvasRect.top + innerCanvasCoordinateInPixel.y
-    };
 
     // remove any existing dialogbox
     dialogBox.style.display = "none"; // Hide the dialog box if it exists
@@ -70,16 +67,14 @@ canvas.addEventListener('click', async (e) => {
 
       AddDeleteButtonToDialogContent();
       AddWateringButtonToDialogContent();
-      // DisplayCreateWateringJobForTouchBased(selectedPlant);
     }
     else {
       if (!isSeedingPossible) return;
       dialogHeader.textContent = `Position: X:${x} , Y:${y}`;
-      // DisplayCreateSeedingJobForTouchedBased(x,y);
       AddSeedingButtonToDialogContent(x, y);
     }
 
-    showDialogOnCanvas(positiononscreen.x, positiononscreen.y);
+    showDialogOnCanvas(e.clientX, e.clientY);
   }
 });
 
