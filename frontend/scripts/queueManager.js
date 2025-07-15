@@ -36,13 +36,12 @@ viewQueueBtn.addEventListener('click', () => {
 });
 
 function generateGUI() {
-    queue = [{jobType: 'Seeding', job: {jobname: "MyJobName"}}, {jobType: 'Watering', job: {jobname: "MyWateringJobName"}}]
     jobCountDisplay.textContent = `${getTranslation('queuedJobs')}${queue.length}`;
+    queueList.innerHTML = '';
     if (queue.length === 0) {
         jobsList.innerHTML = getTranslation('notFound');
         return;
     };
-    queueList.innerHTML = '';
     queue.forEach((job, index) => {
         const isLast = index === queue.length - 1;
         
@@ -114,7 +113,7 @@ function updateViewButton() {
         viewQueueBtn.innerHTML = `
         <div class="queue-icon">${JOB_VISUALS[job.jobType].icon}</div>
         <div class="queue-title">View Queue</div>
-        <div class="progress-fill" style="width: ${job.progress * 100}%;"></div>
+        <div class="progress-fill" style="width: ${job_progress * 100}%;"></div>
         `;
     }
 }

@@ -65,7 +65,7 @@ class ScheduleManager {
     // removes a scheduled job from execution-queue (Not in use currently)
     removeScheduledJob(name) {
         for (const job_idx in this.jobsToExecute) {
-            if (this.jobsToExecute[job_idx].job.name == name) {
+            if (this.jobsToExecute[job_idx].job.jobname == name) {
 
                 // remove job from queue
                 const job_data = this.jobsToExecute.splice(job_idx, 1)[0];
