@@ -46,31 +46,41 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Submit feedback
-  submitBtn.addEventListener('click', () => {
+  submitBtn.addEventListener('click', async () => {
     errorDiv.textContent = '';
     successDiv.textContent = '';
-
+  
     const message = textInput.value.trim();
     const rating = getSelectedRating();
-
-    // Validation
-
+  
     if (rating < 1 || rating > 5) {
       errorDiv.textContent = getTranslation("noRating");
       return;
     }
-
-    // Create and store feedback
+  
     const fb = new Feedback(message, rating);
     feedbackList.push(fb);
     console.log('New feedback:', fb);
-    console.log('All feedbacks:', feedbackList);
-
-    // Show success
-    successDiv.textContent = getTranslation("feedbackResponse");
-
-    // Reset form
+  
+    try {
+      const response = await fetch('/api/send-feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, rating })
+      });
+  
+      const result = await response.json();
+  
+      if (!response.ok) throw new Error(result.error);
+  
+      successDiv.textContent = getTranslation("feedbackResponse");
+    } catch (err) {
+      console.error('Feedback send error:', err);
+      errorDiv.textContent = '❌ Failed to send feedback. Please try again later.';
+    }
+  
     textInput.value = '';
     ratingStars.forEach(s => s.checked = false);
   });
+  
 });

@@ -245,3 +245,36 @@ app.post('/api/ask-question', async (req, res) => {
   }
 });
 
+app.post('/api/send-feedback', async (req, res) => {
+  const { rating, message } = req.body;
+
+  if (!rating || !message) {
+    return res.status(400).json({ error: 'Rating and message are required.' });
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'farmbot394@gmail.com',
+        pass: 'fhiuohwwzqezuolf'
+      }
+    });
+
+    const mailOptions = {
+      from: 'farmbot394@gmail.com',
+      to: 'farmbot394@gmail.com',
+      subject: `New Feedback Received ⭐️ Rating: ${rating}`,
+      text: `Feedback Message:\n\n${message}\n\nRating: ${rating}`
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'Feedback sent successfully.' });
+  } catch (error) {
+    console.error('Feedback email error:', error);
+    res.status(500).json({ error: 'Failed to send feedback email.' });
+  }
+});
+
+

@@ -284,7 +284,6 @@ modifyExecuteBtn.addEventListener('click', async () => {
 
 closeModifyBtn.addEventListener('click', () => {
   modifyModal.style.display = 'none';
-  viewJobsModal.style.display = 'block';
 });
 
 window.addEventListener('click', e => {
