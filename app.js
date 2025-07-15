@@ -94,13 +94,14 @@ app.put('/api/putquestions', async (req, res) => {
 });
 
 app.put('/api/plant/rename', async (req,res) => {
-  const {plantname, xcoordinate, ycoordinate,token} =req.body;
+  const {plantname, xcoordinate, ycoordinate, token} =req.body;
   if (!TokenManager.validateToken(token)) {
     res.status(500).json({ error: "You dont have permission to do that" });
     return
   }
   try {
     await DatabaseService.UpdatePlantNameinDB(plantname, xcoordinate, ycoordinate);
+    backend.appendNotification("plant_name_changed", plantname);
     backend.refetchPlants()
     res.status(200).json("The plant name has been updated.");
   }catch(err) {

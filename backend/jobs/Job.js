@@ -9,7 +9,8 @@ A Job is a list of Tasks inside a Queue for the Farmbot to complete
 class Job {
     constructor(jobName) {
         this.taskQueue = new Array(); //new Queue();
-        this.name = jobName
+        this.name = jobName;
+        this.task_count = this.taskQueue.length;
     }
     // Returns True if no more tasks are inside the task-queue
     isJobCompleted() {
