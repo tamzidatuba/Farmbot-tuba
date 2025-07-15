@@ -87,7 +87,7 @@ form.addEventListener('submit', async function (e) {
             viewJobs.style.display = 'flex';
             //viewJobsBtn.style.display='block';
             managePlants.style.display = 'flex';
-            pauseBtn.style.display = 'inline-block';
+            //pauseBtn.style.display = 'inline-block';
 
             token = data.token;
 
