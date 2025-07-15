@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Local store for predefined plants
   let plants = {};
 
+
   let i = 0;
 
 
@@ -41,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === modal) modal.style.display = "none";
   });
 
+  /*
   // Fill the <select> with predefined plant entries
   function populateDropdown() {
     plantSelect.innerHTML = "";
@@ -53,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     plants = predefinedPlants;
   }
+  */
 
   async function startDemo() {
     console.log("Array length " + predefinedPlants.length);

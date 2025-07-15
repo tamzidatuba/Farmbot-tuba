@@ -145,6 +145,11 @@ class StatusManager {
         this.runningJob = false
         this.backend.finishJob();
     }
+
+    getJobProgress() {
+        if (!this.runningJob) return 0.0;
+        return 1 - (this.currentJob.taskQueue.length / this.currentJob.task_count);
+    }
 }
 
 export {StatusManager};

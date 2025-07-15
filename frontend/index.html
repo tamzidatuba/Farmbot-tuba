@@ -63,7 +63,7 @@
         <span class="close" id="closeModalWatering">&times;</span>
       </div>
       <h2 id="modalTitleWatering" data-i18n="wateringJob">Create Watering Job</h2>
-      <input type="text" id="WateringJobName" data-i18n-placeholder="enterName" placeholder="Enter job name" />
+      <input type="text" id="WateringJobName" data-i18n-placeholder="enterName" placeholder="Enter job name" autocomplete="off" />
       <div id="jobNameErrorWatering" class="errorMsg"></div>
 
       <!-- Schedule Option -->
@@ -98,7 +98,10 @@
   <!-- MODIFY PLANT MODAL -->
   <div id="modifyPlantModal" class="modal">
     <div class="modal-content">
-      <span class="close" id="closeModifyPlantModal">&times;</span>
+      <div class="header-row">
+        <span class="return" id="returnToOverviewPlants">&larr;</span>
+        <span class="close" id="closeModifyPlantModal">&times;</span>
+      </div>
       <h2 id="modifyModalTitle" data-i18n="modifyPlant">Modify Plant Name</h2>
       <div class="job-header-row">
         <img id="plantTypeImage" src="assets/icons/tomato.png" alt="plant-image" style="width:50px;height:50px;">
@@ -338,7 +341,6 @@
 
     <!-- grid container using canvas-->
     <div>
-      <!--<canvas id="gridCanvas" width="550" height="650"></canvas>-->
       <canvas id="gridCanvas" style="width: 550px; height: 650px;" width="1100" height="1300"></canvas>
       <div class="help-text-grid" data-i18n="helpField" style="display:outside; color: gray;">This is a visual
         representation of the Farmbot.
@@ -349,6 +351,10 @@
         It shows whether the farmbot is currently offline or Ready to work or moving.</div>
     </div>
     <div id="hover-coordinates"></div>
+    <div>
+      <div class="queue-element" id="viewQueueBtn"></div> 
+
+    </div>
     <div id="farmbot-status-container">
       <div id="farmbot-status" data-i18n="initialStatus">Status: Offline</div> <!-- Robot status -->
       <button id="pauseJobBtn" class="pause-btn">⏸</button>
@@ -379,6 +385,17 @@
       </div>
     </div>
 
+    <!-- VIEW QUEUED JOBS MODAL -->
+    <div id="viewQueueModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeViewQueueModal">&times;</span>
+        <h2 data-i18n="queueOverview">📋 Execution Queue Overview</h2>
+        <p id="jobCountDisplayQueued"></p>
+        <div id="jobsListQueued"></div>
+        <div id="jobQueueError" class="errorMsg"></div>
+      </div>
+    </div>
+
     <!-- VIEW WATERING JOBS MODAL -->
     <div id="viewJobsModalWatering" class="modal">
       <div class="modal-content">
@@ -389,6 +406,7 @@
       </div>
     </div>
     <!-- Ask Questions -->
+     
 
     <!-- Question Icon Button -->
     <div>
@@ -481,6 +499,7 @@
     <script type="module" src="./scripts/seedingdemo.js"></script>
     <script type="module" src="./scripts/feedback.js"></script>
     <script type="module" src="./scripts/your_questions.js"></script>
+    <script type="module" src="./scripts/queueManager.js"></script>
 
 
 

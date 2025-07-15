@@ -2,6 +2,7 @@ import { token, isLoggedIn } from "./auth.js";
 import { getTranslation } from "./translation.js";
 import { languageSelector } from "./translation.js";
 import { updateGrid, setbotposition } from "./canvas.js";
+import { updateQueue } from "./queueManager.js";
 
 let maxHistoryEntries = 10;
 // button for max history entries
@@ -32,6 +33,8 @@ export async function updateRobot() {
     .then(response => response.json())
     .then(data => {
       setbotposition(data.farmbotPosition);
+      updateQueue(data.executionPipeline, data.job_progress);
+
       // Update robot Status
       statusBox.textContent = getTranslation("status") + getTranslation(data.status.replace(/\s/g, '').toLowerCase());
       // Update Status History
@@ -42,18 +45,8 @@ export async function updateRobot() {
           statusHistory.removeChild(statusHistory.lastChild);
         }
         // Add new entries to the status history
-        for (const status in data.notifications.reverse()) {
-          if (statusHistory.children.length < maxHistoryEntries + 1) {
-            const entry = document.createElement('div');
-            console.log("Status:", data.notifications[status].key.replace(/\s/g, ''))
-            var textInput = data.notifications[status].date + " " + getTranslation(data.notifications[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + data.notifications[status].jobname;
-            entry.textContent = textInput;
-            statusHistory.insertBefore(entry, previousChild);
-            previousChild = entry;
-          }
-        }
-        previousChild = null;
         historyList = data.notifications;
+        fillHistory(data.notifications.reverse());
         for (let note of data.notifications) {
           if (note.key.toLowerCase() === 'queued') {
             const row = document.querySelector(
@@ -87,19 +80,17 @@ export async function updateRobot() {
       // Update button text depending on paused state
       pauseBtn.textContent = data.paused ? '▶' : '⏸';
 
-      //Update plants
-      if (!(arraysEqual(window.plants, removeId(data.plants)))) {
-        //if (plants.toString() != data.toString()) {
-        window.plants.length = 0; // clear it
-        for (const plant of data.plants) {
-          window.plants.push({ plantname: plant.plantname, planttype: plant.planttype, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate });
-        }
-      }
+      // Update plants
+      window.plants = data.plants;
     })
     .catch(err => {
       console.error("Failed to fetch frontend data:", err);
       pauseBtn.style.display = 'none'; // hide on error
     });
+
+  const res = await fetch('/api/jobs/Seeding'); // update seeding jobs
+  const jobs = await res.json();
+  window.seedingjobs = jobs;
   //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   updateGrid(); // Update the grid on the canvas
 }
@@ -120,24 +111,33 @@ function arraysEqual(arr1, arr2) {
   });
 }
 
+function fillHistory (entries) {
+  for (const status in entries) {
+    if (statusHistory.children.length < maxHistoryEntries + 1) {
+      const entry = document.createElement('div');
+      console.log("Key: " + historyList[status].key)
+      if (historyList[status].key === "plant_deleted" || historyList[status].key === "plant_name_changed") {
+        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key) + historyList[status].plantname;
+      } else {
+        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
+      }
+      entry.textContent = textInput;
+      statusHistory.insertBefore(entry, previousChild);
+      previousChild = entry;
+    }
+  }
+  previousChild = null;
+}
+
 
 entryLimitSelect.addEventListener('change', () => {
-    maxHistoryEntries = parseInt(entryLimitSelect.value);
-    // Clear the current status history
-    while (statusHistory.children.length > 1) {
-      statusHistory.removeChild(statusHistory.lastChild);
-    }
-    // Add new entries to the status history
-    for (const status in historyList) {
-      if (statusHistory.children.length < maxHistoryEntries + 1) {
-        const entry = document.createElement('div');
-        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
-        entry.textContent = textInput;
-        statusHistory.insertBefore(entry, previousChild);
-        previousChild = entry;
-      }
-    }
-    previousChild = null;
+  maxHistoryEntries = parseInt(entryLimitSelect.value);
+  // Clear the current status history
+  while (statusHistory.children.length > 1) {
+    statusHistory.removeChild(statusHistory.lastChild);
+  }
+  // Add new entries to the status history
+  fillHistory(historyList);
 });
 
 function translateHistory() {
@@ -145,14 +145,7 @@ function translateHistory() {
     statusHistory.removeChild(statusHistory.lastChild);
   }
   // Add new entries to the status history
-  for (const status in historyList) {
-    if (statusHistory.children.length < maxHistoryEntries + 1) {
-      const entry = document.createElement('div');
-      var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
-      entry.textContent = textInput;
-      statusHistory.appendChild(entry);
-    }
-  }
+  fillHistory(historyList);
 }
 
 languageSelector.addEventListener('change', () => {

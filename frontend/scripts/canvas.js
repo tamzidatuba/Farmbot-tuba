@@ -25,8 +25,6 @@ const coordHeight = 650;
 const majorTickX = 50;
 const majorTickY = 100;
 
-let plants = [];
-
 const plantImages = {
     lettuce: new Image(),
     radish: new Image(),
@@ -39,25 +37,55 @@ plantImages.tomato.src = './assets/icons/tomato.png';
 const size = 50 * SCALE; // Size of the plant image
 
 //draw plants
-function drawPlant(ctx, plant) {
-    const coord = coordToPixel(plant.xcoordinate, plant.ycoordinate);
-    let image;
-    switch (plant.planttype) {
-        case "lettuce":
-            image = plantImages.lettuce;
-            // drawRadius(ctx, coord, 15);
-            break;
-        case "radish":
-            image = plantImages.radish;
-            // drawRadius(ctx, coord, 2);
-            break;
-        case "tomato":
-            image = plantImages.tomato;
-            // drawRadius(ctx, coord, 30);
-            break;
+function drawPlants(ctx) {
+    for (const plant of window.plants) {
+        const coord = coordToPixel(plant.xcoordinate, plant.ycoordinate);
+        switch (plant.planttype) {
+            case "lettuce":
+                ctx.drawImage(plantImages.lettuce, coord.x - size / 2, coord.y - size / 2, size, size);
+                //drawRadius(ctx, coord, 15);
+                break;
+            case "radish":
+                ctx.drawImage(plantImages.radish, coord.x - size / 2, coord.y - size / 2, size, size);
+                //drawRadius(ctx, coord, 2);
+                break;
+            case "tomato":
+                ctx.drawImage(plantImages.tomato, coord.x - size / 2, coord.y - size / 2, size, size);
+                //drawRadius(ctx, coord, 30);
+                break;
+        }
     }
+}
 
-    ctx.drawImage(image, coord.x - size / 2, coord.y - size / 2, size, size);
+function drawSeeds(seeds, ctx) {
+    for (const seed of seeds) {
+        const coord = coordToPixel(seed.xcoordinate, seed.ycoordinate);
+        switch (seed.seedtype) {
+            case "lettuce":
+                ctx.drawImage(plantImages.lettuce, coord.x - size / 2, coord.y - size / 2, size, size);
+                // drawRadius(ctx, coord, 15);
+                break;
+            case "radish":
+                ctx.drawImage(plantImages.radish, coord.x - size / 2, coord.y - size / 2, size, size);
+                // drawRadius(ctx, coord, 2);
+                break;
+            case "tomato":
+                ctx.drawImage(plantImages.tomato, coord.x - size / 2, coord.y - size / 2, size, size);
+                //drawRadius(ctx, coord, 30);
+                break;
+        }
+    }
+}
+
+// draw seeding jobs
+function drawSeedingJobs(ctx) {
+    ctx.save(); // isolate style changes
+    ctx.globalAlpha = 0.4;
+    ctx.filter = "grayscale(100%)";
+    for (const seedingjob of window.seedingjobs) {
+        drawSeeds(seedingjob.seeds, ctx);        
+    }
+    ctx.restore(); // revert to original canvas style
 }
 
 // Draws the radius
@@ -77,7 +105,7 @@ function drawRobot() {
 
 // Draw grid lines for visual reference
 export function drawGrid() {
-    plants = window.plants;
+    seedingjobs = window.seedingjobs;
     ctx.strokeStyle = 'rgb(102, 68, 40)'//'#ddd';
     ctx.linewidth = 1 * SCALE;
 
@@ -96,10 +124,8 @@ export function drawGrid() {
     }
 
     drawAxesAndLabels(ctx);
-
-    for (const plant in plants) {
-        drawPlant(ctx, plants[plant]);
-    }
+    drawPlants(ctx);
+    drawSeedingJobs(ctx);
 }
 
 function drawAxesAndLabels(ctx) {
@@ -156,15 +182,12 @@ function drawAxesAndLabels(ctx) {
 
 
 export function clearCanvas() {
-    plants = [];
     canvas.width = canvas.width;
     canvas.height = canvas.height;
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 }
 
 export function updateGrid() {
-    plants = window.plants;
-
     // Clear the buffer
     bufferCtx.clearRect(0, 0, canvasWidth, canvasHeight);
     bufferCtx.strokeStyle = 'rgb(102, 68, 40)';
@@ -188,11 +211,9 @@ export function updateGrid() {
 
     // Draw labels and axes
     drawAxesAndLabels(bufferCtx);
-
-    // Draw plants
-    for (const plant in plants) {
-        drawPlant(bufferCtx, plants[plant]);
-    }
+    
+    drawPlants(bufferCtx); // Draw plants
+    drawSeedingJobs(bufferCtx); // draw seeding jobs
 
     // Copy buffer to main canvas
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -210,7 +231,7 @@ export function pixelToCoord(x, y) {
 
 // Map real-world coordinate to pixel
 export function coordToPixel(x, y) {
-    const px = (x / coordWidth) * canvasWidth
+    const px = (x / coordWidth) * canvasWidth;
     const py = (y / coordHeight) * canvasHeight;
     return { x: px, y: py };
 }
