@@ -352,7 +352,7 @@ export default {
     FetchAlltheQuestionsFromDB,
     FetchQuestionsFromDBbyQuestion,
     DeletePlantFromDB,
-    InsertAnswerIntoDB,
+    //InsertAnswerIntoDB,
     ClearPlantFromWateringJobs,
     UpdateQuestionDetailsIntoDB,
     DeleteQuestionInDB,
