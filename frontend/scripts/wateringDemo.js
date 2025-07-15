@@ -1,4 +1,4 @@
-import { predefinedPlants } from './seedingdemo.js'; // predefined plants for demo
+import { predefinedPlants } from '../customization/demo_plants.js'; // predefined plants for demo
 import { getTranslation } from './translation.js';
 import { token } from './auth.js';
 import { customAlert,customConfirm } from './popups.js';
