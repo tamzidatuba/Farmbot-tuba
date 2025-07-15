@@ -15,6 +15,7 @@ mongoose.connect(connectionString)
 //define the schema or the structure of each document/ entry in Mongo DB
 export const askQuestionSchema = new mongoose.Schema(
     {
+        question_id: String,
         user: String,
         question: String,
         answer: String,
@@ -26,14 +27,14 @@ const questionModel = mongoose.model('questions', askQuestionSchema);
 
 
 // function to insert questions into the DB.
-async function InsertQuestionsToDB(user, question, answer) {
-    let question1 = await questionModel.create({ user: user, question: question, answer: answer });
+async function InsertQuestionsToDB(question_id, user, question, answer) {
+    let question1 = await questionModel.create({question_id:question_id, user: user, question: question, answer: answer });
     return question1;
 }
 
 //function to retreive a specific question in the DB
-async function FetchSpecificQuestionsFromDB(question) {
-    let questions = await questionModel.findOne({ "question": question });
+async function FetchSpecificQuestionsFromDB(question_id) {
+    let questions = await questionModel.findOne({ "question_id": question_id });
     return questions;
 }
 
@@ -44,20 +45,20 @@ async function FetchAllQuestionsFromDB() {
 }
 
 //function to insert answer to a specific question in the DB.
-async function InsertAnswersIntoDB(question, answer) {
+/*async function InsertAnswersIntoDB(question_id, answer) {
     let recieved_answer = await questionModel.findOneAndUpdate(
-        { "question": question },
+        { "question_id": question_id },
         { $set: { "answer": answer } },
         { new: true }
     );
     return recieved_answer;
-}
+}*/
 
 //function to update the details (the name of the user, question and answer) in the database.
-async function UpdateDetailsinDB(user,question,answer)
+async function UpdateDetailsinDB(question_id,user,question,answer)
 {
     let change_details = await questionModel.findOneAndUpdate(
-        {"question":question},
+        {"question_id":question_id},
         {
             $set:
             {
@@ -71,9 +72,9 @@ async function UpdateDetailsinDB(user,question,answer)
 }
 
 //function to delete question in the Database.
-async function DeleteQuestionfromDB(question)
+async function DeleteQuestionfromDB(question_id)
 {
-    await questionModel.findOneAndDelete({"question": question});
+    await questionModel.findOneAndDelete({"question_id": question_id});
 }
 
 
@@ -82,8 +83,16 @@ export default {
     InsertQuestionsToDB,
     FetchAllQuestionsFromDB,
     FetchSpecificQuestionsFromDB,
-    InsertAnswersIntoDB,
+    //InsertAnswersIntoDB,
     UpdateDetailsinDB,
     DeleteQuestionfromDB,
-
 }
+
+const question_id1 = "question1";
+const user1 = "Alagu";
+const question1= "何歳？";
+const answer1 = "22.";
+
+await InsertQuestionsToDB(question_id1,user1,question1,answer1);
+
+
