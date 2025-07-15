@@ -2,6 +2,7 @@ import { token, isLoggedIn } from "./auth.js";
 import { getTranslation } from "./translation.js";
 import { languageSelector } from "./translation.js";
 import { updateGrid, setbotposition } from "./canvas.js";
+import { updateQueue } from "./queueManager.js";
 
 let maxHistoryEntries = 10;
 // button for max history entries
@@ -32,6 +33,8 @@ export async function updateRobot() {
     .then(response => response.json())
     .then(data => {
       setbotposition(data.farmbotPosition);
+      updateQueue(data.executionPipeline, data.job_progress);
+
       // Update robot Status
       statusBox.textContent = getTranslation("status") + getTranslation(data.status.replace(/\s/g, '').toLowerCase());
       // Update Status History

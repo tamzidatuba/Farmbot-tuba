@@ -34,6 +34,7 @@ class WateringJob extends Job {
         let returnToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING, FieldConstants.SAFETY_HEIGHT);
         this.taskQueue.push(returnToSafetyHeight)
 
+        this.task_count = this.taskQueue.length;
         
     }
 

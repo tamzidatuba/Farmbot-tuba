@@ -1063,8 +1063,104 @@ margin-top: 4px;
 }
 
 
-  
-    
+  #jobsListQueued {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#queue {
+  font-size: 16px;
+  position: absolute;
+  display: flex;
+  top: 2%;
+  right: 78%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 230px;
+  height: 48px;
+  background-color: var(--elements-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 10px;
+  pointer-events: auto;
+  text-align: center;
+}
+
+.queue-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.queue-element {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  color: white;
+  min-width: 250px;
+  flex-grow: 1;
+}
+
+/* Inhalt (Icon + Titel) über dem Balken */
+.queue-element > *:not(.progress-fill) {
+  position: relative;
+  z-index: 1;
+}
+
+.progress-fill {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 0%; /* wird per JS gesetzt */
+  background-color: rgba(255, 255, 255, 0.4); /* halbtransparent weiß */
+  border-radius: 16px 0 0 16px; /* Abrundung nur links */
+  z-index: 0;
+  transition: width 0.3s ease;
+}
+
+
+.queue-icon {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #333;
+}
+
+.queue-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.dequeue-btn {
+  width: 40px;
+  height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  height: fit-content;
+  align-self: flex-start; /* NEU: verhindert dass der Button sich streckt */
+}
+
+.dequeue-btn:hover {
+  background-color: #c0392b; /* Besser als Textfarbe ändern */
+}   
 
 
     

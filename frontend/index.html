@@ -241,7 +241,7 @@
           <button id="viewWateringJobsBtn" data-i18n="wateringTitle">💧 Watering Job</button>
         </div>
       </li>
-      <li class="menu-item" id="managePlants" data-i18n="manage">🪴 Manage Plants></li>      
+      <li class="menu-item" id="managePlants" data-i18n="manage">🪴 Manage Plants</li>   
       <!----help option----->
       <div class="help-translucent" id="helpTranslucent"></div>
       <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo"><span>Seeding Demo</span></li>
@@ -284,6 +284,9 @@
         It shows whether the farmbot is currently offline or Ready to work or moving.</div>
     </div>
     <div id="hover-coordinates"></div>
+    <div>
+      <div class="queue" id="viewQueueBtn" data-i18n="viewQueue">View Queue</div> 
+    </div>
     <div id="farmbot-status-container">
       <div id="farmbot-status" data-i18n="initialStatus">Status: Offline</div> <!-- Robot status -->
       <button id="pauseJobBtn" class="pause-btn">⏸</button>
@@ -314,6 +317,17 @@
       </div>
     </div>
 
+    <!-- VIEW QUEUED JOBS MODAL -->
+    <div id="viewQueueModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeViewQueueModal">&times;</span>
+        <h2 data-i18n="queueOverview">📋 Execution Queue Overview</h2>
+        <p id="jobCountDisplayQueued"></p>
+        <div id="jobsListQueued"></div>
+        <div id="jobQueueError" class="errorMsg"></div>
+      </div>
+    </div>
+
     <!-- VIEW WATERING JOBS MODAL -->
     <div id="viewJobsModalWatering" class="modal">
       <div class="modal-content">
@@ -324,6 +338,7 @@
       </div>
     </div>
     <!-- Ask Questions -->
+     
 
     <!-- Question Icon Button -->
     <div>
@@ -416,6 +431,7 @@
     <script type="module" src="./scripts/seedingdemo.js"></script>
     <script type="module" src="./scripts/feedback.js"></script>
     <script type="module" src="./scripts/your_questions.js"></script>
+    <script type="module" src="./scripts/queueManager.js"></script>
 
 
 
