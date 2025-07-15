@@ -59,7 +59,7 @@
 
     <div class="modal-content">
       <div class="header-row">
-        <span class="return" id="returnToOverviewWatering">&larr;</span>
+        <span class="return" style = "visibility: visible;" id="returnToOverviewWatering">&larr;</span>
         <span class="close" id="closeModalWatering">&times;</span>
       </div>
       <h2 id="modalTitleWatering" data-i18n="wateringJob">Create Watering Job</h2>
@@ -98,7 +98,10 @@
   <!-- MODIFY PLANT MODAL -->
   <div id="modifyPlantModal" class="modal">
     <div class="modal-content">
-      <span class="close" id="closeModifyPlantModal">&times;</span>
+      <div class="header-row">
+        <span class="return" id="returnToOverviewPlants">&larr;</span>
+        <span class="close" id="closeModifyPlantModal">&times;</span>
+      </div>
       <h2 id="modifyModalTitle" data-i18n="modifyPlant">Modify Plant Name</h2>
       <div class="job-header-row">
         <img id="plantTypeImage" src="assets/icons/tomato.png" alt="plant-image" style="width:50px;height:50px;">

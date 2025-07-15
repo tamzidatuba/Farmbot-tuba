@@ -183,6 +183,7 @@ export const translations = {
     plantRenamed: 'Plant has been renamed.',
     modifyPlant: 'Modify Plant Name',
     saveChanges: 'Save Changes',
+    sameName: 'New name cannot be the same as the old name.',
   },
   de: {
     // German translations
@@ -368,5 +369,6 @@ export const translations = {
     plantRenamed: 'Pflanze wurde umbenannt.',
     modifyPlant: 'Pflanze Umbenennen',
     saveChanges: 'Änderungen Übernehmen',
+    sameName: 'Der neue Name darf nicht gleich sein zum alten Namen.',
   }
 }

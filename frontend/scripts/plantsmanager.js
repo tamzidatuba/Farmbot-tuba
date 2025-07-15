@@ -18,6 +18,7 @@ const modifyNameError = document.getElementById('modifyPlantNameError');
 const originalName = document.getElementById('originalPlantName');
 const plantTypeImage = document.getElementById('plantTypeImage');
 const plantCoordinates = document.getElementById('plantCoordinates');
+const returnBtn = document.getElementById('returnToOverviewPlants');
 
 let xcoordinate;
 let ycoordinate;
@@ -67,6 +68,7 @@ managePlantsBtn.addEventListener('click', async () => {
       xcoordinate = plant.xcoordinate;
       ycoordinate = plant.ycoordinate;
       
+      returnBtn.style.visibility = 'visible';
       managePlantsModal.style.display = 'none';
       modifyModal.style.display = 'block';
     });
@@ -88,15 +90,20 @@ closeManagePlantsBtn.addEventListener('click', () => {
   managePlantsModal.style.display = 'none';
 });
 
+returnBtn.addEventListener('click', () => {
+  modifyModal.style.display = 'none';
+  managePlantsModal.style.display = 'block';
+})
+
 window.addEventListener('click', (e) => {
-    if (e.target === managePlantsModal) {
+    if (e.target === managePlantsModal || e.target === modifyModal) {
       managePlantsModal.style.display = 'none';
+      modifyModal.style.display = 'none';
     }
   });
 
 closeModifyPlantsBtn.addEventListener('click', () => {
   modifyModal.style.display = 'none';
-  managePlantsModal.style.display = 'block';
 });
 
 modifyPlantBtn.addEventListener('click', async () => {
@@ -106,10 +113,10 @@ modifyPlantBtn.addEventListener('click', async () => {
     return;
   }
   if (plantname === originalName.textContent) {
-    modifyNameError.textContent = 'New name cant be the same as the old name';
+    modifyNameError.textContent = getTranslation("sameName");
     return;
   }
-  const confirmed = await customConfirm("Are you sure you want to change the plantname?");
+  const confirmed = await customConfirm(getTranslation("changeConfirm"));
   if(!confirmed) return;
   const res = await fetch('/api/plant/rename', {
     method: 'PUT',
