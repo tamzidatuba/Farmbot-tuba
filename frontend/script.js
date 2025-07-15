@@ -108,3 +108,26 @@ window.addEventListener('click', (e) => {
     loginModal.style.display = 'none';
   }
 });
+
+  // Get elements
+  const infoModal = document.getElementById('infoModal');
+  const openInfoBtn = document.getElementById('openInfoModal');
+  const closeInfoModal = document.getElementById('closeInfoModal');
+
+  // Open modal
+  openInfoBtn.addEventListener('click', () => {
+    infoModal.style.display = 'block';
+  });
+
+  // Close modal
+  closeInfoModal.addEventListener('click', () => {
+    infoModal.style.display = 'none';
+  });
+
+  // Close when clicking outside
+  window.addEventListener('click', (event) => {
+    if (event.target === infoModal) {
+      infoModal.style.display = 'none';
+    }
+  });
+
