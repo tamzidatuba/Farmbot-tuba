@@ -1,4 +1,4 @@
-import { pixelToCoord, coordToPixel } from "./canvas.js";
+import { pixelToCoord } from "./canvas.js";
 import { isLoggedIn } from "./auth.js";
 import { getTranslation } from "./translation.js";
 import { DisplayCreateSeedingJobForTouchedBased } from "./seeding.js";

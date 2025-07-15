@@ -366,7 +366,7 @@ export const translations = {
     yourQuestionsTitle: 'Eure eingereichten Fragen',
     noQuestions: 'Keine Fragen gefunden.',
     errorQuestions: 'Fehler beim Laden der Fragen: ',
-    user: 'Gefragt von Nutzer*in: ',
+    user: 'Gefragt von Nutzer*in',
     question: 'Frage',
     answer: 'Antwort',
     newQuestion: 'Neue Frage hinzufügen',
