@@ -99,6 +99,10 @@ modifyPlantBtn.addEventListener('click', async () => {
     modifyNameError.textContent = 'Plant name cant be empty';
     return;
   }
+  if (plantname === originalName.textContent) {
+    modifyNameError.textContent = 'New name cant be the same as the old name';
+    return;
+  }
   const confirmed = await customConfirm("Are you sure you want to change the plantname?");
   if(!confirmed) return;
   const res = await fetch('/api/plant/rename', {
