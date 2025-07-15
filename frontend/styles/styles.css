@@ -75,8 +75,9 @@ canvas {
       font-size: 16px;
       position: absolute;
       display: flex;
-      top: 2%;
+      top: 20px;
       right: 63%;
+      left:300px;
       justify-content: center;
       align-items: center;
       text-align: center;
@@ -90,6 +91,7 @@ canvas {
       margin-bottom: 10px;
       pointer-events: auto;
       text-align: center;
+      font-weight: 500;
     }
 
     #status-history {
@@ -632,12 +634,15 @@ margin-top: 4px;
       top: 2%;
       right: 43%; /* aligns to the left of status box */
       background-color: #f7be00;
+      background-position: center;
       color: white;
       padding: 10px 20px;
+      left: 800px;
       height: 48px;
       width: 48px;
       border: none;
       border-radius: 5px;
+      top:10px;
       cursor: pointer;
       width: auto; /* 👈 ensures button does not stretch */
       display: none; /* 👈 ensures it doesn't behave like a block element */
