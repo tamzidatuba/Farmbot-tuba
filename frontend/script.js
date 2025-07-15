@@ -2,9 +2,7 @@ import { drawGrid } from "./scripts/canvas.js";
 import { updateRobot } from "./scripts/notification_status.js";
 import "./scripts/watering.js";
 import "./scripts/seeding.js";
-import { getTranslation } from "./scripts/translation.js";
 import "./scripts/TouchFunctions.js";
-import { customAlert } from "./scripts/popups.js";
 
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
@@ -13,8 +11,6 @@ const subtaskView = document.getElementById('subtaskView');
 const arrow = document.getElementById('arrow');
 const arrowView = document.getElementById('arrowView');
 const managePlants = document.getElementById('managePlants');
-const subtaskManage = document.getElementById('subtaskManage');
-const arrowmanageView = document.getElementById('arrowmanageView');
 
 window.addEventListener('DOMContentLoaded', () => {
   toggle.style.display = 'none';
