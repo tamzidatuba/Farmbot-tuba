@@ -63,7 +63,7 @@
         <span class="close" id="closeModalWatering">&times;</span>
       </div>
       <h2 id="modalTitleWatering" data-i18n="wateringJob">Create Watering Job</h2>
-      <input type="text" id="WateringJobName" data-i18n-placeholder="enterName" placeholder="Enter job name" />
+      <input type="text" id="WateringJobName" data-i18n-placeholder="enterName" placeholder="Enter job name" autocomplete="off" />
       <div id="jobNameErrorWatering" class="errorMsg"></div>
 
       <!-- Schedule Option -->
@@ -116,13 +116,13 @@
   </div>
   <!-- MANAGE PLANTS MODAL -->
   <div id="managePlantsModal" class="modal">
-      <div class="modal-content">
-        <span class="close" id="closeManagePlantsModal">&times;</span>
-        <h2 data-i18n="plantsOverview">📋 Manage Plants</h2>
-        <p id="plantCountDisplay"></p> <!-- 👈 Add this -->
-        <div id="plantsList"></div>
-      </div>
+    <div class="modal-content">
+      <span class="close" id="closeManagePlantsModal">&times;</span>
+      <h2 data-i18n="plantsOverview">📋 Manage Plants</h2>
+      <p id="plantCountDisplay"></p> <!-- 👈 Add this -->
+      <div id="plantsList"></div>
     </div>
+  </div>
 
   <!-- WATERING DEMO MODAL -->
   <div id="wateringDemoModal" class="modal">
@@ -150,6 +150,8 @@
     </div>
   </div>
 
+
+
   <!-- Feedback Modal -->
   <div id="feedbackModal" class="modal">
     <div class="modal-content">
@@ -158,8 +160,8 @@
 
       <div class="field">
         <label data-i18n="feedbackText" for="feedbackText">Your Feedback</label>
-        <textarea data-i18n-placeholder="feedbackPlaceholder" id="feedbackText" rows="4" placeholder="What did you think?"
-          style="width:100%; padding:0.5em;"></textarea>
+        <textarea data-i18n-placeholder="feedbackPlaceholder" id="feedbackText" rows="4"
+          placeholder="What did you think?" style="width:100%; padding:0.5em;"></textarea>
       </div>
 
       <div class="field">
@@ -244,7 +246,10 @@
           <button id="viewWateringJobsBtn" data-i18n="wateringTitle">💧 Watering Job</button>
         </div>
       </li>
-      <li class="menu-item" id="managePlants" data-i18n="manage">🪴 Manage Plants></li>      
+      <li class="menu-item" id="managePlants" data-i18n="manage">🪴 Manage Plants></li>
+
+
+
       <!----help option----->
       <div class="help-translucent" id="helpTranslucent"></div>
       <li class="menu-item" id="seedingDemoBtn" data-i18n="seedingDemo"><span>Seeding Demo</span></li>
@@ -259,6 +264,66 @@
       </li>
       <li class="menu-item" id="help-button" data-i18n="help">Help</li>
       <li class="menu-item" id="yourQuestions" data-i18n="yourQuestions">Your Questions</li>
+
+      <!-- Info Button -->
+       <li class="menu-item" id="openInfoModal" data-i18n="farmbotinfo">ℹ️️ FarmBot Info</li>
+      
+
+      <!-- FarmBot Info Modal -->
+      <div id="infoModal" class="modal">
+        <div class="modal-content">
+          <span id="closeInfoModal" class="close">&times;</span>
+          <h2>FarmBot Documentation</h2>
+          <p>
+          <section id="about" style="padding: 2em; font-family: Arial, sans-serif; color:gray;">
+            <p>
+              The <strong>FarmBot Web Application</strong> is an interactive platform that allows both visitors and
+              administrators to explore, manage, and demonstrate automated farming operations with ease.
+            </p>
+
+            <h2 style="margin-top: 1.5em; color:#ae1757;">Visitor Features</h2>
+            <ul>
+              <li><strong>Seeding and Watering Demos:</strong> Execute live demonstrations of plant seeding and
+                watering.</li>
+              <li><strong>Feedback and Q&A:</strong> Submit feedback and ask questions through the <em>Q&A feature</em>
+                in the bottom-right corner of the app, and view your questions with answers in the <em>Your
+                  Questions</em> section on the sidebar.</li>
+            </ul>
+
+            <h2 style="margin-top: 1.5em; color: #ae1757;">Administrator Features</h2>
+            <ul>
+              <li><strong>Secure Login:</strong> Access advanced controls upon successful authentication.</li>
+              <li><strong>Create Task:</strong>
+                <ul>
+                  <li><em>Seeding Jobs:</em> Add job names and choose plant types such as Tomato, Lettuce, or Radish.
+                  </li>
+                  <li><em>Watering Jobs:</em> Schedule and manage watering tasks under the <em>Create Task</em> menu.
+                  </li>
+                </ul>
+              </li>
+              <li><strong>View Jobs:</strong> Monitor all seeding and watering jobs under the <em>View Jobs</em>
+                section.</li>
+              <li><strong>Manage Plants:</strong> Add, modify, or delete plant varieties in the <em>Manage Plant</em>
+                section.</li>
+              
+            </ul>
+
+            <h2 style="margin-top: 1.5em; color: #ae1757;">Additional Features</h2>
+            <ul>
+              <li><strong>Translation Support:</strong> Switch seamlessly between English and German via the sidebar
+                translation feature.</li>
+              <li><strong>Interactive Interface:</strong> Easy navigation for demos, Q&A, notifications, and job
+                management.</li>
+                <li><strong>Notification History:</strong> Review detailed logs of executed tasks and jobs.</li>
+            </ul>
+          </section>
+
+          Visit the full documentation:
+          <a href="https://software.farm.bot/docs" target="_blank">FarmBot Docs</a>.
+          </p>
+
+        </div>
+      </div>
     </ul>
     <div class="language-menu">
       <select id="languageSelector" class="menu-item language-select"></select>
@@ -276,7 +341,6 @@
 
     <!-- grid container using canvas-->
     <div>
-      <!--<canvas id="gridCanvas" width="550" height="650"></canvas>-->
       <canvas id="gridCanvas" style="width: 550px; height: 650px;" width="1100" height="1300"></canvas>
       <div class="help-text-grid" data-i18n="helpField" style="display:outside; color: gray;">This is a visual
         representation of the Farmbot.
@@ -287,6 +351,10 @@
         It shows whether the farmbot is currently offline or Ready to work or moving.</div>
     </div>
     <div id="hover-coordinates"></div>
+    <div>
+      <div class="queue-element" id="viewQueueBtn"></div> 
+
+    </div>
     <div id="farmbot-status-container">
       <div id="farmbot-status" data-i18n="initialStatus">Status: Offline</div> <!-- Robot status -->
       <button id="pauseJobBtn" class="pause-btn">⏸</button>
@@ -317,6 +385,17 @@
       </div>
     </div>
 
+    <!-- VIEW QUEUED JOBS MODAL -->
+    <div id="viewQueueModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeViewQueueModal">&times;</span>
+        <h2 data-i18n="queueOverview">📋 Execution Queue Overview</h2>
+        <p id="jobCountDisplayQueued"></p>
+        <div id="jobsListQueued"></div>
+        <div id="jobQueueError" class="errorMsg"></div>
+      </div>
+    </div>
+
     <!-- VIEW WATERING JOBS MODAL -->
     <div id="viewJobsModalWatering" class="modal">
       <div class="modal-content">
@@ -327,6 +406,7 @@
       </div>
     </div>
     <!-- Ask Questions -->
+     
 
     <!-- Question Icon Button -->
     <div>
@@ -419,6 +499,7 @@
     <script type="module" src="./scripts/seedingdemo.js"></script>
     <script type="module" src="./scripts/feedback.js"></script>
     <script type="module" src="./scripts/your_questions.js"></script>
+    <script type="module" src="./scripts/queueManager.js"></script>
 
 
 

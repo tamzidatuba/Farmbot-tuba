@@ -95,6 +95,7 @@ class SeedingJob extends Job {
 
             this.taskQueue.push(returnToFieldSafetyHeight);
         }
+        this.task_count = this.taskQueue.length;
         
     }
 }

@@ -94,13 +94,14 @@ app.put('/api/putquestions', async (req, res) => {
 });
 
 app.put('/api/plant/rename', async (req,res) => {
-  const {plantname, xcoordinate, ycoordinate,token} =req.body;
+  const {plantname, xcoordinate, ycoordinate, token} =req.body;
   if (!TokenManager.validateToken(token)) {
     res.status(500).json({ error: "You dont have permission to do that" });
     return
   }
   try {
     await DatabaseService.UpdatePlantNameinDB(plantname, xcoordinate, ycoordinate);
+    backend.appendNotification("plant_name_changed", plantname);
     backend.refetchPlants()
     res.status(200).json("The plant name has been updated.");
   }catch(err) {
@@ -248,8 +249,8 @@ app.post('/api/ask-question', async (req, res) => {
 app.post('/api/send-feedback', async (req, res) => {
   const { rating, message } = req.body;
 
-  if (!rating || !message) {
-    return res.status(400).json({ error: 'Rating and message are required.' });
+  if (!rating) {
+    return res.status(400).json({ error: 'Rating is required.' });
   }
 
   try {

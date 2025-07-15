@@ -43,15 +43,15 @@ function drawPlants(ctx) {
         switch (plant.planttype) {
             case "lettuce":
                 ctx.drawImage(plantImages.lettuce, coord.x - size / 2, coord.y - size / 2, size, size);
-                drawRadius(ctx, coord, 15);
+                //drawRadius(ctx, coord, 15);
                 break;
             case "radish":
                 ctx.drawImage(plantImages.radish, coord.x - size / 2, coord.y - size / 2, size, size);
-                drawRadius(ctx, coord, 2);
+                //drawRadius(ctx, coord, 2);
                 break;
             case "tomato":
                 ctx.drawImage(plantImages.tomato, coord.x - size / 2, coord.y - size / 2, size, size);
-                drawRadius(ctx, coord, 30);
+                //drawRadius(ctx, coord, 30);
                 break;
         }
     }
@@ -63,15 +63,15 @@ function drawSeeds(seeds, ctx) {
         switch (seed.seedtype) {
             case "lettuce":
                 ctx.drawImage(plantImages.lettuce, coord.x - size / 2, coord.y - size / 2, size, size);
-                drawRadius(ctx, coord, 15);
+                // drawRadius(ctx, coord, 15);
                 break;
             case "radish":
                 ctx.drawImage(plantImages.radish, coord.x - size / 2, coord.y - size / 2, size, size);
-                drawRadius(ctx, coord, 2);
+                // drawRadius(ctx, coord, 2);
                 break;
             case "tomato":
                 ctx.drawImage(plantImages.tomato, coord.x - size / 2, coord.y - size / 2, size, size);
-                drawRadius(ctx, coord, 30);
+                //drawRadius(ctx, coord, 30);
                 break;
         }
     }
@@ -231,7 +231,7 @@ export function pixelToCoord(x, y) {
 
 // Map real-world coordinate to pixel
 export function coordToPixel(x, y) {
-    const px = (x / coordWidth) * canvasWidth
+    const px = (x / coordWidth) * canvasWidth;
     const py = (y / coordHeight) * canvasHeight;
     return { x: px, y: py };
 }

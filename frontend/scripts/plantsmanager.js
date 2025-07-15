@@ -28,7 +28,9 @@ managePlantsBtn.addEventListener('click', async () => {
   plantsList.innerHTML = getTranslation('loading');
   plantCountDisplay.textContent = '';
   managePlantsModal.style.display = 'block';
-
+  generateManagePlantsGUI()
+});
+function generateManagePlantsGUI() {
   const plants = window.plants;
 
   plantCountDisplay.textContent = `${getTranslation('plantsSoFar')}${plants.length}`;
@@ -78,13 +80,15 @@ managePlantsBtn.addEventListener('click', async () => {
       const confirmed = await customConfirm(getTranslation("deleteConfirmPlant"));
       if (!confirmed) return;
 
-      console.log('Deleting plant at:', plant.xcoordinate, plant.ycoordinate);
-      deletePlant(plant.xcoordinate, plant.ycoordinate);
-      modifyModal.style.display = "none";
+      //console.log('Deleting plant at:', plant.xcoordinate, plant.ycoordinate);
+      await deletePlant(plant.xcoordinate, plant.ycoordinate);
+      await getPlants();
+      generateManagePlantsGUI();
+
     });
 
   });
-});
+};
 
 closeManagePlantsBtn.addEventListener('click', () => {
   managePlantsModal.style.display = 'none';
@@ -127,6 +131,14 @@ modifyPlantBtn.addEventListener('click', async () => {
   if (!res.ok) throw new Error(data.error || 'Changing failed');
   else customAlert(getTranslation("plantRenamed"));
   modifyModal.style.display = 'none';
+  for (let plant of window.plants) {
+    if (plant.plantname == originalName.textContent) {
+      plant.plantname = plantname;
+      break;
+    };
+  };
+  managePlantsModal.style.display = 'block';
+  generateManagePlantsGUI();
 });
 
 export async function deletePlant(x, y) {
@@ -159,11 +171,3 @@ export async function getPlants() {
     .catch(error => console.error('Error fetching plants:', error));
 }
 
-export const predefinedPlants = [
-  { id:1, planttype: "lettuce", plantname: "Luna", xcoordinate: 20, ycoordinate: 20 },
-  { id:2, planttype: "lettuce", plantname: "Leafy", xcoordinate: 40, ycoordinate: 20 },
-  { id:3, planttype: "tomato", plantname: "Ruby", xcoordinate: 20, ycoordinate: 40 },
-  { id:4, planttype: "tomato", plantname: "Sunny", xcoordinate: 40, ycoordinate: 40 },
-  { id:5, planttype: "radish", plantname: "Spicy", xcoordinate: 20, ycoordinate: 60 },
-  { id:6, planttype: "radish", plantname: "Crunch", xcoordinate: 40, ycoordinate: 60 }
-];
