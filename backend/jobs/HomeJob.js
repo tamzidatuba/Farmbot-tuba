@@ -13,6 +13,8 @@ class HomeJob extends Job {
 
         let goHome = new MoveTask(FarmbotStatus.MOVING, 0, 0);
         this.taskQueue.push(goHome);
+
+        this.task_count = this.taskQueue.length;
     }
 }
 
