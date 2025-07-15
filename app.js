@@ -47,9 +47,13 @@ app.get('/api/plants', async (req, res) => {
 });
 
 app.post('/api/questions', async (req, res) => {
-  const { question, answer } = req.body
+  const { id,user,question, answer,token } = req.body;
+  if (!TokenManager.validateToken(token)) {
+  res.status(500).json({ error: "You dont have permission to do that" });
+  return
+  }
   try {
-    await DatabaseService.InsertQuestionsIntoDB(question, answer);
+    await DatabaseService.InsertQuestionsIntoDB(id,user,question, answer);
     res.status(200).json({ message: "Thank you! Your question has been submitted." });
   }
   catch (err) {
@@ -70,9 +74,9 @@ app.get('/api/getquestions', async (req, res) => {
 });
 
 app.get('/api/getsinglequestion', async (req, res) => {
-  const { question } = req.body;
+  const { id } = req.body;
   try {
-    let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyQuestion(question);
+    let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyQuestion(id);
     res.status(200).json(getsinglequestion);
   }
   catch (err) {
@@ -81,7 +85,7 @@ app.get('/api/getsinglequestion', async (req, res) => {
   }
 });
 
-app.put('/api/putquestions', async (req, res) => {
+/*app.put('/api/putquestions', async (req, res) => {
   const { answer, question } = req.body;
   try {
     let insert_answer = await DatabaseService.InsertAnswerIntoDB(question, answer);
@@ -91,7 +95,7 @@ app.put('/api/putquestions', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Failed to insert answer to database." });
   }
-});
+});*/
 
 app.put('/api/plant/rename', async (req,res) => {
   const {plantname, xcoordinate, ycoordinate,token} =req.body;
