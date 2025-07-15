@@ -15,7 +15,7 @@ mongoose.connect(connectionString)
 //define the schema or the structure of each document/ entry in Mongo DB
 export const askQuestionSchema = new mongoose.Schema(
     {
-        question_id: String,
+        id: String,
         user: String,
         question: String,
         answer: String,
@@ -27,14 +27,14 @@ const questionModel = mongoose.model('questions', askQuestionSchema);
 
 
 // function to insert questions into the DB.
-async function InsertQuestionsToDB(question_id, user, question, answer) {
-    let question1 = await questionModel.create({question_id:question_id, user: user, question: question, answer: answer });
+async function InsertQuestionsToDB(id, user, question, answer) {
+    let question1 = await questionModel.create({id:id, user: user, question: question, answer: answer });
     return question1;
 }
 
 //function to retreive a specific question in the DB
-async function FetchSpecificQuestionsFromDB(question_id) {
-    let questions = await questionModel.findOne({ "question_id": question_id });
+async function FetchSpecificQuestionsFromDB(id) {
+    let questions = await questionModel.findOne({ "id": id });
     return questions;
 }
 
@@ -55,10 +55,10 @@ async function FetchAllQuestionsFromDB() {
 }*/
 
 //function to update the details (the name of the user, question and answer) in the database.
-async function UpdateDetailsinDB(question_id,user,question,answer)
+async function UpdateDetailsinDB(id,user,question,answer)
 {
     let change_details = await questionModel.findOneAndUpdate(
-        {"question_id":question_id},
+        {"question_id":id},
         {
             $set:
             {
@@ -72,9 +72,9 @@ async function UpdateDetailsinDB(question_id,user,question,answer)
 }
 
 //function to delete question in the Database.
-async function DeleteQuestionfromDB(question_id)
+async function DeleteQuestionfromDB(id)
 {
-    await questionModel.findOneAndDelete({"question_id": question_id});
+    await questionModel.findOneAndDelete({"question_id": id});
 }
 
 
@@ -88,11 +88,14 @@ export default {
     DeleteQuestionfromDB,
 }
 
-const question_id1 = "question1";
+/*
+checking insert operation
+const id1 = "question1";
 const user1 = "Alagu";
 const question1= "何歳？";
 const answer1 = "22.";
 
-await InsertQuestionsToDB(question_id1,user1,question1,answer1);
+await InsertQuestionsToDB(id1,user1,question1,answer1);
+*/
 
 
