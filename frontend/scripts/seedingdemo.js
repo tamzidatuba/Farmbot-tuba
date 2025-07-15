@@ -1,8 +1,22 @@
 // This script handles the "Seeding Demo" modal and demo job submission
 import { getTranslation } from "./translation.js";
 import { token } from "./auth.js"; // your auth token binding
+<<<<<<< HEAD
+import { customConfirm, customAlert } from "./popups.js";
+
+// Predefined plants matching your Seeding schema
+export const predefinedPlants = [
+  { id:1, planttype: "lettuce", plantname: "Luna", xcoordinate: 20, ycoordinate: 20 },
+  { id:2, planttype: "lettuce", plantname: "Leafy", xcoordinate: 40, ycoordinate: 20 },
+  { id:3, planttype: "tomato", plantname: "Ruby", xcoordinate: 20, ycoordinate: 40 },
+  { id:4, planttype: "tomato", plantname: "Sunny", xcoordinate: 40, ycoordinate: 40 },
+  { id:5, planttype: "radish", plantname: "Spicy", xcoordinate: 20, ycoordinate: 60 },
+  { id:6, planttype: "radish", plantname: "Crunch", xcoordinate: 40, ycoordinate: 60 }
+];
+=======
 import { predefinedPlants } from "./plantsmanager.js"; // predefined plants for demo
 import { customAlert } from "./popups.js";
+>>>>>>> 92619f25b94c5d1792486328f3327d469b4cc76e
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
@@ -15,12 +29,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // Local store for predefined plants
   let plants = {};
 
-  console.log("Just a test")
+  let i = 0;
 
-  // Open modal and populate dropdown
-  demoBtn.addEventListener("click", () => {
-    populateDropdown();
-    modal.style.display = "block";
+
+  console.log("Adding event listener");
+  i++;
+  console.log("This is i: " + i);
+  demoBtn.addEventListener("click", async () => {
+    console.log("Button was pressed");
+    const confirmed = await customConfirm(getTranslation("seedingDemoText"));
+    if (!confirmed) return;
+    startDemo();
+    //populateDropdown();
+    //modal.style.display = "block";
   });
 
   // Close modal on × or outside click
@@ -42,8 +63,41 @@ document.addEventListener("DOMContentLoaded", () => {
     plants = predefinedPlants;
   }
 
+  async function startDemo() {
+    console.log("Array length " + predefinedPlants.length);
+    const randomPlant = Math.floor(Math.random() * predefinedPlants.length);
+    console.log(randomPlant);
+    const chosenPlant = predefinedPlants[randomPlant];
+    console.log(chosenPlant);
+    
+    const payload = {
+      jobname: "Seeding Demo",
+      seeds: [{
+        xcoordinate: chosenPlant.xcoordinate,
+        ycoordinate: chosenPlant.ycoordinate,
+        depth: 5,                 // adjust as needed
+        seedtype: chosenPlant.planttype,
+        seedname: chosenPlant.plantname
+      }]
+    };
+
+    try {
+      const response = await fetch("/api/demo/seeding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ payload, token })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Seeding demo failed");
+      customAlert(data.message || "Seeding demo queued");
+    } catch (err) {
+      console.error("Seeding demo error:", err);
+      customAlert(err.message);
+    }
+  }
+
   // Handle demo submission
-  execBtn.addEventListener("click", async () => {
+  /*execBtn.addEventListener("click", async () => {
     const selected = plants[plantSelect.value];
     if (!selected) {
       console.error("No plant selected");
@@ -79,9 +133,9 @@ document.addEventListener("DOMContentLoaded", () => {
       modal.style.display = "none";
     }
   });
-
+  */
   // Utility: capitalize first letter
   function capitalize(str) {
     return String(str).charAt(0).toUpperCase() + str.slice(1);
   }
-});
+}, {once: true});
