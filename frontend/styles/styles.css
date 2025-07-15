@@ -996,14 +996,17 @@ margin-top: 4px;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  font-size: 18px;
+  
 }
 
 .popup-modal-content {
-  background: white;
-  padding: 20px;
+  border: 5px solid #ae1757;
+  background:#f9f9f9;
+  padding: 15px;
   border-radius: 8px;
   min-width: 300px;
-  text-align: center;
+  text-align: center ;
 }
 
 .hidden {
@@ -1011,7 +1014,11 @@ margin-top: 4px;
 }
 
 .popup-modal-content button {
-  margin: 10px;
+    margin: 10px;
+    margin-top:20px;
+    padding: 6px 16px;      
+    font-size: 15px;         
+    border-radius: 6px;
 }
 
 /* Modal container - covers whole screen */
