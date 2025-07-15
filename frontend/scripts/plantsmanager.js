@@ -107,22 +107,5 @@ export async function deletePlant(x, y) {
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Delete failed');
   clearCanvas();
-  await getPlants(); //TODO:  remove it from variable instead of fetching again
   drawGrid();
-}
-
-// get plants from server
-export async function getPlants() {
-  await fetch('/api/plants', {
-    method: 'GET',
-  })
-    .then(response => response.json())
-    .then(data => {
-      //if (plants.toString() != data.toString()) {
-      window.plants.length = 0; // Clear the existing plants array
-      for (const plant of data) {
-        window.plants.push({ planttype: plant.planttype, plantname: plant.plantname, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate });
-      }
-    })
-    .catch(error => console.error('Error fetching plants:', error));
 }

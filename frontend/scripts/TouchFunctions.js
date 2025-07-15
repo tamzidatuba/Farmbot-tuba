@@ -1,10 +1,9 @@
-import { pixelToCoord, coordToPixel, drawGrid, clearCanvas } from "./canvas.js";
+import { pixelToCoord, coordToPixel } from "./canvas.js";
 import { isLoggedIn } from "./auth.js";
 import { getTranslation } from "./translation.js";
 import { DisplayCreateSeedingJobForTouchedBased } from "./seeding.js";
 import { DisplayCreateWateringJobForTouchBased } from "./watering.js";
 import { GetDistance } from "./tools.js"; // Function to fetch plants
-import { getPlants } from "./plantsmanager.js";
 import { deletePlant } from "./plantsmanager.js";
 import { customConfirm } from "./popups.js";
 import { PlantRadii } from "./tools.js"; // Import PlantRadii from tools.js
@@ -16,8 +15,6 @@ const dialogHeader = document.getElementById("dialog-header");
 const canvas = document.getElementById('gridCanvas');
 
 let selectedPlant = null;
-
-
 
 canvas.addEventListener('click', async (e) => {
   if (isLoggedIn) {
@@ -32,15 +29,25 @@ canvas.addEventListener('click', async (e) => {
     for (let plant of window.plants) {
       const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
 
-      if(distance < PlantRadii[plant.planttype]) {
+      if (distance < PlantRadii[plant.planttype]) {
         isSeedingPossible = false; // If any plant is too close, seeding is not possible
       }
 
       // const radius = PlantRadii[plant.planttype];
       const radius = 15;
-      if (radius !== undefined && distance <= radius) {
+      if (distance <= radius) { // set the selected plant
         selectedPlant = plant;
         break; // Stop at the first match
+      }
+    }
+
+    for (let job of window.seedingjobs) {
+      for (let seed of job.seeds) {
+        const distance = GetDistance(x, y, seed.xcoordinate, seed.ycoordinate);
+        if (distance <= PlantRadii[seed.seedtype]) { // Assuming a radius of 15 for seeds
+          isSeedingPossible = false; // If a seed is found, seeding is not possible
+          break; // Stop at the first match
+        }
       }
     }
 
@@ -64,13 +71,12 @@ canvas.addEventListener('click', async (e) => {
       AddDeleteButtonToDialogContent();
       AddWateringButtonToDialogContent();
       // DisplayCreateWateringJobForTouchBased(selectedPlant);
-      
     }
     else {
-      if(!isSeedingPossible) return;
+      if (!isSeedingPossible) return;
       dialogHeader.textContent = `Position: X:${x} , Y:${y}`;
       // DisplayCreateSeedingJobForTouchedBased(x,y);
-      AddSeedingButtonToDialogContent(x,y);
+      AddSeedingButtonToDialogContent(x, y);
     }
 
     showDialogOnCanvas(positiononscreen.x, positiononscreen.y);
@@ -144,12 +150,12 @@ function AddWateringButtonToDialogContent() {
   dialogContent.appendChild(wateringButton);
 }
 
-function AddSeedingButtonToDialogContent(x,y) {
+function AddSeedingButtonToDialogContent(x, y) {
   const seedingButton = document.createElement("button");
   seedingButton.textContent = "🌱";
 
   seedingButton.addEventListener("click", () => {
-      DisplayCreateSeedingJobForTouchedBased(x,y);
+    DisplayCreateSeedingJobForTouchedBased(x, y);
 
     dialogBox.style.display = "none"; // Hide the dialog after seeding
   });

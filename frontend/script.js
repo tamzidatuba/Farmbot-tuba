@@ -5,7 +5,6 @@ import "./scripts/seeding.js";
 import { getTranslation } from "./scripts/translation.js";
 import "./scripts/TouchFunctions.js";
 import { customAlert } from "./scripts/popups.js";
-import { getPlants } from "./scripts/plantsmanager.js";
 
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
@@ -16,8 +15,6 @@ const arrowView = document.getElementById('arrowView');
 const managePlants = document.getElementById('managePlants');
 const subtaskManage = document.getElementById('subtaskManage');
 const arrowmanageView = document.getElementById('arrowmanageView');
-// List to compare plants with data base
-window.plants = [];
 
 window.addEventListener('DOMContentLoaded', () => {
   toggle.style.display = 'none';
@@ -37,7 +34,6 @@ toggle.addEventListener('click', () => {
   arrow.classList.toggle('open', !isVisible);
 });
 
-await getPlants(); // get data of plants
 await updateRobot();
 setInterval(async () => await updateRobot(), 1000); // Update every 1 second
 drawGrid(); // draw plants

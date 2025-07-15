@@ -87,19 +87,17 @@ export async function updateRobot() {
       // Update button text depending on paused state
       pauseBtn.textContent = data.paused ? '▶' : '⏸';
 
-      //Update plants
-      if (!(arraysEqual(window.plants, removeId(data.plants)))) {
-        //if (plants.toString() != data.toString()) {
-        window.plants.length = 0; // clear it
-        for (const plant of data.plants) {
-          window.plants.push({ plantname: plant.plantname, planttype: plant.planttype, xcoordinate: plant.xcoordinate, ycoordinate: plant.ycoordinate });
-        }
-      }
+      // Update plants
+      window.plants = data.plants;
     })
     .catch(err => {
       console.error("Failed to fetch frontend data:", err);
       pauseBtn.style.display = 'none'; // hide on error
     });
+
+  const res = await fetch('/api/jobs/Seeding'); // update seeding jobs
+  const jobs = await res.json();
+  window.seedingjobs = jobs;
   //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   updateGrid(); // Update the grid on the canvas
 }
@@ -122,22 +120,22 @@ function arraysEqual(arr1, arr2) {
 
 
 entryLimitSelect.addEventListener('change', () => {
-    maxHistoryEntries = parseInt(entryLimitSelect.value);
-    // Clear the current status history
-    while (statusHistory.children.length > 1) {
-      statusHistory.removeChild(statusHistory.lastChild);
+  maxHistoryEntries = parseInt(entryLimitSelect.value);
+  // Clear the current status history
+  while (statusHistory.children.length > 1) {
+    statusHistory.removeChild(statusHistory.lastChild);
+  }
+  // Add new entries to the status history
+  for (const status in historyList) {
+    if (statusHistory.children.length < maxHistoryEntries + 1) {
+      const entry = document.createElement('div');
+      var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
+      entry.textContent = textInput;
+      statusHistory.insertBefore(entry, previousChild);
+      previousChild = entry;
     }
-    // Add new entries to the status history
-    for (const status in historyList) {
-      if (statusHistory.children.length < maxHistoryEntries + 1) {
-        const entry = document.createElement('div');
-        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
-        entry.textContent = textInput;
-        statusHistory.insertBefore(entry, previousChild);
-        previousChild = entry;
-      }
-    }
-    previousChild = null;
+  }
+  previousChild = null;
 });
 
 function translateHistory() {
