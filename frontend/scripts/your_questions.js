@@ -1,5 +1,6 @@
 import { getTranslation } from "./translation.js";
 import { isLoggedIn, token } from "./auth.js";
+import { customAlert } from "./popups.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   const yourQuestionsBtn = document.getElementById('yourQuestions');
@@ -92,12 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const r = await fetch(`/api/questions/update`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({payload, token})
+        body: JSON.stringify(payload, token)
       });
       if (!r.ok) throw new Error('Update failed');
       await fetchQuestions();
     } catch (err) {
-      alert(err.message);
+      customAlert(err.message);
     }
     return;
   }
@@ -115,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!r.ok) throw new Error('Delete failed');
       await fetchQuestions();
     } catch (err) {
-      alert(err.message);
+      customAlert(err.message);
     }
   }
 });
@@ -187,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
       await fetchQuestions(); // Call your existing fetch + render logic
 
     } catch (err) {
-      alert(err.message);
+      customAlert(err.message);
     }
   });
 

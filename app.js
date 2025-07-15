@@ -279,13 +279,14 @@ app.post('/api/send-feedback', async (req, res) => {
 
 //api to update question
 app.put('/api/questions/update', async (req,res) => {
-  const {id,user,question,answer,token} =req.body;
-  /*if (!TokenManager.validateToken(token)) {
+  const {id,user,question,answer} =req.body.payload;
+  const token = req.body.token;
+  if (!TokenManager.validateToken(token)) {
     res.status(500).json({ error: "You dont have permission to do that" });
     return
-  }*/
+  }
   try {
-    console.log("Udpate in api");
+    console.log("Udpate in api wiht ID: " + id);
     await DatabaseService.UpdateQuestionDetailsIntoDB(id,user,question,answer);
     res.status(200).json("The changed details have been updated.");
   }catch(err) {

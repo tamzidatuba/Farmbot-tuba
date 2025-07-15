@@ -57,7 +57,8 @@ async function FetchAllQuestionsFromDB() {
 //function to update the details (the name of the user, question and answer) in the database.
 async function UpdateDetailsinDB(id,user,question,answer)
 {
-    console.log("TEst");
+    console.log(await FetchSpecificQuestionsFromDB(id));
+    console.log("ID :" + id);
     let change_details = await questionModel.findOneAndUpdate(
         {"id":id},
         {
