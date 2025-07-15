@@ -82,6 +82,7 @@ function generateManagePlantsGUI() {
 
       //console.log('Deleting plant at:', plant.xcoordinate, plant.ycoordinate);
       await deletePlant(plant.xcoordinate, plant.ycoordinate);
+      customAlert(getTranslation('plantDeleted'));
       await getPlants();
       generateManagePlantsGUI();
 
