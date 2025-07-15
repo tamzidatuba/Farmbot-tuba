@@ -628,29 +628,29 @@ margin-top: 4px;
     #pauseJobBtn {
       display: none;
     }
-    .pause-btn {
+    #pauseJobBtn {
       position: fixed;
       top: 2%;
-      right: 43%; /* aligns to the left of status box */
+      right: 43%;
       background-color: #f7be00;
       color: white;
-      padding: 10px 20px;
+      font-size: 32px;
+      padding: 8px 16px;
       height: 48px;
-      width: 48px;
+      width: auto;
       border: none;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      width: auto; /* 👈 ensures button does not stretch */
-      display: none; /* 👈 ensures it doesn't behave like a block element */
+      border-radius: 8px;
       font-weight: bold;
-      z-index: 9;
-      white-space: nowrap;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
+      cursor: pointer;
+      display: none;
+      margin-bottom: 10px;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+      line-height: 0.8; /* 👈 moves emoji a bit up */
+  }
+  
     
-    .pause-btn:hover {
-      background-color: #f9be00;
+  #pauseJobBtn:hover {
+      background-color: red;
     }
     
     .error-box {
