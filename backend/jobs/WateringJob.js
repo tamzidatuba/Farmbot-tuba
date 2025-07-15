@@ -39,7 +39,9 @@ class WateringJob extends Job {
     }
 
     convert_ml_into_duration(ml) {
-        return ml / 100;
+        // measured 450ml running 20seconds
+        // 450/20 = 22.5
+        return ml / 22.5;
     }
 }
 
