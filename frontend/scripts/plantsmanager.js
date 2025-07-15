@@ -105,7 +105,11 @@ modifyPlantBtn.addEventListener('click', async () => {
     modifyNameError.textContent = getTranslation("noPlantName");
     return;
   }
-  const confirmed = await customConfirm(getTranslation("changeConfirm"));
+  if (plantname === originalName.textContent) {
+    modifyNameError.textContent = 'New name cant be the same as the old name';
+    return;
+  }
+  const confirmed = await customConfirm("Are you sure you want to change the plantname?");
   if(!confirmed) return;
   const res = await fetch('/api/plant/rename', {
     method: 'PUT',
