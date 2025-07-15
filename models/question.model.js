@@ -15,7 +15,7 @@ mongoose.connect(connectionString)
 //define the schema or the structure of each document/ entry in Mongo DB
 export const askQuestionSchema = new mongoose.Schema(
     {
-        id: String,
+        id: Number,
         user: String,
         question: String,
         answer: String,
