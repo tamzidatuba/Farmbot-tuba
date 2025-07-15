@@ -249,8 +249,8 @@ app.post('/api/ask-question', async (req, res) => {
 app.post('/api/send-feedback', async (req, res) => {
   const { rating, message } = req.body;
 
-  if (!rating || !message) {
-    return res.status(400).json({ error: 'Rating and message are required.' });
+  if (!rating) {
+    return res.status(400).json({ error: 'Rating is required.' });
   }
 
   try {

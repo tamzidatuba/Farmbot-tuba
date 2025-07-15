@@ -75,9 +75,8 @@ canvas {
       font-size: 16px;
       position: absolute;
       display: flex;
-      top: 20px;
+      top: 2%;
       right: 63%;
-      left:300px;
       justify-content: center;
       align-items: center;
       text-align: center;
@@ -634,15 +633,13 @@ margin-top: 4px;
       top: 2%;
       right: 43%; /* aligns to the left of status box */
       background-color: #f7be00;
-      background-position: center;
       color: white;
       padding: 10px 20px;
-      left: 800px;
       height: 48px;
       width: 48px;
       border: none;
       border-radius: 5px;
-      top:10px;
+      margin-bottom: 10px;
       cursor: pointer;
       width: auto; /* 👈 ensures button does not stretch */
       display: none; /* 👈 ensures it doesn't behave like a block element */
@@ -1075,17 +1072,20 @@ margin-top: 4px;
 }
 
 #viewQueueBtn {
+  font-size: 16px;
+  justify-content: center;
+  top:2%;
   width: 200px;      /* feste Breite */
-  height: 50px;      /* feste Höhe */
+  height: 48px;      /* feste Höhe */
   border: none;
   border-radius: 6px;
-  padding: 12px 16px;
+  padding: 12px 20px;
   cursor: pointer;
-  position: relative;
+  position: fixed;
   display: flex;
   align-items: center;
-  gap: 12px;
   color: white;
+  margin-bottom: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   background-color: #3498db; /* Beispiel */
   overflow: hidden; /* für progress-fill */
@@ -1192,3 +1192,5 @@ margin-top: 4px;
   background-color: #c0392b; /* Besser als Textfarbe ändern */
 }   
 
+
+    

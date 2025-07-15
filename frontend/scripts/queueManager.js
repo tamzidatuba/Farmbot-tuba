@@ -27,6 +27,10 @@ closeViewQueueBtn.addEventListener('click', () => {
     open = false;
 });
 
+window.addEventListener('click', e => {
+    if (e.target === viewQueueModal) viewQueueModal.style.display = 'none';
+  });
+
 viewQueueBtn.addEventListener('click', () => {
     if (!isLoggedIn) return
     viewQueueModal.style.display = 'block';
