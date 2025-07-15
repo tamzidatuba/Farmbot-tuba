@@ -79,7 +79,7 @@ export const translations = {
     manage: '🪴 Manage Plants',
     deletePlants: '🗑️ Delete Plants',
     yourQuestions: '❓ Your Questions',
-    farmbotinfo:'ℹ️️ FarmBot Info',
+    farmbotinfo: 'ℹ️️ FarmBot Info',
     //watering job template
     at: 'at',
     // Translation for alerts and errors:
@@ -187,6 +187,23 @@ export const translations = {
     modifyPlant: 'Modify Plant Name',
     saveChanges: 'Save Changes',
     sameName: 'New name cannot be the same as the old name.',
+    //for farmbot info
+    farmbotdocumentation:'Farmbot Documentation',
+    adminfeature:'Administrator Features',
+    adminfeature1:'Access advanced controls upon successful authentication.',
+    adminfeature2:'Create Task:',
+    adminfeature3:'Seeding Jobs: Add job names and choose plant types such as Tomato, Lettuce, or Radish.',
+    adminfeature4:'Watering Jobs: Schedule and manage watering tasks under the Create Task menu',
+    adminfeature5:'View Jobs: Monitor all seeding and watering jobs under the View Jobs',
+    adminfeature6:'Manage Plants:Add, modify, or delete plant varieties in the Manage Plant section.',
+   visitorfeatures:'Visitor Features',
+   addition3:'Review detailed logs of executed tasks and jobs',
+   addition:'Additional Features',
+    addition1:'Translation Support: Switch seamlessly between English and German via the sidebar translation feature.',
+    addition2:'Interactive Interface Easy navigation for demos, Q&A, notifications, and job management.',
+   visitorfeatures1:'Seeding and Watering Demos: Execute live demonstrations of plant seeding and watering.',
+   visitorfeatures2:'Feedback and Q&A: Submit feedback and ask questions through the Q&A feature in the bottom-right corner of the app, and view your questions with answers in the Your Questions  section on the sidebar',
+    Overview: 'The FarmBot Web Application is an interactive platform that allows both visitors and administrators to explore, manage, and demonstrate automated farming operations with ease.'
   },
   de: {
     // German translations
@@ -376,5 +393,26 @@ export const translations = {
     modifyPlant: 'Pflanze Umbenennen',
     saveChanges: 'Änderungen Übernehmen',
     sameName: 'Der neue Name darf nicht gleich sein zum alten Namen.',
+    //for farmbot info
+    farmbotdocumentation:'Farmbot-Dokumentation',
+    addition:'Zusätzliche Funktionen',
+    addition3:'Überprüfen Sie detaillierte Protokolle der ausgeführten Aufgaben und Jobs',
+    addition1:'Übersetzungsunterstützung: Wechseln Sie nahtlos zwischen Englisch und Deutsch über die Übersetzungsfunktion in der Seitenleiste.',
+    addition2:'Interaktive Benutzeroberfläche: Einfache Navigation für Demos, Fragen und Antworten, Benachrichtigungen und Auftragsverwaltung.',
+    visitorfeatures:'Besucherfunktionen',
+    adminfeature:'Administratorfunktionen',
+    adminfeature1:'Greifen Sie nach erfolgreicher Authentifizierung auf erweiterte Steuerelemente zu.',
+    adminfeature2:'Aufgabe erstellen:',
+    adminfeature3:'Aussaataufträge: Fügen Sie Auftragsnamen hinzu und wählen Sie Pflanzenarten wie Tomaten, Salat oder Radieschen aus.',
+    
+
+    adminfeature4:'Bewässerungsaufgaben: Planen und verwalten Sie Bewässerungsaufgaben im Menü „Aufgabe erstellen“',
+    adminfeature5:'Jobs anzeigen: Überwachen Sie alle Aussaat- und Bewässerungsjobs unter „Jobs anzeigen“',
+    adminfeature6:'Pflanzen verwalten: Im Bereich „Pflanzen verwalten“ können Sie Pflanzenarten hinzufügen, ändern oder löschen.',
+
+visitorfeatures1:'Demos zum Säen und Gießen: Führen Sie Live-Demonstrationen zum Säen und Gießen von Pflanzen durch.',
+ visitorfeatures2:'Feedback und Fragen und Antworten: Senden Sie Feedback und stellen Sie Fragen über die Frage-und-Antwort-Funktion in der unteren rechten Ecke der App. Ihre Fragen und Antworten finden Sie im Abschnitt „Ihre Fragen“ in der Seitenleiste.',
+    Overview:'Die FarmBot-Webanwendung ist eine interaktive Plattform, die es sowohl Besuchern als auch Administratoren ermöglicht, automatisierte landwirtschaftliche Vorgänge mühelos zu erkunden, zu verwalten und zu demonstrieren.',
+
   }
 }
