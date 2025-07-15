@@ -38,10 +38,20 @@ async function DeletePlantFromDB(xcoordinate, ycoordinate) {
   await plantModel.deleteOne({ "xcoordinate": xcoordinate, "ycoordinate": ycoordinate });
 }
 
+async function UpdatePlantNameToDB(plantname, xcoordinate, ycoordinate){
+  let changed_name = await plantModel.findOneAndUpdate(
+    {"xcoordinate":xcoordinate,"ycoordinate":ycoordinate}, 
+    {$set: {"plantname": plantname}},
+    {new:true}
+  );
+    return changed_name;
+}
+
 //exporting for further usage in other files
 export default
   {
     InsertPlantToDB,
     FetchPlantsFromDB,
     DeletePlantFromDB,
+    UpdatePlantNameToDB,
   };

@@ -198,6 +198,13 @@ async function InsertPlantsToDB(plants) {
     }
 }
 
+async function UpdatePlantNameinDB(plantname, xcoordinate,ycoordinate)
+{
+  let new_plant_name = await plantModel.UpdatePlantNameToDB(plantname,xcoordinate,ycoordinate);
+  return new_plant_name;
+
+}
+
 async function FetchUserfromDB(username, password) {
     const users = await userModel.FetchUser(username, password);
     return users;
@@ -338,4 +345,6 @@ export default {
     DeletePlantFromDB,
     InsertAnswerIntoDB,
     clearPlantFromWateringJobs,
+    UpdatePlantNameinDB,
+
 };

@@ -95,6 +95,32 @@
     </div>
   </div>
 
+  <!-- MODIFY PLANT MODAL -->
+  <div id="modifyPlantModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModifyPlantModal">&times;</span>
+      <h2 id="modifyModalTitle" data-i18n="modifyPlant">Modify Plant Name</h2>
+      <div class="job-header-row">
+        <img id="plantTypeImage" src="assets/icons/tomato.png" alt="plant-image" style="width:50px;height:50px;">
+        <strong id="originalPlantName"></strong>
+        <p id="plantCoordinates"></p>
+      </div>
+      <input type="text" id="modifyPlantName" style="width:100%; padding:0.5em; margin-bottom:0.5em;"
+        placeholder="Plant name" />
+      <div id="modifyPlantNameError" class="errorMsg"></div>
+      <button id="modifyPlantBtn" data-i18n="saveChanges" style="margin-top:1em; float:right;">Save Changes</button>
+    </div>
+  </div>
+  <!-- MANAGE PLANTS MODAL -->
+  <div id="managePlantsModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeManagePlantsModal">&times;</span>
+        <h2 data-i18n="plantsOverview">📋 Manage Plants</h2>
+        <p id="plantCountDisplay"></p> <!-- 👈 Add this -->
+        <div id="plantsList"></div>
+      </div>
+    </div>
+
   <!-- WATERING DEMO MODAL -->
   <div id="wateringDemoModal" class="modal">
     <div class="modal-content">
@@ -247,7 +273,8 @@
 
     <!-- grid container using canvas-->
     <div>
-      <canvas id="gridCanvas" width="550" height="650"></canvas>
+      <!--<canvas id="gridCanvas" width="550" height="650"></canvas>-->
+      <canvas id="gridCanvas" style="width: 550px; height: 650px;" width="1100" height="1300"></canvas>
       <div class="help-text-grid" data-i18n="helpField" style="display:outside; color: gray;">This is a visual
         representation of the Farmbot.
         You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also
@@ -386,7 +413,7 @@
     <script type="module" src="./scripts/auth.js"></script>
     <script type="module" src="./script.js"></script>
     <script type="module" src="./scripts/wateringDemo.js"></script>
-    <script type="module" src="./scripts/seedingDemo.js"></script>
+    <script type="module" src="./scripts/seedingdemo.js"></script>
     <script type="module" src="./scripts/feedback.js"></script>
     <script type="module" src="./scripts/your_questions.js"></script>
 

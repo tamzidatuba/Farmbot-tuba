@@ -6,6 +6,7 @@ let botposition;
 const botImage = new Image();
 botImage.src = './assets/icons/bot.png'; // Path to the robot image
 
+const SCALE = 2;
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
@@ -33,7 +34,7 @@ const plantImages = {
 plantImages.lettuce.src = './assets/icons/lettuce.png';
 plantImages.radish.src = './assets/icons/radish.png';
 plantImages.tomato.src = './assets/icons/tomato.png';
-const size = 50; // Size of the plant image
+const size = 50 * SCALE; // Size of the plant image
 
 //draw plants
 function drawPlants(ctx) {
@@ -92,7 +93,7 @@ function drawRadius(ctx, coord, radius) {
     ctx.beginPath();
     ctx.arc(coord.x, coord.y, radius, 0, 2 * Math.PI);
     ctx.strokeStyle = 'rgb(10, 120, 210)'//'rgba(255, 0, 0, 0.5)';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 3 * SCALE;
     ctx.stroke()
 }
 
@@ -106,7 +107,7 @@ function drawRobot() {
 export function drawGrid() {
     seedingjobs = window.seedingjobs;
     ctx.strokeStyle = 'rgb(102, 68, 40)'//'#ddd';
-    ctx.linewidth = 1;
+    ctx.linewidth = 1 * SCALE;
 
     for (let x = 0; x <= coordWidth; x += majorTickX) {
         ctx.beginPath();
@@ -129,7 +130,7 @@ export function drawGrid() {
 
 function drawAxesAndLabels(ctx) {
     ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2 * SCALE;
 
     // Draw X-axis
     ctx.beginPath();
@@ -190,7 +191,7 @@ export function updateGrid() {
     // Clear the buffer
     bufferCtx.clearRect(0, 0, canvasWidth, canvasHeight);
     bufferCtx.strokeStyle = 'rgb(102, 68, 40)';
-    bufferCtx.lineWidth = 1;
+    bufferCtx.lineWidth = 1 * SCALE;
 
     // Draw vertical lines
     for (let x = 0; x <= coordWidth; x += majorTickX) {
@@ -222,15 +223,15 @@ export function updateGrid() {
 
 // Map pixel to real-world coordinate
 export function pixelToCoord(x, y) {
-    const coordX = Math.round((x / canvasWidth) * coordWidth);
-    const coordY = Math.round((y / canvasHeight) * coordHeight);
+    const coordX = Math.round((x / canvasWidth) * coordWidth * SCALE);
+    const coordY = Math.round((y / canvasHeight) * coordHeight * SCALE);
     return { x: coordX, y: coordY };
 }
 
 
 // Map real-world coordinate to pixel
 export function coordToPixel(x, y) {
-    const px = (x / coordWidth) * canvasWidth;
+    const px = (x / coordWidth) * canvasWidth
     const py = (y / coordHeight) * canvasHeight;
     return { x: px, y: py };
 }

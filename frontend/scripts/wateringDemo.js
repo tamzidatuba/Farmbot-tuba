@@ -1,5 +1,4 @@
-import { predefinedPlants } from './plantsmanager.js'; // predefined plants for demo
-import { customAlert } from './popups.js';
+import { predefinedPlants } from './seedingdemo.js'; // predefined plants for demo
 import { getTranslation } from './translation.js';
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -48,13 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || "Watering demo failed");
-        customAlert(data.message || "Watering demo queued");
+        customAlert(getTranslation(data.message) || "Watering demo queued");
       } else {
         console.error("No plant selected or plants are still loading.");
       }
     } catch (err) {
       console.error("Error executing watering demo:", err);
-      customAlert(err.message);
+      customAlert(getTranslation(err.message));
     }
     modal.style.display = "none";
   });
