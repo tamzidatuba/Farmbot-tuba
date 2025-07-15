@@ -44,7 +44,8 @@ class Backend {
       "executionPipeline": this.scheduleManager.jobsToExecute,
       "farmbotPosition": this.statusManager.lastState.location_data.position,
       "plants": this.plants,
-      "demoQueued": this.demo_job_queued
+      "demoQueued": this.demo_job_queued,
+      "job_progress": this.statusManager.getJobProgress(),
     }
   }
   // Appends a notification to the NotificationHistory

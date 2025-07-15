@@ -53,10 +53,37 @@ async function InsertAnswersIntoDB(question, answer) {
     return recieved_answer;
 }
 
+//function to update the details (the name of the user, question and answer) in the database.
+async function UpdateDetailsinDB(user,question,answer)
+{
+    let change_details = await questionModel.findOneAndUpdate(
+        {"question":question},
+        {
+            $set:
+            {
+                "user": user,
+                "question": question,
+                "answer":answer
+            }
+        },
+        {new :true}
+    )
+}
+
+//function to delete question in the Database.
+async function DeleteQuestionfromDB(question)
+{
+    await questionModel.findOneAndDelete({"question": question});
+}
+
+
 //export all function for further usage
 export default {
     InsertQuestionsToDB,
     FetchAllQuestionsFromDB,
     FetchSpecificQuestionsFromDB,
     InsertAnswersIntoDB,
+    UpdateDetailsinDB,
+    DeleteQuestionfromDB,
+
 }

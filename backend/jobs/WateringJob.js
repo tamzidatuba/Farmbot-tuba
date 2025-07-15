@@ -34,11 +34,14 @@ class WateringJob extends Job {
         let returnToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING, FieldConstants.SAFETY_HEIGHT);
         this.taskQueue.push(returnToSafetyHeight)
 
+        this.task_count = this.taskQueue.length;
         
     }
 
     convert_ml_into_duration(ml) {
-        return ml / 100;
+        // measured 450ml running 20seconds
+        // 450/20 = 22.5
+        return ml / 22.5;
     }
 }
 

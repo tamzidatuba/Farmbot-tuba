@@ -97,6 +97,7 @@ export default function createJobsRouter(backend) {
             return
         }
         if (backend.scheduleManager.removeScheduledJob(jobname)) {
+            backend.appendNotification("dequeued", jobname);
             res.status(200).json({ message: 'Job has been dequeued' });
         } else res.status(500).json({ error: 'Job is not in the Queue' });
     });

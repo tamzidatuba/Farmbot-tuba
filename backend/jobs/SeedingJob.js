@@ -19,6 +19,14 @@ Steps:
 - (Move a little up)
 */
 
+const NAME_ARRAY = [
+    "Karl", "Sabine", "Bernd", "Julia", "Andreas", "Katarina", "Benjamin", "Sophie", "Simon",
+    "Lisa", "Leon", "Matilda", "Christian", "Lina", "Niklas", "Lily", "Jan", "Yvonne", "Edwin",
+    "Theresa", "Marco", "Annabel", "Volker", "Pia", "Fabian", "Lena", "Noah", "Tabea", "Tim",
+    "Vanessa", "Richard", "Isabella", "Leo", "Ute", "Thomas", "Laura", "Maurice", "Emma", "Gunter",
+    "Karla", "David", "Jessica", "Elias", "Katja", "Paul", "Marie", "Olaf", "Vivien"
+]
+
 class SeedingJob extends Job {
     constructor(seedingArgs, demo = false) {
         super(seedingArgs.jobname);
@@ -65,24 +73,29 @@ class SeedingJob extends Job {
             this.taskQueue.push(ensurePinDeactivation);
 
             if (!demo){
+                if (seedArgs.seedname === "") {
+                    seedArgs.seedname = NAME_ARRAY[Math.floor(Math.random() * NAME_ARRAY.length)];
+                };
+
                 let new_plant = {
                     plantname: seedArgs.seedname,
                     planttype: seedArgs.seedtype,
                     xcoordinate: seedArgs.xcoordinate,
                     ycoordinate: seedArgs.ycoordinate
-                }
+                };
                 let insertPlantToDB = new DatabaseTask(
                     FarmbotStatus.SEEDING,
                     DatabaseService.InsertPlantsToDB,
                     [new_plant]
-                )
+                );
                 this.taskQueue.push(insertPlantToDB);
-            }
+            };
             this.taskQueue.push(goToWateringHeight);
             this.taskQueue.push(waterPlant);
 
             this.taskQueue.push(returnToFieldSafetyHeight);
         }
+        this.task_count = this.taskQueue.length;
         
     }
 }

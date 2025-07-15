@@ -18,22 +18,25 @@ const modifyNameError = document.getElementById('modifyPlantNameError');
 const originalName = document.getElementById('originalPlantName');
 const plantTypeImage = document.getElementById('plantTypeImage');
 const plantCoordinates = document.getElementById('plantCoordinates');
+const returnBtn = document.getElementById('returnToOverviewPlants');
 
 let xcoordinate;
 let ycoordinate;
 
 // ——— View‐Jobs Logic ———
 managePlantsBtn.addEventListener('click', async () => {
-  plantsList.innerHTML = getTranslation('loadingPlants');
+  plantsList.innerHTML = getTranslation('loading');
   plantCountDisplay.textContent = '';
   managePlantsModal.style.display = 'block';
-
+  generateManagePlantsGUI()
+});
+function generateManagePlantsGUI() {
   const plants = window.plants;
 
-  plantCountDisplay.textContent = `${getTranslation('existingPlants')}${plants.length}`;
+  plantCountDisplay.textContent = `${getTranslation('plantsSoFar')}${plants.length}`;
 
   if (plants.length === 0) {
-    plantsList.innerHTML = getTranslation('notFound');
+    plantsList.innerHTML = getTranslation('noPlantsFound');
     return;
   }
 
@@ -67,39 +70,57 @@ managePlantsBtn.addEventListener('click', async () => {
       xcoordinate = plant.xcoordinate;
       ycoordinate = plant.ycoordinate;
       
+      returnBtn.style.visibility = 'visible';
       managePlantsModal.style.display = 'none';
       modifyModal.style.display = 'block';
     });
 
     // Delete
     div.querySelector('.delete-plant-btn').addEventListener('click', async () => {
-      const confirmed = await customConfirm("Are you sure you want to delete this plant?");
+      const confirmed = await customConfirm(getTranslation("deleteConfirmPlant"));
       if (!confirmed) return;
 
-      console.log('Deleting plant at:', plant.xcoordinate, plant.ycoordinate);
-      deletePlant(plant.xcoordinate, plant.ycoordinate);
-      modifyModal.style.display = "none";
+      //console.log('Deleting plant at:', plant.xcoordinate, plant.ycoordinate);
+      await deletePlant(plant.xcoordinate, plant.ycoordinate);
+      await getPlants();
+      generateManagePlantsGUI();
+
     });
 
   });
-});
+};
 
 closeManagePlantsBtn.addEventListener('click', () => {
   managePlantsModal.style.display = 'none';
 });
 
-closeModifyPlantsBtn.addEventListener('click', () => {
+returnBtn.addEventListener('click', () => {
   modifyModal.style.display = 'none';
   managePlantsModal.style.display = 'block';
+})
+
+window.addEventListener('click', (e) => {
+    if (e.target === managePlantsModal || e.target === modifyModal) {
+      managePlantsModal.style.display = 'none';
+      modifyModal.style.display = 'none';
+    }
+  });
+
+closeModifyPlantsBtn.addEventListener('click', () => {
+  modifyModal.style.display = 'none';
 });
 
 modifyPlantBtn.addEventListener('click', async () => {
   let plantname = modifyNameInput.value;
   if (plantname === "") {
-    modifyNameError.textContent = 'Plant name cant be empty';
+    modifyNameError.textContent = getTranslation("noPlantName");
     return;
   }
-  const confirmed = await customConfirm("Are you sure you want to change the plantname?");
+  if (plantname === originalName.textContent) {
+    modifyNameError.textContent = getTranslation("sameName");
+    return;
+  }
+  const confirmed = await customConfirm(getTranslation("changeConfirm"));
   if(!confirmed) return;
   const res = await fetch('/api/plant/rename', {
     method: 'PUT',
@@ -108,8 +129,16 @@ modifyPlantBtn.addEventListener('click', async () => {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Changing failed');
-  else customAlert("Plant has been renamed");
+  else customAlert(getTranslation("plantRenamed"));
   modifyModal.style.display = 'none';
+  for (let plant of window.plants) {
+    if (plant.plantname == originalName.textContent) {
+      plant.plantname = plantname;
+      break;
+    };
+  };
+  managePlantsModal.style.display = 'block';
+  generateManagePlantsGUI();
 });
 
 export async function deletePlant(x, y) {
@@ -123,7 +152,6 @@ export async function deletePlant(x, y) {
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Delete failed');
   clearCanvas();
-  await getPlants(); //TODO:  remove it from variable instead of fetching again
   drawGrid();
 }
 
@@ -143,11 +171,3 @@ export async function getPlants() {
     .catch(error => console.error('Error fetching plants:', error));
 }
 
-export const predefinedPlants = [
-  { id:1, planttype: "lettuce", plantname: "Luna", xcoordinate: 20, ycoordinate: 20 },
-  { id:2, planttype: "lettuce", plantname: "Leafy", xcoordinate: 40, ycoordinate: 20 },
-  { id:3, planttype: "tomato", plantname: "Ruby", xcoordinate: 20, ycoordinate: 40 },
-  { id:4, planttype: "tomato", plantname: "Sunny", xcoordinate: 40, ycoordinate: 40 },
-  { id:5, planttype: "radish", plantname: "Spicy", xcoordinate: 20, ycoordinate: 60 },
-  { id:6, planttype: "radish", plantname: "Crunch", xcoordinate: 40, ycoordinate: 60 }
-];

@@ -1,10 +1,9 @@
-import { pixelToCoord, coordToPixel, drawGrid, clearCanvas } from "./canvas.js";
+import { pixelToCoord, coordToPixel } from "./canvas.js";
 import { isLoggedIn } from "./auth.js";
 import { getTranslation } from "./translation.js";
 import { DisplayCreateSeedingJobForTouchedBased } from "./seeding.js";
 import { DisplayCreateWateringJobForTouchBased } from "./watering.js";
 import { GetDistance } from "./tools.js"; // Function to fetch plants
-import { getPlants } from "./plantsmanager.js";
 import { deletePlant } from "./plantsmanager.js";
 import { customConfirm } from "./popups.js";
 import { PlantRadii } from "./tools.js"; // Import PlantRadii from tools.js
@@ -17,39 +16,40 @@ const canvas = document.getElementById('gridCanvas');
 
 let selectedPlant = null;
 
-
-
 canvas.addEventListener('click', async (e) => {
   if (isLoggedIn) {
     let coordDisplay = pixelToCoord(e.offsetX, e.offsetY);
-    let x = coordDisplay.x;
-    let y = coordDisplay.y;
+    let x = coordDisplay.x; // x of the click with respect to grid coordinate system
+    let y = coordDisplay.y; // y of the click with respect to grid coordinate system
 
     // Find the clicked plant
     selectedPlant = null;
     let isSeedingPossible = true;
 
-    for (let plant of window.plants) {
+    for (let plant of window.plants) { // this loop will decide if seeding is possible or not
       const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
-
-      if(distance < PlantRadii[plant.planttype]) {
+      if (distance < PlantRadii[plant.planttype]) {
         isSeedingPossible = false; // If any plant is too close, seeding is not possible
-      }
+      }      
+    }
 
-      // const radius = PlantRadii[plant.planttype];
-      const radius = 15;
-      if (radius !== undefined && distance <= radius) {
-        selectedPlant = plant;
+    for(let plant of window.plants) { // this loop will find the plant that is clicked
+      const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
+      if (distance < 15) {
+        selectedPlant = plant; // Set the selected plant
         break; // Stop at the first match
       }
     }
 
-    let innerCanvasCoordinateInPixel = coordToPixel(x, y);
-    const canvasRect = canvas.getBoundingClientRect();
-    let positiononscreen = {
-      x: canvasRect.left + innerCanvasCoordinateInPixel.x,
-      y: canvasRect.top + innerCanvasCoordinateInPixel.y
-    };
+    for (let job of window.seedingjobs) { // this loop will check if there is a seed at the clicked position
+      for (let seed of job.seeds) {
+        const distance = GetDistance(x, y, seed.xcoordinate, seed.ycoordinate);
+        if (distance <= PlantRadii[seed.seedtype]) { // Assuming a radius of 15 for seeds
+          isSeedingPossible = false; // If a seed is found, seeding is not possible
+          break; // Stop at the first match
+        }
+      }
+    }
 
     // remove any existing dialogbox
     dialogBox.style.display = "none"; // Hide the dialog box if it exists
@@ -63,23 +63,18 @@ canvas.addEventListener('click', async (e) => {
 
       AddDeleteButtonToDialogContent();
       AddWateringButtonToDialogContent();
-      // DisplayCreateWateringJobForTouchBased(selectedPlant);
-      
     }
     else {
-      if(!isSeedingPossible) return;
+      if (!isSeedingPossible) return;
       dialogHeader.textContent = `Position: X:${x} , Y:${y}`;
-      // DisplayCreateSeedingJobForTouchedBased(x,y);
-      AddSeedingButtonToDialogContent(x,y);
+      AddSeedingButtonToDialogContent(x, y);
     }
 
-    showDialogOnCanvas(positiononscreen.x, positiononscreen.y);
+    showDialogOnCanvas(e.clientX, e.clientY);
   }
 });
 
 function showDialogOnCanvas(x, y) {
-  console.log(`Showing dialog at (${x}, ${y})`);
-
   // STEP 1: Temporarily make it visible but hidden for measurement
   dialogBox.style.visibility = "hidden";
   dialogBox.style.display = "block";
@@ -144,12 +139,12 @@ function AddWateringButtonToDialogContent() {
   dialogContent.appendChild(wateringButton);
 }
 
-function AddSeedingButtonToDialogContent(x,y) {
+function AddSeedingButtonToDialogContent(x, y) {
   const seedingButton = document.createElement("button");
   seedingButton.textContent = "🌱";
 
   seedingButton.addEventListener("click", () => {
-      DisplayCreateSeedingJobForTouchedBased(x,y);
+    DisplayCreateSeedingJobForTouchedBased(x, y);
 
     dialogBox.style.display = "none"; // Hide the dialog after seeding
   });
