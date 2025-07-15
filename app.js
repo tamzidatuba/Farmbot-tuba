@@ -124,7 +124,7 @@ app.delete('/api/plant', async (req, res) => {
       if (backend.plants[plant].xcoordinate == xcoordinate && backend.plants[plant].ycoordinate == ycoordinate) {
 
         // remove job from queue
-        let plant_object = backend.plants.splice(plant, 1);
+        let plant_object = backend.plants.splice(plant, 1)[0];
         backend.appendNotification("plant_deleted", plant_object.plantname);
         DatabaseService.ClearPlantFromWateringJobs(xcoordinate, ycoordinate);
       }
