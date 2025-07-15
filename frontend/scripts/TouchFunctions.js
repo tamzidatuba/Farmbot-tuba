@@ -26,16 +26,12 @@ canvas.addEventListener('click', async (e) => {
     selectedPlant = null;
     let isSeedingPossible = true;
 
-    console.log(`Clicked at X: ${x}, Y: ${y}`);
-
     for (let plant of window.plants) { // this loop will decide if seeding is possible or not
       const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
       if (distance < PlantRadii[plant.planttype]) {
         isSeedingPossible = false; // If any plant is too close, seeding is not possible
       }      
     }
-
-    console.log(isSeedingPossible);
 
     for(let plant of window.plants) { // this loop will find the plant that is clicked
       const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
@@ -79,8 +75,6 @@ canvas.addEventListener('click', async (e) => {
 });
 
 function showDialogOnCanvas(x, y) {
-  console.log(`Showing dialog at (${x}, ${y})`);
-
   // STEP 1: Temporarily make it visible but hidden for measurement
   dialogBox.style.visibility = "hidden";
   dialogBox.style.display = "block";
