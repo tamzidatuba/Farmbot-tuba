@@ -231,7 +231,7 @@ export function pixelToCoord(x, y) {
 
 // Map real-world coordinate to pixel
 export function coordToPixel(x, y) {
-    const px = (x / coordWidth) * canvasWidth
+    const px = (x / coordWidth) * canvasWidth;
     const py = (y / coordHeight) * canvasHeight;
     return { x: px, y: py };
 }
