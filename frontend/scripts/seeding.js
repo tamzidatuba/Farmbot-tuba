@@ -175,23 +175,30 @@ executeBtn.addEventListener('click', async () => {
   rows.forEach(row => {
     const plant = row.querySelector('.plantType').value.toLowerCase();
     const plantName = row.querySelector('.plantName').value.trim();
-    const x = Number(row.querySelector('.xCoord').value);
-    const y = Number(row.querySelector('.yCoord').value);
+    const x = (row.querySelector('.xCoord').value);
+    const y = (row.querySelector('.yCoord').value);
     const depth = Number(row.querySelector('.depth').value);
     const key = `${x},${y}`;
     const err = row.querySelector('.errorMsg');
     err.textContent = '';
 
-    if (!plant || isNaN(x) || isNaN(y) || x < 0 || x > 395 || y < 0 || y > 650) {
-      err.textContent = getTranslation('correctValues');
+    if (!plant) {
+      err.textContent = getTranslation('noPlant');
       valid = false;
-    } else if (seen.has(key)) {
-      err.textContent = getTranslation("duplicates");
+    } else if (x === '' || y === '') {
+      err.textContent = getTranslation('fillValues');
+      valid = false;
+    }else if (plantName=== '') {
+      err.textContent = getTranslation('noPlantName');
+      valid = false;
+    } else if (isNaN(x) || isNaN(y) || x <= 0 || x >= 395 || y <= 0 || y >= 650) {
+      err.textContent = getTranslation('correctValues');
       valid = false;
     } else {
       seen.add(key);
       seeds.push({ seedname: plantName, seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
     }
+    
   });
 
   const name = createNameInput.value.trim();
@@ -247,20 +254,31 @@ modifyExecuteBtn.addEventListener('click', async () => {
   rows.forEach(row => {
     const plant = row.querySelector('.plantType').value.toLowerCase();
     const plantName = row.querySelector('.plantName').value.trim();
-    const x = Number(row.querySelector('.xCoord').value);
-    const y = Number(row.querySelector('.yCoord').value);
+    const x = (row.querySelector('.xCoord').value);
+    const y = (row.querySelector('.yCoord').value);
     const depth = Number(row.querySelector('.depth').value);
     const key = `${x},${y}`;
     const err = row.querySelector('.errorMsg');
     err.textContent = '';
+    console.log("x: " +x);
 
-    if (!plant || isNaN(x) || isNaN(y) || seen.has(key)) {
+    if (!plant) {
+      err.textContent = getTranslation('noPlant');
+      valid = false;
+    } else if (x === '' || y === '') {
+      err.textContent = getTranslation('fillValues');
+      valid = false;
+    }else if (plantName=== '') {
+      err.textContent = getTranslation('noPlantName');
+      valid = false;
+    } else if (isNaN(x) || isNaN(y) || x <= 0 || x >= 395 || y <= 0 || y >= 650) {
       err.textContent = getTranslation('correctValues');
       valid = false;
     } else {
       seen.add(key);
       seeds.push({ seedname: plantName, seedtype: plant, xcoordinate: x, ycoordinate: y, depth });
     }
+    
   });
 
   if (!valid) return;

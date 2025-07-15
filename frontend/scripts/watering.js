@@ -340,45 +340,60 @@ function editWateringJob(job) {
 
 //VIEW WATERING JOBS BUTTON LOGIC
 viewJobsBtnWatering.addEventListener('click', async () => {
-  jobsListWatering.innerHTML = getTranslation('loadingJobs');
-  jobCountDisplayWatering.textContent = '';
   viewJobsModalWatering.style.display = 'block';
-
+  jobsListWatering.innerHTML = '';
+  jobCountDisplayWatering.textContent = '';
+  
   try {
-    const response = await fetch('/api/jobs/Watering');
-    const jobs = await response.json();
+    const jobsRes = await fetch('/api/jobs/Watering');
+    if (!jobsRes.ok) throw new Error('Failed to load jobs');
+    const allJobs = await jobsRes.json();
 
-    jobCountDisplayWatering.textContent = getTranslation("wateringSoFar") + `${jobs.length}`;
+    let queuedJobs = new Set();
+    try {
+      const notifRes = await fetch('/api/frontendData');
+      if (notifRes.ok) {
+        const { notifications } = await notifRes.json();
+        queuedJobs = new Set(
+          notifications
+            .filter(n => n.key?.toLowerCase().includes('queue'))
+            .map(n => n.jobname)
+        );
+      }
+    } catch (e) {
+      console.warn("Couldn't load notifications, skipping queue filtering.");
+    }
+    const pendingJobs = allJobs.filter(job => !queuedJobs.has(job.jobname));
+    jobCountDisplayWatering.textContent = `${getTranslation('wateringSoFar')}${pendingJobs.length}`;
 
-    if (jobs.length === 0) {
-      jobsListWatering.innerHTML = getTranslation('notFound');
-    } else {
-      jobsListWatering.innerHTML = '';
-      jobs.forEach((job, index) => {
-        const jobDiv = document.createElement('div');
-        jobDiv.className = 'job-row';
-        jobDiv.innerHTML = `
-  <div class="job-header-row">
-    <strong>${job.jobname}</strong>
-    <div class="icon-actions">
-      <span class="icon-btn edit-job-btn" title=${getTranslation("edit")} data-index="${index}">✏️</span>
-      <span class="icon-btn delete-job-btn" title=${getTranslation("delete")} data-index="${index}">🗑️</span>
-    </div>
-  </div>
-  <div>${getTranslation("plants")}: ${job.plantstobewatered?.length || 0}</div>
-  <button class="execute-job-btn">${getTranslation("execute")}</button>
-`;
+    if (pendingJobs.length === 0) {
+      jobsListWatering.innerHTML = `<p>${getTranslation('notFound')}</p>`;
+      return;
+    }
 
-
-        jobsListWatering.appendChild(jobDiv);
+    pendingJobs.forEach(job => {
+      const row = document.createElement('div');
+      row.className = 'job-row';
+      row.innerHTML = `
+        <div class="job-header-row">
+          <strong>${job.jobname}</strong>
+          <div class="icon-actions">
+            <span class="icon-btn edit-job-btn">✏️</span>
+            <span class="icon-btn delete-job-btn">🗑️</span>
+          </div>
+        </div>
+        <div>${getTranslation('plants')}: ${job.plantstobewatered?.length || 0}</div>
+        <button class="execute-job-btn">${getTranslation('execute')}</button>
+      `;
+      jobsListWatering.appendChild(row);
 
         // edit logic
-        jobDiv.querySelector('.edit-job-btn').addEventListener('click', () => {
+        row.querySelector('.edit-job-btn').addEventListener('click', () => {
           editWateringJob(job);
         });
 
         // new delete logic
-        jobDiv.querySelector('.delete-job-btn').addEventListener('click', async () => {
+        row.querySelector('.delete-job-btn').addEventListener('click', async () => {
           const confirm = await customConfirm(getTranslation("deleteConfirm") + `${job.jobname}?`);
           if (confirm) {
             try {
@@ -407,50 +422,37 @@ viewJobsBtnWatering.addEventListener('click', async () => {
         });
 
         // optional placeholder for future Execute
-        jobDiv.querySelector('.execute-job-btn').addEventListener('click', async () => {
-          const confirm = await customConfirm(getTranslation("executeConfirm") + `${job.jobname}?`);
-          if (confirm) {
-            try {
-
-              const res = await fetch(`/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ token })
-              });
-
-              // Check if response is JSON
-              const contentType = res.headers.get("content-type");
-              let message = getTranslation("unkownError");
-
-              if (contentType && contentType.includes("application/json")) {
-                const result = await res.json();
-
-                if (res.ok) {
-                  message = `✅ ${result.message || getTranslation("queueSuccess")}`;
-                } else {
-                  message = `❌ ${result.error || result.message || getTranslation("queueFail")}`;
-                }
-              } else {
-                const text = await res.text();
-                message = getTranslation("unexpectedResponse") + "${text}";
-              }
-
-              customAlert(message);
-            } catch (err) {
-              console.error(getTranslation("executeFail"), err);
-              customAlert(getTranslation("networkError"));
+        row.querySelector('.execute-job-btn').addEventListener('click', async () => {
+          const ok = await customConfirm(getTranslation('executeConfirm') + job.jobname + '?');
+          if (!ok) return;
+          const qRes = await fetch(
+            `/api/jobs/queue/${encodeURIComponent(job.jobname)}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ token })
             }
+          );
+          const qJson = await qRes.json();
+          if (!qRes.ok) {
+            throw new Error(qJson.error || getTranslation('queueFail'));
           }
+  
+          // immediately remove this row from the DOM
+          row.remove();
+  
+          // decrement the count
+          const prev = parseInt(jobCountDisplayWatering.textContent.match(/\d+/)[0], 10);
+          jobCountDisplayWatering.textContent = `${getTranslation('wateringSoFar')}${prev - 1}`;
+  
+          customAlert(`✅ ${getTranslation('queueSuccess')}`);
         });
       });
+  
+    } catch (err) {
+      console.error(err);
+      jobsListWatering.innerHTML = `<div class="error">${getTranslation('loadingError')}</div>`;
     }
-  } catch (err) {
-    jobsListWatering.innerHTML = getTranslation("loadingError");
-    console.error(err);
-  }
-});
+  });
 
 
 closeViewJobsModalWatering.addEventListener('click', () => {
