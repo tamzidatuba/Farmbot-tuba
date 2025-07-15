@@ -260,8 +260,8 @@ async function ClearPlantFromWateringJobs(xcoordinate,  ycoordinate) {
 }
 
 //Functions related to questions DB CRUD operations
-async function InsertQuestionsIntoDB(question, answer){
-   let question1 =  await questionModel.InsertQuestionsToDB(question, answer);
+async function InsertQuestionsIntoDB(id, user, question, answer){
+   let question1 =  await questionModel.InsertQuestionsToDB(id,user, question, answer);
 }
 
 async function FetchAlltheQuestionsFromDB(){
@@ -269,25 +269,25 @@ async function FetchAlltheQuestionsFromDB(){
    return question2;
 }
 
-async function FetchQuestionsFromDBbyQuestion(question){
-   let question3 =  await questionModel.FetchSpecificQuestionsFromDB(question);
+async function FetchQuestionsFromDBbyQuestion(id){
+   let question3 =  await questionModel.FetchSpecificQuestionsFromDB(id);
    return question3;
 }
 
-async function InsertAnswerIntoDB(question, answer){
+/*async function InsertAnswerIntoDB(question, answer){
     let answer_recieved = await questionModel.InsertAnswersIntoDB(question,answer);
     return answer_recieved;
-}
+}*/
 
-async function UpdateQuestionDetailsIntoDB(user, question, answer)
+async function UpdateQuestionDetailsIntoDB(id, user, question, answer)
 {
-    let details_to_be_changed = await questionModel.UpdateDetailsinDB(user,question,answer);
+    let details_to_be_changed = await questionModel.UpdateDetailsinDB(id, user,question,answer);
     return details_to_be_changed;
 }
 
-async function DeleteQuestionInDB(question)
+async function DeleteQuestionInDB(id)
 {
-    await questionModel.DeleteQuestionfromDB(question);
+    await questionModel.DeleteQuestionfromDB(id);
 }
 
 //Functions related to Notifications DB CRUD operations
@@ -352,7 +352,7 @@ export default {
     FetchAlltheQuestionsFromDB,
     FetchQuestionsFromDBbyQuestion,
     DeletePlantFromDB,
-    InsertAnswerIntoDB,
+    //InsertAnswerIntoDB,
     ClearPlantFromWateringJobs,
     UpdateQuestionDetailsIntoDB,
     DeleteQuestionInDB,

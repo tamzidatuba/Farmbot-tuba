@@ -47,9 +47,9 @@ app.get('/api/plants', async (req, res) => {
 });
 
 app.post('/api/questions', async (req, res) => {
-  const { question, answer } = req.body
+  const {id, user, question, answer } = req.body
   try {
-    await DatabaseService.InsertQuestionsIntoDB(question, answer);
+    await DatabaseService.InsertQuestionsIntoDB(id, user, question, answer);
     res.status(200).json({ message: "Thank you! Your question has been submitted." });
   }
   catch (err) {
@@ -278,4 +278,37 @@ app.post('/api/send-feedback', async (req, res) => {
   }
 });
 
+//api to update question
+app.put('/api/questions/update', async (req,res) => {
+  const {id,user,question,answer} =req.body.payload;
+  const token = req.body.token;
+  if (!TokenManager.validateToken(token)) {
+    res.status(500).json({ error: "You dont have permission to do that" });
+    return
+  }
+  try {
+    console.log("Udpate in api wiht ID: " + id);
+    await DatabaseService.UpdateQuestionDetailsIntoDB(id,user,question,answer);
+    res.status(200).json("The changed details have been updated.");
+  }catch(err) {
+    console.error(err);
+    res.status(500).json({error:"Failed to update the change."});
+  }
+});
 
+
+
+//api to delete question
+app.delete('/api/questions/delete', async (req, res) => {
+  const {id, token } = req.body
+  if (!TokenManager.validateToken(token)) {
+    res.status(500).json({ error: "You dont have permission to do that" });
+    return
+  }
+  try {
+    await DatabaseService.DeleteQuestionInDB(id);
+    res.status(200).json({ message: 'Question deleted.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete question.' });
+  }
+    });
