@@ -19,11 +19,6 @@ const statusBox = document.getElementById('farmbot-status');
 const statusHistory = document.getElementById('status-history');
 const pauseBtn = document.getElementById('pauseJobBtn');
 
-
-const title = statusHistory.querySelector('.history-header');
-const historyBox = document.getElementById('notification-history');
-
-
 // Update robot status, notifications and execution
 export async function updateRobot() {
   //updateStatus();//change this to actually get status
