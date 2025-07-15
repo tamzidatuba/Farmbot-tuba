@@ -80,7 +80,7 @@ canvas {
       justify-content: center;
       align-items: center;
       text-align: center;
-      width: 230px;
+      width: 200px;
       height: 48px;
       background-color: var(--elements-color);
       color: white;
@@ -1075,7 +1075,7 @@ margin-top: 4px;
   font-size: 16px;
   justify-content: center;
   top:2%;
-  width: 200px;      /* feste Breite */
+  width: 180px;      /* feste Breite */
   height: 48px;      /* feste Höhe */
   border: none;
   border-radius: 6px;
