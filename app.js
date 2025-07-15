@@ -47,13 +47,9 @@ app.get('/api/plants', async (req, res) => {
 });
 
 app.post('/api/questions', async (req, res) => {
-  const { id,user,question, answer,token } = req.body;
-  if (!TokenManager.validateToken(token)) {
-  res.status(500).json({ error: "You dont have permission to do that" });
-  return
-  }
+  const {id, user, question, answer } = req.body
   try {
-    await DatabaseService.InsertQuestionsIntoDB(id,user,question, answer);
+    await DatabaseService.InsertQuestionsIntoDB(id, user, question, answer);
     res.status(200).json({ message: "Thank you! Your question has been submitted." });
   }
   catch (err) {
@@ -74,9 +70,9 @@ app.get('/api/getquestions', async (req, res) => {
 });
 
 app.get('/api/getsinglequestion', async (req, res) => {
-  const { id } = req.body;
+  const { question } = req.body;
   try {
-    let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyQuestion(id);
+    let getsinglequestion = await DatabaseService.FetchQuestionsFromDBbyQuestion(question);
     res.status(200).json(getsinglequestion);
   }
   catch (err) {
@@ -85,7 +81,7 @@ app.get('/api/getsinglequestion', async (req, res) => {
   }
 });
 
-/*app.put('/api/putquestions', async (req, res) => {
+app.put('/api/putquestions', async (req, res) => {
   const { answer, question } = req.body;
   try {
     let insert_answer = await DatabaseService.InsertAnswerIntoDB(question, answer);
@@ -95,7 +91,7 @@ app.get('/api/getsinglequestion', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Failed to insert answer to database." });
   }
-});*/
+});
 
 app.put('/api/plant/rename', async (req,res) => {
   const {plantname, xcoordinate, ycoordinate,token} =req.body;
@@ -284,11 +280,12 @@ app.post('/api/send-feedback', async (req, res) => {
 //api to update question
 app.put('/api/questions/update', async (req,res) => {
   const {id,user,question,answer,token} =req.body;
-  if (!TokenManager.validateToken(token)) {
+  /*if (!TokenManager.validateToken(token)) {
     res.status(500).json({ error: "You dont have permission to do that" });
     return
-  }
+  }*/
   try {
+    console.log("Udpate in api");
     await DatabaseService.UpdateQuestionDetailsIntoDB(id,user,question,answer);
     res.status(200).json("The changed details have been updated.");
   }catch(err) {

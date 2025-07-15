@@ -1,5 +1,5 @@
 import { getTranslation } from "./translation.js";
-import { isLoggedIn } from "./auth.js";
+import { isLoggedIn, token } from "./auth.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   const yourQuestionsBtn = document.getElementById('yourQuestions');
@@ -9,16 +9,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const addSection = document.getElementById('add-question-section');
   const addBtn = document.getElementById('add-question-btn');
   const form = document.getElementById('question-form');
-  const userInput = document.getElementById('user-email');
+  const userInput = document.getElementById('user');
   const questionInput = document.getElementById('user-question');
   const answerInput = document.getElementById('user-answer');
+
+  let questions = [];
 
   async function fetchQuestions() {
   try {
     const response = await fetch('/api/getquestions');
     if (!response.ok) throw new Error('Network response was not ok');
 
-    const questions = await response.json();
+    questions = await response.json();
 
     if (questions.length === 0) {
       questionsList.innerHTML = '<p>' + getTranslation("noQuestions") + '</p>';
@@ -84,11 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
       answer:   row.querySelector('.answer-input').value.trim()
     };
 
+    console.log("Update this: " + JSON.stringify(payload, token));
+
     try {
       const r = await fetch(`/api/questions/update`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({payload, token})
       });
       if (!r.ok) throw new Error('Update failed');
       await fetchQuestions();
@@ -100,12 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- delete (🗑️) in normal mode ---------- */
   if (!inEdit && e.target === delBtn) {
+    console.log("Id: " + id);
     if (!confirm(getTranslation("confirmDelete") || 'Delete?')) return;
     try {
       const r = await fetch(`/api/questions/delete`, { 
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({id: id, token: token})
       });
       if (!r.ok) throw new Error('Delete failed');
       await fetchQuestions();
@@ -152,14 +157,21 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const highestId = questions.length > 0
+      ? Math.max(...questions.map(q => q.id))
+      : 0;
+
     const newQuestion = {
+      id: highestId,
       user: userInput.value.trim(),
       question: questionInput.value.trim(),
       answer: answerInput.value.trim()
     };
 
+    console.log(JSON.stringify(newQuestion));
+
     try {
-      const response = await fetch('/api/postquestions', {
+      const response = await fetch('/api/questions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newQuestion)

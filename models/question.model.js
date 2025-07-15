@@ -15,7 +15,7 @@ mongoose.connect(connectionString)
 //define the schema or the structure of each document/ entry in Mongo DB
 export const askQuestionSchema = new mongoose.Schema(
     {
-        id: String,
+        id: Number,
         user: String,
         question: String,
         answer: String,
@@ -57,8 +57,9 @@ async function FetchAllQuestionsFromDB() {
 //function to update the details (the name of the user, question and answer) in the database.
 async function UpdateDetailsinDB(id,user,question,answer)
 {
+    console.log("TEst");
     let change_details = await questionModel.findOneAndUpdate(
-        {"question_id":id},
+        {"id":id},
         {
             $set:
             {
@@ -67,14 +68,15 @@ async function UpdateDetailsinDB(id,user,question,answer)
                 "answer":answer
             }
         },
-        {new :true}
+        {"new" :true}
     )
 }
 
 //function to delete question in the Database.
 async function DeleteQuestionfromDB(id)
 {
-    await questionModel.findOneAndDelete({"question_id": id});
+    console.log("Delete in question model");
+    await questionModel.findOneAndDelete({"id": id});
 }
 
 
