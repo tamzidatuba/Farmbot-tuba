@@ -112,7 +112,7 @@ function fillHistory (entries) {
       const entry = document.createElement('div');
       console.log("Key: " + historyList[status].key)
       if (historyList[status].key === "plant_deleted" || historyList[status].key === "plant_name_changed") {
-        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key) + historyList[status].plantname;
+        var textInput = historyList[status].date + " " + getTranslation(historyList[status].key) + historyList[status].jobname;
       } else {
         var textInput = historyList[status].date + " " + getTranslation(historyList[status].key.replace(/\s/g, '')) + " , " + getTranslation("jobname") + historyList[status].jobname;
       }
