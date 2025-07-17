@@ -17,6 +17,7 @@ class Task {
     async pauseTask(farmbot) {
         await farmbot.emergencyLock();
         await farmbot.emergencyUnlock();
+        await new Promise(res => setTimeout(res, 5000)); // Wait 5 Seconds
         return;
     }
     // Code for Task-Specific resuming
