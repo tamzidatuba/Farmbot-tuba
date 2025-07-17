@@ -6,3 +6,8 @@ export const predefinedPlants = [
   { id: 5, planttype: "radish", plantname: "Spicy", xcoordinate: 20, ycoordinate: 60 },
   { id: 6, planttype: "radish", plantname: "Crunch", xcoordinate: 40, ycoordinate: 60 }
 ];
+
+export const predefinedWatering = {
+  wateringHeight: 40,
+  wateringCapacity: 20
+};

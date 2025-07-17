@@ -1,7 +1,10 @@
-import { predefinedPlants } from '../customization/demo_plants.js'; // predefined plants for demo
+import { predefinedPlants, predefinedWatering } from '../customization/demo_plants.js'; // predefined plants for demo
 import { getTranslation } from './translation.js';
 import { token } from './auth.js';
 import { customAlert,customConfirm } from './popups.js';
+
+const wateringCapacity = predefinedWatering.wateringCapacity;
+const wateringHeight = predefinedWatering.wateringHeight;
 
 document.addEventListener("DOMContentLoaded", () => {
   const demoBtn = document.getElementById("wateringDemoBtn");
@@ -14,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function startDemo() {
     const randomPlant = Math.floor(Math.random() * predefinedPlants.length);
-    const plantstobewatered = [{ plant: predefinedPlants[randomPlant], wateringcapacity: 10, wateringheight:50}];
+    const plantstobewatered = [{ plant: predefinedPlants[randomPlant], wateringcapacity: wateringCapacity, wateringheight:wateringHeight}];
     
     const payload = {
           jobname: "Watering Demo",
