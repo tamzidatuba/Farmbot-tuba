@@ -309,6 +309,7 @@ window.addEventListener('click', e => {
 
 // ——— View‐Jobs Logic ———
 viewJobsBtn.addEventListener('click', async () => {
+  console.log("view jobs");
   viewJobsModal.style.display = 'block';
   jobsList.innerHTML = '';
   jobCountDisplay.textContent = '';
@@ -330,7 +331,7 @@ viewJobsBtn.addEventListener('click', async () => {
 
     if (allJobs.length === 0) {
       jobsList.innerHTML = `<p>${getTranslation('notFound')}</p>`;
-      return;
+      //return;
     }
 
     allJobs.forEach(job => {
