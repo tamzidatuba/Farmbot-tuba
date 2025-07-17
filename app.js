@@ -219,15 +219,15 @@ app.post('/api/ask-question', async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'farmbot285@gmail.com',
-        pass: 'jphfvfkdtbvcgyxf'  // app password 
+        user: 'farmbot394@gmail.com',
+        pass: 'fhiuohwwzqezuolf'  // app password 
       }
     });
 
     const supportMailOptions = {
       
       from:email,
-      to: 'farmbot285@gmail.com',
+      to: 'farmbot394@gmail.com',
       subject: `New question from ${email}`,
       text: `You have received a new question from ${email}:\n\n${question}`
     };

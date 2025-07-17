@@ -98,7 +98,7 @@ class Backend {
       // check if another job is queued
       if (!this.checkForNextJob()) {
         // no other job is queued -> start a "Home"-Job
-        this.currentJobData = {jobType: DatabaseService.JobType.HOME}
+        this.currentJobData = {jobType: DatabaseService.JobType.HOME, job: {jobname: "Home"}};
         this.statusManager.startJob(new HomeJob());
         this.appendNotification("started", "Home");
       }

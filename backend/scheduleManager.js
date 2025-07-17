@@ -64,7 +64,9 @@ class ScheduleManager {
 
     // removes a scheduled job from execution-queue
     removeScheduledJob(name) {
-        if (name == this.backend.currentJobData.job.jobname) return false // return false in case its already being executed
+        if (this.backend.statusManager.runningJob) {
+            if (name == this.backend.statusManager.currentJob.name) return false // return false in case its already being executed
+        }
         for (const job_idx in this.jobsToExecute) {
             if (this.jobsToExecute[job_idx].job.jobname == name) {
 

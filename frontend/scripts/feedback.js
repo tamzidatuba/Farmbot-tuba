@@ -1,5 +1,7 @@
 // feedback.js
 import { getTranslation } from "./translation.js";
+import { customAlert } from "./popups.js";
+
 
 class Feedback {
   constructor( message, rating) {
@@ -73,7 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
       if (!response.ok) throw new Error(result.error);
   
-      successDiv.textContent = getTranslation("feedbackResponse");
+      customAlert(getTranslation("feedbackResponse"));
+      modal.style.display='none';
     } catch (err) {
       console.error('Feedback send error:', err);
       errorDiv.textContent = '❌ Failed to send feedback. Please try again later.';
