@@ -267,9 +267,9 @@ modifyExecuteBtn.addEventListener('click', async () => {
     } else if (x === '' || y === '') {
       err.textContent = getTranslation('fillValues');
       valid = false;
-    }else if (plantName=== '') {
+    /* }else if (plantName=== '') {
       err.textContent = getTranslation('noPlantName');
-      valid = false;
+      valid = false; */
     } else if (isNaN(x) || isNaN(y) || x < 10 || x >= 395 || y < 10 || y >= 650) {
       err.textContent = getTranslation('correctValues');
       valid = false;
