@@ -42,7 +42,7 @@ function generateGUI() {
     jobCountDisplay.textContent = `${getTranslation('queuedJobs')}${queue.length}`;
     queueList.innerHTML = '';
     if (queue.length === 0) {
-        jobsList.innerHTML = getTranslation('notFound');
+        jobsList.innerHTML = getTranslation('notFoundQueue');
         return;
     };
     queue.forEach((job, index) => {
