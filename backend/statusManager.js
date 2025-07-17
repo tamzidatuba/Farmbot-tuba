@@ -139,8 +139,8 @@ class StatusManager {
     }
 
     // Cancels the currently running job
-    cancelJob() {
-        this.pauseJob();
+    async cancelJob() {
+        await this.pauseJob();
         this.isPaused = false;
         this.runningJob = false
         this.backend.finishJob();
