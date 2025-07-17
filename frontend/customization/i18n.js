@@ -1,7 +1,7 @@
 export const translations = {
   en: {
     // English translations
-    _name: 'English',
+    _name: '🇬🇧 English',
     // Main dashboard translations
     title: 'Digital Farming Dashboard',
     seedingJob: 'Create Seeding Job',
@@ -208,7 +208,7 @@ export const translations = {
     // queue manager
     queueOverview: '📋 Execution Queue Overview',
     queuedJobs: 'Number of queued jobs: ',
-    notFound: 'No Jobs in queue.',
+    notFoundQueue: 'No Jobs in queue.',
     dequeued: ' dequed',
     queue: 'Queue',
     viewQueue: 'View Queue',
@@ -216,7 +216,7 @@ export const translations = {
   },
   de: {
     // German translations
-    _name: 'Deutsch',
+    _name: '🇩🇪 Deutsch',
     // Main dashboard translations
     title: 'Digital Farming Dashboard',
     seedingJob: 'Aussaats Auftrag erstellen',
@@ -294,7 +294,7 @@ export const translations = {
     manage: '🪴 Pflanzen verwalten',
     deletePlants: '🗑️ Pflanzen löschen',
     yourQuestions: '❓ Eure Fragen',
-    farmbotinfo: 'ℹ️Farmbot Info',
+    farmbotinfo: 'ℹ️ Farmbot Info',
     //watering job template
     at: 'bei',
     // Translation for alerts and errors:
@@ -426,7 +426,7 @@ export const translations = {
     // queue manager
     queueOverview: '📋 Ausführungswarteschlange Übersicht',
     queuedJobs: 'Anzahl an eingereihten Aufträgen: ',
-    notFound: 'Keine Aufträge in der Warteschlange.',
+    notFoundQueue: 'Keine Aufträge in der Warteschlange.',
     dequeued: ' aus der Warteschlange entfernt.',
     queue: 'Warteschlange',
     viewQueue: 'Warteschlange Öffnen',
