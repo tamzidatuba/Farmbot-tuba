@@ -11,6 +11,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon/favicon-16x16.png">
   <link rel="manifest" href="./assets/site.webmanifest">
   <link rel="stylesheet" href="./styles/help-style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 
 <body>
@@ -267,15 +268,13 @@
 
       <!-- Info Button -->
        <li class="menu-item" id="openInfoModal" data-i18n="farmbotinfo">ℹ️️ FarmBot Info</li>
-      
 
       <!-- FarmBot Info Modal -->
       <div id="infoModal" class="modal">
-        <div class="modal-content">
+        <!-- <div class="modal-content">
           <span id="closeInfoModal" class="close">&times;</span>
           <h2 data-i18n="farmbotdocumentation" >FarmBot Documentation</h2>
-          <p>
-          <section id="about" style="padding: 2em; font-family: Arial, sans-serif; color:gray;">
+           <section id="about" style="padding: 2em; font-family: Arial, sans-serif; color:gray;">
             <p  data-i18n="Overview">
               The <strong>FarmBot Web Application</strong> is an interactive platform that allows both visitors and
               administrators to explore, manage, and demonstrate automated farming operations with ease.
@@ -321,7 +320,10 @@
           Visit the full documentation:
           <a href="https://software.farm.bot/docs" target="_blank">FarmBot Docs</a>.
           </p>
+        </div> -->
 
+        <div class="infomodal" style="width: 1000px;">
+          <div id="infocontainer" style="width: 100%; height: 50%;"> </div>
         </div>
       </div>
     </ul>
@@ -406,7 +408,7 @@
       </div>
     </div>
     <!-- Ask Questions -->
-     
+
 
     <!-- Question Icon Button -->
     <div>

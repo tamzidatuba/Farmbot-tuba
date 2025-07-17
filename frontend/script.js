@@ -103,25 +103,47 @@ window.addEventListener('click', (e) => {
   }
 });
 
-  // Get elements
-  const infoModal = document.getElementById('infoModal');
-  const openInfoBtn = document.getElementById('openInfoModal');
-  const closeInfoModal = document.getElementById('closeInfoModal');
+// Get elements
+const infoModal = document.getElementById('infoModal');
+const openInfoBtn = document.getElementById('openInfoModal');
 
-  // Open modal
-  openInfoBtn.addEventListener('click', () => {
-    infoModal.style.display = 'block';
-  });
+// Open modal
+openInfoBtn.addEventListener('click', () => {
+  infoModal.style.display = 'block';
+});
 
-  // Close modal
-  closeInfoModal.addEventListener('click', () => {
+// Close modal
+// closeInfoModal.addEventListener('click', () => {
+//   infoModal.style.display = 'none';
+// });
+
+// Close when clicking outside
+window.addEventListener('click', (event) => {
+  if (event.target === infoModal) {
     infoModal.style.display = 'none';
-  });
+  }
+});
 
-  // Close when clicking outside
-  window.addEventListener('click', (event) => {
-    if (event.target === infoModal) {
-      infoModal.style.display = 'none';
-    }
-  });
+const url = './customization/info_EN.pdf'; // the file in your /public folder
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+const loadingTask = pdfjsLib.getDocument(url);
+loadingTask.promise.then(pdf => {
+  const container = document.getElementById('infocontainer');
+
+  for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+    pdf.getPage(pageNumber).then(page => {
+      const scale = 1.6;
+      const viewport = page.getViewport({ scale });
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      container.appendChild(canvas);
+
+      page.render({ canvasContext: context, viewport });
+    });
+  }
+});
