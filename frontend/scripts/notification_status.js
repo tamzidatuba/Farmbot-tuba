@@ -110,7 +110,6 @@ function fillHistory (entries) {
   for (const status in entries) {
     if (statusHistory.children.length < maxHistoryEntries + 1) {
       const entry = document.createElement('div');
-      console.log("Key: " + historyList[status].key)
       if (historyList[status].key === "plant_deleted" || historyList[status].key === "plant_name_changed") {
         var textInput = historyList[status].date + " " + getTranslation(historyList[status].key) + historyList[status].jobname;
       } else {
