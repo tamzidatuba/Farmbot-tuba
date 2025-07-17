@@ -1,6 +1,6 @@
 import { getTranslation } from "./translation.js";
 import { isLoggedIn, token } from "./auth.js";
-import { customAlert } from "./popups.js";
+import { customAlert, customConfirm } from "./popups.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   const yourQuestionsBtn = document.getElementById('yourQuestions');
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- delete (🗑️) in normal mode ---------- */
   if (!inEdit && e.target === delBtn) {
     console.log("Id: " + id);
-    if (!confirm(getTranslation("confirmDelete") || 'Delete?')) return;
+    if (!await customConfirm(getTranslation("confirmDelete") || 'Delete?')) return;
     try {
       const r = await fetch(`/api/questions/delete`, { 
         method: 'DELETE',

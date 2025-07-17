@@ -212,6 +212,7 @@ export const translations = {
     dequeued: ' dequed',
     queue: 'Queue',
     viewQueue: 'View Queue',
+    confirmDelete:"Do you want to Delete?",
   },
   de: {
     // German translations
@@ -429,5 +430,6 @@ export const translations = {
     dequeued: ' aus der Warteschlange entfernt.',
     queue: 'Warteschlange',
     viewQueue: 'Warteschlange Öffnen',
+    confirmDelete: "Willst du das löschen?",
   }
 }
