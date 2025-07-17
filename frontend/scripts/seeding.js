@@ -190,7 +190,7 @@ executeBtn.addEventListener('click', async () => {
       err.textContent = getTranslation('noPlantName');
       valid = false;
     } */
-      else if (isNaN(x) || isNaN(y) || x <= 0 || x >= 395 || y <= 0 || y >= 650) {
+      else if (isNaN(x) || isNaN(y) || x < 10 || x >= 395 || y < 10 || y >= 650) {
       err.textContent = getTranslation('correctValues');
       valid = false;
     } else {
@@ -270,7 +270,7 @@ modifyExecuteBtn.addEventListener('click', async () => {
     }else if (plantName=== '') {
       err.textContent = getTranslation('noPlantName');
       valid = false;
-    } else if (isNaN(x) || isNaN(y) || x <= 0 || x >= 395 || y <= 0 || y >= 650) {
+    } else if (isNaN(x) || isNaN(y) || x < 10 || x >= 395 || y < 10 || y >= 650) {
       err.textContent = getTranslation('correctValues');
       valid = false;
     } else {
