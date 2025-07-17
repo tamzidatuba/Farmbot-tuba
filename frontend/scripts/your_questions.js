@@ -106,7 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- delete (🗑️) in normal mode ---------- */
   if (!inEdit && e.target === delBtn) {
     console.log("Id: " + id);
-    if (!await customConfirm(getTranslation("confirmDelete") || 'Delete?')) return;
+    const confirmed = await customConfirm(getTranslation("confirmDelete"));
+    if (!confirmed) return;
     try {
       const r = await fetch(`/api/questions/delete`, { 
         method: 'DELETE',

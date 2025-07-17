@@ -116,7 +116,7 @@ function AddDeleteButtonToDialogContent() {
   deleteButton.textContent = "❌";
 
   deleteButton.addEventListener("click", async () => {
-    const confirmed = await customConfirm("Are you sure you want to delete this plant?");
+    const confirmed = await customConfirm(getTranslation("deleteConfirmPlant"));
     if (selectedPlant && confirmed) {
       deletePlant(selectedPlant.xcoordinate, selectedPlant.ycoordinate);
     }
