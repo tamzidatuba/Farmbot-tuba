@@ -158,9 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const highestId = questions.length > 0
+    let highestId = questions.length > 0
       ? Math.max(...questions.map(q => q.id))
       : 0;
+
+    highestId++;
+    console.log("ID: " + highestId);
 
     const newQuestion = {
       id: highestId,
