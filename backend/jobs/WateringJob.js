@@ -12,6 +12,7 @@ class WateringJob extends Job {
         
         let goToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, FieldConstants.SAFETY_HEIGHT);
         this.taskQueue.push(goToSafetyHeight);
+        let returnToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING, FieldConstants.SAFETY_HEIGHT);
         
         for(const seed in wateringArgs.plantstobewatered) {
             let seedArgs = wateringArgs.plantstobewatered[seed];
@@ -30,10 +31,9 @@ class WateringJob extends Job {
 
             let waterSeeds = new TimedPinTask(FarmbotStatus.WATERING, FARMBOT_DATA.water_pin, duration);
             this.taskQueue.push(waterSeeds);
-        }
-        let returnToSafetyHeight = new MoveZTask(FarmbotStatus.MOVING, FieldConstants.SAFETY_HEIGHT);
-        this.taskQueue.push(returnToSafetyHeight)
 
+            this.taskQueue.push(returnToSafetyHeight);
+        }
         this.task_count = this.taskQueue.length;
         
     }
