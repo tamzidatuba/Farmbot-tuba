@@ -317,30 +317,22 @@ viewJobsBtn.addEventListener('click', async () => {
     if (!jobsRes.ok) throw new Error('Failed to load jobs');
     const allJobs = await jobsRes.json();
 
-    let queuedJobs = new Set();
-    try {
-      const notifRes = await fetch('/api/frontendData');
-      if (notifRes.ok) {
-        const { notifications } = await notifRes.json();
-        queuedJobs = new Set(
-          notifications
-            .filter(n => n.key?.toLowerCase().includes('queue'))
-            .map(n => n.jobname)
-        );
+    for(const queued_job of window.queue) {
+      for(const job_idx in allJobs) {
+        if (queued_job.job.jobname == allJobs[job_idx].jobname) {
+          allJobs.splice(job_idx, 1);
+          break;
+        }
       }
-    } catch (e) {
-      console.warn("Couldn't load notifications, skipping queue filtering.");
     }
+    jobCountDisplay.textContent = `${getTranslation('seedingSoFar')}${allJobs.length}`;
 
-    const pendingJobs = allJobs.filter(job => !queuedJobs.has(job.jobname));
-    jobCountDisplay.textContent = `${getTranslation('seedingSoFar')}${pendingJobs.length}`;
-
-    if (pendingJobs.length === 0) {
+    if (allJobs.length === 0) {
       jobsList.innerHTML = `<p>${getTranslation('notFound')}</p>`;
       return;
     }
 
-    pendingJobs.forEach(job => {
+    allJobs.forEach(job => {
       const row = document.createElement('div');
       row.className = 'job-row';
       row.innerHTML = `

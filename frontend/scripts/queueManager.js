@@ -126,6 +126,7 @@ function updateViewButton() {
 export function updateQueue(new_queue, progress) {
     queue = new_queue;
     queue.reverse()
+    window.queue = queue;
     job_progress = progress;
     if (open) {
         generateGUI();
