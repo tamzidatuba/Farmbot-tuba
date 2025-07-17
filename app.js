@@ -48,6 +48,7 @@ app.get('/api/plants', async (req, res) => {
 
 app.post('/api/questions', async (req, res) => {
   const {id, user, question, answer } = req.body.newQuestion;
+  console.log(req.body.newQuestion);
   const token = req.body.token;
   if (!TokenManager.validateToken(token)) {
     res.status(500).json({ error: "You dont have permission to do that" });

@@ -1,6 +1,6 @@
 import { getTranslation } from "./translation.js";
 import { isLoggedIn, token } from "./auth.js";
-import { customAlert } from "./popups.js";
+import { customAlert, customConfirm } from "./popups.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   const yourQuestionsBtn = document.getElementById('yourQuestions');
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const r = await fetch(`/api/questions/update`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload, token)
+        body: JSON.stringify({payload, token})
       });
       if (!r.ok) throw new Error('Update failed');
       await fetchQuestions();
@@ -106,7 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- delete (🗑️) in normal mode ---------- */
   if (!inEdit && e.target === delBtn) {
     console.log("Id: " + id);
-    if (!confirm(getTranslation("confirmDelete") || 'Delete?')) return;
+    const confirmed = await customConfirm(getTranslation("confirmDelete"));
+    if (!confirmed) return;
     try {
       const r = await fetch(`/api/questions/delete`, { 
         method: 'DELETE',
@@ -158,9 +159,12 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const highestId = questions.length > 0
+    let highestId = questions.length > 0
       ? Math.max(...questions.map(q => q.id))
       : 0;
+
+    highestId++;
+    console.log("ID: " + highestId);
 
     const newQuestion = {
       id: highestId,
