@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const r = await fetch(`/api/questions/update`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload, token)
+        body: JSON.stringify({payload, token})
       });
       if (!r.ok) throw new Error('Update failed');
       await fetchQuestions();
