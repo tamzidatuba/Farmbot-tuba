@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/questions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newQuestion)
+        body: JSON.stringify({newQuestion, token})
       });
 
       if (!response.ok) throw new Error('Failed to add question.');
