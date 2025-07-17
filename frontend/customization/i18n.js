@@ -367,9 +367,9 @@ export const translations = {
     helpNotification: 'Hier könnt Ihr die Benachrichtigungen sehen. Ihr könnt auch die Anzahl der Benachrichtigungen ändern, die Ihr sehen möchten.',
     helpDemoSeeding: 'Klickt hier, um eine Demo des Aussäens von Samen zu simulieren.',
     helpDemoWatering: 'Klickt hier, um eine Demo des Bewässerns von Samen zu simulieren.',
-    helpFeedback: 'Falls Ihr Feedback geben möchten, klickt bitte hier.',
-    helpQandA: 'Wenn Ihr Fragen zum Farmbot haben, könnt Ihr diese hier stellen.',
-    helpLanguage: 'Ihr könnt hier ihre bevorzugte Sprache ändern. Aktuell könnt Ihr zwischen Deutsch und Englisch auswählen.',
+    helpFeedback: 'Klickt hier, falls Ihr Feedback geben möchtet.',
+    helpQandA: 'Wenn Ihr Fragen zum Farmbot habt, könnt Ihr diese hier stellen.',
+    helpLanguage: 'Hier könnt Ihr eure bevorzugte Sprache ändern. Aktuell könnt Ihr zwischen Deutsch und Englisch auswählen.',
     // Translations for the yourQuestions section
     yourQuestionsTitle: 'Eure eingereichten Fragen',
     noQuestions: 'Keine Fragen gefunden.',
