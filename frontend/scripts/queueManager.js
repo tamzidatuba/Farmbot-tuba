@@ -96,14 +96,14 @@ async function dequeueJob(jobname) {
     const data = await res.json();
     if (!res.ok) queueNameError.textContent = data.error
     else {
-        customAlert(jobname + " dequeued");
+        customAlert(jobname + getTranslation("dequeued"));
         queueNameError.textContent = "";
     }
 }
 
 function updateViewButton() {
-    let title = "Queue";
-    if (isLoggedIn) title = "View Queue";
+    let title = getTranslation("queue");
+    if (isLoggedIn) title = getTranslation("viewQueue");
     if (queue.length == 0) {
         viewQueueBtn.style.backgroundColor = "#ae1757";
         viewQueueBtn.innerHTML = `
