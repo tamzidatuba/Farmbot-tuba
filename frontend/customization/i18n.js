@@ -225,7 +225,7 @@ export const translations = {
     notScheduled: 'Einmalige Bewässerung',
     executionTime: 'Ausführungszeitpunkt:',
     repeatInterval: 'Wiederholungsintervall (in Stunden):',
-    seedingDemoText: 'Möchtes du die Aussäh Demo starten?',
+    seedingDemoText: 'Möchtest du die Aussäh Demo starten?',
     wateringDemoText: 'Möchtest du die Bewässerungs Demo starten?',
     loading: 'Lade...',
     execute: '🚜 Ausführen',
