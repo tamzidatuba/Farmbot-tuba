@@ -293,7 +293,7 @@ export const translations = {
     manage: '🪴 Pflanzen verwalten',
     deletePlants: '🗑️ Pflanzen löschen',
     yourQuestions: '❓ Eure Fragen',
-    farmbotinfo: 'ℹ️Informationen zum Farmbot',
+    farmbotinfo: 'ℹ️Farmbot Info',
     //watering job template
     at: 'bei',
     // Translation for alerts and errors:
