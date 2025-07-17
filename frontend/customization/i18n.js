@@ -147,7 +147,7 @@ export const translations = {
     time: ' at: ',
     jobname: 'Job name: ',
     // Translations for the help text
-    helpField: 'This is a visual representation of the Farmbot.You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile.',
+    helpField: 'This is a visual representation of the Farmbot.You can hover over the field to see the coordinates. The plants currently planted in the farmbot are also visbile. The transparent plants are not seeded yet, but only pre-arranged.',
     helpStatus: 'You can see the status of the Farmbot here. It shows whether the farmbot is currently offline or Ready to work or moving.',
     helpNotification: 'You can see the notifications here. You can also change the number of notifications you want to see.',
     helpDemoSeeding: 'Click to simulate a demo of planting seeds.',
@@ -293,7 +293,7 @@ export const translations = {
     manage: '🪴 Pflanzen verwalten',
     deletePlants: '🗑️ Pflanzen löschen',
     yourQuestions: '❓ Eure Fragen',
-    farmbotinfo: 'ℹ️Informationen zum Farmbot',
+    farmbotinfo: 'ℹ️Farmbot Info',
     //watering job template
     at: 'bei',
     // Translation for alerts and errors:
@@ -361,7 +361,7 @@ export const translations = {
     time: ' um: ',
     jobname: 'Auftragsname: ',
     //Translations for the help text
-    helpField: 'Dies ist eine visuelle Darstellung des Farmbots. Ihr könnt das Feld berühren, um die Koordinaten zu sehen. Die aktuell im Farmbot gepflanzten Pflanzen sind ebenfalls sichtbar.',
+    helpField: 'Dies ist eine visuelle Darstellung des Farmbots. Ihr könnt das Feld berühren, um die Koordinaten zu sehen. Die aktuell im Farmbot gepflanzten Pflanzen sind ebenfalls sichtbar. Die transparenten Pflanzen sind noch nicht gepflanzt, sondern nur vorgeplant.',
     helpStatus: 'Hier könnt Ihr den Status des Farmbots sehen. Er zeigt an, ob der Farmbot derzeit offline, bereit zur Arbeit oder in Bewegung ist.',
     helpNotification: 'Hier könnt Ihr die Benachrichtigungen sehen. Ihr könnt auch die Anzahl der Benachrichtigungen ändern, die Ihr sehen möchten.',
     helpDemoSeeding: 'Klickt hier, um eine Demo des Aussäens von Samen zu simulieren.',

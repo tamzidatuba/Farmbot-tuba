@@ -6,6 +6,8 @@ import { customAlert,customConfirm } from './popups.js';
 const wateringCapacity = predefinedWatering.wateringCapacity;
 const wateringHeight = predefinedWatering.wateringHeight;
 
+let currentPlants = [...predefinedPlants];
+
 document.addEventListener("DOMContentLoaded", () => {
   const demoBtn = document.getElementById("wateringDemoBtn");
 
@@ -36,6 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || "Watering demo failed");
+        if (currentPlants.length == 1) {
+          currentPlants = [...predefinedPlants];
+        } else {
+          currentPlants.splice(randomPlant, 1);
+        }
         customAlert(getTranslation(data.message) || "Watering demo queued");
     } catch (err) {
       console.error("Error executing watering demo:", err);

@@ -68,11 +68,11 @@ function createJobRow() {
     <div class="coord-row">
       <div>
         <label data-i18n="x">X Coordinate</label>
-        <input type="number" class="coord-input xCoord" placeholder="0 - 395">
+        <input type="number" class="coord-input xCoord" placeholder="10 - 395">
       </div>
       <div>
         <label data-i18n="y">Y Coordinate</label>
-        <input type="number" class="coord-input yCoord" placeholder="0 - 650">
+        <input type="number" class="coord-input yCoord" placeholder="10 - 650">
       </div>
       <div>
         <label data-i18n="depth">Depth (mm)</label>
@@ -125,11 +125,11 @@ function createModifyJobRow() {
     <div class="coord-row">
       <div>
         <label data-i18n="x">X Coordinate</label>
-        <input type="number" class="coord-input xCoord" placeholder="0 - 395">
+        <input type="number" class="coord-input xCoord" placeholder="10 - 395">
       </div>
       <div>
         <label data-i18n="y">Y Coordinate</label>
-        <input type="number" class="coord-input yCoord" placeholder="0 - 650">
+        <input type="number" class="coord-input yCoord" placeholder="10 - 650">
       </div>
       <div>
         <label data-i18n="depth">Depth (mm)</label>
@@ -186,10 +186,11 @@ executeBtn.addEventListener('click', async () => {
     } else if (x === '' || y === '') {
       err.textContent = getTranslation('fillValues');
       valid = false;
-    }else if (plantName=== '') {
+    }/*else if (plantName=== '') {
       err.textContent = getTranslation('noPlantName');
       valid = false;
-    } else if (isNaN(x) || isNaN(y) || x <= 0 || x >= 395 || y <= 0 || y >= 650) {
+    } */
+      else if (isNaN(x) || isNaN(y) || x <= 0 || x >= 395 || y <= 0 || y >= 650) {
       err.textContent = getTranslation('correctValues');
       valid = false;
     } else {
