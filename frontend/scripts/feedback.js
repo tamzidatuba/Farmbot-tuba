@@ -4,9 +4,9 @@ import { customAlert } from "./popups.js";
 
 
 class Feedback {
-  constructor( message, rating) {
+  constructor( message) {
     this.message = message;
-    this.rating = rating;
+    //this.rating = rating;
     this.createdAt = new Date();
   }
 }
@@ -16,28 +16,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('feedbackModal');
   const closeModal = document.getElementById('closeFeedbackModal');
   const textInput = document.getElementById('feedbackText');
-  const ratingStars = document.getElementsByName('rating');
+  //const ratingStars = document.getElementsByName('rating');
   const submitBtn = document.getElementById('submitFeedbackBtn');
   const errorDiv = document.getElementById('feedbackError');
   const successDiv = document.getElementById('feedbackSuccess');
-
+ 
   // In-memory store
   const feedbackList = [];
 
   // Helper to get selected rating
-  function getSelectedRating() {
+  /* function getSelectedRating() {
     for (const star of ratingStars) {
       if (star.checked) return Number(star.value);
     }
     return 0;
-  }
+  } */
 
   // Open modal
   feedbackBtn.addEventListener('click', () => {
     errorDiv.textContent = '';
     successDiv.textContent = '';
     textInput.value = '';
-    ratingStars.forEach(s => s.checked = false);
+    //ratingStars.forEach(s => s.checked = false);
     modal.style.display = 'flex';
   });
 
@@ -53,14 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
     successDiv.textContent = '';
   
     const message = textInput.value.trim();
-    const rating = getSelectedRating();
+    //const rating = getSelectedRating();
   
-    if (rating < 1 || rating > 5) {
-      errorDiv.textContent = getTranslation("noRating");
+    /* if (message.length() < 1 || message.length() > 5) {
+      errorDiv.textContent = getTranslation("noFeedback");
       return;
-    }
+    } */
   
-    const fb = new Feedback(message, rating);
+    const fb = new Feedback(message);
     feedbackList.push(fb);
     console.log('New feedback:', fb);
   
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/send-feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, rating })
+        body: JSON.stringify({ message })
       });
   
       const result = await response.json();
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     textInput.value = '';
-    ratingStars.forEach(s => s.checked = false);
+    //ratingStars.forEach(s => s.checked = false);
   });
   
 });
