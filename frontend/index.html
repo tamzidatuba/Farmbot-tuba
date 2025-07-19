@@ -164,18 +164,18 @@
         <textarea data-i18n-placeholder="feedbackPlaceholder" id="feedbackText" rows="4"
           placeholder="What did you think?" style="width:100%; padding:0.5em;"></textarea>
       </div>
-
+<!-- 
       <div class="field">
         <label data-i18n="rating">Your Rating</label>
         <div class="stars" id="ratingStars">
           <!-- 5-star rating -->
-          <input type="radio" id="star5" name="rating" value="5" /><label for="star5">★</label>
+          <!-- <input type="radio" id="star5" name="rating" value="5" /><label for="star5">★</label>
           <input type="radio" id="star4" name="rating" value="4" /><label for="star4">★</label>
           <input type="radio" id="star3" name="rating" value="3" /><label for="star3">★</label>
           <input type="radio" id="star2" name="rating" value="2" /><label for="star2">★</label>
           <input type="radio" id="star1" name="rating" value="1" /><label for="star1">★</label>
         </div>
-      </div>
+      </div> -->
 
       <div class="field" style="text-align:right;">
         <button data-i18n="submit" id="submitFeedbackBtn" style="padding:0.5em 1em;">Submit</button>
@@ -411,15 +411,15 @@
 
 
     <!-- Question Icon Button -->
-    <div>
+    <!-- <div>
       <button id="openQuestionFormBtn" title="Ask a Question">Q&A</button>
       <div class="help-text-questions" data-i18n="helpQandA" style="display:outside; color: gray;">If you have any
         questions regarding the Farmbot, you can ask them here.</div>
 
-    </div>
+    </div> -->
 
     <!-- Hidden Ask a Question Form -->
-    <div id="questionSection" style="display: none;">
+    <!-- <div id="questionSection" style="display: none;">
       <button id="closeQuestionSection" class="close-btn" title="Close">&times;</button>
       <h3 data-i18n="question">Ask a Question</h3>
 
@@ -434,9 +434,30 @@
           placeholder="Write your question here..."></textarea>
 
         <button data-i18n="submit" type="submit">Submit</button>
-        <div id="questionStatus"></div>
+        <div  id="questionStatus"></div>
       </form>
-    </div>
+    </div> -->
+   <!-- Q&A Button -->
+<button id="openQuestionFormBtn" class="floating-btn">Q&A</button>
+
+<!-- Q&A Floating Box -->
+<div id="questionModal" class="question-floating-box" style="display: none;">
+  <div class="question-content">
+    <span id="closeQuestionModal" class="close-btn">&times;</span>
+    <h3 data-i18n="question">Ask a Question</h3>
+
+    <label for="email" data-i18n="mail">Your Email:</label>
+    <input type="email" id="email" placeholder="you@example.com" required>
+
+    <label for="question" data-i18n="questionBox">Your Question:</label>
+    <textarea id="question" placeholder="Your question..." required></textarea>
+
+    <button id="submitQuestionBtn" type="button" data-i18n="submit">Submit</button>
+    <div id="questionStatus"></div> <!-- ✅ Dynamic success/error here -->
+  </div>
+</div>
+
+
 
     <!-- Your Questions Section -->
     <div id="yourQuestionsSection" class="big-modal">
@@ -502,6 +523,7 @@
     <script type="module" src="./scripts/feedback.js"></script>
     <script type="module" src="./scripts/your_questions.js"></script>
     <script type="module" src="./scripts/queueManager.js"></script>
+    <script type="module" src="./scripts/q&a.js"></script>
 
 
 

@@ -132,6 +132,8 @@ export const translations = {
     questionBox: 'Your Question:',
     writeQuestion: 'Write your question here...',
     submit: 'Submit',
+    questionanswer:'Your question was received and sent to team.',
+
     //history keys
     started: 'Job started',
     queued: 'Job added to queue',
@@ -347,6 +349,7 @@ export const translations = {
     questionBox: 'Eure Frage:',
     writeQuestion: 'Schreibt eure Frage hier...',
     submit: 'Absenden',
+    questionanswer:'Ihre Frage wurde empfangen und an das Team weitergeleitet.',
     //history keys
     started: 'Auftrag gestartet',
     queued: 'Auftrag in die Warteschlange gestellt',

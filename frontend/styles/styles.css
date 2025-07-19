@@ -644,7 +644,7 @@ margin-top: 4px;
       position: fixed;
       top: 2%;
       right: 43%;
-      background-color: #f7be00;
+      background-color: #195632;
       color: white;
       font-size: 32px;
       padding: 8px 16px;
@@ -657,13 +657,13 @@ margin-top: 4px;
       display: none;
       margin-bottom: 10px;
       box-shadow: 0 3px 5px rgba(0,0,0,0.2);
-      line-height: 0.8; /* 👈 moves emoji a bit up */
+      line-height: 0.8; /* moves emoji a bit up */
   }
   
     
-  #pauseJobBtn:hover {
+ /*  #pauseJobBtn:hover {
       background-color: red;
-    }
+    } */
     
     .error-box {
       position: fixed;
@@ -765,12 +765,12 @@ margin-top: 4px;
 }
 
 
-#openQuestionFormBtn:hover {
+ /* #openQuestionFormBtn:hover {
   background-color: var(--buttons-hover-color);
-}
+} */
 
 /* Bottom Panel Form */
-#questionSection {
+/* #questionSection {
   position: fixed;
   bottom: 100px;
   right: 20px;
@@ -784,24 +784,24 @@ margin-top: 4px;
   z-index: 999;
   display: none;
 }
-
-#questionSection h3 {
+ */
+/* #questionSection h3 {
   margin-top: 0;
   font-size: 18px;
-}
+} */
 
-#questionForm {
+/* #questionForm {
   display: flex;
   flex-direction: column;
-}
+} */
 
-#questionForm label {
+/* #questionForm label {
   font-size: 14px;
   margin-bottom: 4px;
 }
 
-
-#questionForm textarea {
+ */
+/* #questionForm textarea {
   box-sizing:border-box;
   width:350px;
   height:200px;
@@ -811,17 +811,17 @@ margin-top: 4px;
   border: 1px solid #ccc;
   border-radius: 6px;
 }
-
-#questionForm input{
+ */
+/* #questionForm input{
   font-size: 14px;
    width:350px;
   padding: 6px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
-}
+} */
 
-#questionForm button[type="submit"] {
+/* #questionForm button[type="submit"] {
   background-color: var(--buttons-color);
   color: white;
   border: none;
@@ -830,19 +830,19 @@ margin-top: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
-#questionForm button[type="submit"]:hover {
+ */
+/* #questionForm button[type="submit"]:hover {
   background-color: var(--buttons-hover-color);
-}
+} */
 
-#questionStatus {
+/* #questionStatus {
   margin-top: 8px;
   font-size: 13px;
-  color: var(--elements-color);/*green;*/
-}
+  color: var(--elements-color);/*green;
+} */
 
  /* Close Button for Question Form */
-#closeQuestionSection {
+/* #closeQuestionSection {
   position: absolute;
   top: 5px;
   left: 350px;
@@ -853,14 +853,122 @@ margin-top: 4px;
   color: #888;
   cursor: pointer;
   z-index: 1000;
+} */
+
+/* #closeQuestionSection:hover {
+  color: #000;
+} */ 
+ 
+/* Floating Q&A Button */
+.floating-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  padding: 12px 20px;
+  border-radius: 50px;
+  background-color: var(--buttons-color);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 9999;
 }
 
-#closeQuestionSection:hover {
+.floating-btn:hover {
+  background-color: var(--buttons-hover-color);
+}
+
+/* Floating Modal for Q&A */
+#questionModal {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  width: 400px;
+  background: #F2ECE6;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  display: none;
+  flex-direction: column;
+}
+
+.question-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title */
+#questionModal h3 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+/* Form */
+#questionModal label {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+#questionModal input,
+#questionModal textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#questionModal textarea {
+  min-height: 200px;
+  resize: vertical;
+}
+
+/* Submit Button */
+#submitQuestionBtn {
+  background-color: var(--buttons-color);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+#submitQuestionBtn:hover {
+  background-color: var(--buttons-hover-color);
+}
+
+/* Status Message */
+#questionStatus {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--elements-color);
+}
+
+/* Close Button Inside Modal */
+#closeQuestionModal {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+}
+
+#closeQuestionModal:hover {
   color: #000;
 }
 
 
-.stars {
+
+/* .stars {
   display: inline-flex;         
   flex-direction: row-reverse;   
   font-size: 2rem;               
@@ -886,7 +994,7 @@ margin-top: 4px;
 .stars input:checked ~ label {
   color: gold;
 }
-
+ */
 /* Feedback form field labels */
 .field label {
   display: block;               
