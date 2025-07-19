@@ -4,6 +4,9 @@ import "./scripts/watering.js";
 import "./scripts/seeding.js";
 import "./scripts/TouchFunctions.js";
 
+
+
+
 const toggle = document.getElementById('createTaskToggle');
 const viewJobs = document.getElementById('viewJobs');
 const subtask = document.getElementById('subtaskContainer');
@@ -35,7 +38,7 @@ setInterval(async () => await updateRobot(), 1000); // Update every 1 second
 drawGrid(); // draw plants
 
 // Close #questionSection when clicking outside of it
-document.addEventListener('click', function (event) {
+/* document.addEventListener('click', function (event) {
   const questionSection = document.getElementById('questionSection');
 
   // Only proceed if it's currently visible
@@ -46,11 +49,11 @@ document.addEventListener('click', function (event) {
       questionSection.style.display = 'none';
     }
   }
-});
+}); */
 
 
 //ask questions
-document.getElementById('openQuestionFormBtn').addEventListener('click', () => {
+/* document.getElementById('openQuestionFormBtn').addEventListener('click', () => {
   const section = document.getElementById('questionSection');
   section.style.display = section.style.display === 'none' ? 'block' : 'none';
 });
@@ -69,6 +72,8 @@ document.getElementById('questionForm').addEventListener('submit', async functio
   const emailInput = document.getElementById('email');
   const questionInput = document.getElementById('question');
   const statusDiv = document.getElementById('questionStatus');
+  const section = document.getElementById('questionSection');
+  
 
   const email = emailInput.value.trim();
   const question = questionInput.value.trim();
@@ -83,9 +88,16 @@ document.getElementById('questionForm').addEventListener('submit', async functio
     const result = await res.json();
 
     if (res.ok) {
-      statusDiv.textContent = result.message;
+      statusDiv.textContent = result.message || "Your question was received.";
       emailInput.value = '';
       questionInput.value = '';
+
+      // ✅ Close after 1.5 seconds
+      setTimeout(() => {
+        section.style.display = 'none';
+        statusDiv.textContent = '';
+      }, 1500);
+      
     } else {
       statusDiv.textContent = result.error || 'Something went wrong.';
     }
@@ -94,7 +106,7 @@ document.getElementById('questionForm').addEventListener('submit', async functio
     statusDiv.textContent = 'Server error. Please try again later.';
   }
 });
-
+ */
 
 // Optional: Close on background click
 window.addEventListener('click', (e) => {

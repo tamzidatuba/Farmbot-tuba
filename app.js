@@ -253,10 +253,10 @@ app.post('/api/ask-question', async (req, res) => {
 });
 
 app.post('/api/send-feedback', async (req, res) => {
-  const { rating, message } = req.body;
+  const { message } = req.body;
 
-  if (!rating) {
-    return res.status(400).json({ error: 'Rating is required.' });
+  if (!message) {
+    return res.status(400).json({ error: 'Message is required.' });
   }
 
   try {
@@ -271,8 +271,8 @@ app.post('/api/send-feedback', async (req, res) => {
     const mailOptions = {
       from: 'farmbot394@gmail.com',
       to: 'farmbot394@gmail.com',
-      subject: `New Feedback Received ⭐️ Rating: ${rating}`,
-      text: `Feedback Message:\n\n${message}\n\nRating: ${rating}`
+      subject: `Feedback Received`,
+      text: `Feedback Message:\n\n${message}`
     };
 
     await transporter.sendMail(mailOptions);
