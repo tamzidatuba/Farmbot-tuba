@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionText = questionInput.value.trim();
 
     if (!email || !questionText) {
-      statusDiv.textContent = getTranslation("missingFields") || "❗ Please fill in all fields.";
+      statusDiv.textContent = getTranslation("fillValues") || "❗ Please fill in all fields.";
       return;
     }
 
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1500);
     } catch (err) {
       console.error('Question send error:', err);
-      statusDiv.textContent = getTranslation("serverError") || "❌ Failed to send your question.";
+      statusDiv.textContent = getTranslation("unkownError") || "❌ Failed to send your question.";
     }
 
     emailInput.value = '';
