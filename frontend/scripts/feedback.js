@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.style.display='none';
     } catch (err) {
       console.error('Feedback send error:', err);
-      errorDiv.textContent = '❌ Failed to send feedback. Please try again later.';
+      errorDiv.textContent = getTranslation('fillValues');
     }
   
     textInput.value = '';
