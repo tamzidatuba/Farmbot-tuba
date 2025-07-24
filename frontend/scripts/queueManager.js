@@ -39,6 +39,10 @@ viewQueueBtn.addEventListener('click', () => {
 });
 
 function generateGUI() {
+    if (viewQueueModal.style.display == 'none') {
+        open = false
+        return
+    }
     jobCountDisplay.textContent = `${getTranslation('queuedJobs')}${queue.length}`;
     queueList.innerHTML = '';
     if (queue.length === 0) {
@@ -127,6 +131,7 @@ export function updateQueue(new_queue, progress) {
     queue = new_queue;
     queue.reverse()
     window.queue = queue;
+    console.log("Set a new Queue")
     job_progress = progress;
     if (open) {
         generateGUI();
