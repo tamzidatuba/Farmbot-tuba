@@ -46,7 +46,7 @@ function createJobRowWatering(jobData = null) {
       </div>
       <div>
         <label data-i18n="height">${getTranslation("height")}</label>
-        <input id="watering-height" type="number" class="coord-input zCoord" placeholder="10 - 100">
+        <input id="watering-height" type="number" class="coord-input zCoord" placeholder="5 - 100">
       </div>
     </div>
     <div class="errorMsg"></div>
@@ -188,7 +188,7 @@ executeBtnWatering.addEventListener('click', async () => {
 
       const coordKey = `${x},${y}`;
 
-      if (!plant || isNaN(z) || isNaN(watering) || z < 10 || z > 100 || watering < 10 || watering > 50) {
+      if (!plant || isNaN(z) || isNaN(watering) || z < 4 || z > 100 || watering < 10 || watering > 50) {
         errorMsg.textContent = getTranslation("fillValues");
         isValid = false;
       } else if (seenCoordinates.has(coordKey)) {
