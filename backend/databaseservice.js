@@ -274,11 +274,6 @@ async function FetchQuestionsFromDBbyQuestion(id){
    return question3;
 }
 
-/*async function InsertAnswerIntoDB(question, answer){
-    let answer_recieved = await questionModel.InsertAnswersIntoDB(question,answer);
-    return answer_recieved;
-}*/
-
 async function UpdateQuestionDetailsIntoDB(id, user, question, answer)
 {
     let details_to_be_changed = await questionModel.UpdateDetailsinDB(id, user,question,answer);
@@ -332,7 +327,12 @@ async function UpdateUserToDB(username, password) {
     const users = await userModel.UpdateUser(username, password);
 }
 
-
+async function AddAdminUserIfNotExists() {
+    const adminUser = await userModel.FetchUser('admin', 'admin');
+    if (!adminUser) {
+        await userModel.InsertUser('admin', 'admin');
+    }
+}
 
 export default {
     InsertJobToDB,
@@ -357,4 +357,5 @@ export default {
     UpdateQuestionDetailsIntoDB,
     DeleteQuestionInDB,
     UpdatePlantNameinDB,
+    AddAdminUserIfNotExists,
 };

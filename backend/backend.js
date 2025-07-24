@@ -210,6 +210,9 @@ async function initalizeBackend(backend) {
   // fetch the plants and cache them in the backend
   backend.plants = await DatabaseService.FetchPlantsfromDB();
 
+  // add admin user if it does not exist
+  await DatabaseService.AddAdminUserIfNotExists();
+
   // check if any scheduled-jobs are due
   backend.scheduleManager.checkForScheduledJobs()
 }
