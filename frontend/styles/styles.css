@@ -96,8 +96,8 @@ canvas {
     #status-history {
       position: absolute;
       width: 320px;
-      max-height: 80%;
-      top: 2%;
+      max-height: 41%;
+      top: 12%;
       right: 10%; 
       background-color: var(--elements-color);
       border: none;
