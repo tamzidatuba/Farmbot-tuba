@@ -208,7 +208,7 @@ executeBtnWatering.addEventListener('click', async () => {
 
   const jobname = document.getElementById("WateringJobName").value.trim();
   jobNameErrorWatering.textContent = '';
-  const regex = /^[a-zA-Z0-9 ]*$/;
+  const regex = /^[\w ]+$/;
 
   if (!regex.test(jobname)) {
     jobNameErrorWatering.textContent = getTranslation("specialChars");
