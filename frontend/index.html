@@ -439,6 +439,8 @@
     </div> -->
    <!-- Q&A Button -->
 <button id="openQuestionFormBtn" class="floating-btn">Q&A</button>
+<div class="help-text-questions" data-i18n="helpQandA" style="display:outside; color: gray;">If you have any
+        questions regarding the Farmbot, you can ask them here.</div>
 
 <!-- Q&A Floating Box -->
 <div id="questionModal" class="question-floating-box" style="display: none;">
@@ -447,10 +449,10 @@
     <h3 data-i18n="question">Ask a Question</h3>
 
     <label for="email" data-i18n="mail">Your Email:</label>
-    <input type="email" id="email" placeholder="you@example.com" required>
+    <input type="email" id="email" data-i18n-placeholder="exampleMail" placeholder="example@mail.com" required>
 
     <label for="question" data-i18n="questionBox">Your Question:</label>
-    <textarea id="question" placeholder="Your question..." required></textarea>
+    <textarea id="question" data-i18n-placeholder="yourQuestion" placeholder="Your question..." required></textarea>
 
     <button id="submitQuestionBtn" type="button" data-i18n="submit">Submit</button>
     <div id="questionStatus"></div> <!-- ✅ Dynamic success/error here -->
@@ -463,7 +465,7 @@
     <div id="yourQuestionsSection" class="big-modal">
       <div class="big-modal-content">
         <span id="closeYourQuestions" class="close" title="Close">&times;</span>
-        <h3 data-i18n="yourQuestionsTitle">Your Submitted Questions</h3>
+        <h3 data-i18n="yourQuestionsTitle" style="font-size: x-large;">Your Submitted Questions</h3>
         <div id="questionsList"></div>
         <div id="add-question-section" style="display: none;">
           <button data-i18n="newQuestion" class="button-small-question" id="add-question-btn">Add New Question</button>

@@ -130,10 +130,11 @@ export const translations = {
     mail: 'Your Email:',
     mailExample: 'you@example.com',
     questionBox: 'Your Question:',
+    exampleMail: 'example@mail.com',
+    yourQuestion: 'Your question...',
     writeQuestion: 'Write your question here...',
     submit: 'Submit',
     questionanswer:'Your question was received and sent to team.',
-
     //history keys
     started: 'Job started',
     queued: 'Job added to queue',
@@ -345,8 +346,9 @@ export const translations = {
     //Q&A
     question: 'Stellt eine Frage',
     mail: 'Eure E-Mail:',
-    mailExample: 'muster@mail.de',
-    questionBox: 'Eure Frage:',
+    exampleMail: 'muster@mail.de',
+    questionBox: 'Deine Frage:',
+    yourQuestion: 'Deine Frage...',
     writeQuestion: 'Schreibt eure Frage hier...',
     submit: 'Absenden',
     questionanswer:'Ihre Frage wurde empfangen und an das Team weitergeleitet.',
