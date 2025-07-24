@@ -1,5 +1,5 @@
 document.getElementById("help-button").addEventListener("click", function () {
-  const helpTexts = document.querySelectorAll('[class^="help-text-"]');
+  const helpTexts = document.querySelectorAll('[class*="help-text-"]');
   const translucent = document.getElementById("helpTranslucent");
 
   const isVisible = Array.from(helpTexts).some(el => el.style.display === "block");
@@ -12,7 +12,7 @@ document.getElementById("help-button").addEventListener("click", function () {
 });
 
 document.getElementById("helpTranslucent").addEventListener("click", function () {
-  document.querySelectorAll('[class^="help-text-"]').forEach(text => {
+  document.querySelectorAll('[class*="help-text-"]').forEach(text => {
     text.style.display = "none";
   });
   this.style.display = "none";

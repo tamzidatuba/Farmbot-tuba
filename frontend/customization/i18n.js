@@ -159,6 +159,7 @@ export const translations = {
     helpQandA: 'If you have any questions regarding the Farmbot, you can ask them here.',
     helpLanguage: 'You can change your preferred language here. At present you can either choose German or English.',
     helpInfo:'You can find the general information about the Farmbot here.',
+    helpYourQuestions:'Previously asked questions about the Farmbot is available here.',
     // Translations for the yourQuestions section
     yourQuestionsTitle: 'Your Submitted Questions',
     noQuestions: 'No questions found.',
@@ -377,6 +378,7 @@ export const translations = {
     helpQandA: 'Wenn Ihr Fragen zum Farmbot habt, könnt Ihr diese hier stellen.',
     helpLanguage: 'Hier könnt Ihr eure bevorzugte Sprache ändern. Aktuell könnt Ihr zwischen Deutsch und Englisch auswählen.',
     helpInfo:'Allgemeine Informationen zum Farmbot finden Sie hier.',
+    helpYourQuestions:'Bisher gestellte Fragen zum Farmbot finden Sie hier',
     // Translations for the yourQuestions section
     yourQuestionsTitle: 'Eure eingereichten Fragen',
     noQuestions: 'Keine Fragen gefunden.',
