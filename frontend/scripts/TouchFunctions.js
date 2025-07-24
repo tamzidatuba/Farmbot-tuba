@@ -17,27 +17,38 @@ const canvas = document.getElementById('gridCanvas');
 let selectedPlant = null;
 
 canvas.addEventListener('click', async (e) => {
+  let coordDisplay = pixelToCoord(e.offsetX, e.offsetY);
+  let x = coordDisplay.x; // x of the click with respect to grid coordinate system
+  let y = coordDisplay.y; // y of the click with respect to grid coordinate system
+
+  // Find the clicked plant
+  selectedPlant = null;
+  let isSeedingPossible = true;
+
+  // remove any existing dialogbox
+  dialogBox.style.display = "none"; // Hide the dialog box if it exists
+  dialogContent.innerHTML = ""; // Clear previous content
+  dialogHeader.textContent = ""; // Clear previous header
+
+  for (let plant of window.plants) { // this loop will find the plant that is clicked
+    const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
+    if (distance < 15) {
+      selectedPlant = plant; // Set the selected plant
+      break; // Stop at the first match
+    }
+  }
+
+  if (selectedPlant) { // set the dialog header if a plant is selected, if not show the position
+  dialogHeader.textContent = `${selectedPlant.plantname === undefined ? "" : selectedPlant.plantname}: ${getTranslation(selectedPlant.planttype)} ${getTranslation("at")}  X: ${selectedPlant.xcoordinate}  Y: ${selectedPlant.ycoordinate}`;
+  } else {
+    dialogHeader.textContent = `Position: X:${x} , Y:${y}`;
+  }
+
   if (isLoggedIn) {
-    let coordDisplay = pixelToCoord(e.offsetX, e.offsetY);
-    let x = coordDisplay.x; // x of the click with respect to grid coordinate system
-    let y = coordDisplay.y; // y of the click with respect to grid coordinate system
-
-    // Find the clicked plant
-    selectedPlant = null;
-    let isSeedingPossible = true;
-
     for (let plant of window.plants) { // this loop will decide if seeding is possible or not
       const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
       if (distance < PlantRadii[plant.planttype]) {
         isSeedingPossible = false; // If any plant is too close, seeding is not possible
-      }      
-    }
-
-    for(let plant of window.plants) { // this loop will find the plant that is clicked
-      const distance = GetDistance(x, y, plant.xcoordinate, plant.ycoordinate);
-      if (distance < 15) {
-        selectedPlant = plant; // Set the selected plant
-        break; // Stop at the first match
       }
     }
 
@@ -51,27 +62,19 @@ canvas.addEventListener('click', async (e) => {
       }
     }
 
-    // remove any existing dialogbox
-    dialogBox.style.display = "none"; // Hide the dialog box if it exists
-
-
-    dialogContent.innerHTML = ""; // Clear previous content
-    dialogHeader.textContent = ""; // Clear previous header
-
     if (selectedPlant) {
-      dialogHeader.textContent = `${selectedPlant.plantname === undefined ? "" : selectedPlant.plantname}: ${getTranslation(selectedPlant.planttype)} ${getTranslation("at")}  X: ${selectedPlant.xcoordinate}  Y: ${selectedPlant.ycoordinate}`;
-
       AddDeleteButtonToDialogContent();
       AddWateringButtonToDialogContent();
     }
     else {
       if (!isSeedingPossible) return;
-      dialogHeader.textContent = `Position: X:${x} , Y:${y}`;
       AddSeedingButtonToDialogContent(x, y);
     }
-
-    showDialogOnCanvas(e.clientX, e.clientY);
   }
+
+  var shouldShowDialog = (isLoggedIn || (!isLoggedIn && selectedPlant)); // Show dialog only if logged in or if a plant is selected
+  if(shouldShowDialog)
+    showDialogOnCanvas(e.clientX, e.clientY);
 });
 
 function showDialogOnCanvas(x, y) {
