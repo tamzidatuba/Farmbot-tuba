@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       questionsList.innerHTML = questions.map(q => `
         <div class="question-item" data-id="${q.id}">
-          <p><strong>${getTranslation("user")}:</strong> <span class="user-text">${q.user}</span></p>
-          <p><strong>${getTranslation("question")}:</strong> <span class="question-text">${q.question}</span></p>
-          <p><strong>${getTranslation("answer")}:</strong> <span class="answer-text">${q.answer}</span></p>
+          <p><strong class="text-size">${getTranslation("user")}:</strong> <span class="user-text text-size">${q.user}</span></p>
+          <p><strong class="text-size">${getTranslation("question")}:</strong> <span class="question-text text-size">${q.question}</span></p>
+          <p><strong class="text-size">${getTranslation("answer")}:</strong> <span class="answer-text text-size">${q.answer}</span></p>
           ${isLoggedIn ? `
             <div class="button-row">
               <button class="icon-btn edit-btn" title="Edit">&#9998;</button>
@@ -59,11 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!inEdit && e.target === editBtn) {
     // turn spans into inputs
     row.querySelector('.user-text').outerHTML =
-      `<input class="user-input"   value="${row.querySelector('.user-text').textContent}">`;
+      `<input class="user-input full-width" value="${row.querySelector('.user-text').textContent}">`;
     row.querySelector('.question-text').outerHTML =
-      `<input class="question-input" value="${row.querySelector('.question-text').textContent}">`;
+      `<input class="question-input full-width" value="${row.querySelector('.question-text').textContent}">`;
     row.querySelector('.answer-text').outerHTML =
-      `<textarea class="answer-input">${row.querySelector('.answer-text').textContent}</textarea>`;
+      `<textarea class="answer-input full-width">${row.querySelector('.answer-text').textContent}</textarea>`;
 
     // swap button icons
     editBtn.textContent = '💾';          // save

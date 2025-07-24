@@ -1191,6 +1191,19 @@ margin-top: 4px;
   margin-bottom: 1em;
   border-left: 4px solid #4CAF50;
   border-radius: 5px;
+  margin: 0.5em 0;
+}
+
+.text-size {
+  font-size: large;
+}
+
+.full-width {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;         /* Ensure it behaves like a block-level element */
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 .button-row {
