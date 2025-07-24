@@ -376,6 +376,7 @@ export const translations = {
     helpFeedback: 'Klickt hier, falls Ihr Feedback geben möchtet.',
     helpQandA: 'Wenn Ihr Fragen zum Farmbot habt, könnt Ihr diese hier stellen.',
     helpLanguage: 'Hier könnt Ihr eure bevorzugte Sprache ändern. Aktuell könnt Ihr zwischen Deutsch und Englisch auswählen.',
+    helpInfo:'Allgemeine Informationen zum Farmbot finden Sie hier.',
     // Translations for the yourQuestions section
     yourQuestionsTitle: 'Eure eingereichten Fragen',
     noQuestions: 'Keine Fragen gefunden.',

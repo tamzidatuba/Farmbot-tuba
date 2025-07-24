@@ -644,7 +644,7 @@ margin-top: 4px;
       position: fixed;
       top: 2%;
       right: 43%;
-      background-color: #f7be00;
+      background-color:#195632;
       color: white;
       font-size: 32px;
       padding: 8px 16px;
@@ -1363,5 +1363,14 @@ margin-top: 4px;
 textarea.edit-answer {
   width: 100%;
   resize: vertical;
+}
+
+.logo-42 {
+    position: absolute;
+    width: 320px;
+    max-height: 41%;
+    top: 55%;
+    right: 10%; 
+    display: inline;
 }
   

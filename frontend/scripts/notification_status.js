@@ -59,7 +59,7 @@ export async function updateRobot() {
             : 'inline-block';
       }
       // Update button text depending on paused state
-      pauseBtn.textContent = data.paused ? '▶' : '⏸';
+      pauseBtn.textContent = data.paused ? '▶' : 'II';
 
       // Update plants
       window.plants = data.plants;
@@ -148,7 +148,7 @@ pauseBtn.addEventListener('click', async () => {
       if (data.message && data.message.includes('No job')) {
         showError(data.message); // 👈 Show user-friendly error
       } else {
-        pauseBtn.textContent = isCurrentlyPaused ? '⏸' : '▶';
+        pauseBtn.textContent = isCurrentlyPaused ? 'II' : '▶';
         //hideError(); // hide if previously shown
       }
     } else {
