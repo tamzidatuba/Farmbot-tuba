@@ -40,7 +40,7 @@ class SeedingJob extends Job {
         let deactivateVacuumPin = new SetPinTask(FarmbotStatus.SEEDING, FARMBOT_DATA.vacuum_pin, 0);
         let ensurePinDeactivation = new TimedTask(FarmbotStatus.SEEDING, 1);
         let goToWateringHeight = new MoveZTask(FarmbotStatus.MOVING_TO_WATERING_POSITION, FieldConstants.FIELD_HEIGHT + 20);
-        let waterPlant = new TimedPinTask(FarmbotStatus.WATERING, FARMBOT_DATA.water_pin, 1);
+        let waterPlant = new TimedPinTask(FarmbotStatus.WATERING, FARMBOT_DATA.water_pin, 0.5);
 
 
         let returnToFieldSafetyHeight = new MoveZTask(FarmbotStatus.MOVING, FieldConstants.SAFETY_HEIGHT);
