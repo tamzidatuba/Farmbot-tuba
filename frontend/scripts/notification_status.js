@@ -42,21 +42,7 @@ export async function updateRobot() {
         // Add new entries to the status history
         historyList = data.notifications;
         fillHistory(data.notifications.reverse());
-        for (let note of data.notifications) {
-          if (note.key.toLowerCase() === 'queued') {
-            const row = document.querySelector(
-              `#jobsList .job-row[data-jobname="${note.jobname}"]`
-            );
-            if (row) {
-              row.remove();
-              const remaining = document
-                .querySelectorAll('#jobsList .job-row')
-                .length;
-              document.getElementById('jobCountDisplay').textContent =
-                `${getTranslation('seedingSoFar')}${remaining}`;
-            }
-          }
-        }
+
 
       }
 
