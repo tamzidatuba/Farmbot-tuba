@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/tamzidatuba/farmbot-tuba.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'docker build -t farmbot:${env.BUILD_NUMBER} .'
+            }
+        }
+        stage('Run') {
+            steps {
+                sh 'docker run -d -p 8081:8080 farmbot:${env.BUILD_NUMBER}'
+            }
+        }
+    }
+}
